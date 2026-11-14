@@ -5,7 +5,7 @@
 ### From source
 
 ```bash
-git clone https://github.com/kk18888678/plainview.git
+git clone https://github.com/KKhosla7/plainview.git
 cd plainview
 npm install
 npm run build

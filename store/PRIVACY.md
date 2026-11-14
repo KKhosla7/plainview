@@ -44,6 +44,6 @@ opened. It does not contact a server.
 
 ## Contact
 
-Open an issue at https://github.com/kk18888678/plainview/issues.
+Open an issue at https://github.com/KKhosla7/plainview/issues.
 
 Last updated: 2026-11-14

@@ -3,7 +3,7 @@
 **A reader for the plain-text files your browser normally shows raw.**
 Markdown, JSON and XML today; YAML, TOML and more are on the roadmap.
 
-[![CI](https://github.com/kk18888678/plainview/actions/workflows/ci.yml/badge.svg)](https://github.com/kk18888678/plainview/actions/workflows/ci.yml)
+[![CI](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml/badge.svg)](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-1f4fa0.svg)](LICENSE)
 
 > Version **1.1.0** · Chrome Web Store and Firefox Add-ons listings pending.
@@ -86,7 +86,7 @@ permanent install plus **Access your data for file:// URLs** in `about:addons`.
 ## Build and install
 
 ```bash
-git clone https://github.com/kk18888678/plainview.git
+git clone https://github.com/KKhosla7/plainview.git
 cd plainview
 npm install
 npm run build

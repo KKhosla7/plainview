@@ -87,4 +87,4 @@ None. See `PRIVACY.md`.
 
 Host this policy and add its public URL plus a support email in the Chrome Web
 Store and AMO dashboards before submitting. The repository itself uses
-https://github.com/kk18888678/plainview/issues for contact.
+https://github.com/KKhosla7/plainview/issues for contact.

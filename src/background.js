@@ -43,7 +43,7 @@
     return Boolean(data.autoOpenDownloads);
   }
 
-  const ReleaseBase = 'https://github.com/kk18888678/plainview/releases/tag/v';
+  const ReleaseBase = 'https://github.com/KKhosla7/plainview/releases/tag/v';
 
   function releaseUrl() {
     return `${ReleaseBase}${api.runtime.getManifest().version}`;

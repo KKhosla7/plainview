@@ -26,15 +26,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kk18888678/plainview.git"
+    "url": "https://github.com/KKhosla7/plainview.git"
   },
-  "homepage": "https://github.com/kk18888678/plainview#readme",
+  "homepage": "https://github.com/KKhosla7/plainview#readme",
   "bugs": {
-    "url": "https://github.com/kk18888678/plainview/issues"
+    "url": "https://github.com/KKhosla7/plainview/issues"
   },
   "engines": {
     "node": ">=22"
   },
-  "author": "kk18888678",
+  "author": "KKhosla7",
   "license": "MIT"
 }

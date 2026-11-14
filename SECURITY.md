@@ -11,6 +11,6 @@ Plainview renders untrusted files locally. The security model is:
 
 Please report a vulnerability privately through GitHub Security Advisories:
 
-https://github.com/kk18888678/plainview/security/advisories/new
+https://github.com/KKhosla7/plainview/security/advisories/new
 
 Do not include real credentials, private documents or personal data in a report.
