@@ -1,0 +1,372 @@
+/*
+ * The rendered Markdown itself: one fluid paper page using the design-doc
+ * visual language. Zoom changes type size; the paper keeps filling the
+ * available column, so no page-level horizontal scrollbar appears.
+ */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown {
+  width: 100%;
+  max-width: none;
+  padding: 2.25em 2.5em;
+  border: 1px solid var(--mdv-border);
+  background: var(--mdv-bg-soft);
+  color: var(--mdv-fg);
+  font-family: var(--mdv-sans);
+  font-size: calc(16px * var(--mdv-zoom, 1));
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown > :first-child {
+  margin-top: 0;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown :is(h1, h2, h3, h4, h5, h6) {
+  scroll-margin-top: calc(var(--mdv-topbar) + 16px);
+}
+
+/* ----------------------------------------------------------- title block */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-titleblock {
+  margin: 0 0 1.4em;
+  border: 2px solid var(--mdv-fg);
+  background: var(--mdv-bg-soft);
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-tb-main {
+  display: grid;
+  gap: 0.875em;
+  padding: 1.75em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-tb-title {
+  margin: 0;
+  padding: 0;
+  border-bottom: 0;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-tb-lede {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 1.12em;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------- typography */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h1,
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h2,
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h3 {
+  max-width: none;
+  margin: 1.4em 0 0.55em;
+  color: var(--mdv-fg);
+  font-family: var(--mdv-display);
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h1 {
+  margin-top: 0;
+  padding-bottom: 0.25em;
+  border-bottom: 2px solid var(--mdv-fg);
+  font-size: clamp(
+    2.4em,
+    calc(6vw * var(--mdv-zoom, 1)),
+    3.8em
+  );
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h2 {
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid var(--mdv-border);
+  font-size: 1.9em;
+  font-weight: 600;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h3 {
+  font-size: 1.35em;
+  font-weight: 600;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h4,
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h5,
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h6 {
+  margin: 1.2em 0 0.5em;
+  color: var(--mdv-fg);
+  font-family: var(--mdv-sans);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h4 {
+  font-size: 1.05em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h5,
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h6 {
+  color: var(--mdv-fg-muted);
+  font-size: 0.95em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown p,
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li {
+  max-width: 72ch;
+  margin: 0 0 1em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown ul,
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown ol {
+  display: grid;
+  gap: 0.375em;
+  margin: 0 0 1em;
+  padding-left: 1.3em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li > ul,
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li > ol {
+  margin-top: 0.375em;
+  margin-bottom: 0;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li > p {
+  margin-bottom: 0.5em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li > input[type="checkbox"] {
+  margin: 0 0.45em 0 -1.35em;
+  vertical-align: middle;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown a {
+  color: var(--mdv-accent);
+  text-decoration: none;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown strong {
+  font-weight: 600;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown hr {
+  height: 1px;
+  margin: 2em 0;
+  border: 0;
+  background: var(--mdv-border);
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown img {
+  max-width: 100%;
+  height: auto;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-anchor {
+  margin-left: 0.35em;
+  color: var(--mdv-fg-faint);
+  font-family: var(--mdv-mono);
+  font-size: 0.7em;
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0;
+}
+
+html[data-mdv][data-mdv-format="markdown"] :is(h1, h2, h3, h4, h5, h6):hover .mdv-anchor,
+html[data-mdv][data-mdv-format="markdown"] .mdv-anchor:focus-visible {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------- quotes */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown blockquote {
+  display: grid;
+  gap: 0.375em;
+  margin: 1.2em 0;
+  padding: 0.625em 0.875em;
+  border-left: 3px solid var(--mdv-accent);
+  background: var(--mdv-accent-soft);
+  color: var(--mdv-fg);
+  max-width: 72ch;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------- tables */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap {
+  margin: 1.2em 0;
+  border: 1px solid var(--mdv-border);
+  overflow-x: auto;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap table {
+  width: 100%;
+  min-width: 40em;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap th,
+html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap td {
+  padding: 0.5em 0.625em;
+  border: 0;
+  border-bottom: 1px solid var(--mdv-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap th {
+  background: var(--mdv-accent-soft);
+  color: var(--mdv-fg-muted);
+  font-family: var(--mdv-mono);
+  font-size: 0.8em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap td:first-child {
+  font-weight: 600;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap tr:last-child td {
+  border-bottom: 0;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap tr:nth-child(2n) td {
+  background: transparent;
+}
+
+/* ------------------------------------------------------------------ code */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-markdown :not(pre) > code {
+  padding: 0 0.25em;
+  border-radius: 3px;
+  background: var(--mdv-accent-soft);
+  color: var(--mdv-fg);
+  font-family: var(--mdv-mono);
+  font-size: 0.88em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-code {
+  margin: 1.2em 0;
+  border: 1px solid var(--mdv-border);
+  border-radius: 3px;
+  background: var(--mdv-code-bg);
+  overflow: hidden;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-code-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75em;
+  padding: 0.3em 0.5em 0.3em 0.75em;
+  border-bottom: 1px solid var(--mdv-border);
+  background: var(--mdv-bg-inset);
+  color: var(--mdv-fg-muted);
+  font-size: 0.72em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-code-lang {
+  font-family: var(--mdv-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-copy {
+  border-radius: 3px;
+  border-color: var(--mdv-border);
+  background: var(--mdv-bg-soft);
+  color: var(--mdv-fg-muted);
+  font-family: var(--mdv-mono);
+  font-size: 0.7em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-copy:hover {
+  color: var(--mdv-fg);
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-code pre {
+  margin: 0;
+  padding: 0.875em 1em;
+  overflow: auto;
+  background: var(--mdv-code-bg);
+  color: var(--mdv-code-fg);
+  font-family: var(--mdv-mono);
+  font-size: 0.82em;
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-code pre code {
+  padding: 0;
+  background: transparent;
+  font-size: inherit;
+  white-space: pre;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-raw-html {
+  margin: 0;
+  padding: 0.625em 0.75em;
+  border: 1px dashed var(--mdv-border);
+  border-radius: 3px;
+  background: var(--mdv-bg);
+  color: var(--mdv-fg-muted);
+  font-family: var(--mdv-mono);
+  font-size: 0.82em;
+  white-space: pre-wrap;
+}
+
+/* --------------------------------------------------------------- mermaid */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-mermaid {
+  margin: 1.2em 0;
+  border: 1px solid var(--mdv-border);
+  border-radius: 3px;
+  background: var(--mdv-bg);
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-mermaid-diagram {
+  padding: 0.75em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-mermaid-source pre {
+  background: var(--mdv-code-bg);
+  color: var(--mdv-code-fg);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 860px) {
+  html[data-mdv][data-mdv-format="markdown"] .mdv-markdown {
+    padding: 1.25em 1em;
+  }
+
+  html[data-mdv][data-mdv-format="markdown"] .mdv-tb-main {
+    padding: 1.25em;
+  }
+}
+
+/* ------------------------------------------------------------------ print */
+
+@media print {
+  html[data-mdv][data-mdv-format="markdown"] .mdv-markdown {
+    width: auto;
+    padding: 0;
+    border: 0;
+    background: #fff;
+    font-size: 11pt;
+  }
+}

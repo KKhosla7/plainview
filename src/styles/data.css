@@ -1,0 +1,98 @@
+/* ------------------------------------------------------------- data views */
+
+html[data-mdv] .mdv-data-doc {
+  font-family: var(--mdv-mono);
+  font-size: calc(13px * var(--mdv-zoom, 1));
+  line-height: 1.65;
+}
+
+html[data-mdv] .mdv-doc-title {
+  margin-bottom: 0.6em;
+  color: var(--mdv-danger);
+  font-family: var(--mdv-sans);
+  font-size: 1.5em;
+  font-weight: 650;
+}
+
+html[data-mdv] .mdv-doc-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  padding: 7px 10px 7px 12px;
+  border: 1px solid var(--mdv-border);
+  border-radius: 8px;
+  background: var(--mdv-bg-soft);
+  font-family: var(--mdv-sans);
+  font-size: 12px;
+  color: var(--mdv-fg-muted);
+}
+
+html[data-mdv] .mdv-meta-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+html[data-mdv] .mdv-meta-button {
+  appearance: none;
+  padding: 3px 8px;
+  border: 1px solid var(--mdv-border);
+  border-radius: 5px;
+  background: var(--mdv-bg);
+  color: var(--mdv-fg-muted);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+html[data-mdv] .mdv-meta-button:hover {
+  border-color: var(--mdv-fg-faint);
+  color: var(--mdv-fg);
+}
+
+html[data-mdv] .mdv-meta-button:focus-visible {
+  outline: 2px solid var(--mdv-accent);
+  outline-offset: 1px;
+}
+
+html[data-mdv] .mdv-error {
+  margin: 1em 0;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--mdv-danger) 35%, var(--mdv-border));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mdv-danger) 7%, var(--mdv-bg));
+  font-family: var(--mdv-sans);
+  font-size: 14px;
+}
+
+html[data-mdv] .mdv-error strong {
+  color: var(--mdv-danger);
+}
+
+html[data-mdv] .mdv-error-message {
+  margin-top: 6px;
+  max-height: 220px;
+  overflow: auto;
+  font-family: var(--mdv-mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+html[data-mdv] .mdv-error-location {
+  margin-top: 6px;
+  color: var(--mdv-fg-muted);
+  font-size: 12px;
+}
+
+html[data-mdv] .mdv-tree-note {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px dashed var(--mdv-border);
+  border-radius: 6px;
+  color: var(--mdv-fg-muted);
+  font-family: var(--mdv-sans);
+  font-size: 12px;
+}

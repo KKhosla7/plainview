@@ -1,0 +1,267 @@
+/*
+ * HTML theme: light and dark values from the Blueprint visual language.
+ * The palette, grid, paper, rules and mono labels only; no design-document
+ * components are generated.
+ */
+
+html[data-mdv][data-mdv-format="markdown"] {
+  --mdv-bg: #edf1f5;
+  --mdv-bg-soft: #f9fbfd;
+  --mdv-bg-inset: #e1e9f6;
+  --mdv-fg: #13233b;
+  --mdv-fg-muted: #56667d;
+  --mdv-fg-faint: #7b8798;
+  --mdv-border: #c5d0dd;
+  --mdv-border-soft: #d8e0e9;
+  --mdv-grid: rgba(31, 79, 160, 0.07);
+  --mdv-accent: #1f4fa0;
+  --mdv-accent-soft: #e1e9f6;
+  --mdv-danger: #b03a2e;
+  --mdv-red: #b03a2e;
+  --mdv-red-soft: #f6e3e0;
+  --mdv-code-bg: #e1e9f6;
+  --mdv-code-fg: #13233b;
+  --mdv-syn-key: #1f4fa0;
+  --mdv-syn-string: #b03a2e;
+  --mdv-syn-number: #56667d;
+  --mdv-syn-bool: #b03a2e;
+  --mdv-syn-tag: #1f4fa0;
+  --mdv-syn-attr: #56667d;
+  --mdv-syn-comment: #7b8798;
+  --mdv-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mdv-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --mdv-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  color-scheme: light;
+}
+
+html[data-mdv][data-mdv-format="markdown"][data-mdv-theme="dark"] {
+  --mdv-bg: #0c2040;
+  --mdv-bg-soft: #10284a;
+  --mdv-bg-inset: #17345f;
+  --mdv-fg: #e3ebf6;
+  --mdv-fg-muted: #9eb1cb;
+  --mdv-fg-faint: #8399b8;
+  --mdv-border: #2a4972;
+  --mdv-border-soft: #224066;
+  --mdv-grid: rgba(141, 184, 255, 0.07);
+  --mdv-accent: #8db8ff;
+  --mdv-accent-soft: #17345f;
+  --mdv-danger: #ff8e7e;
+  --mdv-red: #ff8e7e;
+  --mdv-red-soft: #3a2537;
+  --mdv-code-bg: #17345f;
+  --mdv-code-fg: #e3ebf6;
+  --mdv-syn-key: #8db8ff;
+  --mdv-syn-string: #ff8e7e;
+  --mdv-syn-number: #9eb1cb;
+  --mdv-syn-bool: #ff8e7e;
+  --mdv-syn-tag: #8db8ff;
+  --mdv-syn-attr: #9eb1cb;
+  --mdv-syn-comment: #8399b8;
+  color-scheme: dark;
+}
+
+
+html[data-mdv][data-mdv-format="markdown"] body {
+  background-color: var(--mdv-bg);
+  background-image:
+    linear-gradient(var(--mdv-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mdv-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-app {
+  background: transparent;
+}
+
+/* --------------------------------------------------------------- top bar */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-topbar {
+  left: 0;
+  border-bottom: 1px solid var(--mdv-fg);
+  background: var(--mdv-bg-soft);
+  backdrop-filter: none;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-logo {
+  border-radius: 3px;
+  background: var(--mdv-accent);
+  font-family: var(--mdv-mono);
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-badge,
+html[data-mdv][data-mdv-format="markdown"] .mdv-views,
+html[data-mdv][data-mdv-format="markdown"] .mdv-view-tab,
+html[data-mdv][data-mdv-format="markdown"] .mdv-action {
+  border-radius: 3px;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-themes {
+  border-radius: 3px;
+  border-color: var(--mdv-border);
+  background: var(--mdv-bg-inset);
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-theme-tab {
+  border-radius: 3px;
+  font-family: var(--mdv-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-action,
+html[data-mdv][data-mdv-format="markdown"] .mdv-view-tab {
+  font-family: var(--mdv-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-views {
+  border-color: var(--mdv-border);
+  background: var(--mdv-bg-inset);
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-view-tab[aria-selected="true"] {
+  box-shadow: none;
+}
+
+/* ----------------------------------------------------------------- shell */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-shell {
+  width: min(2200px, 100%);
+  gap: 28px;
+  padding: 0 32px;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-main {
+  padding: 32px 0 64px;
+}
+
+
+/* --------------------------------------------------------------- contents */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-toc {
+  top: calc(var(--mdv-topbar) + 32px);
+  left: 0;
+  flex: 0 0 280px;
+  width: 280px;
+  max-height: calc(100vh - var(--mdv-topbar) - 48px);
+  padding: 14px 16px;
+  border: 1px solid var(--mdv-border);
+  background: var(--mdv-bg-soft);
+  font-size: 0.86rem;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-toc-title {
+  margin: 0 0 8px;
+  padding: 0;
+  color: var(--mdv-fg-muted);
+  font-family: var(--mdv-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-toc-list {
+  display: grid;
+  gap: 2px;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-toc-link {
+  display: block;
+  margin: 0 -6px;
+  padding: 3px 6px 3px calc(6px + var(--mdv-depth, 0) * 12px);
+  color: var(--mdv-fg);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-toc-link:hover {
+  color: var(--mdv-accent);
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-toc-link.is-active {
+  background: var(--mdv-accent-soft);
+  color: var(--mdv-accent);
+}
+
+/* ------------------------------------------------------------------- zoom */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-zoom {
+  border-radius: 3px;
+  border-color: var(--mdv-fg);
+  background: var(--mdv-bg-soft);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-zoom-button,
+html[data-mdv][data-mdv-format="markdown"] .mdv-zoom-value {
+  border-radius: 3px;
+  font-family: var(--mdv-mono);
+}
+
+/* ----------------------------------------------------------- source view */
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-raw-pane {
+  padding-top: 32px;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-raw-label {
+  font-family: var(--mdv-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+html[data-mdv][data-mdv-format="markdown"] .mdv-raw-source {
+  border: 1px solid var(--mdv-fg);
+  border-radius: 3px;
+  background: var(--mdv-bg-soft);
+  color: var(--mdv-fg);
+  font-size: 0.82rem;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1079px) {
+  html[data-mdv][data-mdv-format="markdown"] .mdv-toc {
+    top: var(--mdv-topbar);
+    bottom: 0;
+    max-height: none;
+  }
+}
+
+@media (max-width: 860px) {
+  html[data-mdv][data-mdv-format="markdown"] .mdv-shell {
+    display: block;
+    padding: 0 16px;
+  }
+
+  html[data-mdv][data-mdv-format="markdown"] .mdv-toc {
+    position: static;
+    width: auto;
+    max-height: none;
+    margin-bottom: 20px;
+    transform: none;
+    box-shadow: none;
+  }
+
+  html[data-mdv][data-mdv-format="markdown"] .mdv-app.mdv-toc-open .mdv-scrim {
+    display: none !important;
+  }
+
+  html[data-mdv][data-mdv-format="markdown"] .mdv-action-toc {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ print */
+
+@media print {
+  html[data-mdv][data-mdv-format="markdown"] body {
+    background: #fff;
+    background-image: none;
+  }
+}

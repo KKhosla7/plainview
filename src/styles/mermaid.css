@@ -1,0 +1,72 @@
+/* -------------------------------------------------------------- mermaid */
+
+html[data-mdv] .mdv-mermaid {
+  margin: 1.2em 0;
+  border: 1px solid var(--mdv-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--mdv-bg-soft);
+}
+
+html[data-mdv] .mdv-mermaid-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  padding: 18px;
+  overflow: auto;
+}
+
+html[data-mdv] .mdv-mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+html[data-mdv] .mdv-mermaid-loading {
+  color: var(--mdv-fg-muted);
+  font-family: var(--mdv-sans);
+  font-size: 13px;
+}
+
+html[data-mdv] .mdv-mermaid-failed .mdv-mermaid-diagram {
+  display: block;
+  padding: 12px;
+}
+
+html[data-mdv] .mdv-mermaid-error {
+  color: var(--mdv-danger);
+  font-family: var(--mdv-sans);
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+
+html[data-mdv] .mdv-mermaid-source {
+  border-top: 1px solid var(--mdv-border);
+}
+
+html[data-mdv] .mdv-mermaid-source[hidden] {
+  display: none;
+}
+
+html[data-mdv] .mdv-mermaid-source pre {
+  margin: 0;
+  padding: 14px 16px;
+  overflow: auto;
+  background: var(--mdv-code-bg);
+  color: var(--mdv-code-fg);
+  font-family: var(--mdv-mono);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+html[data-mdv] .mdv-mermaid-tools {
+  display: flex;
+  gap: 4px;
+}
+
+@media (max-width: 640px) {
+  html[data-mdv] .mdv-zoom {
+    right: 14px;
+    bottom: 14px;
+  }
+}

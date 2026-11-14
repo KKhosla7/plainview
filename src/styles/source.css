@@ -1,0 +1,103 @@
+/* Syntax tokens used by the Source view (Markdown, JSON and XML). */
+
+html[data-mdv] .mdv-syn-heading-marker,
+html[data-mdv] .mdv-syn-list-marker {
+  color: var(--mdv-accent);
+  font-weight: 700;
+}
+
+html[data-mdv] .mdv-syn-heading-text {
+  color: var(--mdv-fg);
+  font-weight: 600;
+}
+
+html[data-mdv] .mdv-syn-quote-marker {
+  color: var(--mdv-fg-muted);
+}
+
+html[data-mdv] .mdv-syn-fence {
+  color: var(--mdv-fg-muted);
+  font-weight: 600;
+}
+
+html[data-mdv] .mdv-syn-code-line {
+  color: var(--mdv-syn-string);
+}
+
+html[data-mdv] .mdv-syn-code {
+  color: var(--mdv-syn-string);
+}
+
+html[data-mdv] .mdv-syn-link {
+  color: var(--mdv-accent);
+}
+
+html[data-mdv] .mdv-syn-url {
+  color: var(--mdv-fg-muted);
+}
+
+html[data-mdv] .mdv-syn-strong {
+  color: var(--mdv-fg);
+  font-weight: 600;
+}
+
+html[data-mdv] .mdv-syn-em {
+  color: var(--mdv-fg);
+  font-style: italic;
+}
+
+html[data-mdv] .mdv-syn-strike {
+  color: var(--mdv-fg-muted);
+  text-decoration: line-through;
+}
+
+html[data-mdv] .mdv-syn-task {
+  color: var(--mdv-accent);
+}
+
+html[data-mdv] .mdv-syn-hr {
+  color: var(--mdv-fg-faint);
+}
+
+html[data-mdv] .mdv-syn-table {
+  color: var(--mdv-syn-attr);
+}
+
+html[data-mdv] .mdv-syn-html,
+html[data-mdv] .mdv-syn-tag {
+  color: var(--mdv-syn-tag);
+}
+
+html[data-mdv] .mdv-syn-key,
+html[data-mdv] .mdv-syn-attr {
+  color: var(--mdv-syn-key);
+}
+
+html[data-mdv] .mdv-syn-string,
+html[data-mdv] .mdv-syn-attr-value,
+html[data-mdv] .mdv-syn-cdata {
+  color: var(--mdv-syn-string);
+}
+
+html[data-mdv] .mdv-syn-number {
+  color: var(--mdv-syn-number);
+}
+
+html[data-mdv] .mdv-syn-literal {
+  color: var(--mdv-syn-bool);
+}
+
+html[data-mdv] .mdv-syn-punct {
+  color: var(--mdv-fg-muted);
+}
+
+html[data-mdv] .mdv-syn-comment,
+html[data-mdv] .mdv-syn-decl {
+  color: var(--mdv-syn-comment);
+  font-style: italic;
+}
+
+html[data-mdv] .mdv-raw-code {
+  display: block;
+  font: inherit;
+}

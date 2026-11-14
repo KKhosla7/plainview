@@ -1,0 +1,107 @@
+{
+  "manifest_version": 3,
+  "name": "Plainview",
+  "version": "0.2.3",
+  "description": "Render Markdown, JSON and XML files opened in Chrome or Firefox. Includes Mermaid diagrams and content zoom.",
+  "permissions": [
+    "storage",
+    "clipboardWrite",
+    "downloads"
+  ],
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*",
+        "file:///*"
+      ],
+      "js": [
+        "vendor/marked.umd.js",
+        "vendor/viewer-css.js",
+        "src/settings.js",
+        "src/dom.js",
+        "src/scroll-utils.js",
+        "src/fonts.js",
+        "src/clipboard.js",
+        "src/download.js",
+        "src/error-panel.js",
+        "src/formats.js",
+        "src/document.js",
+        "src/markdown-core.js",
+        "src/markdown-enhance.js",
+        "src/title-block.js",
+        "src/source-highlight-core.js",
+        "src/source-highlight-markdown.js",
+        "src/source-highlight-json.js",
+        "src/source-highlight-xml.js",
+        "src/json-parse.js",
+        "src/data-toolbar.js",
+        "src/json-view.js",
+        "src/xml-parse.js",
+        "src/xml-render.js",
+        "src/xml-view.js",
+        "src/svg-sanitize.js",
+        "src/mermaid.js",
+        "src/topbar.js",
+        "src/scroll-spy.js",
+        "src/toc.js",
+        "src/zoom.js",
+        "src/theme.js",
+        "src/view-switcher.js",
+        "src/scroll-memory.js",
+        "src/ui.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/styles/tokens.css",
+        "src/styles/topbar.css",
+        "src/styles/layout.css",
+        "src/styles/data.css",
+        "src/styles/trees.css",
+        "src/styles/mermaid.css",
+        "src/styles/responsive.css",
+        "src/styles/source.css",
+        "src/styles/theme-html.css",
+        "src/styles/theme-html-doc.css"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "vendor/mermaid/mermaid.esm.min.mjs"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*",
+        "file:///*"
+      ]
+    }
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*",
+    "file:///*"
+  ],
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": true
+  },
+  "action": {
+    "default_title": "Plainview settings",
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "32": "assets/icon-32.png",
+      "48": "assets/icon-48.png",
+      "128": "assets/icon-128.png"
+    }
+  }
+}

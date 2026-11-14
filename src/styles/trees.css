@@ -1,0 +1,130 @@
+/* ---------------------------------------------------------------- JSON tree */
+
+html[data-mdv] .mdv-json-node {
+  margin: 0;
+}
+
+html[data-mdv] .mdv-json-summary,
+html[data-mdv] .mdv-xml-summary {
+  cursor: pointer;
+  list-style-position: outside;
+}
+
+html[data-mdv] .mdv-json-summary::marker,
+html[data-mdv] .mdv-xml-summary::marker {
+  color: var(--mdv-fg-faint);
+}
+
+html[data-mdv] .mdv-json-children {
+  margin-left: 0.55em;
+  padding-left: 1.1em;
+  border-left: 1px solid var(--mdv-border-soft);
+}
+
+html[data-mdv] .mdv-json-leaf {
+  padding-left: 1.25em;
+  white-space: pre-wrap;
+}
+
+html[data-mdv] .mdv-json-key {
+  color: var(--mdv-syn-key);
+}
+
+html[data-mdv] .mdv-json-index {
+  color: var(--mdv-fg-faint);
+}
+
+html[data-mdv] .mdv-json-string {
+  color: var(--mdv-syn-string);
+}
+
+html[data-mdv] .mdv-json-number {
+  color: var(--mdv-syn-number);
+}
+
+html[data-mdv] .mdv-json-boolean {
+  color: var(--mdv-syn-bool);
+}
+
+html[data-mdv] .mdv-json-null {
+  color: var(--mdv-fg-faint);
+  font-style: italic;
+}
+
+html[data-mdv] .mdv-json-punct,
+html[data-mdv] .mdv-json-count {
+  color: var(--mdv-fg-muted);
+}
+
+html[data-mdv] .mdv-json-count,
+html[data-mdv] .mdv-xml-count {
+  font-size: 0.9em;
+}
+
+/* ----------------------------------------------------------------- XML tree */
+
+html[data-mdv] .mdv-xml-node {
+  margin: 0;
+}
+
+html[data-mdv] .mdv-xml-children {
+  margin-left: 0.55em;
+  padding-left: 1.1em;
+  border-left: 1px solid var(--mdv-border-soft);
+}
+
+html[data-mdv] .mdv-xml-leaf {
+  padding-left: 1.25em;
+  white-space: pre-wrap;
+}
+
+html[data-mdv] .mdv-xml-close {
+  padding-left: 1.25em;
+}
+
+html[data-mdv] .mdv-xml-tag {
+  color: var(--mdv-syn-tag);
+}
+
+html[data-mdv] .mdv-xml-attr-name {
+  color: var(--mdv-syn-attr);
+}
+
+html[data-mdv] .mdv-xml-attr-value {
+  color: var(--mdv-syn-string);
+}
+
+html[data-mdv] .mdv-xml-punct {
+  color: var(--mdv-fg-muted);
+}
+
+html[data-mdv] .mdv-xml-text {
+  color: var(--mdv-fg);
+}
+
+html[data-mdv] .mdv-xml-cdata,
+html[data-mdv] .mdv-xml-cdata-block {
+  color: var(--mdv-syn-string);
+  white-space: pre-wrap;
+}
+
+html[data-mdv] .mdv-xml-comment {
+  color: var(--mdv-syn-comment);
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+html[data-mdv] .mdv-xml-pi {
+  color: var(--mdv-syn-comment);
+  white-space: pre-wrap;
+}
+
+html[data-mdv] .mdv-xml-text-block {
+  padding-left: 1.25em;
+  white-space: pre-wrap;
+}
+
+html[data-mdv] .mdv-xml-count {
+  margin-left: 6px;
+  color: var(--mdv-fg-faint);
+}

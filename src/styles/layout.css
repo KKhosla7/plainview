@@ -1,0 +1,200 @@
+/* ------------------------------------------------------------------ shell */
+
+html[data-mdv] .mdv-shell {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+html[data-mdv] .mdv-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 44px 0 96px;
+}
+
+html[data-mdv] .mdv-zoom-surface {
+  width: 100%;
+  margin: 0 auto;
+}
+
+html[data-mdv] .mdv-doc {
+  width: min(860px, 100%);
+  margin: 0 auto;
+  color: var(--mdv-fg);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+html[data-mdv] .mdv-empty {
+  color: var(--mdv-fg-muted);
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------- toc */
+
+html[data-mdv] .mdv-toc {
+  position: sticky;
+  top: calc(var(--mdv-topbar) + 24px);
+  flex: 0 0 220px;
+  width: 220px;
+  max-height: calc(100vh - var(--mdv-topbar) - 48px);
+  padding: 28px 0 40px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+html[data-mdv] .mdv-toc-title {
+  margin: 0 0 10px;
+  padding-left: 12px;
+  color: var(--mdv-fg-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-mdv] .mdv-toc-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-mdv] .mdv-toc-item {
+  margin: 0;
+}
+
+html[data-mdv] .mdv-toc-link {
+  display: block;
+  padding: 3px 10px 3px calc(12px + var(--mdv-depth, 0) * 14px);
+  border-left: 2px solid transparent;
+  color: var(--mdv-fg-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+html[data-mdv] .mdv-toc-link:hover {
+  border-left-color: var(--mdv-border);
+  color: var(--mdv-fg);
+}
+
+/* ------------------------------------------------------------ source view */
+
+html[data-mdv] .mdv-raw-pane {
+  display: none;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 32px 80px;
+}
+
+html[data-mdv] .mdv-show-source .mdv-shell {
+  display: none;
+}
+
+html[data-mdv] .mdv-show-source .mdv-raw-pane {
+  display: block;
+}
+
+html[data-mdv] .mdv-raw-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+html[data-mdv] .mdv-raw-label {
+  color: var(--mdv-fg-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-mdv] .mdv-raw-source {
+  margin: 0;
+  padding: 20px 22px;
+  border: 1px solid var(--mdv-border);
+  border-radius: 8px;
+  background: var(--mdv-code-bg);
+  color: var(--mdv-code-fg);
+  font-family: var(--mdv-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* ------------------------------------------------------------------- zoom */
+
+html[data-mdv] .mdv-zoom {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--mdv-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mdv-bg) 90%, transparent);
+  box-shadow: 0 4px 18px rgb(0 0 0 / 14%);
+  backdrop-filter: blur(10px);
+}
+
+html[data-mdv] .mdv-zoom[hidden] {
+  display: none;
+}
+
+html[data-mdv] .mdv-zoom-button,
+html[data-mdv] .mdv-zoom-value {
+  appearance: none;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mdv-fg-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+html[data-mdv] .mdv-zoom-button {
+  width: 30px;
+  font-size: 17px;
+  line-height: 1;
+}
+
+html[data-mdv] .mdv-zoom-value {
+  min-width: 48px;
+  padding: 0 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-mdv] .mdv-zoom-button:hover,
+html[data-mdv] .mdv-zoom-value:hover {
+  background: var(--mdv-bg-soft);
+  color: var(--mdv-fg);
+}
+
+html[data-mdv] .mdv-zoom-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+html[data-mdv] .mdv-zoom-button:focus-visible,
+html[data-mdv] .mdv-zoom-value:focus-visible {
+  outline: 2px solid var(--mdv-accent);
+  outline-offset: 1px;
+}
+
+/* ------------------------------------------------------------------ scrim */
+
+html[data-mdv] .mdv-scrim {
+  display: none;
+}

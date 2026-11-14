@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plainview settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <img src="../assets/icon-48.png" alt="" width="48" height="48">
+      <div>
+        <p class="eyebrow">Plainview</p>
+        <h1>Settings</h1>
+      </div>
+      <span class="version">v<span id="version"></span></span>
+    </header>
+
+    <section class="card">
+      <h2>Downloads</h2>
+      <label class="toggle-row">
+        <input id="autoOpen" type="checkbox">
+        <span>
+          <strong>Open supported downloads in Plainview</strong>
+          <small>When a Markdown, JSON or XML download finishes, open it in a new tab.</small>
+        </span>
+      </label>
+      <p class="note">
+        This only applies to new downloads. It does not change the operating
+        system's default app, so clicking an already-downloaded file later still
+        opens whatever the OS has configured.
+      </p>
+      <p id="status" class="status" role="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Make your browser the default for file clicks</h2>
+      <p>
+        A browser extension cannot change OS file associations. Set the default
+        app for these file types in your OS:
+      </p>
+      <div class="types">
+        <code>.md</code><code>.markdown</code><code>.json</code><code>.jsonc</code><code>.xml</code><code>.rss</code><code>.atom</code>
+      </div>
+      <details>
+        <summary>Linux</summary>
+        <p>Find the MIME type, then point it at your browser's desktop file.</p>
+<pre><code>xdg-mime query filetype README.md
+ls /usr/share/applications | grep -E 'chrome|chromium|firefox'
+xdg-mime default google-chrome.desktop text/markdown
+xdg-mime default google-chrome.desktop application/json
+xdg-mime default google-chrome.desktop application/xml</code></pre>
+        <p>Use <code>chromium-browser.desktop</code>, <code>chromium.desktop</code> or
+          <code>firefox.desktop</code> as appropriate. Do not point
+          <code>text/plain</code> at the browser unless you want every text file
+          to open there.</p>
+      </details>
+      <details>
+        <summary>Windows</summary>
+        <p>Settings → Apps → Default apps → Choose defaults by file type, then set
+          <code>.md</code>, <code>.json</code> and <code>.xml</code> to Chrome or
+          Firefox. If the browser is not listed, use “Open with” → “Choose another
+          app” → “Look for another app” and select the browser executable.</p>
+      </details>
+      <details>
+        <summary>macOS</summary>
+        <p>Select a file in Finder → Get Info → Open with → choose Chrome or
+          Firefox → Change All.</p>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>File access</h2>
+      <p><strong>Chrome:</strong> open <code>chrome://extensions</code> → Plainview →
+        Details → enable <strong>Allow access to file URLs</strong>.</p>
+      <p><strong>Firefox:</strong> install the signed add-on permanently, then open
+        <code>about:addons</code> → Plainview → Permissions → enable
+        <strong>Access your data for file:// URLs</strong>. Temporary add-ons loaded
+        through <code>about:debugging</code> do not receive file access.</p>
+    </section>
+
+    <footer class="foot">Plainview · Markdown, JSON and XML reader</footer>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>
