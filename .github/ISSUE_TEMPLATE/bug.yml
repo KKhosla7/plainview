@@ -1,0 +1,55 @@
+name: Bug report
+description: Something renders incorrectly or does not work.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please include the exact browser version, extension version and console text.
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome / Chromium
+        - Firefox
+        - Other Chromium browser
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Plainview version
+      placeholder: "0.2.3"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open...
+        2. Click...
+        3. See...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console / error text
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I reloaded the extension and refreshed the tab.
+          required: true
+        - label: I checked file-URL access for local files.
+          required: true

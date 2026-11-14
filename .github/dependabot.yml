@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    ignore:
+      # The vendor build patches Mermaid internals for Firefox CSP.
+      # Update Mermaid manually and re-run the Firefox smoke test.
+      - dependency-name: mermaid
+      - dependency-name: "@playwright/test"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

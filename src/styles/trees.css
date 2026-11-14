@@ -1,0 +1,130 @@
+/* ---------------------------------------------------------------- JSON tree */
+
+html[data-pv] .pv-json-node {
+  margin: 0;
+}
+
+html[data-pv] .pv-json-summary,
+html[data-pv] .pv-xml-summary {
+  cursor: pointer;
+  list-style-position: outside;
+}
+
+html[data-pv] .pv-json-summary::marker,
+html[data-pv] .pv-xml-summary::marker {
+  color: var(--pv-fg-faint);
+}
+
+html[data-pv] .pv-json-children {
+  margin-left: 0.55em;
+  padding-left: 1.1em;
+  border-left: 1px solid var(--pv-border-soft);
+}
+
+html[data-pv] .pv-json-leaf {
+  padding-left: 1.25em;
+  white-space: pre-wrap;
+}
+
+html[data-pv] .pv-json-key {
+  color: var(--pv-syn-key);
+}
+
+html[data-pv] .pv-json-index {
+  color: var(--pv-fg-faint);
+}
+
+html[data-pv] .pv-json-string {
+  color: var(--pv-syn-string);
+}
+
+html[data-pv] .pv-json-number {
+  color: var(--pv-syn-number);
+}
+
+html[data-pv] .pv-json-boolean {
+  color: var(--pv-syn-bool);
+}
+
+html[data-pv] .pv-json-null {
+  color: var(--pv-fg-faint);
+  font-style: italic;
+}
+
+html[data-pv] .pv-json-punct,
+html[data-pv] .pv-json-count {
+  color: var(--pv-fg-muted);
+}
+
+html[data-pv] .pv-json-count,
+html[data-pv] .pv-xml-count {
+  font-size: 0.9em;
+}
+
+/* ----------------------------------------------------------------- XML tree */
+
+html[data-pv] .pv-xml-node {
+  margin: 0;
+}
+
+html[data-pv] .pv-xml-children {
+  margin-left: 0.55em;
+  padding-left: 1.1em;
+  border-left: 1px solid var(--pv-border-soft);
+}
+
+html[data-pv] .pv-xml-leaf {
+  padding-left: 1.25em;
+  white-space: pre-wrap;
+}
+
+html[data-pv] .pv-xml-close {
+  padding-left: 1.25em;
+}
+
+html[data-pv] .pv-xml-tag {
+  color: var(--pv-syn-tag);
+}
+
+html[data-pv] .pv-xml-attr-name {
+  color: var(--pv-syn-attr);
+}
+
+html[data-pv] .pv-xml-attr-value {
+  color: var(--pv-syn-string);
+}
+
+html[data-pv] .pv-xml-punct {
+  color: var(--pv-fg-muted);
+}
+
+html[data-pv] .pv-xml-text {
+  color: var(--pv-fg);
+}
+
+html[data-pv] .pv-xml-cdata,
+html[data-pv] .pv-xml-cdata-block {
+  color: var(--pv-syn-string);
+  white-space: pre-wrap;
+}
+
+html[data-pv] .pv-xml-comment {
+  color: var(--pv-syn-comment);
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+html[data-pv] .pv-xml-pi {
+  color: var(--pv-syn-comment);
+  white-space: pre-wrap;
+}
+
+html[data-pv] .pv-xml-text-block {
+  padding-left: 1.25em;
+  white-space: pre-wrap;
+}
+
+html[data-pv] .pv-xml-count {
+  margin-left: 6px;
+  color: var(--pv-fg-faint);
+}

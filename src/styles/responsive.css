@@ -1,0 +1,154 @@
+/* ---------------------------------------------------------------- narrow */
+
+@media (max-width: 1079px) {
+  html[data-pv] .pv-action-toc {
+    display: inline-block;
+  }
+
+  html[data-pv] .pv-shell {
+    display: block;
+    padding: 0 24px;
+  }
+
+  html[data-pv] .pv-main {
+    padding-top: 32px;
+  }
+
+  html[data-pv] .pv-toc {
+    position: fixed;
+    top: var(--pv-topbar);
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+    width: min(320px, 86vw);
+    max-height: none;
+    padding: 24px 16px 40px;
+    border-right: 1px solid var(--pv-border);
+    background: var(--pv-bg);
+    box-shadow: 12px 0 32px rgb(0 0 0 / 18%);
+    transform: translateX(-105%);
+    transition: transform 160ms ease;
+  }
+
+  html[data-pv] .pv-app.pv-toc-open .pv-toc {
+    transform: translateX(0);
+  }
+
+  html[data-pv] .pv-app.pv-toc-open .pv-scrim {
+    display: block;
+    position: fixed;
+    inset: var(--pv-topbar) 0 0 0;
+    z-index: 35;
+    background: rgb(0 0 0 / 35%);
+  }
+}
+
+@media (max-width: 640px) {
+  html[data-pv] .pv-topbar {
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  html[data-pv] .pv-badge,
+  html[data-pv] .pv-view-label,
+  html[data-pv] .pv-theme-label {
+    display: none;
+  }
+
+  html[data-pv] .pv-action {
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+
+  html[data-pv] .pv-shell {
+    padding: 0 16px;
+  }
+
+  html[data-pv] .pv-main {
+    padding-top: 26px;
+  }
+
+  html[data-pv] .pv-doc {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  html[data-pv] .pv-doc h1 {
+    font-size: 1.7em;
+  }
+
+  html[data-pv] .pv-doc h2 {
+    font-size: 1.35em;
+  }
+
+  html[data-pv] .pv-raw-pane {
+    padding: 20px 16px 60px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-pv] {
+    scroll-behavior: auto;
+  }
+
+  html[data-pv] *,
+  html[data-pv] *::before,
+  html[data-pv] *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------ print */
+
+@media print {
+  html[data-pv] {
+    background: #fff;
+    color: #000;
+  }
+
+  html[data-pv] .pv-topbar,
+  html[data-pv] .pv-toc,
+  html[data-pv] .pv-scrim,
+  html[data-pv] .pv-raw-pane,
+  html[data-pv] .pv-zoom,
+  html[data-pv] .pv-copy,
+  html[data-pv] .pv-code-bar {
+    display: none !important;
+  }
+
+  html[data-pv] .pv-shell,
+  html[data-pv] .pv-show-source .pv-shell {
+    display: block;
+    width: auto;
+    padding: 0;
+  }
+
+  html[data-pv] .pv-zoom-surface {
+    zoom: 1 !important;
+    width: 100% !important;
+  }
+
+  html[data-pv] .pv-main {
+    padding: 0;
+  }
+
+  html[data-pv] .pv-doc {
+    width: auto;
+    max-width: none;
+    font-size: 11pt;
+  }
+
+  html[data-pv] .pv-code {
+    break-inside: avoid;
+  }
+
+  html[data-pv] .pv-code pre {
+    overflow: visible;
+    white-space: pre-wrap;
+  }
+
+  html[data-pv] .pv-doc a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}

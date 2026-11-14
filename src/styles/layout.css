@@ -1,0 +1,200 @@
+/* ------------------------------------------------------------------ shell */
+
+html[data-pv] .pv-shell {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+html[data-pv] .pv-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 44px 0 96px;
+}
+
+html[data-pv] .pv-zoom-surface {
+  width: 100%;
+  margin: 0 auto;
+}
+
+html[data-pv] .pv-doc {
+  width: min(860px, 100%);
+  margin: 0 auto;
+  color: var(--pv-fg);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+html[data-pv] .pv-empty {
+  color: var(--pv-fg-muted);
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------- toc */
+
+html[data-pv] .pv-toc {
+  position: sticky;
+  top: calc(var(--pv-topbar) + 24px);
+  flex: 0 0 220px;
+  width: 220px;
+  max-height: calc(100vh - var(--pv-topbar) - 48px);
+  padding: 28px 0 40px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+html[data-pv] .pv-toc-title {
+  margin: 0 0 10px;
+  padding-left: 12px;
+  color: var(--pv-fg-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-pv] .pv-toc-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-pv] .pv-toc-item {
+  margin: 0;
+}
+
+html[data-pv] .pv-toc-link {
+  display: block;
+  padding: 3px 10px 3px calc(12px + var(--pv-depth, 0) * 14px);
+  border-left: 2px solid transparent;
+  color: var(--pv-fg-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+html[data-pv] .pv-toc-link:hover {
+  border-left-color: var(--pv-border);
+  color: var(--pv-fg);
+}
+
+/* ------------------------------------------------------------ source view */
+
+html[data-pv] .pv-raw-pane {
+  display: none;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 32px 80px;
+}
+
+html[data-pv] .pv-show-source .pv-shell {
+  display: none;
+}
+
+html[data-pv] .pv-show-source .pv-raw-pane {
+  display: block;
+}
+
+html[data-pv] .pv-raw-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+html[data-pv] .pv-raw-label {
+  color: var(--pv-fg-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-pv] .pv-raw-source {
+  margin: 0;
+  padding: 20px 22px;
+  border: 1px solid var(--pv-border);
+  border-radius: 8px;
+  background: var(--pv-code-bg);
+  color: var(--pv-code-fg);
+  font-family: var(--pv-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* ------------------------------------------------------------------- zoom */
+
+html[data-pv] .pv-zoom {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--pv-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pv-bg) 90%, transparent);
+  box-shadow: 0 4px 18px rgb(0 0 0 / 14%);
+  backdrop-filter: blur(10px);
+}
+
+html[data-pv] .pv-zoom[hidden] {
+  display: none;
+}
+
+html[data-pv] .pv-zoom-button,
+html[data-pv] .pv-zoom-value {
+  appearance: none;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pv-fg-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+html[data-pv] .pv-zoom-button {
+  width: 30px;
+  font-size: 17px;
+  line-height: 1;
+}
+
+html[data-pv] .pv-zoom-value {
+  min-width: 48px;
+  padding: 0 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-pv] .pv-zoom-button:hover,
+html[data-pv] .pv-zoom-value:hover {
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg);
+}
+
+html[data-pv] .pv-zoom-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+html[data-pv] .pv-zoom-button:focus-visible,
+html[data-pv] .pv-zoom-value:focus-visible {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 1px;
+}
+
+/* ------------------------------------------------------------------ scrim */
+
+html[data-pv] .pv-scrim {
+  display: none;
+}

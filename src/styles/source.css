@@ -1,0 +1,103 @@
+/* Syntax tokens used by the Source view (Markdown, JSON and XML). */
+
+html[data-pv] .pv-syn-heading-marker,
+html[data-pv] .pv-syn-list-marker {
+  color: var(--pv-accent);
+  font-weight: 700;
+}
+
+html[data-pv] .pv-syn-heading-text {
+  color: var(--pv-fg);
+  font-weight: 600;
+}
+
+html[data-pv] .pv-syn-quote-marker {
+  color: var(--pv-fg-muted);
+}
+
+html[data-pv] .pv-syn-fence {
+  color: var(--pv-fg-muted);
+  font-weight: 600;
+}
+
+html[data-pv] .pv-syn-code-line {
+  color: var(--pv-syn-string);
+}
+
+html[data-pv] .pv-syn-code {
+  color: var(--pv-syn-string);
+}
+
+html[data-pv] .pv-syn-link {
+  color: var(--pv-accent);
+}
+
+html[data-pv] .pv-syn-url {
+  color: var(--pv-fg-muted);
+}
+
+html[data-pv] .pv-syn-strong {
+  color: var(--pv-fg);
+  font-weight: 600;
+}
+
+html[data-pv] .pv-syn-em {
+  color: var(--pv-fg);
+  font-style: italic;
+}
+
+html[data-pv] .pv-syn-strike {
+  color: var(--pv-fg-muted);
+  text-decoration: line-through;
+}
+
+html[data-pv] .pv-syn-task {
+  color: var(--pv-accent);
+}
+
+html[data-pv] .pv-syn-hr {
+  color: var(--pv-fg-faint);
+}
+
+html[data-pv] .pv-syn-table {
+  color: var(--pv-syn-attr);
+}
+
+html[data-pv] .pv-syn-html,
+html[data-pv] .pv-syn-tag {
+  color: var(--pv-syn-tag);
+}
+
+html[data-pv] .pv-syn-key,
+html[data-pv] .pv-syn-attr {
+  color: var(--pv-syn-key);
+}
+
+html[data-pv] .pv-syn-string,
+html[data-pv] .pv-syn-attr-value,
+html[data-pv] .pv-syn-cdata {
+  color: var(--pv-syn-string);
+}
+
+html[data-pv] .pv-syn-number {
+  color: var(--pv-syn-number);
+}
+
+html[data-pv] .pv-syn-literal {
+  color: var(--pv-syn-bool);
+}
+
+html[data-pv] .pv-syn-punct {
+  color: var(--pv-fg-muted);
+}
+
+html[data-pv] .pv-syn-comment,
+html[data-pv] .pv-syn-decl {
+  color: var(--pv-syn-comment);
+  font-style: italic;
+}
+
+html[data-pv] .pv-raw-code {
+  display: block;
+  font: inherit;
+}

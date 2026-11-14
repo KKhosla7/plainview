@@ -1,0 +1,15 @@
+{
+  "name": "plainview",
+  "private": true,
+  "version": 1,
+  "keywords": ["markdown", "json", "xml", "mermaid"],
+  "nested": {
+    "enabled": true,
+    "ratio": 0.5,
+    "nothing": null
+  },
+  "items": [
+    { "id": 1, "label": "one" },
+    { "id": 2, "label": "two" }
+  ]
+}

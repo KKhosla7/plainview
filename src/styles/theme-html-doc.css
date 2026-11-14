@@ -1,0 +1,372 @@
+/*
+ * The rendered Markdown itself: one fluid paper page using the technical-document
+ * visual language. Zoom changes type size; the paper keeps filling the
+ * available column, so no page-level horizontal scrollbar appears.
+ */
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown {
+  width: 100%;
+  max-width: none;
+  padding: 2.25em 2.5em;
+  border: 1px solid var(--pv-border);
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg);
+  font-family: var(--pv-sans);
+  font-size: calc(16px * var(--pv-zoom, 1));
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown > :first-child {
+  margin-top: 0;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown :is(h1, h2, h3, h4, h5, h6) {
+  scroll-margin-top: calc(var(--pv-topbar) + 16px);
+}
+
+/* ----------------------------------------------------------- title block */
+
+html[data-pv][data-pv-format="markdown"] .pv-titleblock {
+  margin: 0 0 1.4em;
+  border: 2px solid var(--pv-fg);
+  background: var(--pv-bg-soft);
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-tb-main {
+  display: grid;
+  gap: 0.875em;
+  padding: 1.75em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-tb-title {
+  margin: 0;
+  padding: 0;
+  border-bottom: 0;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-tb-lede {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 1.12em;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------- typography */
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown h1,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h2,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h3 {
+  max-width: none;
+  margin: 1.4em 0 0.55em;
+  color: var(--pv-fg);
+  font-family: var(--pv-display);
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown h1 {
+  margin-top: 0;
+  padding-bottom: 0.25em;
+  border-bottom: 2px solid var(--pv-fg);
+  font-size: clamp(
+    2.4em,
+    calc(6vw * var(--pv-zoom, 1)),
+    3.8em
+  );
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown h2 {
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid var(--pv-border);
+  font-size: 1.9em;
+  font-weight: 600;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown h3 {
+  font-size: 1.35em;
+  font-weight: 600;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown h4,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h5,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h6 {
+  margin: 1.2em 0 0.5em;
+  color: var(--pv-fg);
+  font-family: var(--pv-sans);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown h4 {
+  font-size: 1.05em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown h5,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h6 {
+  color: var(--pv-fg-muted);
+  font-size: 0.95em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown p,
+html[data-pv][data-pv-format="markdown"] .pv-markdown li {
+  max-width: 72ch;
+  margin: 0 0 1em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown ul,
+html[data-pv][data-pv-format="markdown"] .pv-markdown ol {
+  display: grid;
+  gap: 0.375em;
+  margin: 0 0 1em;
+  padding-left: 1.3em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown li > ul,
+html[data-pv][data-pv-format="markdown"] .pv-markdown li > ol {
+  margin-top: 0.375em;
+  margin-bottom: 0;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown li > p {
+  margin-bottom: 0.5em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown li > input[type="checkbox"] {
+  margin: 0 0.45em 0 -1.35em;
+  vertical-align: middle;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown a {
+  color: var(--pv-accent);
+  text-decoration: none;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown strong {
+  font-weight: 600;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown hr {
+  height: 1px;
+  margin: 2em 0;
+  border: 0;
+  background: var(--pv-border);
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown img {
+  max-width: 100%;
+  height: auto;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-anchor {
+  margin-left: 0.35em;
+  color: var(--pv-fg-faint);
+  font-family: var(--pv-mono);
+  font-size: 0.7em;
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0;
+}
+
+html[data-pv][data-pv-format="markdown"] :is(h1, h2, h3, h4, h5, h6):hover .pv-anchor,
+html[data-pv][data-pv-format="markdown"] .pv-anchor:focus-visible {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------- quotes */
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown blockquote {
+  display: grid;
+  gap: 0.375em;
+  margin: 1.2em 0;
+  padding: 0.625em 0.875em;
+  border-left: 3px solid var(--pv-accent);
+  background: var(--pv-accent-soft);
+  color: var(--pv-fg);
+  max-width: 72ch;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------- tables */
+
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap {
+  margin: 1.2em 0;
+  border: 1px solid var(--pv-border);
+  overflow-x: auto;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap table {
+  width: 100%;
+  min-width: 40em;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap th,
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap td {
+  padding: 0.5em 0.625em;
+  border: 0;
+  border-bottom: 1px solid var(--pv-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap th {
+  background: var(--pv-accent-soft);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
+  font-size: 0.8em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap td:first-child {
+  font-weight: 600;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap tr:last-child td {
+  border-bottom: 0;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap tr:nth-child(2n) td {
+  background: transparent;
+}
+
+/* ------------------------------------------------------------------ code */
+
+html[data-pv][data-pv-format="markdown"] .pv-markdown :not(pre) > code {
+  padding: 0 0.25em;
+  border-radius: 3px;
+  background: var(--pv-accent-soft);
+  color: var(--pv-fg);
+  font-family: var(--pv-mono);
+  font-size: 0.88em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-code {
+  margin: 1.2em 0;
+  border: 1px solid var(--pv-border);
+  border-radius: 3px;
+  background: var(--pv-code-bg);
+  overflow: hidden;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-code-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75em;
+  padding: 0.3em 0.5em 0.3em 0.75em;
+  border-bottom: 1px solid var(--pv-border);
+  background: var(--pv-bg-inset);
+  color: var(--pv-fg-muted);
+  font-size: 0.72em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-code-lang {
+  font-family: var(--pv-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-copy {
+  border-radius: 3px;
+  border-color: var(--pv-border);
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
+  font-size: 0.7em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-copy:hover {
+  color: var(--pv-fg);
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-code pre {
+  margin: 0;
+  padding: 0.875em 1em;
+  overflow: auto;
+  background: var(--pv-code-bg);
+  color: var(--pv-code-fg);
+  font-family: var(--pv-mono);
+  font-size: 0.82em;
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-code pre code {
+  padding: 0;
+  background: transparent;
+  font-size: inherit;
+  white-space: pre;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-raw-html {
+  margin: 0;
+  padding: 0.625em 0.75em;
+  border: 1px dashed var(--pv-border);
+  border-radius: 3px;
+  background: var(--pv-bg);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
+  font-size: 0.82em;
+  white-space: pre-wrap;
+}
+
+/* --------------------------------------------------------------- mermaid */
+
+html[data-pv][data-pv-format="markdown"] .pv-mermaid {
+  margin: 1.2em 0;
+  border: 1px solid var(--pv-border);
+  border-radius: 3px;
+  background: var(--pv-bg);
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-mermaid-diagram {
+  padding: 0.75em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-mermaid-source pre {
+  background: var(--pv-code-bg);
+  color: var(--pv-code-fg);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 860px) {
+  html[data-pv][data-pv-format="markdown"] .pv-markdown {
+    padding: 1.25em 1em;
+  }
+
+  html[data-pv][data-pv-format="markdown"] .pv-tb-main {
+    padding: 1.25em;
+  }
+}
+
+/* ------------------------------------------------------------------ print */
+
+@media print {
+  html[data-pv][data-pv-format="markdown"] .pv-markdown {
+    width: auto;
+    padding: 0;
+    border: 0;
+    background: #fff;
+    font-size: 11pt;
+  }
+}

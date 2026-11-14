@@ -1,0 +1,21 @@
+name: Feature request
+description: A format, setting or interaction you would like Plainview to support.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should happen?
+    validations:
+      required: true
+  - type: input
+    id: format
+    attributes:
+      label: Format or extension, if relevant
+      placeholder: ".yaml, .toml, ..."

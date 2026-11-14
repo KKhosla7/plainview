@@ -1,0 +1,263 @@
+/*
+ * HTML theme: light and dark values from a technical-document visual language.
+ * The palette, grid, paper, rules and mono labels only; no document components
+ * are generated.
+ */
+
+html[data-pv][data-pv-format="markdown"] {
+  --pv-bg: #edf1f5;
+  --pv-bg-soft: #f9fbfd;
+  --pv-bg-inset: #e1e9f6;
+  --pv-fg: #13233b;
+  --pv-fg-muted: #56667d;
+  --pv-fg-faint: #7b8798;
+  --pv-border: #c5d0dd;
+  --pv-border-soft: #d8e0e9;
+  --pv-grid: rgba(31, 79, 160, 0.07);
+  --pv-accent: #1f4fa0;
+  --pv-accent-soft: #e1e9f6;
+  --pv-danger: #b03a2e;
+  --pv-code-bg: #e1e9f6;
+  --pv-code-fg: #13233b;
+  --pv-syn-key: #1f4fa0;
+  --pv-syn-string: #b03a2e;
+  --pv-syn-number: #56667d;
+  --pv-syn-bool: #b03a2e;
+  --pv-syn-tag: #1f4fa0;
+  --pv-syn-attr: #56667d;
+  --pv-syn-comment: #7b8798;
+  --pv-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pv-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --pv-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  color-scheme: light;
+}
+
+html[data-pv][data-pv-format="markdown"][data-pv-theme="dark"] {
+  --pv-bg: #0c2040;
+  --pv-bg-soft: #10284a;
+  --pv-bg-inset: #17345f;
+  --pv-fg: #e3ebf6;
+  --pv-fg-muted: #9eb1cb;
+  --pv-fg-faint: #8399b8;
+  --pv-border: #2a4972;
+  --pv-border-soft: #224066;
+  --pv-grid: rgba(141, 184, 255, 0.07);
+  --pv-accent: #8db8ff;
+  --pv-accent-soft: #17345f;
+  --pv-danger: #ff8e7e;
+  --pv-code-bg: #17345f;
+  --pv-code-fg: #e3ebf6;
+  --pv-syn-key: #8db8ff;
+  --pv-syn-string: #ff8e7e;
+  --pv-syn-number: #9eb1cb;
+  --pv-syn-bool: #ff8e7e;
+  --pv-syn-tag: #8db8ff;
+  --pv-syn-attr: #9eb1cb;
+  --pv-syn-comment: #8399b8;
+  color-scheme: dark;
+}
+
+
+html[data-pv][data-pv-format="markdown"] body {
+  background-color: var(--pv-bg);
+  background-image:
+    linear-gradient(var(--pv-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--pv-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-app {
+  background: transparent;
+}
+
+/* --------------------------------------------------------------- top bar */
+
+html[data-pv][data-pv-format="markdown"] .pv-topbar {
+  left: 0;
+  border-bottom: 1px solid var(--pv-fg);
+  background: var(--pv-bg-soft);
+  backdrop-filter: none;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-logo {
+  border-radius: 3px;
+  background: var(--pv-accent);
+  font-family: var(--pv-mono);
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-badge,
+html[data-pv][data-pv-format="markdown"] .pv-views,
+html[data-pv][data-pv-format="markdown"] .pv-view-tab,
+html[data-pv][data-pv-format="markdown"] .pv-action {
+  border-radius: 3px;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-themes {
+  border-radius: 3px;
+  border-color: var(--pv-border);
+  background: var(--pv-bg-inset);
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-theme-tab {
+  border-radius: 3px;
+  font-family: var(--pv-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-action,
+html[data-pv][data-pv-format="markdown"] .pv-view-tab {
+  font-family: var(--pv-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-views {
+  border-color: var(--pv-border);
+  background: var(--pv-bg-inset);
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-view-tab[aria-selected="true"] {
+  box-shadow: none;
+}
+
+/* ----------------------------------------------------------------- shell */
+
+html[data-pv][data-pv-format="markdown"] .pv-shell {
+  width: min(2200px, 100%);
+  gap: 28px;
+  padding: 0 32px;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-main {
+  padding: 32px 0 64px;
+}
+
+
+/* --------------------------------------------------------------- contents */
+
+html[data-pv][data-pv-format="markdown"] .pv-toc {
+  top: calc(var(--pv-topbar) + 32px);
+  left: 0;
+  flex: 0 0 280px;
+  width: 280px;
+  max-height: calc(100vh - var(--pv-topbar) - 48px);
+  padding: 14px 16px;
+  border: 1px solid var(--pv-border);
+  background: var(--pv-bg-soft);
+  font-size: 0.86rem;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-toc-title {
+  margin: 0 0 8px;
+  padding: 0;
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-toc-list {
+  display: grid;
+  gap: 2px;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-toc-link {
+  display: block;
+  margin: 0 -6px;
+  padding: 3px 6px 3px calc(6px + var(--pv-depth, 0) * 12px);
+  color: var(--pv-fg);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-toc-link:hover {
+  color: var(--pv-accent);
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-toc-link.is-active {
+  background: var(--pv-accent-soft);
+  color: var(--pv-accent);
+}
+
+/* ------------------------------------------------------------------- zoom */
+
+html[data-pv][data-pv-format="markdown"] .pv-zoom {
+  border-radius: 3px;
+  border-color: var(--pv-fg);
+  background: var(--pv-bg-soft);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-zoom-button,
+html[data-pv][data-pv-format="markdown"] .pv-zoom-value {
+  border-radius: 3px;
+  font-family: var(--pv-mono);
+}
+
+/* ----------------------------------------------------------- source view */
+
+html[data-pv][data-pv-format="markdown"] .pv-raw-pane {
+  padding-top: 32px;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-raw-label {
+  font-family: var(--pv-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+html[data-pv][data-pv-format="markdown"] .pv-raw-source {
+  border: 1px solid var(--pv-fg);
+  border-radius: 3px;
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg);
+  font-size: 0.82rem;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1079px) {
+  html[data-pv][data-pv-format="markdown"] .pv-toc {
+    top: var(--pv-topbar);
+    bottom: 0;
+    max-height: none;
+  }
+}
+
+@media (max-width: 860px) {
+  html[data-pv][data-pv-format="markdown"] .pv-shell {
+    display: block;
+    padding: 0 16px;
+  }
+
+  html[data-pv][data-pv-format="markdown"] .pv-toc {
+    position: static;
+    width: auto;
+    max-height: none;
+    margin-bottom: 20px;
+    transform: none;
+    box-shadow: none;
+  }
+
+  html[data-pv][data-pv-format="markdown"] .pv-app.pv-toc-open .pv-scrim {
+    display: none !important;
+  }
+
+  html[data-pv][data-pv-format="markdown"] .pv-action-toc {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ print */
+
+@media print {
+  html[data-pv][data-pv-format="markdown"] body {
+    background: #fff;
+    background-image: none;
+  }
+}

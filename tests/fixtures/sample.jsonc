@@ -1,0 +1,8 @@
+{
+  // JSONC keeps comments and trailing commas readable.
+  "name": "plainview",
+  "features": ["markdown", "json", "xml",],
+  /* block comment
+     across lines */
+  "enabled": true,
+}

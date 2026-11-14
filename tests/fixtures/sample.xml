@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog owner="plainview">
+  <book id="1" lang="en">
+    <title>Markdown</title>
+    <description><![CDATA[Uses <angle> brackets]]></description>
+  </book>
+  <book id="2" lang="en">
+    <title>XML</title>
+    <description>Nested <em>elements</em> work.</description>
+  </book>
+  <!-- a comment -->
+</catalog>
