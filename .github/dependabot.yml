@@ -7,7 +7,7 @@ updates:
     open-pull-requests-limit: 5
     ignore:
       - dependency-name: mermaid
-        update-types: ["version-update:semver-major"]
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
       - dependency-name: "@playwright/test"
         update-types: ["version-update:semver-minor", "version-update:semver-major"]
   - package-ecosystem: github-actions
