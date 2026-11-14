@@ -15,7 +15,7 @@
       if (id) links.set(id, link);
     }
 
-    let frame = 0;
+    let timer = 0;
 
     function activate(id) {
       for (const [key, link] of links) {
@@ -27,7 +27,7 @@
     }
 
     function update() {
-      frame = 0;
+      timer = 0;
       if (!nav.isConnected || (nav.offsetParent === null && nav.getClientRects().length === 0)) {
         return;
       }
@@ -49,8 +49,8 @@
     }
 
     function schedule() {
-      if (frame) return;
-      frame = requestAnimationFrame(update);
+      if (timer) return;
+      timer = window.setTimeout(update, 50);
     }
 
     window.addEventListener('scroll', schedule, { passive: true });

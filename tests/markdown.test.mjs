@@ -76,11 +76,20 @@ test('highlights the current section in Contents', async () => {
     'Plainview sample',
   );
 
-  await page.evaluate(() => document.getElementById('table').scrollIntoView());
+  await page.evaluate(() => {
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    const target = document.getElementById('table');
+    window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY - 80);
+    root.style.scrollBehavior = previous;
+  });
   await page.waitForFunction(
     () =>
       document.querySelector('.mdv-toc-link.is-active')?.textContent.trim() ===
       'Table',
+    null,
+    { polling: 100 },
   );
 
   assertNoErrors(errors);
