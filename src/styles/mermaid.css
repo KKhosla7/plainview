@@ -1,14 +1,14 @@
 /* -------------------------------------------------------------- mermaid */
 
-html[data-mdv] .mdv-mermaid {
+html[data-pv] .pv-mermaid {
   margin: 1.2em 0;
-  border: 1px solid var(--mdv-border);
+  border: 1px solid var(--pv-border);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--mdv-bg-soft);
+  background: var(--pv-bg-soft);
 }
 
-html[data-mdv] .mdv-mermaid-diagram {
+html[data-pv] .pv-mermaid-diagram {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,55 +17,55 @@ html[data-mdv] .mdv-mermaid-diagram {
   overflow: auto;
 }
 
-html[data-mdv] .mdv-mermaid-diagram svg {
+html[data-pv] .pv-mermaid-diagram svg {
   max-width: 100%;
   height: auto;
 }
 
-html[data-mdv] .mdv-mermaid-loading {
-  color: var(--mdv-fg-muted);
-  font-family: var(--mdv-sans);
+html[data-pv] .pv-mermaid-loading {
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-sans);
   font-size: 13px;
 }
 
-html[data-mdv] .mdv-mermaid-failed .mdv-mermaid-diagram {
+html[data-pv] .pv-mermaid-failed .pv-mermaid-diagram {
   display: block;
   padding: 12px;
 }
 
-html[data-mdv] .mdv-mermaid-error {
-  color: var(--mdv-danger);
-  font-family: var(--mdv-sans);
+html[data-pv] .pv-mermaid-error {
+  color: var(--pv-danger);
+  font-family: var(--pv-sans);
   font-size: 13px;
   white-space: pre-wrap;
 }
 
-html[data-mdv] .mdv-mermaid-source {
-  border-top: 1px solid var(--mdv-border);
+html[data-pv] .pv-mermaid-source {
+  border-top: 1px solid var(--pv-border);
 }
 
-html[data-mdv] .mdv-mermaid-source[hidden] {
+html[data-pv] .pv-mermaid-source[hidden] {
   display: none;
 }
 
-html[data-mdv] .mdv-mermaid-source pre {
+html[data-pv] .pv-mermaid-source pre {
   margin: 0;
   padding: 14px 16px;
   overflow: auto;
-  background: var(--mdv-code-bg);
-  color: var(--mdv-code-fg);
-  font-family: var(--mdv-mono);
+  background: var(--pv-code-bg);
+  color: var(--pv-code-fg);
+  font-family: var(--pv-mono);
   font-size: 12px;
   line-height: 1.55;
 }
 
-html[data-mdv] .mdv-mermaid-tools {
+html[data-pv] .pv-mermaid-tools {
   display: flex;
   gap: 4px;
 }
 
 @media (max-width: 640px) {
-  html[data-mdv] .mdv-zoom {
+  html[data-pv] .pv-zoom {
     right: 14px;
     bottom: 14px;
   }

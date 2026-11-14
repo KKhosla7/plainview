@@ -28,7 +28,7 @@ test('settings page loads and remembers the auto-open option', async () => {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
 
-  await page.goto(`chrome-extension://${extensionId}/src/options.html`);
+  await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
   await page.waitForSelector('#autoOpen');
   assert.equal(await page.isChecked('#autoOpen'), false);
 

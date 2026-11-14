@@ -4,52 +4,52 @@
  * available column, so no page-level horizontal scrollbar appears.
  */
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown {
+html[data-pv][data-pv-format="markdown"] .pv-markdown {
   width: 100%;
   max-width: none;
   padding: 2.25em 2.5em;
-  border: 1px solid var(--mdv-border);
-  background: var(--mdv-bg-soft);
-  color: var(--mdv-fg);
-  font-family: var(--mdv-sans);
-  font-size: calc(16px * var(--mdv-zoom, 1));
+  border: 1px solid var(--pv-border);
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg);
+  font-family: var(--pv-sans);
+  font-size: calc(16px * var(--pv-zoom, 1));
   line-height: 1.6;
   overflow-wrap: break-word;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown > :first-child {
+html[data-pv][data-pv-format="markdown"] .pv-markdown > :first-child {
   margin-top: 0;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown > :last-child {
+html[data-pv][data-pv-format="markdown"] .pv-markdown > :last-child {
   margin-bottom: 0;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown :is(h1, h2, h3, h4, h5, h6) {
-  scroll-margin-top: calc(var(--mdv-topbar) + 16px);
+html[data-pv][data-pv-format="markdown"] .pv-markdown :is(h1, h2, h3, h4, h5, h6) {
+  scroll-margin-top: calc(var(--pv-topbar) + 16px);
 }
 
 /* ----------------------------------------------------------- title block */
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-titleblock {
+html[data-pv][data-pv-format="markdown"] .pv-titleblock {
   margin: 0 0 1.4em;
-  border: 2px solid var(--mdv-fg);
-  background: var(--mdv-bg-soft);
+  border: 2px solid var(--pv-fg);
+  background: var(--pv-bg-soft);
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-tb-main {
+html[data-pv][data-pv-format="markdown"] .pv-tb-main {
   display: grid;
   gap: 0.875em;
   padding: 1.75em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-tb-title {
+html[data-pv][data-pv-format="markdown"] .pv-tb-title {
   margin: 0;
   padding: 0;
   border-bottom: 0;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-tb-lede {
+html[data-pv][data-pv-format="markdown"] .pv-tb-lede {
   max-width: 62ch;
   margin: 0;
   font-size: 1.12em;
@@ -58,158 +58,158 @@ html[data-mdv][data-mdv-format="markdown"] .mdv-tb-lede {
 
 /* ------------------------------------------------------------- typography */
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h1,
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h2,
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h3 {
+html[data-pv][data-pv-format="markdown"] .pv-markdown h1,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h2,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h3 {
   max-width: none;
   margin: 1.4em 0 0.55em;
-  color: var(--mdv-fg);
-  font-family: var(--mdv-display);
+  color: var(--pv-fg);
+  font-family: var(--pv-display);
   line-height: 1.1;
   text-wrap: balance;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h1 {
+html[data-pv][data-pv-format="markdown"] .pv-markdown h1 {
   margin-top: 0;
   padding-bottom: 0.25em;
-  border-bottom: 2px solid var(--mdv-fg);
+  border-bottom: 2px solid var(--pv-fg);
   font-size: clamp(
     2.4em,
-    calc(6vw * var(--mdv-zoom, 1)),
+    calc(6vw * var(--pv-zoom, 1)),
     3.8em
   );
   font-weight: 700;
   letter-spacing: 0.01em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h2 {
+html[data-pv][data-pv-format="markdown"] .pv-markdown h2 {
   padding-bottom: 0.2em;
-  border-bottom: 1px solid var(--mdv-border);
+  border-bottom: 1px solid var(--pv-border);
   font-size: 1.9em;
   font-weight: 600;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h3 {
+html[data-pv][data-pv-format="markdown"] .pv-markdown h3 {
   font-size: 1.35em;
   font-weight: 600;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h4,
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h5,
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h6 {
+html[data-pv][data-pv-format="markdown"] .pv-markdown h4,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h5,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h6 {
   margin: 1.2em 0 0.5em;
-  color: var(--mdv-fg);
-  font-family: var(--mdv-sans);
+  color: var(--pv-fg);
+  font-family: var(--pv-sans);
   font-weight: 600;
   line-height: 1.3;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h4 {
+html[data-pv][data-pv-format="markdown"] .pv-markdown h4 {
   font-size: 1.05em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h5,
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown h6 {
-  color: var(--mdv-fg-muted);
+html[data-pv][data-pv-format="markdown"] .pv-markdown h5,
+html[data-pv][data-pv-format="markdown"] .pv-markdown h6 {
+  color: var(--pv-fg-muted);
   font-size: 0.95em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown p,
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li {
+html[data-pv][data-pv-format="markdown"] .pv-markdown p,
+html[data-pv][data-pv-format="markdown"] .pv-markdown li {
   max-width: 72ch;
   margin: 0 0 1em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown ul,
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown ol {
+html[data-pv][data-pv-format="markdown"] .pv-markdown ul,
+html[data-pv][data-pv-format="markdown"] .pv-markdown ol {
   display: grid;
   gap: 0.375em;
   margin: 0 0 1em;
   padding-left: 1.3em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li > ul,
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li > ol {
+html[data-pv][data-pv-format="markdown"] .pv-markdown li > ul,
+html[data-pv][data-pv-format="markdown"] .pv-markdown li > ol {
   margin-top: 0.375em;
   margin-bottom: 0;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li > p {
+html[data-pv][data-pv-format="markdown"] .pv-markdown li > p {
   margin-bottom: 0.5em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown li > input[type="checkbox"] {
+html[data-pv][data-pv-format="markdown"] .pv-markdown li > input[type="checkbox"] {
   margin: 0 0.45em 0 -1.35em;
   vertical-align: middle;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown a {
-  color: var(--mdv-accent);
+html[data-pv][data-pv-format="markdown"] .pv-markdown a {
+  color: var(--pv-accent);
   text-decoration: none;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown a:hover {
+html[data-pv][data-pv-format="markdown"] .pv-markdown a:hover {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown strong {
+html[data-pv][data-pv-format="markdown"] .pv-markdown strong {
   font-weight: 600;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown hr {
+html[data-pv][data-pv-format="markdown"] .pv-markdown hr {
   height: 1px;
   margin: 2em 0;
   border: 0;
-  background: var(--mdv-border);
+  background: var(--pv-border);
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown img {
+html[data-pv][data-pv-format="markdown"] .pv-markdown img {
   max-width: 100%;
   height: auto;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-anchor {
+html[data-pv][data-pv-format="markdown"] .pv-anchor {
   margin-left: 0.35em;
-  color: var(--mdv-fg-faint);
-  font-family: var(--mdv-mono);
+  color: var(--pv-fg-faint);
+  font-family: var(--pv-mono);
   font-size: 0.7em;
   font-weight: 400;
   text-decoration: none;
   opacity: 0;
 }
 
-html[data-mdv][data-mdv-format="markdown"] :is(h1, h2, h3, h4, h5, h6):hover .mdv-anchor,
-html[data-mdv][data-mdv-format="markdown"] .mdv-anchor:focus-visible {
+html[data-pv][data-pv-format="markdown"] :is(h1, h2, h3, h4, h5, h6):hover .pv-anchor,
+html[data-pv][data-pv-format="markdown"] .pv-anchor:focus-visible {
   opacity: 1;
 }
 
 /* --------------------------------------------------------------- quotes */
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown blockquote {
+html[data-pv][data-pv-format="markdown"] .pv-markdown blockquote {
   display: grid;
   gap: 0.375em;
   margin: 1.2em 0;
   padding: 0.625em 0.875em;
-  border-left: 3px solid var(--mdv-accent);
-  background: var(--mdv-accent-soft);
-  color: var(--mdv-fg);
+  border-left: 3px solid var(--pv-accent);
+  background: var(--pv-accent-soft);
+  color: var(--pv-fg);
   max-width: 72ch;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown blockquote > :last-child {
+html[data-pv][data-pv-format="markdown"] .pv-markdown blockquote > :last-child {
   margin-bottom: 0;
 }
 
 /* ---------------------------------------------------------------- tables */
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap {
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap {
   margin: 1.2em 0;
-  border: 1px solid var(--mdv-border);
+  border: 1px solid var(--pv-border);
   overflow-x: auto;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap table {
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap table {
   width: 100%;
   min-width: 40em;
   border-collapse: collapse;
@@ -217,144 +217,144 @@ html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap table {
   font-variant-numeric: tabular-nums;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap th,
-html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap td {
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap th,
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap td {
   padding: 0.5em 0.625em;
   border: 0;
-  border-bottom: 1px solid var(--mdv-border);
+  border-bottom: 1px solid var(--pv-border);
   text-align: left;
   vertical-align: top;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap th {
-  background: var(--mdv-accent-soft);
-  color: var(--mdv-fg-muted);
-  font-family: var(--mdv-mono);
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap th {
+  background: var(--pv-accent-soft);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
   font-size: 0.8em;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap td:first-child {
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap td:first-child {
   font-weight: 600;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap tr:last-child td {
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap tr:last-child td {
   border-bottom: 0;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-table-wrap tr:nth-child(2n) td {
+html[data-pv][data-pv-format="markdown"] .pv-table-wrap tr:nth-child(2n) td {
   background: transparent;
 }
 
 /* ------------------------------------------------------------------ code */
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-markdown :not(pre) > code {
+html[data-pv][data-pv-format="markdown"] .pv-markdown :not(pre) > code {
   padding: 0 0.25em;
   border-radius: 3px;
-  background: var(--mdv-accent-soft);
-  color: var(--mdv-fg);
-  font-family: var(--mdv-mono);
+  background: var(--pv-accent-soft);
+  color: var(--pv-fg);
+  font-family: var(--pv-mono);
   font-size: 0.88em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-code {
+html[data-pv][data-pv-format="markdown"] .pv-code {
   margin: 1.2em 0;
-  border: 1px solid var(--mdv-border);
+  border: 1px solid var(--pv-border);
   border-radius: 3px;
-  background: var(--mdv-code-bg);
+  background: var(--pv-code-bg);
   overflow: hidden;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-code-bar {
+html[data-pv][data-pv-format="markdown"] .pv-code-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75em;
   padding: 0.3em 0.5em 0.3em 0.75em;
-  border-bottom: 1px solid var(--mdv-border);
-  background: var(--mdv-bg-inset);
-  color: var(--mdv-fg-muted);
+  border-bottom: 1px solid var(--pv-border);
+  background: var(--pv-bg-inset);
+  color: var(--pv-fg-muted);
   font-size: 0.72em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-code-lang {
-  font-family: var(--mdv-mono);
+html[data-pv][data-pv-format="markdown"] .pv-code-lang {
+  font-family: var(--pv-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-copy {
+html[data-pv][data-pv-format="markdown"] .pv-copy {
   border-radius: 3px;
-  border-color: var(--mdv-border);
-  background: var(--mdv-bg-soft);
-  color: var(--mdv-fg-muted);
-  font-family: var(--mdv-mono);
+  border-color: var(--pv-border);
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
   font-size: 0.7em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-copy:hover {
-  color: var(--mdv-fg);
+html[data-pv][data-pv-format="markdown"] .pv-copy:hover {
+  color: var(--pv-fg);
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-code pre {
+html[data-pv][data-pv-format="markdown"] .pv-code pre {
   margin: 0;
   padding: 0.875em 1em;
   overflow: auto;
-  background: var(--mdv-code-bg);
-  color: var(--mdv-code-fg);
-  font-family: var(--mdv-mono);
+  background: var(--pv-code-bg);
+  color: var(--pv-code-fg);
+  font-family: var(--pv-mono);
   font-size: 0.82em;
   line-height: 1.6;
   tab-size: 4;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-code pre code {
+html[data-pv][data-pv-format="markdown"] .pv-code pre code {
   padding: 0;
   background: transparent;
   font-size: inherit;
   white-space: pre;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-raw-html {
+html[data-pv][data-pv-format="markdown"] .pv-raw-html {
   margin: 0;
   padding: 0.625em 0.75em;
-  border: 1px dashed var(--mdv-border);
+  border: 1px dashed var(--pv-border);
   border-radius: 3px;
-  background: var(--mdv-bg);
-  color: var(--mdv-fg-muted);
-  font-family: var(--mdv-mono);
+  background: var(--pv-bg);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
   font-size: 0.82em;
   white-space: pre-wrap;
 }
 
 /* --------------------------------------------------------------- mermaid */
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-mermaid {
+html[data-pv][data-pv-format="markdown"] .pv-mermaid {
   margin: 1.2em 0;
-  border: 1px solid var(--mdv-border);
+  border: 1px solid var(--pv-border);
   border-radius: 3px;
-  background: var(--mdv-bg);
+  background: var(--pv-bg);
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-mermaid-diagram {
+html[data-pv][data-pv-format="markdown"] .pv-mermaid-diagram {
   padding: 0.75em;
 }
 
-html[data-mdv][data-mdv-format="markdown"] .mdv-mermaid-source pre {
-  background: var(--mdv-code-bg);
-  color: var(--mdv-code-fg);
+html[data-pv][data-pv-format="markdown"] .pv-mermaid-source pre {
+  background: var(--pv-code-bg);
+  color: var(--pv-code-fg);
 }
 
 /* ------------------------------------------------------------ responsive */
 
 @media (max-width: 860px) {
-  html[data-mdv][data-mdv-format="markdown"] .mdv-markdown {
+  html[data-pv][data-pv-format="markdown"] .pv-markdown {
     padding: 1.25em 1em;
   }
 
-  html[data-mdv][data-mdv-format="markdown"] .mdv-tb-main {
+  html[data-pv][data-pv-format="markdown"] .pv-tb-main {
     padding: 1.25em;
   }
 }
@@ -362,7 +362,7 @@ html[data-mdv][data-mdv-format="markdown"] .mdv-mermaid-source pre {
 /* ------------------------------------------------------------------ print */
 
 @media print {
-  html[data-mdv][data-mdv-format="markdown"] .mdv-markdown {
+  html[data-pv][data-pv-format="markdown"] .pv-markdown {
     width: auto;
     padding: 0;
     border: 0;

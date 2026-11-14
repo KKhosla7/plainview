@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atlas name="Aster Reach" revision="7" season="late-tide">
+  <keeper station="east-stair" awake="true">
+    <name>Iris Vale</name>
+    <note><![CDATA[Keeps the dry cloth in the left pocket.]]></note>
+  </keeper>
+  <keeper station="glass-house" awake="false">
+    <name>Orin Pike</name>
+  </keeper>
+  <lantern id="L-01" glass="amber" status="calibrated">
+    <name>Mothlight</name>
+    <drift unit="degrees">0.012</drift>
+    <note>Reads best just before sunrise.</note>
+  </lantern>
+  <lantern id="L-02" glass="sea-green" status="waiting">
+    <name>Salt Hour</name>
+    <drift unit="degrees">0.041</drift>
+    <note><![CDATA[If the glass sings, do not polish it.]]></note>
+  </lantern>
+  <lantern id="L-03" glass="smoke" status="calibrated">
+    <name>Low Tide</name>
+    <drift unit="degrees">0</drift>
+  </lantern>
+  <weather dawn="mist" dusk="clear">
+    <wind direction="west" knots="12"/>
+    <listeningRocks>quiet</listeningRocks>
+  </weather>
+  <!-- fictional field data; not a real place -->
+</atlas>

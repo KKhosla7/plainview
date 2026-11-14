@@ -1,99 +1,99 @@
 /* ---------------------------------------------------------------- narrow */
 
 @media (max-width: 1079px) {
-  html[data-mdv] .mdv-action-toc {
+  html[data-pv] .pv-action-toc {
     display: inline-block;
   }
 
-  html[data-mdv] .mdv-shell {
+  html[data-pv] .pv-shell {
     display: block;
     padding: 0 24px;
   }
 
-  html[data-mdv] .mdv-main {
+  html[data-pv] .pv-main {
     padding-top: 32px;
   }
 
-  html[data-mdv] .mdv-toc {
+  html[data-pv] .pv-toc {
     position: fixed;
-    top: var(--mdv-topbar);
+    top: var(--pv-topbar);
     bottom: 0;
     left: 0;
     z-index: 40;
     width: min(320px, 86vw);
     max-height: none;
     padding: 24px 16px 40px;
-    border-right: 1px solid var(--mdv-border);
-    background: var(--mdv-bg);
+    border-right: 1px solid var(--pv-border);
+    background: var(--pv-bg);
     box-shadow: 12px 0 32px rgb(0 0 0 / 18%);
     transform: translateX(-105%);
     transition: transform 160ms ease;
   }
 
-  html[data-mdv] .mdv-app.mdv-toc-open .mdv-toc {
+  html[data-pv] .pv-app.pv-toc-open .pv-toc {
     transform: translateX(0);
   }
 
-  html[data-mdv] .mdv-app.mdv-toc-open .mdv-scrim {
+  html[data-pv] .pv-app.pv-toc-open .pv-scrim {
     display: block;
     position: fixed;
-    inset: var(--mdv-topbar) 0 0 0;
+    inset: var(--pv-topbar) 0 0 0;
     z-index: 35;
     background: rgb(0 0 0 / 35%);
   }
 }
 
 @media (max-width: 640px) {
-  html[data-mdv] .mdv-topbar {
+  html[data-pv] .pv-topbar {
     gap: 8px;
     padding: 0 12px;
   }
 
-  html[data-mdv] .mdv-badge,
-  html[data-mdv] .mdv-view-label,
-  html[data-mdv] .mdv-theme-label {
+  html[data-pv] .pv-badge,
+  html[data-pv] .pv-view-label,
+  html[data-pv] .pv-theme-label {
     display: none;
   }
 
-  html[data-mdv] .mdv-action {
+  html[data-pv] .pv-action {
     padding: 5px 7px;
     font-size: 11px;
   }
 
-  html[data-mdv] .mdv-shell {
+  html[data-pv] .pv-shell {
     padding: 0 16px;
   }
 
-  html[data-mdv] .mdv-main {
+  html[data-pv] .pv-main {
     padding-top: 26px;
   }
 
-  html[data-mdv] .mdv-doc {
+  html[data-pv] .pv-doc {
     font-size: 15px;
     line-height: 1.65;
   }
 
-  html[data-mdv] .mdv-doc h1 {
+  html[data-pv] .pv-doc h1 {
     font-size: 1.7em;
   }
 
-  html[data-mdv] .mdv-doc h2 {
+  html[data-pv] .pv-doc h2 {
     font-size: 1.35em;
   }
 
-  html[data-mdv] .mdv-raw-pane {
+  html[data-pv] .pv-raw-pane {
     padding: 20px 16px 60px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-mdv] {
+  html[data-pv] {
     scroll-behavior: auto;
   }
 
-  html[data-mdv] *,
-  html[data-mdv] *::before,
-  html[data-mdv] *::after {
+  html[data-pv] *,
+  html[data-pv] *::before,
+  html[data-pv] *::after {
     transition-duration: 0.01ms !important;
   }
 }
@@ -101,53 +101,53 @@
 /* ------------------------------------------------------------------ print */
 
 @media print {
-  html[data-mdv] {
+  html[data-pv] {
     background: #fff;
     color: #000;
   }
 
-  html[data-mdv] .mdv-topbar,
-  html[data-mdv] .mdv-toc,
-  html[data-mdv] .mdv-scrim,
-  html[data-mdv] .mdv-raw-pane,
-  html[data-mdv] .mdv-zoom,
-  html[data-mdv] .mdv-copy,
-  html[data-mdv] .mdv-code-bar {
+  html[data-pv] .pv-topbar,
+  html[data-pv] .pv-toc,
+  html[data-pv] .pv-scrim,
+  html[data-pv] .pv-raw-pane,
+  html[data-pv] .pv-zoom,
+  html[data-pv] .pv-copy,
+  html[data-pv] .pv-code-bar {
     display: none !important;
   }
 
-  html[data-mdv] .mdv-shell,
-  html[data-mdv] .mdv-show-source .mdv-shell {
+  html[data-pv] .pv-shell,
+  html[data-pv] .pv-show-source .pv-shell {
     display: block;
     width: auto;
     padding: 0;
   }
 
-  html[data-mdv] .mdv-zoom-surface {
+  html[data-pv] .pv-zoom-surface {
     zoom: 1 !important;
     width: 100% !important;
   }
 
-  html[data-mdv] .mdv-main {
+  html[data-pv] .pv-main {
     padding: 0;
   }
 
-  html[data-mdv] .mdv-doc {
+  html[data-pv] .pv-doc {
     width: auto;
     max-width: none;
     font-size: 11pt;
   }
 
-  html[data-mdv] .mdv-code {
+  html[data-pv] .pv-code {
     break-inside: avoid;
   }
 
-  html[data-mdv] .mdv-code pre {
+  html[data-pv] .pv-code pre {
     overflow: visible;
     white-space: pre-wrap;
   }
 
-  html[data-mdv] .mdv-doc a {
+  html[data-pv] .pv-doc a {
     color: inherit;
     text-decoration: underline;
   }

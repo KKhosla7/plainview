@@ -1,130 +1,130 @@
 /* ---------------------------------------------------------------- JSON tree */
 
-html[data-mdv] .mdv-json-node {
+html[data-pv] .pv-json-node {
   margin: 0;
 }
 
-html[data-mdv] .mdv-json-summary,
-html[data-mdv] .mdv-xml-summary {
+html[data-pv] .pv-json-summary,
+html[data-pv] .pv-xml-summary {
   cursor: pointer;
   list-style-position: outside;
 }
 
-html[data-mdv] .mdv-json-summary::marker,
-html[data-mdv] .mdv-xml-summary::marker {
-  color: var(--mdv-fg-faint);
+html[data-pv] .pv-json-summary::marker,
+html[data-pv] .pv-xml-summary::marker {
+  color: var(--pv-fg-faint);
 }
 
-html[data-mdv] .mdv-json-children {
+html[data-pv] .pv-json-children {
   margin-left: 0.55em;
   padding-left: 1.1em;
-  border-left: 1px solid var(--mdv-border-soft);
+  border-left: 1px solid var(--pv-border-soft);
 }
 
-html[data-mdv] .mdv-json-leaf {
+html[data-pv] .pv-json-leaf {
   padding-left: 1.25em;
   white-space: pre-wrap;
 }
 
-html[data-mdv] .mdv-json-key {
-  color: var(--mdv-syn-key);
+html[data-pv] .pv-json-key {
+  color: var(--pv-syn-key);
 }
 
-html[data-mdv] .mdv-json-index {
-  color: var(--mdv-fg-faint);
+html[data-pv] .pv-json-index {
+  color: var(--pv-fg-faint);
 }
 
-html[data-mdv] .mdv-json-string {
-  color: var(--mdv-syn-string);
+html[data-pv] .pv-json-string {
+  color: var(--pv-syn-string);
 }
 
-html[data-mdv] .mdv-json-number {
-  color: var(--mdv-syn-number);
+html[data-pv] .pv-json-number {
+  color: var(--pv-syn-number);
 }
 
-html[data-mdv] .mdv-json-boolean {
-  color: var(--mdv-syn-bool);
+html[data-pv] .pv-json-boolean {
+  color: var(--pv-syn-bool);
 }
 
-html[data-mdv] .mdv-json-null {
-  color: var(--mdv-fg-faint);
+html[data-pv] .pv-json-null {
+  color: var(--pv-fg-faint);
   font-style: italic;
 }
 
-html[data-mdv] .mdv-json-punct,
-html[data-mdv] .mdv-json-count {
-  color: var(--mdv-fg-muted);
+html[data-pv] .pv-json-punct,
+html[data-pv] .pv-json-count {
+  color: var(--pv-fg-muted);
 }
 
-html[data-mdv] .mdv-json-count,
-html[data-mdv] .mdv-xml-count {
+html[data-pv] .pv-json-count,
+html[data-pv] .pv-xml-count {
   font-size: 0.9em;
 }
 
 /* ----------------------------------------------------------------- XML tree */
 
-html[data-mdv] .mdv-xml-node {
+html[data-pv] .pv-xml-node {
   margin: 0;
 }
 
-html[data-mdv] .mdv-xml-children {
+html[data-pv] .pv-xml-children {
   margin-left: 0.55em;
   padding-left: 1.1em;
-  border-left: 1px solid var(--mdv-border-soft);
+  border-left: 1px solid var(--pv-border-soft);
 }
 
-html[data-mdv] .mdv-xml-leaf {
+html[data-pv] .pv-xml-leaf {
   padding-left: 1.25em;
   white-space: pre-wrap;
 }
 
-html[data-mdv] .mdv-xml-close {
+html[data-pv] .pv-xml-close {
   padding-left: 1.25em;
 }
 
-html[data-mdv] .mdv-xml-tag {
-  color: var(--mdv-syn-tag);
+html[data-pv] .pv-xml-tag {
+  color: var(--pv-syn-tag);
 }
 
-html[data-mdv] .mdv-xml-attr-name {
-  color: var(--mdv-syn-attr);
+html[data-pv] .pv-xml-attr-name {
+  color: var(--pv-syn-attr);
 }
 
-html[data-mdv] .mdv-xml-attr-value {
-  color: var(--mdv-syn-string);
+html[data-pv] .pv-xml-attr-value {
+  color: var(--pv-syn-string);
 }
 
-html[data-mdv] .mdv-xml-punct {
-  color: var(--mdv-fg-muted);
+html[data-pv] .pv-xml-punct {
+  color: var(--pv-fg-muted);
 }
 
-html[data-mdv] .mdv-xml-text {
-  color: var(--mdv-fg);
+html[data-pv] .pv-xml-text {
+  color: var(--pv-fg);
 }
 
-html[data-mdv] .mdv-xml-cdata,
-html[data-mdv] .mdv-xml-cdata-block {
-  color: var(--mdv-syn-string);
+html[data-pv] .pv-xml-cdata,
+html[data-pv] .pv-xml-cdata-block {
+  color: var(--pv-syn-string);
   white-space: pre-wrap;
 }
 
-html[data-mdv] .mdv-xml-comment {
-  color: var(--mdv-syn-comment);
+html[data-pv] .pv-xml-comment {
+  color: var(--pv-syn-comment);
   font-style: italic;
   white-space: pre-wrap;
 }
 
-html[data-mdv] .mdv-xml-pi {
-  color: var(--mdv-syn-comment);
+html[data-pv] .pv-xml-pi {
+  color: var(--pv-syn-comment);
   white-space: pre-wrap;
 }
 
-html[data-mdv] .mdv-xml-text-block {
+html[data-pv] .pv-xml-text-block {
   padding-left: 1.25em;
   white-space: pre-wrap;
 }
 
-html[data-mdv] .mdv-xml-count {
+html[data-pv] .pv-xml-count {
   margin-left: 6px;
-  color: var(--mdv-fg-faint);
+  color: var(--pv-fg-faint);
 }

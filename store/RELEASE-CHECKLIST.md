@@ -7,7 +7,7 @@
   error path. Firefox JSON is handled by Firefox's native JSON viewer.
 - Firefox `web-ext lint`: 0 errors, 10 warnings (vendored Mermaid `innerHTML`
   and the lazy dynamic import; no eval, no remote code).
-- Package version: 0.2.3. Bump to 1.0.0 for the first public release if desired.
+- Package version: 0.3.0. Bump to 1.0.0 for the first public release if desired.
 
 ## Build and package
 

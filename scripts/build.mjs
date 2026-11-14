@@ -105,7 +105,7 @@ function copyCommon(target) {
 
   fs.writeFileSync(
     path.join(target, 'vendor', 'viewer-css.js'),
-    `globalThis.MDVIEW_CSS = ${JSON.stringify(css)};\n`,
+    `globalThis.PLAINVIEW_CSS = ${JSON.stringify(css)};\n`,
   );
 
   fs.copyFileSync(

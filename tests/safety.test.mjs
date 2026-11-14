@@ -25,14 +25,14 @@ after(async () => {
 
 test('escapes raw HTML and blocks javascript: links', async () => {
   const { page, errors } = await openPage(context, `${base}/xss.md`);
-  await page.waitForSelector('.mdv-markdown');
+  await page.waitForSelector('.pv-markdown');
 
   assert.equal(await page.evaluate(() => window.__plainviewXss), undefined);
-  assert.equal(await page.locator('.mdv-markdown script').count(), 0);
-  assert.equal(await page.locator('.mdv-markdown img').count(), 0);
-  assert.equal(await page.locator('.mdv-markdown .mdv-link-blocked').count(), 1);
+  assert.equal(await page.locator('.pv-markdown script').count(), 0);
+  assert.equal(await page.locator('.pv-markdown img').count(), 0);
+  assert.equal(await page.locator('.pv-markdown .pv-link-blocked').count(), 1);
   assert.match(
-    await page.locator('.mdv-raw-html').first().innerText(),
+    await page.locator('.pv-raw-html').first().innerText(),
     /<script>/,
   );
 
@@ -43,7 +43,7 @@ test('escapes raw HTML and blocks javascript: links', async () => {
 test('does not touch plain text files', async () => {
   const { page, errors } = await openPage(context, `${base}/plain.txt`);
   await page.waitForTimeout(800);
-  assert.equal(await page.locator('.mdv-app').count(), 0);
+  assert.equal(await page.locator('.pv-app').count(), 0);
   assertNoErrors(errors);
   await page.close();
 });
@@ -51,7 +51,7 @@ test('does not touch plain text files', async () => {
 test('does not touch normal HTML pages', async () => {
   const { page, errors } = await openPage(context, `${base}/page.html`);
   await page.waitForTimeout(500);
-  assert.equal(await page.locator('.mdv-app').count(), 0);
+  assert.equal(await page.locator('.pv-app').count(), 0);
   assertNoErrors(errors);
   await page.close();
 });

@@ -62,14 +62,11 @@ None. See `PRIVACY.md`.
 
 ## Screenshots
 
-- `store/screenshots/markdown-light.png`
-- `store/screenshots/markdown-dark.png`
-- `store/screenshots/markdown-source.png`
-- `store/screenshots/json.png`
-- `store/screenshots/xml.png`
-
-Captions: “Markdown with Contents and Mermaid”, “Dark theme”, “Highlighted source”,
-“JSON tree”, “XML tree”.
+- `store/screenshots/markdown-light.png` — Markdown with Contents and rich text
+- `store/screenshots/markdown-mermaid.png` — dark theme with a Mermaid diagram
+- `store/screenshots/markdown-source.png` — highlighted Markdown source
+- `store/screenshots/json.png` — JSON tree
+- `store/screenshots/xml.png` — XML tree
 
 ## Known limitations
 

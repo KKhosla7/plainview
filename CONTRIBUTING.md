@@ -17,10 +17,10 @@ npm run package
 
 ## Adding a format
 
-1. Add the extension and MIME types in `src/formats.js`.
+1. Add the extension and MIME types in `src/core/formats.js`.
 2. Add a parser that returns data, not untrusted DOM.
-3. Add a view that builds DOM with `MDView.createElement()`.
-4. Add a source highlighter and register it in `src/source-highlight-core.js`.
+3. Add a view that builds DOM with `Plainview.createElement()`.
+4. Add a source highlighter and register it in `src/formats/source/core.js`.
 5. Add fixtures and tests.
 6. Keep the no-remote-code, no-execution, bounded-size rules.
 

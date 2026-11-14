@@ -1,0 +1,43 @@
+{
+  "atlas": "Aster Reach",
+  "revision": 7,
+  "keepers": [
+    { "name": "Iris Vale", "station": "east stair", "awake": true },
+    { "name": "Orin Pike", "station": "glass house", "awake": false },
+    { "name": "Mira Quill", "station": "west stair", "awake": true }
+  ],
+  "lanterns": [
+    {
+      "id": "L-01",
+      "name": "Mothlight",
+      "glass": "amber",
+      "status": "calibrated",
+      "drift": 0.012
+    },
+    {
+      "id": "L-02",
+      "name": "Salt Hour",
+      "glass": "sea-green",
+      "status": "waiting",
+      "drift": 0.041
+    },
+    {
+      "id": "L-03",
+      "name": "Low Tide",
+      "glass": "smoke",
+      "status": "calibrated",
+      "drift": 0
+    }
+  ],
+  "weather": {
+    "dawn": "mist",
+    "dusk": "clear",
+    "wind": { "direction": "west", "knots": 12 },
+    "listeningRocks": null
+  },
+  "notes": [
+    "Do not polish the glass before sunrise.",
+    "The west stair opens only when the tide turns.",
+    "A missing lantern is still expected at dusk."
+  ]
+}

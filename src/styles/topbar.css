@@ -1,20 +1,20 @@
 /* ---------------------------------------------------------------- top bar */
 
-html[data-mdv] .mdv-topbar {
+html[data-pv] .pv-topbar {
   position: sticky;
   top: 0;
   z-index: 30;
   display: flex;
   align-items: center;
   gap: 16px;
-  height: var(--mdv-topbar);
+  height: var(--pv-topbar);
   padding: 0 20px;
-  border-bottom: 1px solid var(--mdv-border);
-  background: color-mix(in srgb, var(--mdv-bg) 88%, transparent);
+  border-bottom: 1px solid var(--pv-border);
+  background: color-mix(in srgb, var(--pv-bg) 88%, transparent);
   backdrop-filter: blur(12px);
 }
 
-html[data-mdv] .mdv-brand {
+html[data-pv] .pv-brand {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -22,7 +22,7 @@ html[data-mdv] .mdv-brand {
   flex: 1 1 auto;
 }
 
-html[data-mdv] .mdv-logo {
+html[data-pv] .pv-logo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -30,22 +30,22 @@ html[data-mdv] .mdv-logo {
   height: 30px;
   flex: 0 0 auto;
   border-radius: 8px;
-  background: var(--mdv-accent);
+  background: var(--pv-accent);
   color: #fff;
-  font-family: var(--mdv-mono);
+  font-family: var(--pv-mono);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -1px;
 }
 
-html[data-mdv] .mdv-file {
+html[data-pv] .pv-file {
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
 }
 
-html[data-mdv] .mdv-filename {
+html[data-pv] .pv-filename {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -53,32 +53,32 @@ html[data-mdv] .mdv-filename {
   font-weight: 600;
 }
 
-html[data-mdv] .mdv-badge {
+html[data-pv] .pv-badge {
   flex: 0 0 auto;
   padding: 1px 6px;
-  border: 1px solid var(--mdv-border);
+  border: 1px solid var(--pv-border);
   border-radius: 999px;
-  color: var(--mdv-fg-muted);
-  font-family: var(--mdv-mono);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
 
-html[data-mdv] .mdv-actions {
+html[data-pv] .pv-actions {
   display: flex;
   align-items: center;
   gap: 6px;
   flex: 0 0 auto;
 }
 
-html[data-mdv] .mdv-action {
+html[data-pv] .pv-action {
   appearance: none;
   padding: 5px 10px;
   border: 1px solid transparent;
   border-radius: 6px;
   background: transparent;
-  color: var(--mdv-fg-muted);
+  color: var(--pv-fg-muted);
   font: inherit;
   font-size: 12px;
   font-weight: 500;
@@ -87,42 +87,42 @@ html[data-mdv] .mdv-action {
   white-space: nowrap;
 }
 
-html[data-mdv] .mdv-action:hover {
-  border-color: var(--mdv-border);
-  background: var(--mdv-bg-soft);
-  color: var(--mdv-fg);
+html[data-pv] .pv-action:hover {
+  border-color: var(--pv-border);
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg);
 }
 
-html[data-mdv] .mdv-action:focus-visible,
-html[data-mdv] .mdv-copy:focus-visible,
-html[data-mdv] .mdv-toc-link:focus-visible,
-html[data-mdv] .mdv-anchor:focus-visible {
-  outline: 2px solid var(--mdv-accent);
+html[data-pv] .pv-action:focus-visible,
+html[data-pv] .pv-copy:focus-visible,
+html[data-pv] .pv-toc-link:focus-visible,
+html[data-pv] .pv-anchor:focus-visible {
+  outline: 2px solid var(--pv-accent);
   outline-offset: 2px;
 }
 
-html[data-mdv] .mdv-action[aria-pressed="true"] {
-  border-color: var(--mdv-border);
-  background: var(--mdv-bg-inset);
-  color: var(--mdv-fg);
+html[data-pv] .pv-action[aria-pressed="true"] {
+  border-color: var(--pv-border);
+  background: var(--pv-bg-inset);
+  color: var(--pv-fg);
 }
 
-html[data-mdv] .mdv-themes {
+html[data-pv] .pv-themes {
   display: flex;
   align-items: center;
   padding: 2px;
-  border: 1px solid var(--mdv-border);
+  border: 1px solid var(--pv-border);
   border-radius: 7px;
-  background: var(--mdv-bg-soft);
+  background: var(--pv-bg-soft);
 }
 
-html[data-mdv] .mdv-theme-tab {
+html[data-pv] .pv-theme-tab {
   appearance: none;
   padding: 3px 8px;
   border: 1px solid transparent;
   border-radius: 5px;
   background: transparent;
-  color: var(--mdv-fg-muted);
+  color: var(--pv-fg-muted);
   font: inherit;
   font-size: 11px;
   font-weight: 600;
@@ -130,50 +130,50 @@ html[data-mdv] .mdv-theme-tab {
   cursor: pointer;
 }
 
-html[data-mdv] .mdv-theme-tab:hover {
-  color: var(--mdv-fg);
+html[data-pv] .pv-theme-tab:hover {
+  color: var(--pv-fg);
 }
 
-html[data-mdv] .mdv-theme-tab[aria-selected="true"] {
-  border-color: var(--mdv-accent);
-  background: var(--mdv-accent);
-  color: var(--mdv-bg-soft);
+html[data-pv] .pv-theme-tab[aria-selected="true"] {
+  border-color: var(--pv-accent);
+  background: var(--pv-accent);
+  color: var(--pv-bg-soft);
 }
 
-html[data-mdv] .mdv-theme-tab:focus-visible {
-  outline: 2px solid var(--mdv-accent);
+html[data-pv] .pv-theme-tab:focus-visible {
+  outline: 2px solid var(--pv-accent);
   outline-offset: 1px;
 }
 
-html[data-mdv] .mdv-action-toc {
+html[data-pv] .pv-action-toc {
   display: none;
 }
 
-html[data-mdv] .mdv-view-label,
-html[data-mdv] .mdv-theme-label {
-  color: var(--mdv-fg-faint);
-  font-family: var(--mdv-mono);
+html[data-pv] .pv-view-label,
+html[data-pv] .pv-theme-label {
+  color: var(--pv-fg-faint);
+  font-family: var(--pv-mono);
   font-size: 0.62rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-html[data-mdv] .mdv-views {
+html[data-pv] .pv-views {
   display: flex;
   align-items: center;
   padding: 2px;
-  border: 1px solid var(--mdv-border);
+  border: 1px solid var(--pv-border);
   border-radius: 7px;
-  background: var(--mdv-bg-soft);
+  background: var(--pv-bg-soft);
 }
 
-html[data-mdv] .mdv-view-tab {
+html[data-pv] .pv-view-tab {
   appearance: none;
   padding: 3px 10px;
   border: 1px solid transparent;
   border-radius: 5px;
   background: transparent;
-  color: var(--mdv-fg-muted);
+  color: var(--pv-fg-muted);
   font: inherit;
   font-size: 11px;
   font-weight: 600;
@@ -181,18 +181,18 @@ html[data-mdv] .mdv-view-tab {
   cursor: pointer;
 }
 
-html[data-mdv] .mdv-view-tab:hover {
-  color: var(--mdv-fg);
+html[data-pv] .pv-view-tab:hover {
+  color: var(--pv-fg);
 }
 
-html[data-mdv] .mdv-view-tab[aria-selected="true"] {
-  border-color: var(--mdv-accent);
-  background: var(--mdv-accent);
-  color: var(--mdv-bg-soft);
+html[data-pv] .pv-view-tab[aria-selected="true"] {
+  border-color: var(--pv-accent);
+  background: var(--pv-accent);
+  color: var(--pv-bg-soft);
   box-shadow: none;
 }
 
-html[data-mdv] .mdv-view-tab:focus-visible {
-  outline: 2px solid var(--mdv-accent);
+html[data-pv] .pv-view-tab:focus-visible {
+  outline: 2px solid var(--pv-accent);
   outline-offset: 1px;
 }

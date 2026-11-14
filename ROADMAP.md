@@ -24,10 +24,10 @@ rewrite.
 
 ## How a format is added
 
-1. Add the extension and MIME types to `src/formats.js`.
+1. Add the extension and MIME types to `src/core/formats.js`.
 2. Add a parser module that returns plain data, never DOM from untrusted input.
-3. Add a view module that builds DOM with `MDView.createElement()` and the shared data toolbar.
-4. Add a source highlighter under `src/source-highlight-*.js` and register it.
+3. Add a view module that builds DOM with `Plainview.createElement()` and the shared data toolbar.
+4. Add a source highlighter under `src/formats/source/*.js` and register it.
 5. Add fixtures and tests in `tests/data.test.mjs`.
 6. Keep the same limits: no code execution, no remote requests, bounded tree size, escaped text.
 

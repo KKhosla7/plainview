@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
@@ -7,9 +8,10 @@ import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
-const fixtures = path.join(project, 'tests', 'fixtures');
+const fixtures = path.join(project, 'store', 'fixtures');
 const dist = path.join(project, 'dist', 'chrome');
-const output = path.join(project, 'store', 'screenshots');
+const docsDir = path.join(project, 'docs', 'screenshots');
+const storeDir = path.join(project, 'store', 'screenshots');
 const MIME = {
   '.md': 'text/markdown; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
@@ -54,39 +56,97 @@ const context = await chromium.launchPersistentContext(profile, {
     '--allow-file-access-from-files',
   ],
   viewport: { width: 1280, height: 800 },
+  deviceScaleFactor: 2,
 });
 
-fs.mkdirSync(output, { recursive: true });
+fs.mkdirSync(docsDir, { recursive: true });
+fs.mkdirSync(storeDir, { recursive: true });
 
-async function shot(name, route, setup) {
-  const page = await context.newPage();
-  await page.goto(`${base}/${route}`);
-  await page.waitForSelector('.mdv-app');
-  await page.waitForTimeout(700);
-  if (setup) await setup(page);
-  await page.waitForTimeout(400);
-  await page.screenshot({ path: path.join(output, name) });
-  await page.close();
-  console.log('wrote', name);
+function resize(source, target) {
+  const result = spawnSync(
+    'magick',
+    [source, '-resize', '1280x800', target],
+    { stdio: 'inherit' },
+  );
+  if (result.status !== 0) {
+    throw new Error(`could not resize ${source}`);
+  }
 }
 
+async function capture(name, route, setup) {
+  const page = await context.newPage();
+  await page.goto(`${base}/${route}`);
+  await page.waitForSelector('.pv-app');
+  await page.waitForTimeout(700);
+  if (setup) await setup(page);
+  await page.waitForTimeout(450);
+  const docsPath = path.join(docsDir, `${name}.png`);
+  await page.screenshot({ path: docsPath });
+  await page.close();
+  console.log('wrote', path.relative(project, docsPath));
+  return docsPath;
+}
+
+async function instantScrollTo(page, selector) {
+  await page.evaluate((target) => {
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    const element = document.querySelector(target);
+    if (element) element.scrollIntoView({ block: 'start' });
+    root.style.scrollBehavior = previous;
+  }, selector);
+  await page.waitForTimeout(250);
+}
+
+const docs = {};
 try {
-  await shot('markdown-light.png', 'sample.md', async (page) => {
+  docs.markdownLight = await capture('markdown-light', 'showcase.md', async (page) => {
     await page.getByRole('button', { name: 'Light theme' }).click();
   });
-  await shot('markdown-dark.png', 'sample.md', async (page) => {
+  docs.markdownDark = await capture('markdown-dark', 'showcase.md', async (page) => {
     await page.getByRole('button', { name: 'Dark theme' }).click();
   });
-  await shot('markdown-source.png', 'sample.md', async (page) => {
+  docs.markdownMermaid = await capture('markdown-mermaid', 'showcase.md', async (page) => {
+    await page.getByRole('button', { name: 'Dark theme' }).click();
+    await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20000 });
+    await instantScrollTo(page, '#the-dusk-sequence');
+  });
+  docs.markdownSource = await capture('markdown-source', 'showcase.md', async (page) => {
     await page.getByRole('button', { name: 'Light theme' }).click();
     await page.getByRole('tab', { name: 'Source' }).click();
   });
-  await shot('json.png', 'sample.json', async (page) => {
+  docs.json = await capture('json', 'showcase.json', async (page) => {
     await page.getByRole('button', { name: 'Light theme' }).click();
   });
-  await shot('xml.png', 'sample.xml', async (page) => {
+  docs.xml = await capture('xml', 'showcase.xml', async (page) => {
     await page.getByRole('button', { name: 'Light theme' }).click();
   });
+
+  for (const name of ['markdown-light', 'markdown-mermaid', 'markdown-source', 'json', 'xml']) {
+    resize(path.join(docsDir, `${name}.png`), path.join(storeDir, `${name}.png`));
+    console.log('wrote', path.relative(project, path.join(storeDir, `${name}.png`)));
+  }
+
+  const webp = spawnSync(
+    'magick',
+    [
+      '-delay', '220',
+      '-loop', '0',
+      path.join(docsDir, 'markdown-light.png'),
+      path.join(docsDir, 'markdown-mermaid.png'),
+      path.join(docsDir, 'markdown-dark.png'),
+      path.join(docsDir, 'markdown-source.png'),
+      path.join(docsDir, 'json.png'),
+      path.join(docsDir, 'xml.png'),
+      '-resize', '1280x800',
+      '-quality', '86',
+      path.join(project, 'docs', 'demo.webp'),
+    ],
+    { stdio: 'inherit' },
+  );
+  if (webp.status !== 0) throw new Error('could not create demo.webp');
+  console.log('wrote docs/demo.webp');
 } finally {
   await context.close();
   rmSync(profile, { recursive: true, force: true });

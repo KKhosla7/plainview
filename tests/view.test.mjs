@@ -26,37 +26,37 @@ after(async () => {
 
 async function openSample() {
   const { page, errors } = await openPage(context, `${base}/sample.md`);
-  await page.waitForSelector('.mdv-app');
-  if (await page.locator('.mdv-app.mdv-show-source').count()) {
+  await page.waitForSelector('.pv-app');
+  if (await page.locator('.pv-app.pv-show-source').count()) {
     await page.getByRole('tab', { name: 'HTML' }).click();
   }
-  await page.waitForSelector('.mdv-markdown', { state: 'visible' });
+  await page.waitForSelector('.pv-markdown', { state: 'visible' });
   return { page, errors };
 }
 
 test('Source view highlights Markdown and uses the full width', async () => {
   const { page, errors } = await openSample();
   await page.getByRole('tab', { name: 'Source' }).click();
-  await page.waitForSelector('.mdv-raw-pane', { state: 'visible' });
-  await page.waitForSelector('.mdv-raw-code .mdv-syn-heading-marker');
+  await page.waitForSelector('.pv-raw-pane', { state: 'visible' });
+  await page.waitForSelector('.pv-raw-code .pv-syn-heading-marker');
 
-  assert.ok((await page.locator('.mdv-raw-code .mdv-syn-strong').count()) >= 1);
-  assert.ok((await page.locator('.mdv-raw-code .mdv-syn-list-marker').count()) >= 1);
-  assert.ok((await page.locator('.mdv-raw-code .mdv-syn-fence').count()) >= 1);
-  assert.ok((await page.locator('.mdv-raw-code .mdv-syn-link').count()) >= 1);
-  assert.ok((await page.locator('.mdv-raw-code .mdv-syn-url').count()) >= 1);
+  assert.ok((await page.locator('.pv-raw-code .pv-syn-strong').count()) >= 1);
+  assert.ok((await page.locator('.pv-raw-code .pv-syn-list-marker').count()) >= 1);
+  assert.ok((await page.locator('.pv-raw-code .pv-syn-fence').count()) >= 1);
+  assert.ok((await page.locator('.pv-raw-code .pv-syn-link').count()) >= 1);
+  assert.ok((await page.locator('.pv-raw-code .pv-syn-url').count()) >= 1);
 
   const widths = await page.evaluate(() => ({
-    pane: document.querySelector('.mdv-raw-pane').getBoundingClientRect().width,
+    pane: document.querySelector('.pv-raw-pane').getBoundingClientRect().width,
     viewport: window.innerWidth,
   }));
   assert.ok(widths.pane >= widths.viewport - 1, 'source pane spans the viewport');
 
-  const copy = page.locator('.mdv-raw-copy');
+  const copy = page.locator('.pv-raw-copy');
   assert.equal(await copy.innerText(), 'Copy source');
   await copy.click();
   await page.waitForFunction(
-    () => document.querySelector('.mdv-raw-copy').textContent !== 'Copy source',
+    () => document.querySelector('.pv-raw-copy').textContent !== 'Copy source',
   );
   assert.equal(await copy.innerText(), 'Copied');
 
@@ -81,12 +81,12 @@ test('downloads the original file', async () => {
 
 test('Source view, theme and reading position survive a reload', async () => {
   const { page, errors } = await openSample();
-  await page.waitForSelector('.mdv-mermaid-ready svg', { timeout: 20000 });
+  await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20000 });
 
   await page.getByRole('tab', { name: 'Source' }).click();
   await page.getByRole('button', { name: 'Dark theme' }).click();
   await page.waitForFunction(
-    () => document.documentElement.dataset.mdvTheme === 'dark',
+    () => document.documentElement.dataset.pvTheme === 'dark',
   );
   assert.equal(
     await page.getByRole('button', { name: 'Dark theme' }).getAttribute('aria-selected'),
@@ -94,14 +94,14 @@ test('Source view, theme and reading position survive a reload', async () => {
   );
 
   await page.reload();
-  await page.waitForSelector('.mdv-app');
+  await page.waitForSelector('.pv-app');
   await page.waitForFunction(
     () =>
-      document.documentElement.dataset.mdvTheme === 'dark' &&
-      document.querySelector('.mdv-app')?.classList.contains('mdv-show-source'),
+      document.documentElement.dataset.pvTheme === 'dark' &&
+      document.querySelector('.pv-app')?.classList.contains('pv-show-source'),
   );
   assert.equal(
-    await page.locator('.mdv-raw-pane').evaluate((el) => getComputedStyle(el).display),
+    await page.locator('.pv-raw-pane').evaluate((el) => getComputedStyle(el).display),
     'block',
   );
   assert.equal(
@@ -110,7 +110,7 @@ test('Source view, theme and reading position survive a reload', async () => {
   );
 
   await page.getByRole('tab', { name: 'HTML' }).click();
-  await page.waitForSelector('.mdv-markdown', { state: 'visible' });
+  await page.waitForSelector('.pv-markdown', { state: 'visible' });
   const y = await page.evaluate(
     () => document.getElementById('table').getBoundingClientRect().top + window.scrollY - 80,
   );
@@ -120,7 +120,7 @@ test('Source view, theme and reading position survive a reload', async () => {
   assert.ok(saved > 100);
 
   await page.reload();
-  await page.waitForSelector('.mdv-markdown');
+  await page.waitForSelector('.pv-markdown');
   await page.waitForTimeout(1500);
   const restored = await page.evaluate(() => window.scrollY);
   assert.ok(Math.abs(restored - saved) <= 4, `${restored} ~= ${saved}`);
@@ -131,10 +131,10 @@ test('Source view, theme and reading position survive a reload', async () => {
 
 test('zoom enlarges the content without a page-level horizontal scrollbar', async () => {
   const { page, errors } = await openSample();
-  await page.waitForSelector('.mdv-toc-link.is-active');
+  await page.waitForSelector('.pv-toc-link.is-active');
 
   const before = await page.evaluate(() => {
-    const doc = document.querySelector('.mdv-markdown');
+    const doc = document.querySelector('.pv-markdown');
     return {
       font: Number.parseFloat(getComputedStyle(doc).fontSize),
       width: doc.getBoundingClientRect().width,
@@ -142,15 +142,15 @@ test('zoom enlarges the content without a page-level horizontal scrollbar', asyn
   });
 
   for (let i = 0; i < 15; i += 1) {
-    await page.locator('.mdv-zoom-button[aria-label="Zoom in"]').click();
+    await page.locator('.pv-zoom-button[aria-label="Zoom in"]').click();
   }
   await page.waitForTimeout(300);
 
   const after = await page.evaluate(() => {
-    const main = document.querySelector('.mdv-main');
-    const doc = document.querySelector('.mdv-markdown');
+    const main = document.querySelector('.pv-main');
+    const doc = document.querySelector('.pv-markdown');
     return {
-      zoom: getComputedStyle(document.documentElement).getPropertyValue('--mdv-zoom').trim(),
+      zoom: getComputedStyle(document.documentElement).getPropertyValue('--pv-zoom').trim(),
       font: Number.parseFloat(getComputedStyle(doc).fontSize),
       width: doc.getBoundingClientRect().width,
       mainWidth: main.getBoundingClientRect().width,
@@ -168,11 +168,11 @@ test('zoom enlarges the content without a page-level horizontal scrollbar', asyn
   assert.ok(after.scrollWidth <= after.viewport + 1, 'no page-level horizontal scroll');
   assert.ok(after.mainScrollWidth <= after.mainClientWidth + 1, 'the main column does not overflow');
 
-  await page.locator('.mdv-zoom-value').click();
+  await page.locator('.pv-zoom-value').click();
   await page.waitForFunction(
     () =>
       getComputedStyle(document.documentElement)
-        .getPropertyValue('--mdv-zoom')
+        .getPropertyValue('--pv-zoom')
         .trim() === '1',
   );
 
@@ -182,12 +182,12 @@ test('zoom enlarges the content without a page-level horizontal scrollbar', asyn
 
 test('clicking Contents lands on the heading and highlights the same item', async () => {
   const { page, errors } = await openSample();
-  await page.waitForSelector('.mdv-toc-link.is-active');
+  await page.waitForSelector('.pv-toc-link.is-active');
 
   await page.getByRole('link', { name: 'Table', exact: true }).click();
   await page.waitForFunction(
     () =>
-      document.querySelector('.mdv-toc-link.is-active')?.textContent.trim() ===
+      document.querySelector('.pv-toc-link.is-active')?.textContent.trim() ===
       'Table',
   );
   const top = await page.evaluate(

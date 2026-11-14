@@ -1,86 +1,86 @@
 /*
- * Everything is scoped under html[data-mdv] / .mdv-* so the stylesheet can be
+ * Everything is scoped under html[data-pv] / .pv-* so the stylesheet can be
  * injected on every page without touching normal sites.
  */
 
-html[data-mdv] {
-  --mdv-bg: #ffffff;
-  --mdv-bg-soft: #f6f8fa;
-  --mdv-bg-inset: #eef1f4;
-  --mdv-fg: #1f2328;
-  --mdv-fg-muted: #59636e;
-  --mdv-fg-faint: #818b98;
-  --mdv-border: #d1d9e0;
-  --mdv-border-soft: #e6eaef;
-  --mdv-accent: #0969da;
-  --mdv-accent-soft: #ddf4ff;
-  --mdv-danger: #cf222e;
-  --mdv-code-bg: #f6f8fa;
-  --mdv-code-fg: #1f2328;
-  --mdv-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+html[data-pv] {
+  --pv-bg: #ffffff;
+  --pv-bg-soft: #f6f8fa;
+  --pv-bg-inset: #eef1f4;
+  --pv-fg: #1f2328;
+  --pv-fg-muted: #59636e;
+  --pv-fg-faint: #818b98;
+  --pv-border: #d1d9e0;
+  --pv-border-soft: #e6eaef;
+  --pv-accent: #0969da;
+  --pv-accent-soft: #ddf4ff;
+  --pv-danger: #cf222e;
+  --pv-code-bg: #f6f8fa;
+  --pv-code-fg: #1f2328;
+  --pv-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-  --mdv-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+  --pv-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  --mdv-syn-key: #0550ae;
-  --mdv-syn-string: #0a3069;
-  --mdv-syn-number: #953800;
-  --mdv-syn-bool: #8250df;
-  --mdv-syn-tag: #116329;
-  --mdv-syn-attr: #0550ae;
-  --mdv-syn-comment: #6e7781;
-  --mdv-topbar: 56px;
+  --pv-syn-key: #0550ae;
+  --pv-syn-string: #0a3069;
+  --pv-syn-number: #953800;
+  --pv-syn-bool: #8250df;
+  --pv-syn-tag: #116329;
+  --pv-syn-attr: #0550ae;
+  --pv-syn-comment: #6e7781;
+  --pv-topbar: 56px;
   color-scheme: light;
-  background: var(--mdv-bg);
+  background: var(--pv-bg);
   scroll-behavior: smooth;
 }
 
-html[data-mdv][data-mdv-theme="dark"] {
-  --mdv-bg: #0d1117;
-  --mdv-bg-soft: #151b23;
-  --mdv-bg-inset: #1c2430;
-  --mdv-fg: #e6edf3;
-  --mdv-fg-muted: #9198a1;
-  --mdv-fg-faint: #6e7681;
-  --mdv-border: #30363d;
-  --mdv-border-soft: #21262d;
-  --mdv-accent: #58a6ff;
-  --mdv-accent-soft: #0c2d4a;
-  --mdv-danger: #ff7b72;
-  --mdv-code-bg: #151b23;
-  --mdv-code-fg: #e6edf3;
-  --mdv-syn-key: #79c0ff;
-  --mdv-syn-string: #a5d6ff;
-  --mdv-syn-number: #ffa657;
-  --mdv-syn-bool: #d2a8ff;
-  --mdv-syn-tag: #7ee787;
-  --mdv-syn-attr: #79c0ff;
-  --mdv-syn-comment: #8b949e;
+html[data-pv][data-pv-theme="dark"] {
+  --pv-bg: #0d1117;
+  --pv-bg-soft: #151b23;
+  --pv-bg-inset: #1c2430;
+  --pv-fg: #e6edf3;
+  --pv-fg-muted: #9198a1;
+  --pv-fg-faint: #6e7681;
+  --pv-border: #30363d;
+  --pv-border-soft: #21262d;
+  --pv-accent: #58a6ff;
+  --pv-accent-soft: #0c2d4a;
+  --pv-danger: #ff7b72;
+  --pv-code-bg: #151b23;
+  --pv-code-fg: #e6edf3;
+  --pv-syn-key: #79c0ff;
+  --pv-syn-string: #a5d6ff;
+  --pv-syn-number: #ffa657;
+  --pv-syn-bool: #d2a8ff;
+  --pv-syn-tag: #7ee787;
+  --pv-syn-attr: #79c0ff;
+  --pv-syn-comment: #8b949e;
   color-scheme: dark;
 }
 
 
-html[data-mdv],
-html[data-mdv] body {
+html[data-pv],
+html[data-pv] body {
   margin: 0;
   padding: 0;
 }
 
-html[data-mdv] body {
+html[data-pv] body {
   min-height: 100vh;
-  background: var(--mdv-bg);
-  color: var(--mdv-fg);
-  font-family: var(--mdv-sans);
+  background: var(--pv-bg);
+  color: var(--pv-fg);
+  font-family: var(--pv-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-html[data-mdv] *,
-html[data-mdv] *::before,
-html[data-mdv] *::after {
+html[data-pv] *,
+html[data-pv] *::before,
+html[data-pv] *::after {
   box-sizing: border-box;
 }
 
-html[data-mdv] .mdv-app {
+html[data-pv] .pv-app {
   min-height: 100vh;
-  background: var(--mdv-bg);
+  background: var(--pv-bg);
 }

@@ -6,12 +6,12 @@ Markdown, JSON and XML today; YAML, TOML and more are on the roadmap.
 [![CI](https://github.com/kk18888678/plainview/actions/workflows/ci.yml/badge.svg)](https://github.com/kk18888678/plainview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-1f4fa0.svg)](LICENSE)
 
-> Private alpha · version **0.2.3** · Chrome Web Store and Firefox Add-ons listings pending.
+> Private alpha · version **0.3.0** · Chrome Web Store and Firefox Add-ons listings pending.
 
-![Plainview demo](docs/demo.gif)
+![Plainview demo](docs/demo.webp)
 
-GitHub READMEs do not have a native carousel, so the animated preview above cycles the screenshots.
-A full gallery is below.
+GitHub READMEs do not have a native carousel, so the animated WebP above cycles the screenshots.
+The full gallery below uses 2560×1600 lossless PNGs; the animated preview is compressed for size.
 
 ## What it renders
 
@@ -71,13 +71,13 @@ Mermaid is loaded only on documents that contain a Mermaid block.
 
 ## Screenshots
 
-| Markdown | Dark theme | Source |
+| Markdown | Dark theme | Mermaid |
 |---|---|---|
-| ![Markdown](store/screenshots/markdown-light.png) | ![Dark](store/screenshots/markdown-dark.png) | ![Source](store/screenshots/markdown-source.png) |
+| ![Markdown](docs/screenshots/markdown-light.png) | ![Dark](docs/screenshots/markdown-dark.png) | ![Mermaid](docs/screenshots/markdown-mermaid.png) |
 
-| JSON | XML |
-|---|---|
-| ![JSON](store/screenshots/json.png) | ![XML](store/screenshots/xml.png) |
+| Source | JSON | XML |
+|---|---|---|
+| ![Source](docs/screenshots/markdown-source.png) | ![JSON](docs/screenshots/json.png) | ![XML](docs/screenshots/xml.png) |
 
 ## Opening files from the browser
 
@@ -165,33 +165,23 @@ npm run lint:firefox
 
 ```text
 src/manifest.json          extension manifest
-src/content.js             format detection and mount
-src/formats.js             format registry and MIME/extension matching
-src/document.js            raw-document source extraction and the XML HTML shell
-src/markdown-core.js       marked + HTML escaping + URL sanitising
-src/markdown-enhance.js    code blocks, tables, heading ids and Mermaid placeholders
-src/title-block.js         visual H1 + first paragraph box
 src/background.js          optional download auto-open and toolbar settings entry
-src/options.html/js/css    settings page and OS file-association help
-src/json-parse.js          JSON/JSONC parser
-src/json-view.js           JSON tree
-src/xml-parse.js           XML parser
-src/xml-render.js          XML tree
-src/xml-view.js            XML document
-src/source-highlight-*.js  Markdown/JSON/XML source highlighting
-src/mermaid.js             lazy Mermaid loader and renderer
-src/svg-sanitize.js        second-pass SVG sanitiser
-src/topbar.js              top bar and HTML/Source + theme controls
-src/toc.js                 Contents panel and scroll spy
-src/zoom.js                content zoom
-src/theme.js               light/dark theme
-src/view-switcher.js       HTML/Source view and view persistence
-src/scroll-memory.js       reading-position persistence
-src/ui.js                  mount and wiring
-src/styles/               the HTML visual theme, data trees, source tokens
+src/app/                   content entry, reader shell, top bar, Contents, zoom, theme
+src/core/                  dom, formats, document, settings, clipboard, download, fonts,
+                           scroll utilities and reading-position memory
+src/formats/markdown/      marked, code/tables/headings, visual title block
+src/formats/json/          JSON/JSONC parser and tree
+src/formats/xml/           XML parser, tree renderer and document
+src/formats/mermaid/       lazy Mermaid loader and SVG sanitiser
+src/formats/source/        Markdown/JSON/XML source highlighters
+src/formats/shared/        data toolbar and error panel
+src/options/               settings page and OS file-association help
+src/styles/                HTML theme, data trees, source tokens, layout
+src/fonts/                 local WOFF2 files and OFL licences
+vendor/                    bundled marked, Mermaid, generated CSS
 scripts/build.mjs          builds dist/chrome and dist/firefox, patches Mermaid for Firefox CSP
 scripts/package.mjs        creates the Chrome and Firefox ZIP files
-scripts/screenshots.mjs    creates the store screenshots
+scripts/screenshots.mjs    creates the high-res gallery and animated preview
 scripts/test.mjs           runs the Playwright suite with the local browser path
 store/                     store listing, privacy policy, screenshots and release checklist
 ```
