@@ -1,11 +1,13 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (className) {
+      node.className = className;
+    }
+    if (text !== undefined) {
+      node.textContent = text;
+    }
     return node;
   }
 
@@ -16,11 +18,7 @@
     if (parsed.error) {
       article.append(
         el('div', 'pv-doc-title', 'Invalid XML'),
-        Plainview.errorPanel(
-          parsed.error.message,
-          parsed.error.line,
-          parsed.error.column,
-        ),
+        Plainview.errorPanel(parsed.error.message, parsed.error.line, parsed.error.column),
       );
       return { article, stats: null, error: true };
     }

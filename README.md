@@ -6,7 +6,7 @@ Markdown, JSON and XML today; YAML, TOML and more are on the roadmap.
 [![CI](https://github.com/kk18888678/plainview/actions/workflows/ci.yml/badge.svg)](https://github.com/kk18888678/plainview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-1f4fa0.svg)](LICENSE)
 
-> Version **1.0.0** · Chrome Web Store and Firefox Add-ons listings pending.
+> Version **1.1.0** · Chrome Web Store and Firefox Add-ons listings pending.
 
 ![Plainview demo](docs/demo.webp)
 
@@ -141,9 +141,16 @@ npm run package
 The GitHub release workflow attaches all three. The source ZIP is generated with
 `git archive` from the tagged commit.
 
+## Code style
+
+Formatting and review standards live in [STYLE.md](STYLE.md). Biome 2.6.7 enforces all non-nursery
+rules; `npm run lint` fails on any diagnostic, including informational suggestions. The configuration
+is in [biome.json](biome.json).
+
 ## Test
 
 ```bash
+npm run lint
 npm test
 ```
 

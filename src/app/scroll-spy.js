@@ -1,7 +1,5 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function createScrollSpy({ nav, headings }) {
     const links = new Map();
 
@@ -12,7 +10,9 @@
       } catch {
         id = link.hash.slice(1);
       }
-      if (id) links.set(id, link);
+      if (id) {
+        links.set(id, link);
+      }
     }
 
     let timer = 0;
@@ -21,8 +21,11 @@
       for (const [key, link] of links) {
         const active = key === id;
         link.classList.toggle('is-active', active);
-        if (active) link.setAttribute('aria-current', 'location');
-        else link.removeAttribute('aria-current');
+        if (active) {
+          link.setAttribute('aria-current', 'location');
+        } else {
+          link.removeAttribute('aria-current');
+        }
       }
     }
 
@@ -36,20 +39,30 @@
       let active = headings[0]?.id;
       for (const heading of headings) {
         const target = document.getElementById(heading.id);
-        if (!target) continue;
-        if (target.getBoundingClientRect().top <= offset) active = heading.id;
-        else break;
+        if (!target) {
+          continue;
+        }
+        if (target.getBoundingClientRect().top <= offset) {
+          active = heading.id;
+        } else {
+          break;
+        }
       }
 
       const atBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 4;
-      if (atBottom) active = headings[headings.length - 1]?.id || active;
-      if (active) activate(active);
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      if (atBottom) {
+        active = headings.at(-1)?.id || active;
+      }
+      if (active) {
+        activate(active);
+      }
     }
 
     function schedule() {
-      if (timer) return;
+      if (timer) {
+        return;
+      }
       timer = window.setTimeout(update, 50);
     }
 

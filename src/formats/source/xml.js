@@ -1,26 +1,26 @@
 /* global Plainview */
-(function () {
-  'use strict';
-
+(() => {
   const { escapeHtml } = Plainview;
   const { register } = Plainview.sourceHighlight;
 
-  const TOKEN =
-    /(<!--[\s\S]*?-->)|(<!\[CDATA\[[\s\S]*?\]\]>)|(<\?[\s\S]*?\?>)|(<\/?)([A-Za-z_][\w:.-]*)((?:\s+[\w:.-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)(\s*\/?>)/g;
-  const ATTR = /([\w:.-]+)(\s*=\s*)("[^"]*"|'[^']*')/g;
+  const Token =
+    /(<!--[\s\S]*?-->)|(<!\[CDATA\[[\s\S]*?\]\]>)|(<\?[\s\S]*?\?>)|(<\/?)([A-Za-z_][\w:.-]*)((?:\s+[\w:.-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)(\s*\/?>)/gu;
+  const Attr = /([\w:.-]+)(\s*=\s*)("[^"]*"|'[^']*')/gu;
 
   function escapeAttrBlock(block) {
     let out = '';
     let last = 0;
-    let match;
+    Attr.lastIndex = 0;
+    let match = Attr.exec(block);
 
-    ATTR.lastIndex = 0;
-    while ((match = ATTR.exec(block))) {
+    while (match) {
       out += escapeHtml(block.slice(last, match.index));
-      out += `<span class="pv-syn-attr">${escapeHtml(match[1])}</span>`;
-      out += `<span class="pv-syn-punct">${escapeHtml(match[2])}</span>`;
-      out += `<span class="pv-syn-attr-value">${escapeHtml(match[3])}</span>`;
+      const [, name, equals, value] = match;
+      out += `<span class="pv-syn-attr">${escapeHtml(name)}</span>`;
+      out += `<span class="pv-syn-punct">${escapeHtml(equals)}</span>`;
+      out += `<span class="pv-syn-attr-value">${escapeHtml(value)}</span>`;
       last = match.index + match[0].length;
+      match = Attr.exec(block);
     }
 
     out += escapeHtml(block.slice(last));
@@ -39,22 +39,24 @@
   function highlight(source) {
     let out = '';
     let last = 0;
-    let match;
+    let match = Token.exec(source);
 
-    while ((match = TOKEN.exec(source))) {
+    while (match) {
       out += escapeHtml(source.slice(last, match.index));
+      const [, comment, cdata, declaration, opening, name, attrs, closing] = match;
 
-      if (match[1]) {
-        out += `<span class="pv-syn-comment">${escapeHtml(match[1])}</span>`;
-      } else if (match[2]) {
-        out += `<span class="pv-syn-cdata">${escapeHtml(match[2])}</span>`;
-      } else if (match[3]) {
-        out += `<span class="pv-syn-decl">${escapeHtml(match[3])}</span>`;
+      if (comment) {
+        out += `<span class="pv-syn-comment">${escapeHtml(comment)}</span>`;
+      } else if (cdata) {
+        out += `<span class="pv-syn-cdata">${escapeHtml(cdata)}</span>`;
+      } else if (declaration) {
+        out += `<span class="pv-syn-decl">${escapeHtml(declaration)}</span>`;
       } else {
-        out += highlightTag(match[4], match[5], match[6], match[7]);
+        out += highlightTag(opening, name, attrs, closing);
       }
 
       last = match.index + match[0].length;
+      match = Token.exec(source);
     }
 
     out += escapeHtml(source.slice(last));

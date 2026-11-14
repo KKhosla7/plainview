@@ -3,13 +3,9 @@
  * Post-processing after marked: code blocks, Mermaid placeholders, tables,
  * heading ids and the table of contents source.
  */
-(function (root) {
-  'use strict';
-
+((root) => {
   function codeLanguage(code) {
-    const languageClass = [...code.classList].find((name) =>
-      name.startsWith('language-'),
-    );
+    const languageClass = [...code.classList].find((name) => name.startsWith('language-'));
     return languageClass ? languageClass.slice('language-'.length) : '';
   }
 
@@ -20,7 +16,7 @@
     button.textContent = 'Copy';
     button.title = 'Copy code';
     button.addEventListener('click', async () => {
-      const ok = await Plainview.copyText(code.textContent.replace(/\n$/, ''));
+      const ok = await Plainview.copyText(code.textContent.replace(/\n$/u, ''));
       button.textContent = ok ? 'Copied' : 'Copy failed';
       window.setTimeout(() => {
         button.textContent = 'Copy';
@@ -30,7 +26,7 @@
   }
 
   function prepareMermaidBlock(pre, code) {
-    const source = code.textContent.replace(/\n$/, '');
+    const source = code.textContent.replace(/\n$/u, '');
     const container = Plainview.createElement('figure');
     container.className = 'pv-mermaid';
 
@@ -80,7 +76,9 @@
 
     for (const pre of article.querySelectorAll('pre')) {
       const code = pre.querySelector('code');
-      if (!code) continue;
+      if (!code) {
+        continue;
+      }
 
       if (codeLanguage(code).toLowerCase() === 'mermaid') {
         mermaidBlocks.push(prepareMermaidBlock(pre, code));
@@ -119,15 +117,15 @@
   }
 
   function enhanceHeadings(article) {
-    const used = new Set(
-      [...article.querySelectorAll('[id]')].map((el) => el.id),
-    );
+    const used = new Set([...article.querySelectorAll('[id]')].map((el) => el.id));
     const nextId = Plainview.createIdFactory(used);
     const headings = [];
 
     for (const heading of article.querySelectorAll('h1,h2,h3,h4,h5,h6')) {
-      const text = (heading.textContent || '').replace(/\s+/g, ' ').trim();
-      if (!text) continue;
+      const text = (heading.textContent || '').replace(/\s+/gu, ' ').trim();
+      if (!text) {
+        continue;
+      }
 
       const id = nextId(text);
       heading.id = id;

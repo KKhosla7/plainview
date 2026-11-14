@@ -1,10 +1,6 @@
 import assert from 'node:assert/strict';
-import { after, before, test } from 'node:test';
-import {
-  assertNoErrors,
-  closeExtension,
-  launchExtension,
-} from './helpers.mjs';
+import { after, before, test as it } from 'node:test';
+import { assertNoErrors, closeExtension, launchExtension } from './helpers.mjs';
 
 let context;
 let profile;
@@ -14,7 +10,7 @@ before(async () => {
   ({ context, profile } = await launchExtension());
   let workers = context.serviceWorkers();
   if (workers.length === 0) {
-    workers = [await context.waitForEvent('serviceworker', { timeout: 10000 })];
+    workers = [await context.waitForEvent('serviceworker', { timeout: 10_000 })];
   }
   extensionId = new URL(workers[0].url()).host;
 });
@@ -23,7 +19,7 @@ after(async () => {
   await closeExtension({ context, profile });
 });
 
-test('settings page loads and remembers the auto-open option', async () => {
+it('settings page loads and remembers the auto-open option', async () => {
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
@@ -37,10 +33,7 @@ test('settings page loads and remembers the auto-open option', async () => {
   await page.reload();
   await page.waitForSelector('#autoOpen');
   assert.equal(await page.isChecked('#autoOpen'), true);
-  assert.match(
-    await page.locator('#version').textContent(),
-    /^\d+\.\d+\.\d+$/,
-  );
+  assert.match(await page.locator('#version').textContent(), /^\d+\.\d+\.\d+$/u);
 
   assertNoErrors(errors);
   await page.close();

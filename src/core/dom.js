@@ -4,13 +4,9 @@
  * created with document.createElement() there may not behave like HTML, so use
  * a hidden HTML document as the element factory for every XML document.
  */
-(function (root) {
-  'use strict';
-
-  const isXmlDocument = /xml/i.test(document.contentType || '');
-  const factory = isXmlDocument
-    ? document.implementation.createHTMLDocument('')
-    : document;
+((root) => {
+  const isXmlDocument = /xml/iu.test(document.contentType || '');
+  const factory = isXmlDocument ? document.implementation.createHTMLDocument('') : document;
 
   function createElement(tag) {
     return factory.createElement(tag);

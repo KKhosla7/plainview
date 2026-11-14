@@ -3,13 +3,15 @@
  * Mounts the reader shell and wires the small UI controllers together.
  * Format-specific rendering lives in src/formats/.
  */
-(function (root) {
-  'use strict';
-
+((root) => {
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (className) {
+      node.className = className;
+    }
+    if (text !== undefined) {
+      node.textContent = text;
+    }
     return node;
   }
 
@@ -24,8 +26,12 @@
   }
 
   function buildContent(source, format) {
-    if (format.id === 'json') return Plainview.buildJson(source);
-    if (format.id === 'xml') return Plainview.buildXml(source);
+    if (format.id === 'json') {
+      return Plainview.buildJson(source);
+    }
+    if (format.id === 'xml') {
+      return Plainview.buildXml(source);
+    }
     return Plainview.buildMarkdown(source);
   }
 
@@ -55,16 +61,18 @@
   }
 
   function scrollToHash(format) {
-    if (format.id !== 'markdown' || location.hash.length <= 1) return;
+    if (format.id !== 'markdown' || location.hash.length <= 1) {
+      return;
+    }
     let target = null;
     try {
-      target = document.getElementById(
-        decodeURIComponent(location.hash.slice(1)),
-      );
+      target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
     } catch {
       target = null;
     }
-    if (target) Plainview.scrollElementIntoViewInstant(target);
+    if (target) {
+      Plainview.scrollElementIntoViewInstant(target);
+    }
   }
 
   function wireShortcuts({ viewSwitcher, zoom, toc }) {
@@ -73,39 +81,51 @@
     document.addEventListener(
       'wheel',
       (event) => {
-        if (viewSwitcher.getView() !== 'html') return;
-        if (!(event.ctrlKey || event.metaKey)) return;
+        if (viewSwitcher.getView() !== 'html') {
+          return;
+        }
+        if (!(event.ctrlKey || event.metaKey)) {
+          return;
+        }
         event.preventDefault();
-        zoom.setZoom(
-          zoom.getZoom() + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP),
-        );
+        zoom.setZoom(zoom.getZoom() + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP));
       },
       { passive: false },
     );
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
-        if (toc.isOpen()) toc.close();
-        else if (viewSwitcher.getView() === 'source') {
-          viewSwitcher.setView('html');
-        }
+        handleEscape(viewSwitcher, toc);
         return;
       }
-
-      if (viewSwitcher.getView() !== 'html') return;
-      if (!(event.ctrlKey || event.metaKey)) return;
-
-      if (event.key === '+' || event.key === '=') {
-        event.preventDefault();
-        zoom.setZoom(zoom.getZoom() + ZOOM_STEP);
-      } else if (event.key === '-') {
-        event.preventDefault();
-        zoom.setZoom(zoom.getZoom() - ZOOM_STEP);
-      } else if (event.key === '0') {
-        event.preventDefault();
-        zoom.setZoom(100);
-      }
+      handleZoomKey(event, viewSwitcher, zoom, ZOOM_STEP);
     });
+  }
+
+  function handleEscape(viewSwitcher, toc) {
+    if (toc.isOpen()) {
+      toc.close();
+      return;
+    }
+    if (viewSwitcher.getView() === 'source') {
+      viewSwitcher.setView('html');
+    }
+  }
+
+  function handleZoomKey(event, viewSwitcher, zoom, step) {
+    if (viewSwitcher.getView() !== 'html' || !(event.ctrlKey || event.metaKey)) {
+      return;
+    }
+    if (event.key === '+' || event.key === '=') {
+      event.preventDefault();
+      zoom.setZoom(zoom.getZoom() + step);
+    } else if (event.key === '-') {
+      event.preventDefault();
+      zoom.setZoom(zoom.getZoom() - step);
+    } else if (event.key === '0') {
+      event.preventDefault();
+      zoom.setZoom(100);
+    }
   }
 
   function removeBrowserTextChrome() {
@@ -114,9 +134,7 @@
         link.remove();
       }
     }
-    for (const style of document.querySelectorAll(
-      '#xml-viewer-style, #json-viewer-style',
-    )) {
+    for (const style of document.querySelectorAll('#xml-viewer-style, #json-viewer-style')) {
       style.remove();
     }
   }
@@ -134,7 +152,9 @@
       Plainview.loadSetting(Plainview.ZOOM_KEY, 100),
     ]);
 
-    if (format.id === 'markdown') Plainview.installFonts();
+    if (format.id === 'markdown') {
+      Plainview.installFonts();
+    }
     const content = buildContent(source, format);
     const app = el('div', 'pv-app');
     const scrim = el('div', 'pv-scrim');
@@ -175,7 +195,9 @@
       persistKey: viewKey,
       onSource: toc.close,
       onViewChange: () => {
-        if (toc.update) toc.update();
+        if (toc.update) {
+          toc.update();
+        }
       },
     });
 
@@ -200,19 +222,16 @@
     });
     wireShortcuts({ viewSwitcher, zoom, toc });
 
-    app.append(
-      topbar.element,
-      shell,
-      createSourcePane(source, format),
-      zoom.element,
-    );
+    app.append(topbar.element, shell, createSourcePane(source, format), zoom.element);
 
     removeBrowserTextChrome();
     document.documentElement.dataset.pvFormat = format.id;
     document.documentElement.dataset.pv = 'active';
     document.body.replaceChildren(app);
     document.body.removeAttribute('style');
-    if (fileName) document.title = fileName;
+    if (fileName) {
+      document.title = fileName;
+    }
 
     const fallback = () => scrollToHash(format);
     const scrollMemory = Plainview.createScrollMemory({
@@ -222,12 +241,15 @@
     });
 
     scrollMemory.restore(fallback);
-    if (toc.update) toc.update();
+    if (toc.update) {
+      toc.update();
+    }
     refreshMermaid().then(() => {
       scrollMemory.reapply(fallback);
-      if (toc.update) toc.update();
+      if (toc.update) {
+        toc.update();
+      }
     });
-
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, { mountViewer });

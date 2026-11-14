@@ -1,0 +1,167 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.7/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "src/**",
+      "scripts/**",
+      "tests/**",
+      "package.json",
+      "biome.json",
+      "!src/fonts",
+      "!tests/fixtures",
+      "!dist",
+      "!vendor",
+      "!package-lock.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "lineEnding": "lf"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "all",
+      "nursery": "off",
+      "correctness": {
+        "useQwikValidLexicalScope": "off",
+        "noUnresolvedImports": "off"
+      },
+      "security": {
+        "noSecrets": "off"
+      },
+      "suspicious": {
+        "useBaseline": "off"
+      },
+      "performance": {
+        "useTopLevelRegex": "off"
+      },
+      "style": {
+        "noTernary": "off",
+        "noHexColors": "off",
+        "noMagicNumbers": "off",
+        "noContinue": "off",
+        "useNamedCaptureGroup": "off",
+        "useGlobalThis": "off",
+        "useDomQuerySelector": "off",
+        "useNamingConvention": "off",
+        "noExcessiveLinesPerFile": {
+          "level": "error",
+          "options": {
+            "maxLines": 300,
+            "skipBlankLines": true
+          }
+        }
+      },
+      "complexity": {
+        "noImportantStyles": "off",
+        "noExcessiveLinesPerFunction": {
+          "level": "error",
+          "options": {
+            "maxLines": 80,
+            "skipBlankLines": true,
+            "skipIifes": true
+          }
+        },
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": {
+            "maxAllowedComplexity": 25
+          }
+        },
+        "useMaxParams": {
+          "level": "error",
+          "options": {
+            "max": 5
+          }
+        }
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all",
+      "arrowParentheses": "always",
+      "bracketSpacing": true
+    },
+    "globals": [
+      "Plainview",
+      "chrome",
+      "browser",
+      "FontFace",
+      "DOMParser",
+      "XMLSerializer",
+      "NodeFilter",
+      "marked"
+    ]
+  },
+  "json": {
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["scripts/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off",
+            "noPlaywrightWaitForTimeout": "off"
+          },
+          "style": {
+            "noProcessEnv": "off",
+            "noPlaywrightWaitForSelector": "off"
+          },
+          "correctness": {
+            "noNodejsModules": "off",
+            "noProcessGlobal": "off"
+          },
+          "performance": {
+            "noSyncScripts": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["tests/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noPlaywrightWaitForSelector": "off",
+            "noProcessEnv": "off"
+          },
+          "suspicious": {
+            "noPlaywrightWaitForTimeout": "off"
+          },
+          "correctness": {
+            "noNodejsModules": "off",
+            "noProcessGlobal": "off"
+          },
+          "performance": {
+            "useDomNodeTextContent": "off",
+            "noAwaitInLoops": "off"
+          }
+        }
+      }
+    }
+  ]
+}

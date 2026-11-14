@@ -3,12 +3,14 @@
 ## Current status
 
 - Chrome extension: 20/20 Playwright tests pass against `dist/chrome`.
+- Biome: zero diagnostics with the strict non-nursery preset.
 - Firefox: smoke-tested Markdown, Mermaid, source view, theme, XML and the
   error path. Firefox JSON is handled by Firefox's native JSON viewer.
 - Firefox `web-ext lint`: 0 errors, 11 warnings (bundled lazy imports and
   vendored Mermaid `innerHTML`; no eval, no remote code).
 - Gitleaks scans the working tree and full git history in CI; local scan is clean.
-- Package version: 1.0.0.
+- Code style and review rules are documented in `STYLE.md`.
+- Package version: 1.1.0.
 
 ## Build and package
 
@@ -71,4 +73,6 @@ documents.
 - Confirm the project licence (MIT is included as a starting point).
 - Confirm the Firefox minimum version (currently 142.0).
 - Review the permission justification with the store reviewers' wording.
-- Re-run `npm test`, `npm run package` and `npm run lint:firefox`.
+- Write `store/release-notes/<version>.md` before tagging.
+- Run `npm run lint` with zero diagnostics.
+- Re-run `npm run lint`, `npm test`, `npm run package` and `npm run lint:firefox`.

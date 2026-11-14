@@ -1,21 +1,17 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function parseXml(source) {
-    const clean = source.replace(/^\uFEFF/, '');
+    const clean = source.replace(/^\uFEFF/u, '');
     const doc = new DOMParser().parseFromString(clean, 'application/xml');
     const error =
       doc.querySelector('parsererror') ||
-      (doc.documentElement?.localName === 'parsererror'
-        ? doc.documentElement
-        : null);
+      (doc.documentElement?.localName === 'parsererror' ? doc.documentElement : null);
 
     if (error) {
       const message = (error.textContent || 'Malformed XML').trim();
       const lineColumn =
-        /line\s+(\d+)\s+at\s+column\s+(\d+)/i.exec(message) ||
-        /line\s+(\d+)\s+column\s+(\d+)/i.exec(message);
+        /line\s+(\d+)\s+at\s+column\s+(\d+)/iu.exec(message) ||
+        /line\s+(\d+)\s+column\s+(\d+)/iu.exec(message);
       return {
         error: {
           message,

@@ -1,10 +1,8 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   async function copyText(text) {
     try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
+      if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(text);
         return true;
       }

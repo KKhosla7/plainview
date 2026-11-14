@@ -26,6 +26,7 @@ jobs:
           /tmp/gitleaks git . --redact --verbose
           /tmp/gitleaks dir . --redact --verbose
       - run: npm ci
+      - run: npm run lint
       - run: npx playwright install --with-deps chromium
       - name: Check tag matches package version
         run: |
@@ -37,7 +38,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" \
-            dist/plainview-*.zip \
-            --title "Plainview $GITHUB_REF_NAME" \
-            --generate-notes
+          version="${GITHUB_REF_NAME#v}"
+          notes="store/release-notes/${version}.md"
+          if [ -f "$notes" ]; then
+            gh release create "$GITHUB_REF_NAME" dist/plainview-*.zip \
+              --title "Plainview $GITHUB_REF_NAME" --notes-file "$notes"
+          else
+            gh release create "$GITHUB_REF_NAME" dist/plainview-*.zip \
+              --title "Plainview $GITHUB_REF_NAME" --generate-notes
+          fi

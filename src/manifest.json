@@ -1,14 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Plainview",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Render Markdown, JSON and XML files opened in Chrome or Firefox. Includes Mermaid diagrams and content zoom.",
-  "permissions": [
-    "storage",
-    "clipboardWrite",
-    "downloads",
-    "notifications"
-  ],
+  "permissions": ["storage", "clipboardWrite", "downloads", "notifications"],
   "icons": {
     "16": "assets/icon-16.png",
     "32": "assets/icon-32.png",
@@ -17,38 +12,20 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "http://*/*",
-        "https://*/*",
-        "file:///*"
-      ],
-      "js": [
-        "boot.js"
-      ],
-      "css": [
-        "styles.css"
-      ],
+      "matches": ["http://*/*", "https://*/*", "file:///*"],
+      "js": ["boot.js"],
+      "css": ["styles.css"],
       "run_at": "document_end",
       "all_frames": false
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": [
-        "app.js"
-      ],
-      "matches": [
-        "http://*/*",
-        "https://*/*",
-        "file:///*"
-      ]
+      "resources": ["app.js"],
+      "matches": ["http://*/*", "https://*/*", "file:///*"]
     }
   ],
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*",
-    "file:///*"
-  ],
+  "host_permissions": ["http://*/*", "https://*/*", "file:///*"],
   "options_ui": {
     "page": "src/options/options.html",
     "open_in_tab": true

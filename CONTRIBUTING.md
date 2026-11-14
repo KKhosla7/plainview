@@ -9,11 +9,16 @@ npx playwright install chromium
 
 ## Checks
 
+Formatting and review standards are in [STYLE.md](STYLE.md).
+
 ```bash
+npm run lint
 npm test
 npm run lint:firefox
 npm run package
 ```
+
+Use `npm run lint:fix` before committing when Biome reports formatting or safe-fix diagnostics.
 
 ## Adding a format
 

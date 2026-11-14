@@ -1,103 +1,133 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   /**
    * Remove // and /* comments *\/ and trailing commas without touching string
    * contents. This makes .jsonc files readable without pretending to support
    * the rest of JSON5.
    */
+  function readJsonString(text, start) {
+    let index = start + 1;
+    let escaped = false;
+    while (index < text.length) {
+      const char = text[index];
+      if (escaped) {
+        escaped = false;
+      } else if (char === '\\') {
+        escaped = true;
+      } else if (char === '"') {
+        return { value: text.slice(start, index + 1), end: index + 1 };
+      }
+      index += 1;
+    }
+    return { value: text.slice(start), end: text.length };
+  }
+
+  function skipLineComment(text, start) {
+    let index = start + 2;
+    while (index < text.length && text[index] !== '\n') {
+      index += 1;
+    }
+    return index;
+  }
+
+  function skipBlockComment(text, start) {
+    let index = start + 2;
+    let newlines = '';
+    while (index < text.length && !(text[index] === '*' && text[index + 1] === '/')) {
+      if (text[index] === '\n') {
+        newlines += '\n';
+      }
+      index += 1;
+    }
+    return { newlines, end: Math.min(index + 2, text.length) };
+  }
+
+  function flushComma(out, pendingComma) {
+    return pendingComma ? `${out},` : out;
+  }
+
+  function isClosingBracket(char) {
+    return char === '}' || char === ']';
+  }
+
+  function readComment(text, index) {
+    if (text[index] !== '/') {
+      return null;
+    }
+    if (text[index + 1] === '/') {
+      return { newlines: '', end: skipLineComment(text, index) };
+    }
+    if (text[index + 1] === '*') {
+      return skipBlockComment(text, index);
+    }
+    return null;
+  }
+
   function stripJsonComments(text) {
     let out = '';
-    let i = 0;
-    let inString = false;
-    let escaped = false;
+    let index = 0;
     let pendingComma = false;
 
-    while (i < text.length) {
-      const ch = text[i];
+    while (index < text.length) {
+      const char = text[index];
 
-      if (inString) {
-        out += ch;
-        if (escaped) escaped = false;
-        else if (ch === '\\') escaped = true;
-        else if (ch === '"') inString = false;
-        i += 1;
+      if (char === '"') {
+        out = flushComma(out, pendingComma);
+        pendingComma = false;
+        const string = readJsonString(text, index);
+        out += string.value;
+        index = string.end;
         continue;
       }
 
-      if (ch === '"') {
-        if (pendingComma) {
-          out += ',';
-          pendingComma = false;
-        }
-        inString = true;
-        out += ch;
-        i += 1;
+      const comment = readComment(text, index);
+      if (comment) {
+        out += comment.newlines;
+        index = comment.end;
         continue;
       }
 
-      if (ch === '/' && text[i + 1] === '/') {
-        i += 2;
-        while (i < text.length && text[i] !== '\n') i += 1;
+      if (/\s/u.test(char)) {
+        out += char;
+        index += 1;
         continue;
       }
 
-      if (ch === '/' && text[i + 1] === '*') {
-        i += 2;
-        while (i < text.length && !(text[i] === '*' && text[i + 1] === '/')) {
-          if (text[i] === '\n') out += '\n';
-          i += 1;
-        }
-        i += 2;
-        continue;
-      }
-
-      if (/\s/.test(ch)) {
-        out += ch;
-        i += 1;
-        continue;
-      }
-
-      if (ch === ',') {
+      if (char === ',') {
         pendingComma = true;
-        i += 1;
+        index += 1;
         continue;
       }
 
-      if (ch === '}' || ch === ']') {
+      if (isClosingBracket(char)) {
         pendingComma = false;
-        out += ch;
-        i += 1;
+        out += char;
+        index += 1;
         continue;
       }
 
-      if (pendingComma) {
-        out += ',';
-        pendingComma = false;
-      }
-
-      out += ch;
-      i += 1;
+      out = flushComma(out, pendingComma);
+      pendingComma = false;
+      out += char;
+      index += 1;
     }
 
-    if (pendingComma) out += ',';
-    return out;
+    return flushComma(out, pendingComma);
   }
 
   function positionFromError(message, source) {
-    const position = /position\s+(\d+)/i.exec(message);
+    const position = /position\s+(\d+)/iu.exec(message);
     if (position) {
       const index = Math.min(Number(position[1]), source.length);
       const lines = source.slice(0, index).split('\n');
       return {
         position: index,
         line: lines.length,
-        column: lines[lines.length - 1].length + 1,
+        column: lines.at(-1).length + 1,
       };
     }
 
-    const lineColumn = /line\s+(\d+)\s+column\s+(\d+)/i.exec(message);
+    const lineColumn = /line\s+(\d+)\s+column\s+(\d+)/iu.exec(message);
     if (lineColumn) {
       return {
         line: Number(lineColumn[1]),
@@ -109,7 +139,7 @@
   }
 
   function parseJson(source) {
-    const clean = source.replace(/^\uFEFF/, '');
+    const clean = source.replace(/^\uFEFF/u, '');
     try {
       return { value: JSON.parse(clean) };
     } catch (firstError) {
@@ -136,8 +166,12 @@
   }
 
   function formatBytes(bytes) {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024) {
+      return `${bytes} B`;
+    }
+    if (bytes < 1024 * 1024) {
+      return `${(bytes / 1024).toFixed(1)} KB`;
+    }
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 

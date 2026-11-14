@@ -3,10 +3,8 @@
  * Markdown parsing and DOM hardening. Raw HTML is deliberately escaped: a
  * downloaded .md file is untrusted input and must not run script.
  */
-(function (root) {
-  'use strict';
-
-  const HTML_ESCAPES = {
+((root) => {
+  const HtmlEscapes = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -17,7 +15,7 @@
   let parser = null;
 
   function escapeHtml(value) {
-    return String(value ?? '').replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch]);
+    return String(value ?? '').replace(/[&<>"']/gu, (ch) => HtmlEscapes[ch]);
   }
 
   function createParser() {
@@ -31,9 +29,7 @@
       renderer: {
         html(token) {
           const escaped = escapeHtml(token.text);
-          return token.block
-            ? `<div class="pv-raw-html">${escaped}</div>\n`
-            : escaped;
+          return token.block ? `<div class="pv-raw-html">${escaped}</div>\n` : escaped;
         },
       },
     });
@@ -42,7 +38,9 @@
   }
 
   function renderMarkdown(source) {
-    if (!parser) parser = createParser();
+    if (!parser) {
+      parser = createParser();
+    }
     return parser.parse(String(source ?? ''));
   }
 
@@ -51,10 +49,16 @@
    * Relative URLs stay relative so they resolve against the markdown file.
    */
   function sanitizeUrl(raw, kind) {
-    if (typeof raw !== 'string') return null;
+    if (typeof raw !== 'string') {
+      return null;
+    }
     const value = raw.trim();
-    if (!value) return null;
-    if (value.startsWith('#')) return value;
+    if (!value) {
+      return null;
+    }
+    if (value.startsWith('#')) {
+      return value;
+    }
 
     let parsed;
     try {
@@ -67,16 +71,12 @@
 
     if (kind === 'image') {
       if (protocol === 'data:') {
-        return /^data:image\/(?:png|jpe?g|gif|webp|avif|bmp);/i.test(value)
-          ? value
-          : null;
+        return /^data:image\/(?:png|jpe?g|gif|webp|avif|bmp);/iu.test(value) ? value : null;
       }
       return ['http:', 'https:', 'file:'].includes(protocol) ? value : null;
     }
 
-    return ['http:', 'https:', 'mailto:', 'file:'].includes(protocol)
-      ? value
-      : null;
+    return ['http:', 'https:', 'mailto:', 'file:'].includes(protocol) ? value : null;
   }
 
   function sanitizeLinks(article) {
@@ -98,9 +98,7 @@
       if (safe === null) {
         const blocked = Plainview.createElement('span');
         blocked.className = 'pv-image-blocked';
-        blocked.textContent = image.alt
-          ? `[blocked image: ${image.alt}]`
-          : '[blocked image]';
+        blocked.textContent = image.alt ? `[blocked image: ${image.alt}]` : '[blocked image]';
         image.replaceWith(blocked);
         continue;
       }
@@ -121,8 +119,8 @@
       .toLowerCase()
       .replace(/[^\p{L}\p{N}\s-]/gu, '')
       .trim()
-      .replace(/[\s-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+      .replace(/[\s-]+/gu, '-')
+      .replace(/^-+|-+$/gu, '');
     return slug || 'section';
   }
 

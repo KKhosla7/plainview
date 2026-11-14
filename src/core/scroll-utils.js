@@ -1,7 +1,5 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function withAutoBehavior(fn) {
     const element = document.documentElement;
     const previous = element.style.scrollBehavior;

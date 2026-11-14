@@ -1,17 +1,21 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (className) {
+      node.className = className;
+    }
+    if (text !== undefined) {
+      node.textContent = text;
+    }
     return node;
   }
 
   function buildToc(headings) {
     const usable = headings.filter((heading) => heading.level <= 4);
-    if (usable.length < 2) return null;
+    if (usable.length < 2) {
+      return null;
+    }
 
     const minLevel = Math.min(...usable.map((heading) => heading.level));
     const nav = el('nav', 'pv-toc');
@@ -38,7 +42,7 @@
     const nav = buildToc(allHeadings);
     if (!nav) {
       button.hidden = true;
-      return { element: null, close() {}, isOpen: () => false };
+      return { element: null, close: () => false, isOpen: () => false };
     }
 
     let open = false;
@@ -60,15 +64,20 @@
     }
 
     function toggle() {
-      if (open) close();
-      else show();
+      if (open) {
+        close();
+      } else {
+        show();
+      }
     }
 
     button.addEventListener('click', toggle);
     scrim.addEventListener('click', close);
     nav.addEventListener('click', (event) => {
       const link = event.target.closest('a');
-      if (!link || link.hash.length <= 1) return;
+      if (!link || link.hash.length <= 1) {
+        return;
+      }
       if (
         event.defaultPrevented ||
         event.button !== 0 ||
@@ -82,18 +91,20 @@
 
       let target = null;
       try {
-        target = document.getElementById(
-          decodeURIComponent(link.hash.slice(1)),
-        );
+        target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
       } catch {
         target = null;
       }
-      if (!target) return;
+      if (!target) {
+        return;
+      }
 
       event.preventDefault();
       Plainview.scrollElementIntoViewSmooth(target);
       history.pushState(null, '', link.hash);
-      if (window.matchMedia('(max-width: 1079px)').matches) close();
+      if (window.matchMedia('(max-width: 1079px)').matches) {
+        close();
+      }
     });
 
     const spy = Plainview.createScrollSpy({ nav, headings: usable });

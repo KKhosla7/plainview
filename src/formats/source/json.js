@@ -1,36 +1,36 @@
 /* global Plainview */
-(function () {
-  'use strict';
-
+(() => {
   const { escapeHtml } = Plainview;
   const { register } = Plainview.sourceHighlight;
 
-  const TOKEN =
-    /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*")(?=\s*:)|("(?:\\.|[^"\\])*")|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|\b(true|false|null)\b|([{}[\],:])/g;
+  const Token =
+    /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*")(?=\s*:)|("(?:\\.|[^"\\])*")|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|\b(true|false|null)\b|([{}[\],:])/gu;
 
   function highlight(source) {
     let out = '';
     let last = 0;
-    let match;
+    let match = Token.exec(source);
 
-    while ((match = TOKEN.exec(source))) {
+    while (match) {
       out += escapeHtml(source.slice(last, match.index));
+      const [, comment, key, string, number, literal, punctuation] = match;
 
-      if (match[1]) {
-        out += `<span class="pv-syn-comment">${escapeHtml(match[1])}</span>`;
-      } else if (match[2]) {
-        out += `<span class="pv-syn-key">${escapeHtml(match[2])}</span>`;
-      } else if (match[3]) {
-        out += `<span class="pv-syn-string">${escapeHtml(match[3])}</span>`;
-      } else if (match[4]) {
-        out += `<span class="pv-syn-number">${escapeHtml(match[4])}</span>`;
-      } else if (match[5]) {
-        out += `<span class="pv-syn-literal">${escapeHtml(match[5])}</span>`;
-      } else if (match[6]) {
-        out += `<span class="pv-syn-punct">${escapeHtml(match[6])}</span>`;
+      if (comment) {
+        out += `<span class="pv-syn-comment">${escapeHtml(comment)}</span>`;
+      } else if (key) {
+        out += `<span class="pv-syn-key">${escapeHtml(key)}</span>`;
+      } else if (string) {
+        out += `<span class="pv-syn-string">${escapeHtml(string)}</span>`;
+      } else if (number) {
+        out += `<span class="pv-syn-number">${escapeHtml(number)}</span>`;
+      } else if (literal) {
+        out += `<span class="pv-syn-literal">${escapeHtml(literal)}</span>`;
+      } else if (punctuation) {
+        out += `<span class="pv-syn-punct">${escapeHtml(punctuation)}</span>`;
       }
 
       last = match.index + match[0].length;
+      match = Token.exec(source);
     }
 
     out += escapeHtml(source.slice(last));

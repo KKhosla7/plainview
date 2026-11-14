@@ -1,7 +1,5 @@
 /* global chrome, browser, Plainview */
-(function () {
-  'use strict';
-
+(() => {
   const api = globalThis.browser ?? globalThis.chrome;
   const toggle = document.getElementById('autoOpen');
   const status = document.getElementById('status');
@@ -11,8 +9,7 @@
   async function load() {
     const data = await api.storage.local.get({ autoOpenDownloads: false });
     toggle.checked = Boolean(data.autoOpenDownloads);
-    document.getElementById('version').textContent =
-      api.runtime.getManifest().version;
+    document.getElementById('version').textContent = api.runtime.getManifest().version;
   }
 
   toggle.addEventListener('change', async () => {

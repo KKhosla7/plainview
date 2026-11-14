@@ -1,11 +1,13 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (className) {
+      node.className = className;
+    }
+    if (text !== undefined) {
+      node.textContent = text;
+    }
     return node;
   }
 
@@ -23,10 +25,7 @@
     const fileBox = el('div', 'pv-file');
     const version = document.documentElement.getAttribute('data-pv-version');
     fileBox.title = version ? `${url} · Plainview ${version}` : url;
-    fileBox.append(
-      el('span', 'pv-filename', fileName),
-      el('span', 'pv-badge', formatLabel),
-    );
+    fileBox.append(el('span', 'pv-filename', fileName), el('span', 'pv-badge', formatLabel));
 
     brand.append(logo, fileBox);
     return brand;
@@ -70,12 +69,7 @@
     const downloadButton = button('pv-action pv-action-download', 'Download');
     downloadButton.title = 'Download this file';
 
-    actions.append(
-      tocButton,
-      el('span', 'pv-theme-label', 'Theme'),
-      themes,
-      downloadButton,
-    );
+    actions.append(tocButton, el('span', 'pv-theme-label', 'Theme'), themes, downloadButton);
     return { actions, tocButton, lightButton, darkButton, downloadButton };
   }
 
@@ -85,10 +79,7 @@
     const tabs = createViewTabs();
     const controls = createActions();
 
-    controls.actions.prepend(
-      el('span', 'pv-view-label', 'View'),
-      tabs.views,
-    );
+    controls.actions.prepend(el('span', 'pv-view-label', 'View'), tabs.views);
     topbar.append(brand, controls.actions);
 
     return {

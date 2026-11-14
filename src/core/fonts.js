@@ -4,10 +4,8 @@
  * the extension self-contained (no Google Fonts request) and avoids relative
  * URL problems when the reader is mounted inside an XML document.
  */
-(function (root) {
-  'use strict';
-
-  const FACES = [
+((root) => {
+  const Faces = [
     ['Barlow Condensed', 'barlow-condensed-500.woff2', '500', 'normal'],
     ['Barlow Condensed', 'barlow-condensed-600.woff2', '600', 'normal'],
     ['Barlow Condensed', 'barlow-condensed-700.woff2', '700', 'normal'],
@@ -22,22 +20,24 @@
   let installed = false;
 
   function installFonts() {
-    if (installed) return;
+    if (installed) {
+      return;
+    }
     installed = true;
 
     const runtime = root.browser?.runtime ?? root.chrome?.runtime;
-    if (!runtime || !document.fonts || typeof root.FontFace !== 'function') {
+    if (!(runtime && document.fonts) || typeof root.FontFace !== 'function') {
       return;
     }
 
-    for (const [family, file, weight, style] of FACES) {
+    for (const [family, file, weight, style] of Faces) {
       try {
         const face = new FontFace(family, `url("${runtime.getURL(`src/fonts/${file}`)}")`, {
           weight,
           style,
         });
         document.fonts.add(face);
-        face.load().catch(() => {});
+        face.load().catch(() => undefined);
       } catch {
         /* fallback fonts are fine */
       }

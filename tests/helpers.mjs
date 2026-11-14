@@ -26,22 +26,17 @@ export function fixtureUrl(name) {
 
 export async function startServer(overrides = {}) {
   const server = http.createServer((request, response) => {
-    const pathname = decodeURIComponent(
-      new URL(request.url, 'http://127.0.0.1').pathname,
-    );
-    const file = path.join(fixtures, pathname.replace(/^\//, ''));
+    const pathname = decodeURIComponent(new URL(request.url, 'http://127.0.0.1').pathname);
+    const file = path.join(fixtures, pathname.replace(/^\//u, ''));
 
-    if (!file.startsWith(fixtures) || !fs.existsSync(file)) {
+    if (!(file.startsWith(fixtures) && fs.existsSync(file))) {
       response.writeHead(404);
       response.end('not found');
       return;
     }
 
     response.writeHead(200, {
-      'content-type':
-        overrides[pathname] ||
-        MIME[path.extname(file)] ||
-        'application/octet-stream',
+      'content-type': overrides[pathname] || MIME[path.extname(file)] || 'application/octet-stream',
     });
     response.end(fs.readFileSync(file));
   });
@@ -67,8 +62,12 @@ export async function launchExtension() {
 }
 
 export async function closeExtension({ context, profile } = {}) {
-  if (context) await context.close();
-  if (profile) rmSync(profile, { recursive: true, force: true });
+  if (context) {
+    await context.close();
+  }
+  if (profile) {
+    rmSync(profile, { recursive: true, force: true });
+  }
 }
 
 export async function openPage(context, url) {
@@ -77,10 +76,16 @@ export async function openPage(context, url) {
 
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('console', (message) => {
-    if (message.type() !== 'error') return;
+    if (message.type() !== 'error') {
+      return;
+    }
     const text = message.text();
-    if (text.includes('Failed to load resource')) return;
-    if (text.includes('net::ERR_')) return;
+    if (text.includes('Failed to load resource')) {
+      return;
+    }
+    if (text.includes('net::ERR_')) {
+      return;
+    }
     errors.push(text);
   });
 
@@ -89,5 +94,6 @@ export async function openPage(context, url) {
 }
 
 export function assertNoErrors(errors) {
+  // biome-ignore lint/suspicious/noMisplacedAssertion: shared assertion helper called from tests
   assert.deepEqual(errors, []);
 }

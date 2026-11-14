@@ -1,20 +1,19 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function createTheme({ lightButton, darkButton, initialTheme }) {
     const { THEME_KEY, saveSetting, validTheme } = Plainview;
     const stored = validTheme(initialTheme);
     let theme =
-      stored ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light');
+      stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     let onChange = null;
 
     function effectiveDark() {
-      if (theme === 'dark') return true;
-      if (theme === 'light') return false;
+      if (theme === 'dark') {
+        return true;
+      }
+      if (theme === 'light') {
+        return false;
+      }
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
 
@@ -32,11 +31,15 @@
     }
 
     function setTheme(next) {
-      if (next === theme) return;
+      if (next === theme) {
+        return;
+      }
       theme = next;
       saveSetting(THEME_KEY, theme);
       apply();
-      if (onChange) onChange();
+      if (onChange) {
+        onChange();
+      }
     }
 
     lightButton.addEventListener('click', () => setTheme('light'));

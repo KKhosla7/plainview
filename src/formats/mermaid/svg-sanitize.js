@@ -1,7 +1,5 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   /**
    * Mermaid already renders with securityLevel: 'strict'. This is a second,
    * cheap pass before the SVG is imported into the page: no scripts, no inline
@@ -14,12 +12,18 @@
     } catch {
       return null;
     }
-    if (doc.querySelector('parsererror')) return null;
+    if (doc.querySelector('parsererror')) {
+      return null;
+    }
 
     const svg = doc.documentElement;
-    if (!svg || svg.localName !== 'svg') return null;
+    if (svg?.localName !== 'svg') {
+      return null;
+    }
 
-    for (const script of svg.querySelectorAll('script')) script.remove();
+    for (const script of svg.querySelectorAll('script')) {
+      script.remove();
+    }
 
     for (const node of svg.querySelectorAll('*')) {
       const attrs = node.attributes;
@@ -30,7 +34,7 @@
           node.removeAttribute(attr.name);
         } else if (
           (name === 'href' || name.endsWith(':href')) &&
-          /^\s*(?:javascript|vbscript|data):/i.test(attr.value)
+          /^\s*(?:javascript|vbscript|data):/iu.test(attr.value)
         ) {
           node.removeAttribute(attr.name);
         }

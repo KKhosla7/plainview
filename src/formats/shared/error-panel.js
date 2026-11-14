@@ -1,11 +1,13 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (className) {
+      node.className = className;
+    }
+    if (text !== undefined) {
+      node.textContent = text;
+    }
     return node;
   }
 
@@ -15,11 +17,7 @@
     panel.append(el('div', 'pv-error-message', message));
     if (line) {
       panel.append(
-        el(
-          'div',
-          'pv-error-location',
-          `Line ${line}${column ? `, column ${column}` : ''}`,
-        ),
+        el('div', 'pv-error-location', `Line ${line}${column ? `, column ${column}` : ''}`),
       );
     }
     return panel;

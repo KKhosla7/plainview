@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0
+
+- Added Biome 2.6.7 with the all non-nursery rule preset; CI fails on any diagnostic.
+- Added `STYLE.md`: formatting, naming, architecture, security and review standards.
+- Reformatted the source and fixed unused code, dead CSS, complex functions and unsafe patterns.
+- Added a CI lint gate alongside gitleaks, Playwright and `web-ext lint`.
+- No runtime behaviour changes.
+
 ## 1.0.0
 
 - First stable release.

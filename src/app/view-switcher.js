@@ -1,7 +1,5 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function createViewSwitcher({
     app,
     htmlTab,
@@ -25,15 +23,24 @@
     }
 
     function setView(next, { persist = true } = {}) {
-      if (next === view) return;
-      if (view === 'html') htmlScroll = window.scrollY;
-      else sourceScroll = window.scrollY;
+      if (next === view) {
+        return;
+      }
+      if (view === 'html') {
+        htmlScroll = window.scrollY;
+      } else {
+        sourceScroll = window.scrollY;
+      }
 
       view = next;
       applyState();
-      if (view === 'source' && onSource) onSource();
+      if (view === 'source' && onSource) {
+        onSource();
+      }
       Plainview.scrollToInstant(view === 'source' ? sourceScroll : htmlScroll);
-      if (onViewChange) onViewChange(view);
+      if (onViewChange) {
+        onViewChange(view);
+      }
 
       if (persist && persistKey) {
         Plainview.saveSetting(persistKey, view);
@@ -41,8 +48,11 @@
     }
 
     function syncScroll(y) {
-      if (view === 'html') htmlScroll = y;
-      else sourceScroll = y;
+      if (view === 'html') {
+        htmlScroll = y;
+      } else {
+        sourceScroll = y;
+      }
     }
 
     applyState();
@@ -51,7 +61,9 @@
     sourceTab.addEventListener('click', () => setView('source'));
 
     app.addEventListener('keydown', (event) => {
-      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+        return;
+      }
       event.preventDefault();
       const next = view === 'html' ? 'source' : 'html';
       setView(next);

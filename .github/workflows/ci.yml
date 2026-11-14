@@ -28,6 +28,7 @@ jobs:
           /tmp/gitleaks git . --redact --verbose
           /tmp/gitleaks dir . --redact --verbose
       - run: npm ci
+      - run: npm run lint
       - run: npx playwright install --with-deps chromium
       - run: npm test
       - run: npm run lint:firefox

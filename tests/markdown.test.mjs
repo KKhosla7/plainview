@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { after, before, test } from 'node:test';
+import { after, before, test as it } from 'node:test';
 import {
   assertNoErrors,
   closeExtension,
@@ -23,26 +23,17 @@ after(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
-test('renders a normal Markdown document with the HTML theme', async () => {
+it('renders a normal Markdown document with the HTML theme', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.md`);
   await page.waitForSelector('.pv-markdown');
 
   assert.equal(await page.locator('.pv-titleblock').count(), 1);
   assert.equal(await page.locator('.pv-tb-cells').count(), 0);
   assert.equal(await page.locator('.pv-sheet').count(), 0);
-  assert.match(
-    await page.locator('.pv-titleblock h1').innerText(),
-    /Plainview sample/,
-  );
-  assert.match(
-    await page.locator('.pv-tb-lede').innerText(),
-    /A quick Markdown file/,
-  );
+  assert.match(await page.locator('.pv-titleblock h1').innerText(), /Plainview sample/u);
+  assert.match(await page.locator('.pv-tb-lede').innerText(), /A quick Markdown file/u);
   await page.evaluate(() => document.fonts.load('16px "IBM Plex Sans"'));
-  assert.equal(
-    await page.evaluate(() => document.fonts.check('16px "IBM Plex Sans"')),
-    true,
-  );
+  assert.equal(await page.evaluate(() => document.fonts.check('16px "IBM Plex Sans"')), true);
   assert.equal(await page.locator('.pv-code').count(), 1);
   assert.equal(await page.locator('.pv-table-wrap table').count(), 1);
   assert.equal(await page.locator('.pv-markdown blockquote').count(), 1);
@@ -50,10 +41,7 @@ test('renders a normal Markdown document with the HTML theme', async () => {
 
   assert.equal(await page.locator('.pv-toc-title').textContent(), 'Contents');
   assert.equal(await page.locator('.pv-theme-label').textContent(), 'Theme');
-  assert.equal(
-    await page.locator('.pv-theme-tab[aria-selected="true"]').count(),
-    1,
-  );
+  assert.equal(await page.locator('.pv-theme-tab[aria-selected="true"]').count(), 1);
   assert.deepEqual(await page.locator('.pv-toc-link').allTextContents(), [
     'Plainview sample',
     'Lists',
@@ -66,7 +54,7 @@ test('renders a normal Markdown document with the HTML theme', async () => {
   await page.close();
 });
 
-test('highlights the current section in Contents', async () => {
+it('highlights the current section in Contents', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.md`);
   await page.waitForSelector('.pv-markdown');
   await page.waitForSelector('.pv-toc-link.is-active');
@@ -85,9 +73,7 @@ test('highlights the current section in Contents', async () => {
     root.style.scrollBehavior = previous;
   });
   await page.waitForFunction(
-    () =>
-      document.querySelector('.pv-toc-link.is-active')?.textContent.trim() ===
-      'Table',
+    () => document.querySelector('.pv-toc-link.is-active')?.textContent.trim() === 'Table',
     null,
     { polling: 100 },
   );
@@ -96,10 +82,10 @@ test('highlights the current section in Contents', async () => {
   await page.close();
 });
 
-test('renders Mermaid diagrams', async () => {
+it('renders Mermaid diagrams', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.md`);
   await page.waitForSelector('.pv-markdown');
-  await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20000 });
+  await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20_000 });
 
   assert.ok((await page.locator('.pv-mermaid svg').count()) >= 1);
   assertNoErrors(errors);

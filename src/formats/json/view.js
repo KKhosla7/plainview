@@ -1,13 +1,15 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
-  const MAX_NODES = 40000;
+((root) => {
+  const MaxNodes = 40_000;
 
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (className) {
+      node.className = className;
+    }
+    if (text !== undefined) {
+      node.textContent = text;
+    }
     return node;
   }
 
@@ -16,16 +18,28 @@
   }
 
   function valueClass(value) {
-    if (value === null) return 'pv-json-null';
-    if (typeof value === 'string') return 'pv-json-string';
-    if (typeof value === 'number') return 'pv-json-number';
-    if (typeof value === 'boolean') return 'pv-json-boolean';
+    if (value === null) {
+      return 'pv-json-null';
+    }
+    if (typeof value === 'string') {
+      return 'pv-json-string';
+    }
+    if (typeof value === 'number') {
+      return 'pv-json-number';
+    }
+    if (typeof value === 'boolean') {
+      return 'pv-json-boolean';
+    }
     return 'pv-json-boolean';
   }
 
   function renderValue(value) {
-    if (typeof value === 'string') return JSON.stringify(value);
-    if (value === null) return 'null';
+    if (typeof value === 'string') {
+      return JSON.stringify(value);
+    }
+    if (value === null) {
+      return 'null';
+    }
     return String(value);
   }
 
@@ -38,28 +52,36 @@
 
   function renderLeaf(key, value, isLast, isRoot) {
     const row = el('div', 'pv-json-leaf');
-    if (!isRoot) row.append(renderKey(key), span('pv-json-punct', ': '));
+    if (!isRoot) {
+      row.append(renderKey(key), span('pv-json-punct', ': '));
+    }
     row.append(span(valueClass(value), renderValue(value)));
-    if (!isLast) row.append(span('pv-json-punct', ','));
+    if (!isLast) {
+      row.append(span('pv-json-punct', ','));
+    }
     return row;
   }
 
   function renderSummary(key, array, count, isLast, isRoot) {
     const summary = el('summary', 'pv-json-summary');
-    if (!isRoot) summary.append(renderKey(key), span('pv-json-punct', ': '));
+    if (!isRoot) {
+      summary.append(renderKey(key), span('pv-json-punct', ': '));
+    }
     summary.append(
       span('pv-json-punct', array ? '[' : '{'),
       span('pv-json-count', `${count} ${array ? 'items' : 'keys'}`),
       span('pv-json-punct', array ? ']' : '}'),
     );
-    if (!isLast) summary.append(span('pv-json-punct', ','));
+    if (!isLast) {
+      summary.append(span('pv-json-punct', ','));
+    }
     return summary;
   }
 
   function renderChildren(entries, depth, ctx) {
     const children = el('div', 'pv-json-children');
     for (let i = 0; i < entries.length; i += 1) {
-      if (ctx.nodes > MAX_NODES) {
+      if (ctx.nodes > MaxNodes) {
         ctx.truncated = true;
         children.append(el('div', 'pv-tree-note', '…'));
         break;
@@ -69,8 +91,7 @@
         renderNode(
           childKey,
           childValue,
-          depth + 1,
-          i === entries.length - 1,
+          { depth: depth + 1, isLast: i === entries.length - 1 },
           ctx,
           false,
         ),
@@ -79,14 +100,16 @@
     return children;
   }
 
-  function renderContainer(key, value, depth, isLast, ctx, isRoot) {
+  function renderContainer(key, value, meta, ctx, isRoot) {
+    const { depth, isLast } = meta;
     const array = Array.isArray(value);
-    if (array) ctx.arrays += 1;
-    else ctx.objects += 1;
+    if (array) {
+      ctx.arrays += 1;
+    } else {
+      ctx.objects += 1;
+    }
 
-    const entries = array
-      ? value.map((item, index) => [index, item])
-      : Object.entries(value);
+    const entries = array ? value.map((item, index) => [index, item]) : Object.entries(value);
 
     const details = el('details', 'pv-json-node');
     details.open = isRoot || depth < 2;
@@ -95,11 +118,12 @@
     return details;
   }
 
-  function renderNode(key, value, depth, isLast, ctx, isRoot) {
+  function renderNode(key, value, meta, ctx, isRoot) {
+    const { depth, isLast } = meta;
     ctx.depth = Math.max(ctx.depth, depth);
     ctx.nodes += 1;
 
-    if (ctx.nodes > MAX_NODES) {
+    if (ctx.nodes > MaxNodes) {
       ctx.truncated = true;
       return el('div', 'pv-tree-note', '…');
     }
@@ -110,7 +134,7 @@
       return renderLeaf(key, value, isLast, isRoot);
     }
 
-    return renderContainer(key, value, depth, isLast, ctx, isRoot);
+    return renderContainer(key, value, { depth, isLast }, ctx, isRoot);
   }
 
   function buildJson(source) {
@@ -120,11 +144,7 @@
     if (parsed.error) {
       article.append(
         el('div', 'pv-doc-title', 'Invalid JSON'),
-        Plainview.errorPanel(
-          parsed.error.message,
-          parsed.error.line,
-          parsed.error.column,
-        ),
+        Plainview.errorPanel(parsed.error.message, parsed.error.line, parsed.error.column),
       );
       return { article, stats: null, error: true };
     }
@@ -139,14 +159,15 @@
     };
 
     const tree = el('div', 'pv-json');
-    tree.append(renderNode('$', parsed.value, 0, true, ctx, true));
+    tree.append(renderNode('$', parsed.value, { depth: 0, isLast: true }, ctx, true));
 
+    // biome-ignore lint/suspicious/noUnnecessaryConditions: truncated is set by recursive renderChildren
     if (ctx.truncated) {
       tree.append(
         el(
           'div',
           'pv-tree-note',
-          `Tree truncated at ${MAX_NODES.toLocaleString()} nodes. Use “Source” for the full file.`,
+          `Tree truncated at ${MaxNodes.toLocaleString()} nodes. Use “Source” for the full file.`,
         ),
       );
     }

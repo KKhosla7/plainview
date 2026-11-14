@@ -5,6 +5,7 @@ import path from 'node:path';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
+import process from 'node:process';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
@@ -30,9 +31,9 @@ const { chromium } = await import('@playwright/test');
 const server = http.createServer((request, response) => {
   const file = path.join(
     fixtures,
-    new URL(request.url, 'http://127.0.0.1').pathname.replace(/^\//, ''),
+    new URL(request.url, 'http://127.0.0.1').pathname.replace(/^\//u, ''),
   );
-  if (!file.startsWith(fixtures) || !fs.existsSync(file)) {
+  if (!(file.startsWith(fixtures) && fs.existsSync(file))) {
     response.writeHead(404);
     response.end('not found');
     return;
@@ -63,11 +64,7 @@ fs.mkdirSync(docsDir, { recursive: true });
 fs.mkdirSync(storeDir, { recursive: true });
 
 function resize(source, target) {
-  const result = spawnSync(
-    'magick',
-    [source, '-resize', '1280x800', target],
-    { stdio: 'inherit' },
-  );
+  const result = spawnSync('magick', [source, '-resize', '1280x800', target], { stdio: 'inherit' });
   if (result.status !== 0) {
     throw new Error(`could not resize ${source}`);
   }
@@ -78,7 +75,9 @@ async function capture(name, route, setup) {
   await page.goto(`${base}/${route}`);
   await page.waitForSelector('.pv-app');
   await page.waitForTimeout(700);
-  if (setup) await setup(page);
+  if (setup) {
+    await setup(page);
+  }
   await page.waitForTimeout(450);
   const docsPath = path.join(docsDir, `${name}.png`);
   await page.screenshot({ path: docsPath });
@@ -93,7 +92,9 @@ async function instantScrollTo(page, selector) {
     const previous = root.style.scrollBehavior;
     root.style.scrollBehavior = 'auto';
     const element = document.querySelector(target);
-    if (element) element.scrollIntoView({ block: 'start' });
+    if (element) {
+      element.scrollIntoView({ block: 'start' });
+    }
     root.style.scrollBehavior = previous;
   }, selector);
   await page.waitForTimeout(250);
@@ -109,7 +110,7 @@ try {
   });
   docs.markdownMermaid = await capture('markdown-mermaid', 'showcase.md', async (page) => {
     await page.getByRole('button', { name: 'Dark theme' }).click();
-    await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20000 });
+    await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20_000 });
     await instantScrollTo(page, '#the-dusk-sequence');
   });
   docs.markdownSource = await capture('markdown-source', 'showcase.md', async (page) => {
@@ -131,21 +132,27 @@ try {
   const webp = spawnSync(
     'magick',
     [
-      '-delay', '220',
-      '-loop', '0',
+      '-delay',
+      '220',
+      '-loop',
+      '0',
       path.join(docsDir, 'markdown-light.png'),
       path.join(docsDir, 'markdown-mermaid.png'),
       path.join(docsDir, 'markdown-dark.png'),
       path.join(docsDir, 'markdown-source.png'),
       path.join(docsDir, 'json.png'),
       path.join(docsDir, 'xml.png'),
-      '-resize', '1280x800',
-      '-quality', '86',
+      '-resize',
+      '1280x800',
+      '-quality',
+      '86',
       path.join(project, 'docs', 'demo.webp'),
     ],
     { stdio: 'inherit' },
   );
-  if (webp.status !== 0) throw new Error('could not create demo.webp');
+  if (webp.status !== 0) {
+    throw new Error('could not create demo.webp');
+  }
   console.log('wrote docs/demo.webp');
 } finally {
   await context.close();

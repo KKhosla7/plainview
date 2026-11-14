@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { after, before, test } from 'node:test';
+import { after, before, test as it } from 'node:test';
 import {
   assertNoErrors,
   closeExtension,
@@ -23,26 +23,22 @@ after(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
-test('renders a JSON tree and its source syntax', async () => {
+it('renders a JSON tree and its source syntax', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.json`);
   await page.waitForSelector('.pv-json');
 
   assert.ok((await page.locator('.pv-json-key').count()) >= 5);
   assert.ok((await page.locator('.pv-json-string').count()) >= 2);
-  assert.match(await page.locator('.pv-doc-meta').innerText(), /nodes/);
+  assert.match(await page.locator('.pv-doc-meta').innerText(), /nodes/u);
 
   await page.getByRole('button', { name: 'Collapse all' }).click();
   assert.equal(
-    await page.locator('.pv-json-node').evaluateAll((nodes) =>
-      nodes.every((node) => !node.open),
-    ),
+    await page.locator('.pv-json-node').evaluateAll((nodes) => nodes.every((node) => !node.open)),
     true,
   );
   await page.getByRole('button', { name: 'Expand all' }).click();
   assert.equal(
-    await page.locator('.pv-json-node').evaluateAll((nodes) =>
-      nodes.every((node) => node.open),
-    ),
+    await page.locator('.pv-json-node').evaluateAll((nodes) => nodes.every((node) => node.open)),
     true,
   );
 
@@ -54,11 +50,11 @@ test('renders a JSON tree and its source syntax', async () => {
   await page.close();
 });
 
-test('reads JSONC comments and trailing commas', async () => {
+it('reads JSONC comments and trailing commas', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.jsonc`);
   await page.waitForSelector('.pv-json');
 
-  assert.match(await page.locator('.pv-doc-meta').innerText(), /JSONC/);
+  assert.match(await page.locator('.pv-doc-meta').innerText(), /JSONC/u);
   assert.equal(await page.locator('.pv-error').count(), 0);
   assert.ok((await page.locator('.pv-json-key').count()) >= 3);
 
@@ -66,15 +62,15 @@ test('reads JSONC comments and trailing commas', async () => {
   await page.close();
 });
 
-test('reports invalid JSON without crashing', async () => {
+it('reports invalid JSON without crashing', async () => {
   const { page, errors } = await openPage(context, `${base}/bad.json`);
   await page.waitForSelector('.pv-error');
-  assert.match(await page.locator('.pv-error-message').innerText(), /JSON|token|position/i);
+  assert.match(await page.locator('.pv-error-message').innerText(), /JSON|token|position/iu);
   assertNoErrors(errors);
   await page.close();
 });
 
-test('renders an XML tree with attributes, CDATA and comments', async () => {
+it('renders an XML tree with attributes, CDATA and comments', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.xml`);
   await page.waitForSelector('.pv-xml');
 
@@ -86,12 +82,10 @@ test('renders an XML tree with attributes, CDATA and comments', async () => {
   const style = await page.evaluate(() => ({
     width: document.querySelector('.pv-app').getBoundingClientRect().width,
     font: getComputedStyle(document.querySelector('.pv-xml')).fontFamily,
-    metaBackground: getComputedStyle(
-      document.querySelector('.pv-doc-meta'),
-    ).backgroundColor,
+    metaBackground: getComputedStyle(document.querySelector('.pv-doc-meta')).backgroundColor,
   }));
   assert.ok(style.width > 500);
-  assert.match(style.font, /mono/i);
+  assert.match(style.font, /mono/iu);
   assert.notEqual(style.metaBackground, 'rgba(0, 0, 0, 0)');
 
   await page.getByRole('tab', { name: 'Source' }).click();
@@ -102,10 +96,10 @@ test('renders an XML tree with attributes, CDATA and comments', async () => {
   await page.close();
 });
 
-test('reports invalid XML without crashing', async () => {
+it('reports invalid XML without crashing', async () => {
   const { page, errors } = await openPage(context, `${base}/bad.xml`);
   await page.waitForSelector('.pv-error');
-  assert.match(await page.locator('.pv-error-message').innerText(), /mismatch|error|line/i);
+  assert.match(await page.locator('.pv-error-message').innerText(), /mismatch|error|line/iu);
   assertNoErrors(errors);
   await page.close();
 });

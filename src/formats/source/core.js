@@ -1,8 +1,6 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
-  const MAX_HIGHLIGHT_CHARS = 1_500_000;
+((root) => {
+  const MaxHighlightChars = 1_500_000;
   const highlighters = {};
 
   function register(format, highlighter) {
@@ -11,7 +9,9 @@
 
   function highlight(source, format) {
     const text = String(source ?? '');
-    if (text.length > MAX_HIGHLIGHT_CHARS) return Plainview.escapeHtml(text);
+    if (text.length > MaxHighlightChars) {
+      return Plainview.escapeHtml(text);
+    }
     const highlighter = highlighters[format];
     return highlighter ? highlighter(text) : Plainview.escapeHtml(text);
   }

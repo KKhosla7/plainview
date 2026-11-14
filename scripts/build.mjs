@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build, transform } from 'esbuild';
+import process from 'node:process';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
@@ -58,13 +59,13 @@ const fontFiles = fs
   .filter((name) => name.endsWith('.woff2'))
   .sort();
 
-if (chunkFiles.length === 0) fail('no mermaid ESM chunks found');
+if (chunkFiles.length === 0) {
+  fail('no mermaid ESM chunks found');
+}
 
 const css = (
   await transform(
-    STYLE_FILES.map((file) =>
-      fs.readFileSync(path.join(project, file), 'utf8'),
-    ).join('\n'),
+    STYLE_FILES.map((file) => fs.readFileSync(path.join(project, file), 'utf8')).join('\n'),
     { loader: 'css', minify: true, target: ['chrome120', 'firefox142'] },
   )
 ).code;
@@ -72,14 +73,20 @@ const css = (
 const bundleDir = path.join(dist, '.bundle');
 fs.mkdirSync(bundleDir, { recursive: true });
 
+// esbuild filters are Go regexes; they must not carry the JavaScript unicode flag.
+// biome-ignore lint/style/useUnicodeRegex: esbuild filters reject the unicode flag
+const ViewerCssFilter = /^virtual:viewer-css$/;
+// biome-ignore lint/style/useUnicodeRegex: esbuild filters reject the unicode flag
+const AllFilter = /.*/;
+
 const cssPlugin = {
   name: 'viewer-css',
   setup(buildApi) {
-    buildApi.onResolve({ filter: /^virtual:viewer-css$/ }, () => ({
+    buildApi.onResolve({ filter: ViewerCssFilter }, () => ({
       path: 'viewer-css',
       namespace: 'viewer',
     }));
-    buildApi.onLoad({ filter: /.*/, namespace: 'viewer' }, () => ({
+    buildApi.onLoad({ filter: AllFilter, namespace: 'viewer' }, () => ({
       contents: `globalThis.PLAINVIEW_CSS = ${JSON.stringify(css)};`,
       loader: 'js',
     }));
@@ -148,26 +155,17 @@ function copyCommon(target) {
 
   fs.copyFileSync(path.join(bundleDir, 'boot.js'), path.join(target, 'boot.js'));
   fs.copyFileSync(path.join(bundleDir, 'app.js'), path.join(target, 'app.js'));
-  fs.copyFileSync(
-    path.join(bundleDir, 'styles.css'),
-    path.join(target, 'styles.css'),
-  );
+  fs.copyFileSync(path.join(bundleDir, 'styles.css'), path.join(target, 'styles.css'));
 
   for (const licenseName of ['LICENSE.md', 'LICENSE']) {
     const markedLicense = path.join(project, 'node_modules', 'marked', licenseName);
     if (fs.existsSync(markedLicense)) {
-      fs.copyFileSync(
-        markedLicense,
-        path.join(target, 'vendor', 'marked.LICENSE'),
-      );
+      fs.copyFileSync(markedLicense, path.join(target, 'vendor', 'marked.LICENSE'));
       break;
     }
   }
 
-  fs.copyFileSync(
-    mermaidMain,
-    path.join(target, 'vendor', 'mermaid', 'mermaid.esm.min.mjs'),
-  );
+  fs.copyFileSync(mermaidMain, path.join(target, 'vendor', 'mermaid', 'mermaid.esm.min.mjs'));
 
   for (const name of chunkFiles) {
     const source = fs.readFileSync(path.join(mermaidChunks, name), 'utf8');
@@ -188,10 +186,7 @@ function copyCommon(target) {
 
   const mermaidLicense = path.join(project, 'node_modules', 'mermaid', 'LICENSE');
   if (fs.existsSync(mermaidLicense)) {
-    fs.copyFileSync(
-      mermaidLicense,
-      path.join(target, 'vendor', 'mermaid', 'LICENSE'),
-    );
+    fs.copyFileSync(mermaidLicense, path.join(target, 'vendor', 'mermaid', 'LICENSE'));
   }
 }
 
@@ -205,9 +200,7 @@ function manifestFor(browser) {
       resources: [
         'app.js',
         'vendor/mermaid/mermaid.esm.min.mjs',
-        ...chunkFiles.map(
-          (name) => `vendor/mermaid/chunks/mermaid.esm.min/${name}`,
-        ),
+        ...chunkFiles.map((name) => `vendor/mermaid/chunks/mermaid.esm.min/${name}`),
         ...fontFiles.map((name) => `src/fonts/${name}`),
       ],
       matches: ['http://*/*', 'https://*/*', 'file:///*'],

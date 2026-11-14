@@ -1,27 +1,25 @@
 /* global Plainview */
-(function () {
-  'use strict';
-
+(() => {
   const { escapeHtml } = Plainview;
   const { register } = Plainview.sourceHighlight;
 
-  const INLINE =
-    /(`[^`\n]*`)|(!?\[[^\]\n]*\]\([^)\n]*\))|(\*\*[^*\n]+\*\*)|(__[^_\n]+__)|(\*[^*\n]+\*)|(_[^_\n]+_)|(~~[^~\n]+~~)|(<[^>\n]+>)/g;
+  const Inline =
+    /(`[^`\n]*`)|(!?\[[^\]\n]*\]\([^)\n]*\))|(\*\*[^*\n]+\*\*)|(__[^_\n]+__)|(\*[^*\n]+\*)|(_[^_\n]+_)|(~~[^~\n]+~~)|(<[^>\n]+>)/gu;
 
   function highlightInline(text) {
     let out = '';
     let last = 0;
-    let match;
-    INLINE.lastIndex = 0;
+    Inline.lastIndex = 0;
+    let match = Inline.exec(text);
 
-    while ((match = INLINE.exec(text))) {
+    while (match) {
       out += escapeHtml(text.slice(last, match.index));
-      const token = match[0];
+      const [token] = match;
 
       if (token.startsWith('`')) {
         out += `<span class="pv-syn-code">${escapeHtml(token)}</span>`;
       } else if (token.startsWith('![') || token.startsWith('[')) {
-        const link = /^(!?)\[([^\]]*)\]\(([^)]*)\)$/.exec(token);
+        const link = /^(!?)\[([^\]]*)\]\(([^)]*)\)$/u.exec(token);
         if (link) {
           out += `<span class="pv-syn-link">${escapeHtml(`${link[1]}[${link[2]}]`)}</span>`;
           out += `<span class="pv-syn-url">${escapeHtml(`(${link[3]})`)}</span>`;
@@ -41,6 +39,7 @@
       }
 
       last = match.index + token.length;
+      match = Inline.exec(text);
     }
 
     out += escapeHtml(text.slice(last));
@@ -48,8 +47,10 @@
   }
 
   function highlightHeading(line) {
-    const match = /^(\s{0,3})(#{1,6})(\s+)(.*)$/.exec(line);
-    if (!match) return null;
+    const match = /^(\s{0,3})(#{1,6})(\s+)(.*)$/u.exec(line);
+    if (!match) {
+      return null;
+    }
     return (
       `${escapeHtml(match[1])}` +
       `<span class="pv-syn-heading-marker">${match[2]}</span>` +
@@ -59,10 +60,12 @@
   }
 
   function highlightList(line) {
-    const match = /^(\s*)([-*+]|\d+[.)])(\s+)(.*)$/.exec(line);
-    if (!match) return null;
+    const match = /^(\s*)([-*+]|\d+[.)])(\s+)(.*)$/u.exec(line);
+    if (!match) {
+      return null;
+    }
 
-    const task = /^(\[[ xX]\])(\s+)(.*)$/.exec(match[4]);
+    const task = /^(\[[ xX]\])(\s+)(.*)$/u.exec(match[4]);
     if (!task) {
       return (
         `${escapeHtml(match[1])}` +
@@ -81,17 +84,21 @@
   }
 
   function highlightLine(line) {
-    const fence = /^\s*(`{3,}|~{3,})(.*)$/.exec(line);
-    if (fence) return { fence: true, marker: fence[1], html: null };
+    const fence = /^\s*(`{3,}|~{3,})(.*)$/u.exec(line);
+    if (fence) {
+      return { fence: true, marker: fence[1], html: null };
+    }
 
-    if (/^\s{0,3}([-*_])(?:\s*\1){2,}\s*$/.test(line)) {
+    if (/^\s{0,3}([-*_])(?:\s*\1){2,}\s*$/u.test(line)) {
       return { html: `<span class="pv-syn-hr">${escapeHtml(line)}</span>` };
     }
 
     const heading = highlightHeading(line);
-    if (heading) return { html: heading };
+    if (heading) {
+      return { html: heading };
+    }
 
-    const quote = /^(\s{0,3})(>+\s?)(.*)$/.exec(line);
+    const quote = /^(\s{0,3})(>+\s?)(.*)$/u.exec(line);
     if (quote) {
       return {
         html:
@@ -102,13 +109,15 @@
     }
 
     const list = highlightList(line);
-    if (list) return { html: list };
+    if (list) {
+      return { html: list };
+    }
 
-    if (/^\s*\|/.test(line)) {
+    if (/^\s*\|/u.test(line)) {
       return { html: `<span class="pv-syn-table">${highlightInline(line)}</span>` };
     }
 
-    if (/^\s*<[^>]+>/.test(line)) {
+    if (/^\s*<[^>]+>/u.test(line)) {
       return { html: `<span class="pv-syn-html">${highlightInline(line)}</span>` };
     }
 
@@ -121,7 +130,7 @@
 
     for (const line of source.split('\n')) {
       if (fenceMarker) {
-        const closing = /^\s*(`{3,}|~{3,})\s*$/.exec(line);
+        const closing = /^\s*(`{3,}|~{3,})\s*$/u.exec(line);
         if (closing && closing[1][0] === fenceMarker[0]) {
           fenceMarker = '';
           out.push(`<span class="pv-syn-fence">${escapeHtml(line)}</span>`);
@@ -132,7 +141,7 @@
       }
 
       const result = highlightLine(line);
-      if (result.fence) {
+      if ('fence' in result) {
         fenceMarker = result.marker;
         out.push(`<span class="pv-syn-fence">${escapeHtml(line)}</span>`);
       } else {

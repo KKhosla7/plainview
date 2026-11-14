@@ -2,7 +2,7 @@
  * The reader bundle. It is imported only for supported documents, so normal
  * pages pay only for boot.js and the manifest stylesheet.
  */
-import * as markedModule from 'marked';
+import { Marked } from 'marked';
 import 'virtual:viewer-css';
 
 import './core/settings.js';
@@ -37,4 +37,4 @@ import './core/scroll-memory.js';
 import './core/xml-shell.js';
 import './app/ui.js';
 
-globalThis.marked = markedModule;
+globalThis.marked = { Marked };

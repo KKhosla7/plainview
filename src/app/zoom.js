@@ -1,18 +1,22 @@
 /* global Plainview */
-(function (root) {
-  'use strict';
-
+((root) => {
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (className) {
+      node.className = className;
+    }
+    if (text !== undefined) {
+      node.textContent = text;
+    }
     return node;
   }
 
   function zoomButton(className, label, ariaLabel) {
     const button = el('button', className, label);
     button.type = 'button';
-    if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
+    if (ariaLabel) {
+      button.setAttribute('aria-label', ariaLabel);
+    }
     return button;
   }
 
@@ -35,10 +39,7 @@
       : 100;
 
     function apply() {
-      root.document.documentElement.style.setProperty(
-        '--pv-zoom',
-        String(zoom / 100),
-      );
+      root.document.documentElement.style.setProperty('--pv-zoom', String(zoom / 100));
       value.textContent = `${zoom}%`;
       out.disabled = zoom <= ZOOM_MIN;
       inButton.disabled = zoom >= ZOOM_MAX;
@@ -46,7 +47,9 @@
 
     function setZoom(next, options = {}) {
       const clamped = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, Math.round(next)));
-      if (clamped === zoom) return;
+      if (clamped === zoom) {
+        return;
+      }
       zoom = clamped;
       apply();
       if (options.persist !== false) {
