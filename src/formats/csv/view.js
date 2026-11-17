@@ -108,6 +108,9 @@
       exportData: {
         formatId,
         hasFilter: () => table.isFiltered(),
+        getDocument() {
+          return { delimiter, formatId, label, source };
+        },
         getData(scope) {
           const visible = table.isFiltered();
           if (scope === 'filtered' && !visible) {

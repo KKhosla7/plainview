@@ -82,6 +82,7 @@ for (const required of [
   path.join(project, 'src', 'app-entry.js'),
   path.join(project, 'src', 'boot-entry.js'),
   path.join(project, 'src', 'viewer-entry.js'),
+  path.join(project, 'src', 'export-data-entry.js'),
   path.join(project, 'src', 'viewer.html'),
   path.join(katexDist, 'katex.min.css'),
   katexFonts,
@@ -155,7 +156,6 @@ await build({
   outfile: path.join(bundleDir, 'boot.js'),
   logLevel: 'silent',
 });
-
 await build({
   entryPoints: [path.join(project, 'src', 'app-entry.js')],
   bundle: true,
@@ -168,7 +168,18 @@ await build({
   alias: { 'virtual:viewer-css': CssModule },
   logLevel: 'silent',
 });
-
+await build({
+  entryPoints: [path.join(project, 'src', 'export-data-entry.js')],
+  bundle: true,
+  format: 'iife',
+  minify: true,
+  legalComments: 'none',
+  target: ['chrome120', 'firefox142'],
+  loader: { '.html': 'text', '.txt': 'text' },
+  outfile: path.join(bundleDir, 'export-data.js'),
+  alias: { 'virtual:viewer-css': CssModule },
+  logLevel: 'silent',
+});
 await build({
   entryPoints: [path.join(project, 'src', 'viewer-entry.js')],
   bundle: true,
@@ -215,6 +226,7 @@ function manifestFor(browser) {
     {
       resources: [
         'app.js',
+        'export-data.js',
         'vendor/mermaid/mermaid.esm.min.mjs',
         'vendor/yaml/js-yaml.min.mjs',
         'vendor/toml/toml.min.mjs',

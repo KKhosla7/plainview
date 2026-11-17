@@ -57,7 +57,7 @@ function copyPackageFiles({ project, bundleDir }, target) {
     }
   }
 
-  for (const file of ['boot.js', 'app.js', 'viewer.js', 'styles.css']) {
+  for (const file of ['boot.js', 'app.js', 'viewer.js', 'export-data.js', 'styles.css']) {
     fs.copyFileSync(path.join(bundleDir, file), path.join(target, file));
   }
   fs.copyFileSync(

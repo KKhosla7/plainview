@@ -13,6 +13,14 @@
     );
   }
 
+  function treeModeFor(options, virtual) {
+    if (options.standalone) {
+      return '';
+    }
+
+    return virtual ? 'virtual' : 'classic';
+  }
+
   function buildJsonValue(value, options = {}) {
     const source = String(options.source ?? '');
     const article = el('article', 'pv-doc pv-data-doc');
@@ -40,7 +48,7 @@
       source,
       summary: '',
       copyLabel: options.copyLabel || 'Copy JSON',
-      treeMode: virtual ? 'virtual' : 'classic',
+      treeMode: treeModeFor(options, virtual),
     });
     const metaText = toolbar.querySelector('.pv-meta-text');
     const factory = virtual ? Plainview.createVirtualJsonTree : Plainview.createJsonTree;
@@ -71,6 +79,15 @@
       exportData: {
         formatId,
         hasFilter: () => Boolean(exportState.getFiltered()?.length),
+        getDocument() {
+          return {
+            formatId,
+            label: options.copyLabel?.replace(/^Copy /u, '') || 'JSON',
+            source,
+            suffix: options.suffix,
+            value,
+          };
+        },
         getData(scope) {
           const data = scope === 'filtered' ? exportState.getFiltered() : value;
           if (!data || (scope === 'filtered' && data.length === 0)) {

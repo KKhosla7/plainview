@@ -71,6 +71,9 @@
       exportData: {
         formatId: 'xml',
         hasFilter: () => Boolean(exportState.getFiltered()?.length),
+        getDocument() {
+          return { formatId: 'xml', source };
+        },
         getData(scope) {
           const nodes = exportState.getFiltered();
           if (scope === 'filtered') {

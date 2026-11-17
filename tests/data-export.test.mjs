@@ -162,6 +162,8 @@ it('keeps clean data downloads inside a compressed HTML export', async () => {
     try {
       await exported.goto(pathToFileURL(file).href);
       await exported.waitForSelector('.pv-json');
+      assert.equal(await exported.getByLabel('Search JSON keys and values').count(), 1);
+      assert.equal(await exported.getByLabel('Query expression').count(), 1);
       await exported.getByRole('button', { name: 'Export data', exact: true }).click();
       await exported.waitForSelector('.pv-export-menu:not([hidden])');
       assert.match(
@@ -177,6 +179,36 @@ it('keeps clean data downloads inside a compressed HTML export', async () => {
         exported.getByRole('button', { name: /Download filtered JSON/u }).click(),
       ]);
       assert.deepEqual(JSON.parse(fs.readFileSync(await download.path(), 'utf8')), ['one', 'two']);
+    } finally {
+      await exported.close();
+    }
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+it('keeps search, query and complete data in a standalone data HTML export', async () => {
+  const { page, errors } = await openPage(context, `${base}/long.json`);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-data-search-'));
+  try {
+    await page.waitForSelector('.pv-json');
+    const html = await exportScope(page, /Download HTML page/u);
+    const file = path.join(dir, 'long.html');
+    fs.writeFileSync(file, html.text);
+
+    const exported = await context.newPage();
+    try {
+      await exported.goto(pathToFileURL(file).href);
+      await exported.waitForSelector('.pv-json');
+      assert.equal(await exported.getByLabel('Search JSON keys and values').count(), 1);
+      assert.equal(await exported.getByLabel('Query expression').count(), 1);
+      await exported.getByLabel('Search JSON keys and values').fill('item-406');
+      await exported.waitForSelector('.pv-json-search-results:not([hidden])');
+      await exported.locator('.pv-json-search-result').first().click();
+      await exported.waitForSelector('.pv-vrow-active');
+      assert.match(await exported.locator('.pv-vrow-active').innerText(), /item-406/u);
     } finally {
       await exported.close();
     }

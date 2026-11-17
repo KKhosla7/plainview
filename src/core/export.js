@@ -164,7 +164,43 @@ import DocumentTemplate from './export/document.html';
     }
 
     const data = await Plainview.dataExport.serializeScopes({ exportData, fileName });
-    return data.entries.length > 0 ? JSON.stringify(data).replace(/</gu, '\\u003c') : '';
+    if (data.entries.length === 0) {
+      return '';
+    }
+
+    const documentData = exportData.getDocument?.() ?? null;
+    return JSON.stringify({ document: documentData, entries: data.entries }).replace(
+      /</gu,
+      '\\u003c',
+    );
+  }
+
+  async function buildDataViewer(exportData) {
+    if (!(exportData?.getDocument && runtime())) {
+      return null;
+    }
+
+    const source = await Plainview.requestText(runtime().getURL('export-data.js'));
+    if (!source) {
+      return null;
+    }
+
+    return {
+      content: '<main class="pv-main"><div class="pv-zoom-surface" id="pv-data-root"></div></main>',
+      script: source.replace(/<\/script/giu, '<\\/script'),
+    };
+  }
+
+  function exportContent({ clone, dataViewer, shell }) {
+    if (dataViewer?.content) {
+      return dataViewer.content;
+    }
+
+    if (shell) {
+      return clone.outerHTML;
+    }
+
+    return `<main class="pv-main"><div class="pv-zoom-surface">${clone.outerHTML}</div></main>`;
   }
 
   async function buildExportHtml({
@@ -183,14 +219,13 @@ import DocumentTemplate from './export/document.html';
     const themeName = theme === 'dark' ? 'dark' : 'light';
     const version = document.documentElement.getAttribute('data-pv-version') || '';
     const hasToc = Boolean(clone.querySelector('.pv-toc-link'));
-    const content = shell
-      ? clone.outerHTML
-      : `<main class="pv-main"><div class="pv-zoom-surface">${clone.outerHTML}</div></main>`;
+    const dataPayload = await buildDataPayload(exportData, title);
+    const dataViewer = dataPayload ? await buildDataViewer(exportData) : null;
+    const content = exportContent({ clone, dataViewer, shell });
     const generator = version
       ? `<meta name="generator" content="Plainview ${escapeHtml(version)}">`
       : '';
     const creditVersion = version ? ` data-plainview-version="${escapeHtml(version)}"` : '';
-    const dataPayload = await buildDataPayload(exportData, title);
     const html = fillTemplate(DocumentTemplate, {
       FORMAT: formatId,
       THEME: themeName,
@@ -198,6 +233,7 @@ import DocumentTemplate from './export/document.html';
       TABLE_RESIZE: document.documentElement.dataset.pvTableResize || 'on',
       TABLE_LAYOUT: Plainview.validTableLayout(document.documentElement.dataset.pvTableLayout),
       DATA_EXPORTS: dataPayload,
+      DATA_VIEWER_SCRIPT: dataViewer?.script || '',
       GENERATOR: generator,
       TITLE: escapeHtml(title),
       CSS: String(root.PLAINVIEW_CSS || ''),
