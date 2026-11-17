@@ -5,7 +5,7 @@
  * opening its ancestors without rendering unrelated branches.
  */
 ((root) => {
-  const { openDepth, pageSize } = Plainview.jsonLimits;
+  const { autoOpenChildLimit, openDepth, pageSize } = Plainview.jsonLimits;
   const { el } = Plainview;
 
   const { actionButton, pathButton, renderKey, renderValue, span, valueClass } =
@@ -132,7 +132,9 @@
 
     const pathText = Plainview.jsonPath.pathToJsonPath(path);
     const details = el('details', 'pv-json-node');
-    details.open = Boolean(meta.isRoot || depth < ctx.openDepth);
+    details.open = Boolean(
+      meta.isRoot || (depth < ctx.openDepth && total <= ctx.autoOpenChildLimit),
+    );
     details.setAttribute('data-json-path', pathText);
     const summary = renderSummary(key, array, total, meta);
     const children = el('div', 'pv-json-children');
@@ -192,6 +194,7 @@
   function createJsonTree({ value, source, options, indexRef, onStats }) {
     const tree = el('div', 'pv-json');
     const ctx = {
+      autoOpenChildLimit: options.autoOpenChildLimit ?? autoOpenChildLimit,
       indexRef,
       openDepth: options.openDepth ?? openDepth(source.length),
       pageSize: options.pageSize ?? pageSize(source.length),

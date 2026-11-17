@@ -11,7 +11,8 @@
   const LargePageSize = 200;
   const SmallOpenDepth = 3;
   const MediumOpenDepth = 2;
-  const LargeOpenDepth = 1;
+  const LargeOpenDepth = 2;
+  const AutoOpenChildLimit = 40;
 
   function pageSize(sourceLength) {
     if (sourceLength > MediumSourceBytes) {
@@ -38,6 +39,6 @@
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {
-    jsonLimits: { openDepth, pageSize },
+    jsonLimits: { autoOpenChildLimit: AutoOpenChildLimit, openDepth, pageSize },
   });
 })(globalThis);
