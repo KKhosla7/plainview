@@ -39,6 +39,14 @@
     return row;
   }
 
+  function countLabel(count, array) {
+    if (array) {
+      return count === 1 ? 'item' : 'items';
+    }
+
+    return count === 1 ? 'key' : 'keys';
+  }
+
   function renderSummary(key, array, count, meta) {
     const { isRoot, path } = meta;
     const summary = el('summary', 'pv-json-summary');
@@ -48,9 +56,9 @@
       summary.append(renderKey(key), span('pv-json-punct', ': '));
     }
     summary.append(
-      span('pv-json-punct', array ? '[' : '{'),
-      span('pv-json-count', `${count} ${array ? 'items' : 'keys'}`),
-      span('pv-json-punct', array ? ']' : '}'),
+      span('pv-json-punct', array ? '[ ' : '{ '),
+      span('pv-json-count', `${count} ${countLabel(count, array)}`),
+      span('pv-json-punct', array ? ' ]' : ' }'),
     );
     summary.append(pathButton(Plainview.jsonPath.pathToJsonPath(path)));
     return summary;

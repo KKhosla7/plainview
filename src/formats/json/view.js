@@ -13,14 +13,6 @@
     );
   }
 
-  function treeModeFor(options, virtual) {
-    if (options.standalone) {
-      return '';
-    }
-
-    return virtual ? 'virtual' : 'classic';
-  }
-
   function buildJsonValue(value, options = {}) {
     const source = String(options.source ?? '');
     const article = el('article', 'pv-doc pv-data-doc');
@@ -42,17 +34,14 @@
         }
       },
     };
-    const virtual = document.documentElement.dataset.pvJsonTreeMode === 'virtual';
     const toolbar = Plainview.createDataToolbar({
       article,
       source,
       summary: '',
       copyLabel: options.copyLabel || 'Copy JSON',
-      treeMode: treeModeFor(options, virtual),
     });
     const metaText = toolbar.querySelector('.pv-meta-text');
-    const factory = virtual ? Plainview.createVirtualJsonTree : Plainview.createJsonTree;
-    const { tree, context, revealPath } = factory({
+    const { tree, context, revealPath } = Plainview.createVirtualJsonTree({
       value,
       source,
       options,

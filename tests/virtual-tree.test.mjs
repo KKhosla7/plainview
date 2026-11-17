@@ -145,16 +145,3 @@ it('renders XML with the virtual tree and reveals search hits', async () => {
     await page.close();
   }
 });
-
-it('keeps the classic tree available by default', async () => {
-  await setTreeMode('classic');
-  const { page, errors } = await openPage(context, `${base}/sample.json`);
-  try {
-    await page.waitForSelector('.pv-json');
-    assert.equal(await page.locator('.pv-virtual-tree').count(), 0);
-    assert.ok((await page.locator('.pv-json-key').count()) >= 5);
-    assertNoErrors(errors);
-  } finally {
-    await page.close();
-  }
-});

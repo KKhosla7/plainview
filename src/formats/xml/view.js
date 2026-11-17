@@ -25,10 +25,7 @@
       return { article, stats: null, error: true };
     }
 
-    const virtual = document.documentElement.dataset.pvJsonTreeMode === 'virtual';
-    const tree = virtual
-      ? Plainview.createXmlVirtualTree(parsed.doc.documentElement)
-      : Plainview.renderXmlTree(parsed.doc.documentElement);
+    const tree = Plainview.createXmlVirtualTree(parsed.doc.documentElement);
     const { stats } = tree;
     const exportState = {
       filter: null,
@@ -60,7 +57,6 @@
           `${stats.attributes.toLocaleString()} attributes · ` +
           Plainview.formatBytes(source.length),
         copyLabel: 'Copy XML',
-        treeMode: virtual ? 'virtual' : 'classic',
       }),
       Plainview.createXmlTools({
         tree: tree.element,

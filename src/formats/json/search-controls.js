@@ -137,7 +137,16 @@
         },
       }),
     );
-    state.hits = result.hits;
+    if (result.matches[0]) {
+      await revealPath(result.matches[0].path);
+      if (token !== state.token) {
+        return;
+      }
+    }
+    state.hits = result.hits.flatMap((hit) => {
+      const entry = indexRef.current.get(hit.pathText);
+      return entry ? [entry] : [];
+    });
     if (state.hits.length > 0) {
       state.index = selectHit(state.hits, 0, 'pv-json-hit-active');
     }

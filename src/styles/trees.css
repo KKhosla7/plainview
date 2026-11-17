@@ -16,16 +16,14 @@ html[data-pv] .pv-xml-summary::marker {
 }
 
 html[data-pv] .pv-json-children {
-  margin-left: 0.55em;
-  padding-left: 1.1em;
-  border-left: 1px solid var(--pv-border-soft);
+  margin-left: 0;
+  padding-left: 18px;
 }
 
 html[data-pv] .pv-json-leaf {
   display: flex;
   align-items: baseline;
   gap: 4px;
-  padding-left: 1.25em;
 }
 
 .pv-json-leaf > .pv-json-key,
@@ -38,8 +36,9 @@ html[data-pv] .pv-json-leaf {
 .pv-json-value {
   flex: 1 1 auto;
   min-width: 0;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pv-json-value > .pv-json-punct {
@@ -88,14 +87,15 @@ html[data-pv] .pv-xml-node {
 }
 
 html[data-pv] .pv-xml-children {
-  margin-left: 0.55em;
-  padding-left: 1.1em;
-  border-left: 1px solid var(--pv-border-soft);
+  margin-left: 0;
+  padding-left: 18px;
 }
 
 html[data-pv] .pv-xml-leaf {
-  padding-left: 1.25em;
-  white-space: pre-wrap;
+  padding-left: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 html[data-pv] .pv-xml-close {

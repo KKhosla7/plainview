@@ -146,6 +146,10 @@
         },
       }),
     );
+    ctx.queryHits = items.flatMap((item) => {
+      const entry = item.pathText ? ctx.indexRef.current.get(item.pathText) : null;
+      return entry ? [{ entry, pathText: item.pathText }] : [];
+    });
     if (items.length > 0) {
       ctx.exportState?.set(
         'query',

@@ -5,11 +5,8 @@ import {
   closeExtension,
   launchExtension,
   openPage,
-  setSetting,
   startServer,
 } from './helpers.mjs';
-
-const TreeModeKey = 'plainview.jsonTreeMode';
 
 let server;
 let base;
@@ -19,7 +16,6 @@ let profile;
 before(async () => {
   ({ server, base } = await startServer());
   ({ context, profile } = await launchExtension());
-  await setSetting(context, TreeModeKey, 'classic');
 });
 
 after(async () => {
@@ -61,19 +57,23 @@ it('searches JSON values and clears the search field', async () => {
 
 it('filters the JSON tree to matching entries and restores on clear', async () => {
   const { page, errors } = await openJson();
+  const rowsBefore = await page.locator('.pv-vrow').count();
   const search = page.getByLabel('Search JSON keys and values');
   await search.fill('label');
-  await page.waitForSelector('.pv-json-leaf.pv-json-hit');
-  await page.waitForFunction(() => document.querySelectorAll('.pv-json-leaf[hidden]').length > 0);
-  const visible = await page.locator('.pv-json-leaf:not([hidden])').count();
-  assert.equal(visible, 4);
-  const filtered = await page.locator('.pv-json-leaf:not([hidden])').allInnerTexts();
-  assert.ok(filtered.some((text) => text.includes('id')));
-  assert.ok(filtered.some((text) => text.includes('label')));
+  await page.waitForSelector('.pv-vrow.pv-json-hit');
+  await page.waitForFunction(
+    (previous) => document.querySelectorAll('.pv-vrow').length < previous,
+    rowsBefore,
+  );
+  const filtered = await page.locator('.pv-vrow').allInnerTexts();
+  assert.ok(filtered.some((text) => text.includes('"id"')));
+  assert.ok(filtered.some((text) => text.includes('"label"')));
 
   await page.getByRole('button', { name: 'Clear search' }).click();
-  await page.waitForFunction(() => document.querySelectorAll('.pv-json-leaf[hidden]').length === 0);
-  assert.ok((await page.locator('.pv-json-leaf:not([hidden])').count()) > visible);
+  await page.waitForFunction(
+    (previous) => document.querySelectorAll('.pv-vrow').length === previous,
+    rowsBefore,
+  );
   assertNoErrors(errors);
   await page.close();
 });
@@ -183,9 +183,9 @@ it('keeps the active search hit below the sticky tools', async () => {
   await page.evaluate(() => globalThis.scrollTo(0, document.documentElement.scrollHeight));
   const search = page.getByLabel('Search JSON keys and values');
   await search.fill('label');
-  await page.waitForSelector('.pv-json-hit-active');
+  await page.waitForSelector('.pv-vrow-active');
   const positions = await page.evaluate(() => {
-    const active = document.querySelector('.pv-json-hit-active').getBoundingClientRect();
+    const active = document.querySelector('.pv-vrow-active').getBoundingClientRect();
     const tools = document.querySelector('.pv-json-tools').getBoundingClientRect();
     return { activeTop: active.top, toolsBottom: tools.bottom };
   });

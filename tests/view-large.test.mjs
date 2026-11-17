@@ -9,23 +9,19 @@ import {
   closeExtension,
   launchExtension,
   openPage,
-  setSetting,
   startServer,
 } from './helpers.mjs';
 
-const TreeModeKey = 'plainview.jsonTreeMode';
 const MaxSourcePreviewChars = 210_000;
 const MinimumFullSourceChars = 500_000;
 
 let server;
-let base;
 let context;
 let profile;
 
 before(async () => {
-  ({ server, base } = await startServer());
+  ({ server } = await startServer());
   ({ context, profile } = await launchExtension());
-  await setSetting(context, TreeModeKey, 'classic');
 });
 
 after(async () => {
@@ -45,63 +41,6 @@ function createLargeJson() {
   fs.writeFileSync(file, JSON.stringify(rows));
   return { dir, file };
 }
-
-it('progressively renders a large JSON tree', async () => {
-  const { dir, file } = createLargeJson();
-  const { page, errors } = await openPage(context, pathToFileURL(file).href);
-  try {
-    await page.waitForSelector('.pv-json');
-    assert.match(await page.locator('.pv-doc-meta').innerText(), /\+ nodes/u);
-    assert.equal(await page.locator('.pv-tree-more').count(), 1);
-
-    const nodesBefore = await page.locator('.pv-json-node').count();
-    await page.locator('.pv-tree-more').first().click();
-    await page.waitForFunction(
-      (previousCount) => document.querySelectorAll('.pv-json-node').length > previousCount,
-      nodesBefore,
-    );
-
-    const search = page.getByLabel('Search JSON keys and values');
-    await search.fill('item-1199');
-    await page.waitForSelector('.pv-json-search-results:not([hidden])');
-    const results = page.locator('.pv-json-search-results:not(.pv-json-query-results)');
-    assert.match(await results.innerText(), /\$\[1199\]\.name/u);
-    assert.match(await results.innerText(), /item-1199/u);
-
-    await search.click();
-    await results.locator('.pv-json-search-result').first().click();
-    await page.waitForSelector('.pv-json-path[data-json-path="$[1199].name"]');
-    assertNoErrors(errors);
-  } finally {
-    await page.close();
-    fs.rmSync(dir, { recursive: true, force: true });
-  }
-});
-
-it('hangs wrapped JSON values under the value column', async () => {
-  const { page, errors } = await openPage(context, `${base}/wrapped.json`);
-  try {
-    await page.waitForSelector('.pv-json');
-    const metrics = await page
-      .locator('.pv-json-leaf')
-      .filter({ hasText: 'Donec' })
-      .evaluate((node) => {
-        const value = node.querySelector('.pv-json-value');
-        const range = document.createRange();
-        range.selectNodeContents(value);
-        const lefts = [...range.getClientRects()].map((rect) => rect.left);
-        return {
-          lefts,
-          valueLeft: value.getBoundingClientRect().left,
-        };
-      });
-    assert.ok(metrics.lefts.length > 2);
-    assert.ok(Math.min(...metrics.lefts) >= metrics.valueLeft - 1);
-    assertNoErrors(errors);
-  } finally {
-    await page.close();
-  }
-});
 
 it('previews a large source file and returns to the top', async () => {
   const { dir, file } = createLargeJson();
