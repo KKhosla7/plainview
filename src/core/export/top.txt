@@ -2,6 +2,13 @@
 (() => {
   const button = document.querySelector('.pv-export-top');
   if (!button) return;
+
+  function update() {
+    button.hidden = globalThis.scrollY < 600;
+  }
+
+  globalThis.addEventListener('scroll', update, { passive: true });
+  update();
   button.addEventListener('click', () => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       globalThis.scrollTo(0, 0);

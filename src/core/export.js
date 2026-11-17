@@ -78,23 +78,14 @@ import DocumentTemplate from './export/document.html';
 
     const actions = Plainview.createElement('div');
     actions.className = 'pv-actions pv-export-actions';
-    const themes = Plainview.createElement('div');
-    themes.className = 'pv-themes';
-    themes.setAttribute('role', 'group');
-    themes.setAttribute('aria-label', 'Theme');
-    for (const [theme, label] of [
-      ['light', 'Light'],
-      ['dark', 'Dark'],
-    ]) {
-      const button = Plainview.createElement('button');
-      button.type = 'button';
-      button.className = 'pv-theme-tab';
-      button.textContent = label;
-      button.setAttribute('data-pv-export-theme', theme);
-      button.setAttribute('aria-label', `${label} theme`);
-      themes.append(button);
-    }
-    actions.append(themes);
+    const themeButton = Plainview.createElement('button');
+    themeButton.type = 'button';
+    themeButton.className = 'pv-action pv-icon-action pv-theme-toggle';
+    themeButton.setAttribute('data-pv-export-theme-toggle', '');
+    themeButton.setAttribute('aria-label', 'Toggle theme');
+    themeButton.title = 'Toggle theme';
+    themeButton.append(Plainview.icons.theme());
+    actions.append(themeButton);
     clone.append(actions);
     return clone.outerHTML;
   }
@@ -267,6 +258,7 @@ import DocumentTemplate from './export/document.html';
       CONTENT: content,
       CREDIT_VERSION: creditVersion,
       DATA_EXPORT_SCRIPT: dataPayload ? Plainview.exportScripts.DataExportScript : '',
+      TABLE_BORDERS_SCRIPT: Plainview.exportScripts.TableBordersScript,
       THEME_SCRIPT: Plainview.exportScripts.ThemeScript,
       TOP_SCRIPT: Plainview.exportScripts.TopScript,
       TABLE_RESIZE_SCRIPT: Plainview.exportScripts.TableResizeScript,

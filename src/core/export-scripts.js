@@ -4,6 +4,7 @@
  */
 
 import dataExportScript from './export/data-export.txt';
+import tableBordersScript from './export/table-borders.txt';
 import tableResizeScript from './export/table-resize.txt';
 import themeScript from './export/theme.txt';
 import tocScript from './export/toc.txt';
@@ -15,6 +16,7 @@ import topScript from './export/top.txt';
       ThemeScript: themeScript,
       TopScript: topScript,
       DataExportScript: dataExportScript,
+      TableBordersScript: tableBordersScript,
       TableResizeScript: tableResizeScript,
       TocScript: tocScript,
     },

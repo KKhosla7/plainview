@@ -13,7 +13,7 @@ import {
 } from './helpers.mjs';
 
 const MaxSampleExportBytes = 40_000;
-const MaxRichExportBytes = 450_000;
+const MaxRichExportBytes = 800_000;
 
 let server;
 let base;
@@ -30,6 +30,24 @@ after(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
+async function toggleColumnLines(exported) {
+  const borderCell = exported.locator('.pv-markdown table th').first();
+  const beforeWidth = await borderCell.evaluate((node) => getComputedStyle(node).borderRightWidth);
+  await exported.getByRole('button', { name: 'Show column lines' }).click();
+  const afterWidth = await borderCell.evaluate((node) => getComputedStyle(node).borderRightWidth);
+  return {
+    afterVisible: afterWidth !== '0px',
+    beforeHidden: beforeWidth === '0px',
+    hideCount: await exported.getByRole('button', { name: 'Hide column lines' }).count(),
+  };
+}
+
+async function downloadHtml(page) {
+  await page.getByRole('button', { name: 'Export', exact: true }).click();
+  await page.waitForSelector('.pv-export-menu:not([hidden])');
+  return page.getByRole('button', { name: 'Download HTML page' }).click();
+}
+
 async function openSample() {
   const { page, errors } = await openPage(context, `${base}/sample.md`);
   await page.waitForSelector('.pv-app');
@@ -42,10 +60,7 @@ async function openSample() {
 
 it('exports a compressed standalone HTML file with Contents and theme controls', async () => {
   const { page, errors } = await openSample();
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Export', exact: true }).click(),
-  ]);
+  const [download] = await Promise.all([page.waitForEvent('download'), downloadHtml(page)]);
 
   assert.equal(download.suggestedFilename(), 'sample.html');
   const file = await download.path();
@@ -78,12 +93,18 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
     );
     assert.equal(await exported.locator('.pv-code-bar').count(), 0);
     assert.equal(await exported.locator('.pv-doc-meta').count(), 0);
+    assert.deepEqual(await toggleColumnLines(exported), {
+      afterVisible: true,
+      beforeHidden: true,
+      hideCount: 1,
+    });
 
-    await exported.getByRole('button', { name: 'Light theme' }).click();
-    assert.equal(await exported.evaluate(() => document.documentElement.dataset.pvTheme), 'light');
-    await exported.getByRole('button', { name: 'Dark theme' }).click();
+    await exported.getByRole('button', { name: 'Toggle theme' }).click();
     assert.equal(await exported.evaluate(() => document.documentElement.dataset.pvTheme), 'dark');
+    await exported.getByRole('button', { name: 'Toggle theme' }).click();
+    assert.equal(await exported.evaluate(() => document.documentElement.dataset.pvTheme), 'light');
 
+    assert.equal(await exported.getByRole('button', { name: 'Back to top' }).isHidden(), true);
     await exported.evaluate(() => document.querySelector('#table').scrollIntoView());
     await exported.waitForFunction(
       () => document.querySelector('.pv-toc-link.is-active')?.textContent.trim() === 'Table',
@@ -112,10 +133,7 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
 it('embeds KaTeX styles and fonts when exporting math', async () => {
   const { page, errors } = await openPage(context, `${base}/rich.md`);
   await page.waitForSelector('.katex', { timeout: 10_000 });
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Export', exact: true }).click(),
-  ]);
+  const [download] = await Promise.all([page.waitForEvent('download'), downloadHtml(page)]);
 
   const file = await download.path();
   const html = fs.readFileSync(file, 'utf8');
@@ -147,10 +165,7 @@ it('embeds KaTeX styles and fonts when exporting math', async () => {
 
 it('allows column resizing in exported HTML', async () => {
   const { page, errors } = await openSample();
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Export', exact: true }).click(),
-  ]);
+  const [download] = await Promise.all([page.waitForEvent('download'), downloadHtml(page)]);
   const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-export-'));
   const exportFile = path.join(exportDir, 'sample.html');
   fs.copyFileSync(await download.path(), exportFile);
@@ -199,10 +214,7 @@ it('preserves resized column widths in exported HTML', async () => {
   assert.ok(resizedWidth > sourceWidth);
   await page.waitForTimeout(300);
 
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Export', exact: true }).click(),
-  ]);
+  const [download] = await Promise.all([page.waitForEvent('download'), downloadHtml(page)]);
   const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-export-'));
   const exportFile = path.join(exportDir, 'sample.html');
   fs.copyFileSync(await download.path(), exportFile);

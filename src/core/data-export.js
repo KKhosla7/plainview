@@ -7,6 +7,7 @@
   const Mime = {
     csv: 'text/csv;charset=utf-8',
     json: 'application/json;charset=utf-8',
+    markdown: 'text/markdown;charset=utf-8',
     toml: 'application/toml;charset=utf-8',
     tsv: 'text/tab-separated-values;charset=utf-8',
     xml: 'application/xml;charset=utf-8',
@@ -16,6 +17,10 @@
   function extensionFor(formatId) {
     if (formatId === 'jsonc') {
       return 'json';
+    }
+
+    if (formatId === 'markdown') {
+      return 'md';
     }
 
     return formatId || 'txt';

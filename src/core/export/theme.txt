@@ -1,18 +1,18 @@
 <script>
 (() => {
   const root = document.documentElement;
-  const buttons = [...document.querySelectorAll('[data-pv-export-theme]')];
+  const button = document.querySelector('[data-pv-export-theme-toggle]');
   function apply(theme) {
     root.dataset.pvTheme = theme;
-    for (const button of buttons) {
-      const selected = button.dataset.pvExportTheme === theme;
-      button.setAttribute('aria-selected', String(selected));
-      button.setAttribute('aria-pressed', String(selected));
+    if (button) {
+      const dark = theme === 'dark';
+      button.setAttribute('aria-pressed', String(dark));
+      button.title = dark ? 'Switch to light theme' : 'Switch to dark theme';
     }
   }
-  for (const button of buttons) {
-    button.addEventListener('click', () => apply(button.dataset.pvExportTheme));
-  }
+  button?.addEventListener('click', () => {
+    apply(root.dataset.pvTheme === 'dark' ? 'light' : 'dark');
+  });
   apply(root.dataset.pvTheme || 'light');
 })();
 </script>

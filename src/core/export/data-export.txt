@@ -14,8 +14,10 @@
 
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'pv-action pv-export-data-action';
-  button.textContent = 'Export data';
+  button.className = 'pv-action pv-icon-action pv-export-data-action';
+  button.setAttribute('aria-label', 'Export data');
+  button.title = 'Export data';
+  button.append(Plainview.icons.export());
   button.setAttribute('aria-haspopup', 'menu');
   button.setAttribute('aria-expanded', 'false');
   const menu = document.createElement('div');
@@ -45,12 +47,30 @@
     close();
   }
 
+  const labels = {
+    markdown: 'MD',
+  };
+  const glyphs = {
+    csv: ',',
+    json: '{}',
+    markdown: '#',
+    toml: '[=]',
+    tsv: '⇥',
+    xml: '<>',
+    yaml: '-:',
+  };
   for (const entry of payload.entries) {
     const item = document.createElement('button');
     item.type = 'button';
-    item.textContent = payload.entries.length === 1
-      ? `Download ${entry.formatId.toUpperCase()}`
-      : `${entry.scope === 'filtered' ? 'Download filtered' : 'Download complete'} ${entry.formatId.toUpperCase()}`;
+    item.className = 'pv-export-cell';
+    const glyph = document.createElement('span');
+    glyph.className = 'pv-format-glyph';
+    glyph.textContent = glyphs[entry.formatId] || '{}';
+    const label = payload.entries.length === 1
+      ? `Download ${labels[entry.formatId] || entry.formatId.toUpperCase()}`
+      : `${entry.scope === 'filtered' ? 'Download filtered' : 'Download complete'} ${labels[entry.formatId] || entry.formatId.toUpperCase()}`;
+    item.append(glyph, document.createTextNode(label));
+    item.title = label;
     item.addEventListener('click', () => download(entry));
     menu.append(item);
   }

@@ -1,0 +1,43 @@
+<script>
+(() => {
+  if (!document.querySelector('.pv-markdown table')) return;
+  const actions = document.querySelector('.pv-export-actions');
+  if (!actions) return;
+  const root = document.documentElement;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'pv-action pv-icon-action pv-table-borders-toggle';
+  button.setAttribute('aria-pressed', String(root.dataset.pvTableBorders === 'on'));
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('width', '18');
+  svg.setAttribute('height', '18');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  for (const d of ['M3 3h18v18H3z', 'M3 9h18', 'M3 15h18', 'M9 3v18', 'M15 3v18']) {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d);
+    svg.append(path);
+  }
+  button.append(svg);
+
+  function apply() {
+    const on = root.dataset.pvTableBorders === 'on';
+    button.setAttribute('aria-pressed', String(on));
+    button.setAttribute('aria-label', on ? 'Hide column lines' : 'Show column lines');
+    button.title = on ? 'Hide column lines' : 'Show column lines';
+  }
+
+  button.addEventListener('click', () => {
+    root.dataset.pvTableBorders =
+      root.dataset.pvTableBorders === 'on' ? 'off' : 'on';
+    apply();
+  });
+  apply();
+  actions.append(button);
+})();
+</script>

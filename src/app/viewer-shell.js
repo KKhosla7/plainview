@@ -25,7 +25,7 @@
       fileName,
       url,
       formatLabel: format.label,
-      showDownload: format.id === 'markdown',
+      showDownload: false,
     });
     const sourcePane = Plainview.createSourcePane(source, format);
     const shell = el('div', 'pv-shell');

@@ -5,6 +5,7 @@ import './core/setting-keys.js';
 import './core/settings.js';
 import './core/events.js';
 import './core/dom.js';
+import './app/icons.js';
 import './core/value.js';
 import './core/scheduler.js';
 import './core/clipboard.js';

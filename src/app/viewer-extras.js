@@ -64,6 +64,7 @@
     const glyphs = {
       CSV: ',',
       JSON: '{}',
+      MD: '#',
       TOML: '[=]',
       TSV: '⇥',
       XML: '<>',
@@ -205,7 +206,7 @@
         content,
         fileName,
         format,
-        formatLabel: String(formatId || 'data').toUpperCase(),
+        formatLabel: String(format?.label || formatId || 'data').toUpperCase(),
         hasFilter: content.exportData.hasFilter(),
         refreshExtras,
       });

@@ -183,6 +183,13 @@
       mermaidBlocks,
       codeBlocks,
       math: Plainview.hasMath(source),
+      exportData: {
+        formatId: 'markdown',
+        hasFilter: () => false,
+        getData(scope) {
+          return scope === 'filtered' ? null : { data: source, formatId: 'markdown', kind: 'text' };
+        },
+      },
     };
   }
 

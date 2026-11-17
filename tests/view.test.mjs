@@ -66,9 +66,11 @@ it('Source view highlights Markdown and uses the full width', async () => {
 
 it('downloads the original file', async () => {
   const { page, errors } = await openSample();
+  await page.getByRole('button', { name: 'Export', exact: true }).click();
+  await page.waitForSelector('.pv-export-menu:not([hidden])');
   const [download] = await Promise.all([
     page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Download' }).click(),
+    page.getByRole('button', { name: 'Download complete data (MD)' }).click(),
   ]);
 
   assert.equal(download.suggestedFilename(), 'sample.md');
