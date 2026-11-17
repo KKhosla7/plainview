@@ -11,8 +11,11 @@
   const sourceStatus = document.querySelector('#sourceStatus');
   const shortcutSelects = [...document.querySelectorAll('[data-shortcut]')];
   const shortcutStatus = document.querySelector('#shortcutStatus');
-  const exportUncompressed = document.querySelector('#exportUncompressed');
-  const exportStatus = document.querySelector('#exportStatus');
+  const [exportDataMenu, exportStatus, exportUncompressed] = [
+    '#exportDataMenu',
+    '#exportStatus',
+    '#exportUncompressed',
+  ].map((selector) => document.querySelector(selector));
   const controls = [...document.querySelectorAll('input, select')];
 
   for (const control of controls) {
@@ -30,6 +33,7 @@
       [Keys.TableLayout]: 'wrap',
       [Keys.JsonTreeMode]: 'classic',
       [Keys.Shortcuts]: 'alt-s',
+      [Keys.ExportDataMenu]: false,
       [Keys.ExportUncompressed]: false,
     });
     autoReload.checked = Boolean(data[Keys.AutoReload]);
@@ -41,6 +45,7 @@
     for (const select of shortcutSelects) {
       select.value = shortcuts[select.dataset.shortcut];
     }
+    exportDataMenu.checked = Boolean(data[Keys.ExportDataMenu]);
     exportUncompressed.checked = Boolean(data[Keys.ExportUncompressed]);
     document.querySelector('#version').textContent = api.runtime.getManifest().version;
     for (const control of controls) {
@@ -48,6 +53,17 @@
     }
     document.documentElement.dataset.pvOptionsReady = 'true';
   }
+
+  Plainview.onAsync(exportDataMenu, 'change', async () => {
+    await api.storage.local.set({
+      [Keys.ExportDataMenu]: exportDataMenu.checked,
+    });
+    exportStatus.textContent = exportDataMenu.checked
+      ? 'Data downloads enabled in exported HTML'
+      : 'Data downloads hidden in exported HTML';
+    exportStatus.classList.add('visible');
+    globalThis.setTimeout(() => exportStatus.classList.remove('visible'), StatusResetMs);
+  });
 
   Plainview.onAsync(exportUncompressed, 'change', async () => {
     await api.storage.local.set({

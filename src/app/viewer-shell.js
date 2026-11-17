@@ -26,6 +26,7 @@
       url,
       formatLabel: format.label,
       showDownload: false,
+      showTableBorders: format.id === 'markdown',
     });
     const sourcePane = Plainview.createSourcePane(source, format);
     const shell = el('div', 'pv-shell');

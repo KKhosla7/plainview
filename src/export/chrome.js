@@ -5,6 +5,7 @@
  */
 ((root) => {
   const { document } = root;
+  const ExportTableBordersPrefix = 'plainview.export.tableBorders:';
   const RevokeDelayMs = 10_000;
 
   function exportEntry(entry, total, close) {
@@ -47,7 +48,11 @@
       return;
     }
 
-    if (!(payload && Array.isArray(payload.entries)) || payload.entries.length === 0) {
+    if (
+      payload?.showDataMenu !== true ||
+      !Array.isArray(payload.entries) ||
+      payload.entries.length === 0
+    ) {
       return;
     }
 
@@ -78,11 +83,13 @@
     }
 
     const placeholder = topbar.querySelector('.pv-export-actions');
+    const exportId = document.documentElement.dataset.pvExportId || location.pathname;
     const controls = Plainview.createTopbarActions({
       showDownload: false,
       showExport: false,
       showTableBorders: Boolean(document.querySelector('.pv-markdown table')),
       showToc: false,
+      tableBordersKey: `${ExportTableBordersPrefix}${exportId}`,
     });
     if (placeholder) {
       placeholder.replaceWith(controls.actions);
@@ -96,14 +103,7 @@
     });
     dataExportMenu(controls.actions);
 
-    let index = 0;
-    for (const table of document.querySelectorAll('.pv-markdown .pv-table-wrap table')) {
-      Plainview.tableResize.enable(table, {
-        offset: 0,
-        tableId: table.dataset.pvTableId || `markdown-${index}`,
-      });
-      index += 1;
-    }
+    Plainview.tableResize.enableAll();
 
     const app = document.querySelector('.pv-app');
     if (app) {

@@ -162,13 +162,16 @@
   }
 
   function enableAll() {
+    let markdownIndex = 0;
     for (const table of document.querySelectorAll(
       '.pv-csv-table, .pv-markdown .pv-table-wrap table',
     )) {
-      enable(table, {
-        offset: table.classList.contains('pv-csv-table') ? 1 : 0,
-        tableId: table.dataset.pvTableId,
-      });
+      const csv = table.classList.contains('pv-csv-table');
+      const tableId = table.dataset.pvTableId || (csv ? 'csv' : `markdown-${markdownIndex}`);
+      if (!csv) {
+        markdownIndex += 1;
+      }
+      enable(table, { offset: csv ? 1 : 0, tableId });
     }
   }
 
@@ -196,6 +199,6 @@
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {
-    tableResize: { apply, applyLayout, enable },
+    tableResize: { apply, applyLayout, enable, enableAll },
   });
 })(globalThis);

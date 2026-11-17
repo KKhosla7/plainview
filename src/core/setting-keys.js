@@ -5,6 +5,7 @@
  */
 ((root) => {
   const AutoReloadKey = 'plainview.autoReloadSource';
+  const ExportDataMenuKey = 'plainview.exportDataMenu';
   const ExportUncompressedKey = 'plainview.exportUncompressed';
   const ShortcutsKey = 'plainview.shortcuts';
   const TableBordersKey = 'plainview.tableBorders';
@@ -19,6 +20,7 @@
   root.Plainview = Object.assign(root.Plainview || {}, {
     SETTING_KEYS: Object.freeze({
       AutoReload: AutoReloadKey,
+      ExportDataMenu: ExportDataMenuKey,
       ExportUncompressed: ExportUncompressedKey,
       Shortcuts: ShortcutsKey,
       TableBorders: TableBordersKey,

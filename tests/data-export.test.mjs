@@ -9,8 +9,11 @@ import {
   closeExtension,
   launchExtension,
   openPage,
+  setSetting,
   startServer,
 } from './helpers.mjs';
+
+const ExportDataMenuKey = 'plainview.exportDataMenu';
 
 let server;
 let base;
@@ -151,6 +154,7 @@ it('keeps standalone HTML export in the data export menu', async () => {
 });
 
 it('keeps clean data downloads inside a compressed HTML export', async () => {
+  await setSetting(context, ExportDataMenuKey, true);
   const { page, errors } = await openPage(context, `${base}/sample.json`);
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-data-export-'));
   try {
@@ -217,6 +221,7 @@ it('keeps search, query and complete data in a standalone data HTML export', asy
 });
 
 it('applies the active search in a filtered HTML export', async () => {
+  await setSetting(context, ExportDataMenuKey, true);
   const { page, errors } = await openPage(context, `${base}/sample.json`);
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-filtered-html-'));
   try {

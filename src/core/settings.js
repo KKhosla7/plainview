@@ -4,7 +4,7 @@
   const ThemeKey = Keys.Theme;
   const ZoomKey = Keys.Zoom;
   const ShortcutKey = Keys.Shortcuts;
-  const ExportUncompressedKey = Keys.ExportUncompressed;
+  const { ExportDataMenu: ExportDataMenuKey, ExportUncompressed: ExportUncompressedKey } = Keys;
   const TableBordersKey = Keys.TableBorders;
   const TableResizeKey = Keys.TableResize;
   const ZoomMin = 50;
@@ -172,6 +172,7 @@
     THEME_KEY: ThemeKey,
     ZOOM_KEY: ZoomKey,
     SHORTCUT_KEY: ShortcutKey,
+    EXPORT_DATA_MENU_KEY: ExportDataMenuKey,
     EXPORT_UNCOMPRESSED_KEY: ExportUncompressedKey,
     TABLE_BORDERS_KEY: TableBordersKey,
     TABLE_RESIZE_KEY: TableResizeKey,

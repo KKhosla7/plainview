@@ -61,6 +61,7 @@
     showExport = true,
     showTableBorders = false,
     showToc = true,
+    tableBordersKey,
   } = {}) {
     const actions = el('div', 'pv-actions');
 
@@ -69,7 +70,9 @@
     tocButton.title = 'Table of contents';
 
     const themeButton = Plainview.createThemeButton();
-    const tableBordersButton = showTableBorders ? Plainview.createTableBordersButton() : null;
+    const tableBordersButton = showTableBorders
+      ? Plainview.createTableBordersButton({ settingKey: tableBordersKey })
+      : null;
 
     const downloadButton = button('pv-action pv-action-download', 'Download');
     downloadButton.title = 'Download the original file';
@@ -108,11 +111,11 @@
     };
   }
 
-  function createTopbar({ fileName, url, formatLabel, showDownload }) {
+  function createTopbar({ fileName, url, formatLabel, showDownload, showTableBorders = false }) {
     const topbar = el('header', 'pv-topbar');
     const brand = createBrand({ fileName, url, formatLabel });
     const tabs = createViewTabs();
-    const controls = createActions({ showDownload });
+    const controls = createActions({ showDownload, showTableBorders });
 
     controls.actions.prepend(tabs.views);
     topbar.append(brand, controls.actions);

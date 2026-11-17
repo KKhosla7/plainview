@@ -14,6 +14,7 @@ import {
 
 const MaxSampleExportBytes = 40_000;
 const MaxRichExportBytes = 800_000;
+const LiveTableBordersKey = 'plainview.tableBorders';
 
 let server;
 let base;
@@ -35,10 +36,18 @@ async function toggleColumnLines(exported) {
   const beforeWidth = await borderCell.evaluate((node) => getComputedStyle(node).borderRightWidth);
   await exported.getByRole('button', { name: 'Show column lines' }).click();
   const afterWidth = await borderCell.evaluate((node) => getComputedStyle(node).borderRightWidth);
+  const hideCount = await exported.getByRole('button', { name: 'Hide column lines' }).count();
+  await exported.evaluate((key) => localStorage.setItem(key, 'false'), LiveTableBordersKey);
+  await exported.reload();
+  await exported.waitForSelector('.pv-table-borders-toggle');
+  const persistedWidth = await borderCell.evaluate(
+    (node) => getComputedStyle(node).borderRightWidth,
+  );
   return {
     afterVisible: afterWidth !== '0px',
     beforeHidden: beforeWidth === '0px',
-    hideCount: await exported.getByRole('button', { name: 'Hide column lines' }).count(),
+    hideCount,
+    persistedVisible: persistedWidth !== '0px',
   };
 }
 
@@ -47,6 +56,7 @@ function exportControlCounts(exported) {
     exported.getByRole('button', { name: 'Export', exact: true }).count(),
     exported.getByRole('button', { name: 'Download HTML page' }).count(),
     exported.getByRole('button', { name: 'Toggle theme' }).count(),
+    exported.getByRole('button', { name: 'Export data', exact: true }).count(),
   ]);
 }
 
@@ -100,12 +110,13 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
       'fixed',
     );
     assert.equal(await exported.locator('.pv-code-bar').count(), 0);
-    assert.deepEqual(await exportControlCounts(exported), [0, 0, 1]);
+    assert.deepEqual(await exportControlCounts(exported), [0, 0, 1, 0]);
     assert.equal(await exported.locator('.pv-doc-meta').count(), 0);
     assert.deepEqual(await toggleColumnLines(exported), {
       afterVisible: true,
       beforeHidden: true,
       hideCount: 1,
+      persistedVisible: true,
     });
 
     await exported.getByRole('button', { name: 'Toggle theme' }).click();

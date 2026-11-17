@@ -29,10 +29,14 @@ it('settings page loads and remembers the auto-reload option', async () => {
   await page.waitForSelector('html[data-pv-options-ready="true"]');
   assert.equal(await page.isChecked('#autoReloadSources'), false);
   assert.equal(await page.locator('#shortcutPreset').inputValue(), 'alt-s');
-  assert.equal(await page.isChecked('#exportUncompressed'), false);
+  assert.deepEqual(
+    await Promise.all([page.isChecked('#exportUncompressed'), page.isChecked('#exportDataMenu')]),
+    [false, false],
+  );
 
   await page.check('#autoReloadSources');
   await page.check('#exportUncompressed');
+  await page.check('#exportDataMenu');
   await page.locator('#shortcutPreset').selectOption('off');
   await page.waitForTimeout(150);
   await page.reload();
@@ -40,7 +44,10 @@ it('settings page loads and remembers the auto-reload option', async () => {
   await page.waitForSelector('html[data-pv-options-ready="true"]');
   assert.equal(await page.isChecked('#autoReloadSources'), true);
   assert.equal(await page.locator('#shortcutPreset').inputValue(), 'off');
-  assert.equal(await page.isChecked('#exportUncompressed'), true);
+  assert.deepEqual(
+    await Promise.all([page.isChecked('#exportUncompressed'), page.isChecked('#exportDataMenu')]),
+    [true, true],
+  );
   assert.match(await page.locator('#version').textContent(), /^\d+\.\d+\.\d+$/u);
   assert.match(
     await page.getByRole('link', { name: /Buy me a coffee/u }).getAttribute('href'),

@@ -100,6 +100,17 @@ export async function closeExtension({ context, profile } = {}) {
   }
 }
 
+export async function setSetting(context, key, value) {
+  let workers = context.serviceWorkers();
+  if (workers.length === 0) {
+    workers = [await context.waitForEvent('serviceworker', { timeout: 10_000 })];
+  }
+  await workers[0].evaluate(
+    ({ settingKey, settingValue }) => chrome.storage.local.set({ [settingKey]: settingValue }),
+    { settingKey: key, settingValue: value },
+  );
+}
+
 export async function openPage(context, url) {
   const page = await context.newPage();
   const errors = [];

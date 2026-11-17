@@ -143,7 +143,7 @@ import DocumentTemplate from './export/document.html';
     return output;
   }
 
-  async function buildDataPayload(exportData, fileName, scope) {
+  async function buildDataPayload(exportData, fileName, scope, showDataMenu) {
     if (!exportData) {
       return '';
     }
@@ -169,7 +169,10 @@ import DocumentTemplate from './export/document.html';
     }
 
     const entries = data.entries.filter((entry) => entry.scope === scope);
-    return JSON.stringify({ document: documentData, entries }).replace(/</gu, '\\u003c');
+    return JSON.stringify({ document: documentData, entries, showDataMenu }).replace(
+      /</gu,
+      '\\u003c',
+    );
   }
 
   async function buildDataViewer(exportData) {
@@ -225,6 +228,7 @@ import DocumentTemplate from './export/document.html';
     fileName,
     format,
     scope = 'complete',
+    showDataMenu = null,
     theme,
     uncompressed = false,
   }) {
@@ -233,10 +237,13 @@ import DocumentTemplate from './export/document.html';
     const katex = await katexExportCss(clone);
     const title = fileName || document.title || 'Plainview document';
     const formatId = escapeHtml(format?.id || 'markdown');
+    const exportId = crypto.randomUUID();
     const themeName = theme === 'dark' ? 'dark' : 'light';
     const version = document.documentElement.getAttribute('data-pv-version') || '';
     const hasToc = Boolean(clone.querySelector('.pv-toc-link'));
-    const dataPayload = await buildDataPayload(exportData, title, scope);
+    const includeDataMenu =
+      showDataMenu ?? Boolean(await Plainview.loadSetting(Plainview.EXPORT_DATA_MENU_KEY, false));
+    const dataPayload = await buildDataPayload(exportData, title, scope, includeDataMenu);
     const dataViewer = dataPayload ? await buildDataViewer(exportData) : null;
     const chromeScript = await buildChromeScript();
     const content = exportContent({ clone, dataViewer, shell });
@@ -245,6 +252,7 @@ import DocumentTemplate from './export/document.html';
       : '';
     const creditVersion = version ? ` data-plainview-version="${escapeHtml(version)}"` : '';
     const html = fillTemplate(DocumentTemplate, {
+      EXPORT_ID: exportId,
       FORMAT: formatId,
       THEME: themeName,
       TABLE_BORDERS: document.documentElement.dataset.pvTableBorders || 'off',
