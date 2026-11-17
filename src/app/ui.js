@@ -90,6 +90,7 @@
       Plainview.loadSetting(Plainview.SHORTCUT_KEY, 'alt-s'),
       Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
       Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
+      Plainview.loadSetting(Plainview.TABLE_LAYOUT_KEY, 'wrap'),
     ]);
     return {
       viewKey,
@@ -101,6 +102,7 @@
       savedShortcuts: settings[4],
       savedTableBorders: settings[5],
       savedTableResize: settings[6],
+      savedTableLayout: settings[7],
     };
   }
 
@@ -130,6 +132,18 @@
     });
   }
 
+  function watchTableSettings() {
+    Plainview.watchSetting(Plainview.TABLE_BORDERS_KEY, (value) => {
+      document.documentElement.dataset.pvTableBorders = value ? 'on' : 'off';
+    });
+    Plainview.watchSetting(Plainview.TABLE_RESIZE_KEY, (value) => {
+      Plainview.tableResize.apply(Boolean(value));
+    });
+    Plainview.watchSetting(Plainview.TABLE_LAYOUT_KEY, (value) => {
+      Plainview.tableResize.applyLayout(Plainview.validTableLayout(value));
+    });
+  }
+
   async function mountViewer({ source, url, format, fileName: requestedName }) {
     await Plainview.migrateLegacySettings();
     const fileName = requestedName || fileNameFromUrl(url);
@@ -143,10 +157,12 @@
       savedShortcuts,
       savedTableBorders,
       savedTableResize,
+      savedTableLayout,
     } = await loadViewerSettings(url);
 
     document.documentElement.dataset.pvTableBorders = savedTableBorders ? 'on' : 'off';
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
+    document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);
 
     if (format.id === 'markdown') {
       Plainview.installFonts();
@@ -198,12 +214,7 @@
     globalThis.addEventListener('pagehide', () => sourceWatch.stop(), { once: true });
 
     applyDocumentChrome({ app, format, fileName });
-    Plainview.watchSetting(Plainview.TABLE_BORDERS_KEY, (value) => {
-      document.documentElement.dataset.pvTableBorders = value ? 'on' : 'off';
-    });
-    Plainview.watchSetting(Plainview.TABLE_RESIZE_KEY, (value) => {
-      Plainview.tableResize.apply(Boolean(value));
-    });
+    watchTableSettings();
     restoreScrollState({ scrollKey, savedScroll, viewSwitcher, toc, format, refreshExtras });
   }
 

@@ -59,13 +59,16 @@ it('settings page remembers table options', async () => {
   await page.waitForSelector('#tableBorders');
   await page.waitForSelector('html[data-pv-options-ready="true"]');
   assert.equal(await page.isChecked('#tableResize'), true);
+  assert.equal(await page.locator('#tableLayout').inputValue(), 'wrap');
 
   await page.uncheck('#tableResize');
+  await page.locator('#tableLayout').selectOption('scroll');
   await page.waitForTimeout(150);
   await page.reload();
   await page.waitForSelector('#tableBorders');
   await page.waitForSelector('html[data-pv-options-ready="true"]');
   assert.equal(await page.isChecked('#tableResize'), false);
+  assert.equal(await page.locator('#tableLayout').inputValue(), 'scroll');
   assertNoErrors(errors);
   await page.close();
 });

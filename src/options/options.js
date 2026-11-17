@@ -6,6 +6,7 @@
   const autoReload = document.querySelector('#autoReloadSources');
   const tableBorders = document.querySelector('#tableBorders');
   const tableResize = document.querySelector('#tableResize');
+  const tableLayout = document.querySelector('#tableLayout');
   const tableStatus = document.querySelector('#tableStatus');
   const sourceStatus = document.querySelector('#sourceStatus');
   const shortcutSelects = [...document.querySelectorAll('[data-shortcut]')];
@@ -25,12 +26,14 @@
       [Keys.AutoReload]: false,
       [Keys.TableBorders]: false,
       [Keys.TableResize]: true,
+      [Keys.TableLayout]: 'wrap',
       [Keys.Shortcuts]: 'alt-s',
       [Keys.ExportUncompressed]: false,
     });
     autoReload.checked = Boolean(data[Keys.AutoReload]);
     tableBorders.checked = Boolean(data[Keys.TableBorders]);
     tableResize.checked = Boolean(data[Keys.TableResize]);
+    tableLayout.value = data[Keys.TableLayout] === 'scroll' ? 'scroll' : 'wrap';
     const shortcuts = Plainview.shortcutConfig.normalizeShortcuts(data[Keys.Shortcuts]);
     for (const select of shortcutSelects) {
       select.value = shortcuts[select.dataset.shortcut];
@@ -80,6 +83,14 @@
     tableStatus.textContent = tableResize.checked
       ? 'Column resizing enabled'
       : 'Column resizing disabled';
+    tableStatus.classList.add('visible');
+    globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
+  });
+
+  Plainview.onAsync(tableLayout, 'change', async () => {
+    await api.storage.local.set({ [Keys.TableLayout]: tableLayout.value });
+    tableStatus.textContent =
+      tableLayout.value === 'wrap' ? 'Wide tables wrap text' : 'Wide tables scroll sideways';
     tableStatus.classList.add('visible');
     globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
   });

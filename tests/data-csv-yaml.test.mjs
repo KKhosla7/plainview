@@ -10,6 +10,7 @@ import {
 
 const TableBordersKey = 'plainview.tableBorders';
 const TableResizeKey = 'plainview.tableResize';
+const TableLayoutKey = 'plainview.tableLayout';
 
 let server;
 let base;
@@ -75,6 +76,10 @@ async function setTableBorders(value) {
 
 async function setTableResize(value) {
   await setStoredSetting(TableResizeKey, value);
+}
+
+async function setTableLayout(value) {
+  await setStoredSetting(TableLayoutKey, value);
 }
 
 it('renders CSV as a bounded table with quoted fields', async () => {
@@ -153,6 +158,10 @@ it('applies optional column borders to Markdown tables', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.md`);
   try {
     await page.waitForSelector('.pv-markdown table');
+    const wrap = page.locator('.pv-markdown .pv-table-wrap');
+    const table = page.locator('.pv-markdown table');
+    assert.equal(await wrap.evaluate((node) => getComputedStyle(node).overflowX), 'hidden');
+    assert.equal(await table.evaluate((node) => getComputedStyle(node).minWidth), '0px');
     const cell = page.locator('.pv-markdown table th').first();
     assert.equal(await cell.evaluate((node) => getComputedStyle(node).borderRightWidth), '0px');
     await setTableBorders(true);
@@ -213,6 +222,25 @@ it('exposes column resize handles', async () => {
     assertNoErrors(errors);
   } finally {
     await setTableResize(true);
+    await page.close();
+  }
+});
+
+it('wraps wide tables by default and can scroll them', async () => {
+  await setTableLayout('wrap');
+  const { page, errors } = await openCsvFixture();
+  try {
+    const wrap = page.locator('.pv-csv-wrap');
+    const cell = page.locator('.pv-csv-table td').first();
+    assert.equal(await wrap.evaluate((node) => getComputedStyle(node).overflowX), 'hidden');
+    assert.equal(await cell.evaluate((node) => getComputedStyle(node).whiteSpace), 'normal');
+    await setTableLayout('scroll');
+    await page.waitForFunction(() => document.documentElement.dataset.pvTableLayout === 'scroll');
+    assert.equal(await wrap.evaluate((node) => getComputedStyle(node).overflowX), 'auto');
+    assert.equal(await cell.evaluate((node) => getComputedStyle(node).whiteSpace), 'pre');
+    assertNoErrors(errors);
+  } finally {
+    await setTableLayout('wrap');
     await page.close();
   }
 });

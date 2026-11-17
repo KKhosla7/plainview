@@ -1,6 +1,5 @@
 /* global Plainview */
 ((root) => {
-  const Themes = ['light', 'dark'];
   const Keys = Plainview.SETTING_KEYS;
   const ThemeKey = Keys.Theme;
   const ZoomKey = Keys.Zoom;
@@ -91,7 +90,11 @@
   }
 
   function validTheme(value) {
-    return Themes.includes(value) ? value : null;
+    return ['light', 'dark'].includes(value) ? value : null;
+  }
+
+  function validTableLayout(value) {
+    return value === 'scroll' ? 'scroll' : 'wrap';
   }
 
   let migration = null;
@@ -164,6 +167,7 @@
     EXPORT_UNCOMPRESSED_KEY: ExportUncompressedKey,
     TABLE_BORDERS_KEY: TableBordersKey,
     TABLE_RESIZE_KEY: TableResizeKey,
+    TABLE_LAYOUT_KEY: Keys.TableLayout,
     ZOOM_MIN: ZoomMin,
     ZOOM_MAX: ZoomMax,
     ZOOM_STEP: ZoomStep,
@@ -171,5 +175,6 @@
     saveSetting,
     watchSetting,
     validTheme,
+    validTableLayout,
   });
 })(globalThis);

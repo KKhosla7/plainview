@@ -29,6 +29,7 @@ const STYLE_FILES = [
   'src/styles/theme-html.css',
   'src/styles/theme-html-doc.css',
   'src/styles/table-borders.css',
+  'src/styles/table-layout.css',
 ];
 
 const mermaidDist = path.join(project, 'node_modules', 'mermaid', 'dist');

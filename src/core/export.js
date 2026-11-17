@@ -179,6 +179,7 @@ import DocumentTemplate from './export/document.html';
       THEME: themeName,
       TABLE_BORDERS: document.documentElement.dataset.pvTableBorders || 'off',
       TABLE_RESIZE: document.documentElement.dataset.pvTableResize || 'on',
+      TABLE_LAYOUT: Plainview.validTableLayout(document.documentElement.dataset.pvTableLayout),
       GENERATOR: generator,
       TITLE: escapeHtml(title),
       CSS: String(root.PLAINVIEW_CSS || ''),

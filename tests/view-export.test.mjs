@@ -158,6 +158,12 @@ it('allows column resizing in exported HTML', async () => {
   try {
     await exported.goto(pathToFileURL(exportFile).href);
     await exported.waitForSelector('.pv-table-resize');
+    assert.equal(
+      await exported
+        .locator('.pv-markdown .pv-table-wrap')
+        .evaluate((node) => getComputedStyle(node).overflowX),
+      'hidden',
+    );
     const handleLocator = exported.locator('.pv-table-resize').first();
     await handleLocator.scrollIntoViewIfNeeded();
     const header = exported.locator('.pv-markdown table th').first();

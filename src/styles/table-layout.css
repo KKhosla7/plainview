@@ -1,0 +1,25 @@
+html[data-pv][data-pv-table-layout="wrap"] .pv-csv-wrap {
+  overflow-x: hidden;
+}
+
+html[data-pv][data-pv-format="markdown"][data-pv-table-layout="wrap"] .pv-table-wrap {
+  overflow-x: hidden;
+}
+
+html[data-pv][data-pv-table-layout="wrap"] .pv-csv-table th,
+html[data-pv][data-pv-table-layout="wrap"] .pv-csv-table td {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+html[data-pv][data-pv-format="markdown"][data-pv-table-layout="wrap"] .pv-table-wrap table {
+  min-width: 0;
+}
+
+html[data-pv][data-pv-format="markdown"][data-pv-table-layout="wrap"] .pv-table-wrap th,
+html[data-pv][data-pv-format="markdown"][data-pv-table-layout="wrap"] .pv-table-wrap td {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}

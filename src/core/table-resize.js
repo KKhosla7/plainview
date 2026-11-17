@@ -28,6 +28,7 @@
   function resizeColumn({ event, column, table, cols, offset, headers }) {
     event.preventDefault();
     event.stopPropagation();
+    const wrap = document.documentElement.dataset.pvTableLayout !== 'scroll';
     if (!table.classList.contains('pv-table-resizable')) {
       const headCells = table.tHead.rows[0].cells;
       const widths = [
@@ -43,10 +44,29 @@
     }
     const handle = event.currentTarget;
     const startX = event.clientX;
-    const startWidth = cols[column].getBoundingClientRect().width;
+    const startWidths = cols.map((col) => col.getBoundingClientRect().width);
     handle.setPointerCapture(event.pointerId);
     function move(moveEvent) {
-      const width = Math.max(MinColumnWidth, startWidth + moveEvent.clientX - startX);
+      const delta = moveEvent.clientX - startX;
+      const canGrow = column < cols.length - 1;
+      const canShrink = column > offset;
+      if (wrap && (canGrow || canShrink)) {
+        const neighbor = canGrow ? column + 1 : column - 1;
+        const pairWidth = startWidths[column] + startWidths[neighbor];
+        const width = Math.max(
+          MinColumnWidth,
+          Math.min(pairWidth - MinColumnWidth, startWidths[column] + delta),
+        );
+        cols[column].style.width = `${width}px`;
+        cols[neighbor].style.width = `${pairWidth - width}px`;
+        return;
+      }
+
+      let width = Math.max(MinColumnWidth, startWidths[column] + delta);
+      if (wrap) {
+        const fixed = startWidths.slice(0, offset).reduce((sum, value) => sum + value, 0);
+        width = Math.min(width, table.getBoundingClientRect().width - fixed);
+      }
       cols[column].style.width = `${width}px`;
     }
     function end() {
@@ -99,13 +119,7 @@
     }
   }
 
-  function apply(enabled) {
-    document.documentElement.dataset.pvTableResize = enabled ? 'on' : 'off';
-    if (!enabled) {
-      disableAll();
-      return;
-    }
-
+  function enableAll() {
     for (const table of document.querySelectorAll(
       '.pv-csv-table, .pv-markdown .pv-table-wrap table',
     )) {
@@ -113,7 +127,30 @@
     }
   }
 
+  function apply(enabled) {
+    document.documentElement.dataset.pvTableResize = enabled ? 'on' : 'off';
+    if (!enabled) {
+      disableAll();
+      return;
+    }
+
+    enableAll();
+  }
+
+  function applyLayout(layout) {
+    document.documentElement.dataset.pvTableLayout = layout === 'scroll' ? 'scroll' : 'wrap';
+    if (layout !== 'wrap') {
+      return;
+    }
+
+    const resizeOn = document.documentElement.dataset.pvTableResize !== 'off';
+    disableAll();
+    if (resizeOn) {
+      enableAll();
+    }
+  }
+
   root.Plainview = Object.assign(root.Plainview || {}, {
-    tableResize: { apply, enable },
+    tableResize: { apply, applyLayout, enable },
   });
 })(globalThis);

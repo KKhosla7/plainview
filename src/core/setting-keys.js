@@ -9,6 +9,7 @@
   const ShortcutsKey = 'plainview.shortcuts';
   const TableBordersKey = 'plainview.tableBorders';
   const TableResizeKey = 'plainview.tableResize';
+  const TableLayoutKey = 'plainview.tableLayout';
   const ThemeKey = 'plainview.theme';
   const ZoomKey = 'plainview.zoom';
   const Prefix = 'plainview.';
@@ -21,6 +22,7 @@
       Shortcuts: ShortcutsKey,
       TableBorders: TableBordersKey,
       TableResize: TableResizeKey,
+      TableLayout: TableLayoutKey,
       Theme: ThemeKey,
       Zoom: ZoomKey,
     }),
