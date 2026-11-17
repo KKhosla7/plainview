@@ -169,6 +169,13 @@ it('keeps clean data downloads inside a compressed HTML export', async () => {
     try {
       await exported.goto(pathToFileURL(file).href);
       await exported.waitForSelector('.pv-json');
+      assert.deepEqual(
+        await exported.evaluate(() => [
+          getComputedStyle(document.documentElement).getPropertyValue('--pv-bg').trim(),
+          getComputedStyle(document.documentElement).getPropertyValue('--pv-accent').trim(),
+        ]),
+        ['#edf1f5', '#1f4fa0'],
+      );
       assert.equal(await exported.getByLabel('Search JSON keys and values').count(), 1);
       assert.equal(await exported.getByLabel('Query expression').count(), 1);
       await exported.getByRole('button', { name: 'Export data', exact: true }).click();
