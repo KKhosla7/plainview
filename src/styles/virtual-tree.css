@@ -49,7 +49,20 @@ html[data-pv] .pv-vrow-spacer {
   width: 16px;
 }
 
-html[data-pv] .pv-vrow > span {
+html[data-pv] .pv-vrow > .pv-json-key,
+html[data-pv] .pv-vrow > .pv-json-index,
+html[data-pv] .pv-vrow > .pv-json-punct,
+html[data-pv] .pv-vrow > .pv-json-count {
+  flex: 0 0 auto;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+html[data-pv] .pv-vrow > .pv-json-string,
+html[data-pv] .pv-vrow > .pv-json-number,
+html[data-pv] .pv-vrow > .pv-json-boolean,
+html[data-pv] .pv-vrow > .pv-json-null {
+  flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

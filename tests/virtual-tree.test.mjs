@@ -40,6 +40,13 @@ async function setTreeMode(value) {
   });
 }
 
+function createLongValueJson() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-virtual-'));
+  const file = path.join(dir, 'long-value.json');
+  fs.writeFileSync(file, JSON.stringify({ scripts: { dsr: 'x'.repeat(400) } }));
+  return { dir, file };
+}
+
 function createLargeJson() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-virtual-'));
   const file = path.join(dir, 'large.json');
@@ -96,6 +103,24 @@ it('mounts every row when the virtual tree is shorter than the viewport', async 
     assertNoErrors(errors);
   } finally {
     await page.close();
+  }
+});
+
+it('keeps the key visible when a value is long', async () => {
+  await setTreeMode('virtual');
+  const { dir, file } = createLongValueJson();
+  const { page, errors } = await openPage(context, pathToFileURL(file).href);
+  try {
+    await page.waitForSelector('.pv-virtual-tree');
+    const row = page.locator('.pv-vrow').filter({ hasText: '"dsr"' }).first();
+    const key = row.locator('.pv-json-key');
+    const value = row.locator('.pv-json-string');
+    assert.equal(await key.evaluate((node) => getComputedStyle(node).flexShrink), '0');
+    assert.equal(await value.evaluate((node) => getComputedStyle(node).flexShrink), '1');
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
