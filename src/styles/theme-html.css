@@ -75,6 +75,16 @@ html[data-pv] .pv-app {
   background: transparent;
 }
 
+/* ---------------------------------------------------------------- paper */
+
+html[data-pv] :is(.pv-markdown, .pv-data-doc) {
+  width: 100%;
+  max-width: none;
+  padding: 2.25em 2.5em;
+  border: 1px solid var(--pv-border);
+  background: var(--pv-bg-soft);
+}
+
 /* --------------------------------------------------------------- top bar */
 
 html[data-pv] .pv-topbar {
