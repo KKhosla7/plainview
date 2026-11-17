@@ -12,6 +12,9 @@ html[data-pv] {
   --pv-fg-faint: #818b98;
   --pv-border: #d1d9e0;
   --pv-border-soft: #e6eaef;
+  --pv-scrollbar-track: #eef1f4;
+  --pv-scrollbar-thumb: #c5ced8;
+  --pv-scrollbar-thumb-hover: #a8b4c1;
   --pv-accent: #0969da;
   --pv-accent-soft: #ddf4ff;
   --pv-danger: #cf222e;
@@ -32,6 +35,8 @@ html[data-pv] {
   color-scheme: light;
   background: var(--pv-bg);
   scroll-behavior: smooth;
+  scrollbar-color: var(--pv-scrollbar-thumb) var(--pv-scrollbar-track);
+  scrollbar-width: thin;
 }
 
 html[data-pv][data-pv-theme="dark"] {
@@ -43,6 +48,9 @@ html[data-pv][data-pv-theme="dark"] {
   --pv-fg-faint: #6e7681;
   --pv-border: #30363d;
   --pv-border-soft: #21262d;
+  --pv-scrollbar-track: #161b22;
+  --pv-scrollbar-thumb: #3d4652;
+  --pv-scrollbar-thumb-hover: #505a68;
   --pv-accent: #58a6ff;
   --pv-accent-soft: #0c2d4a;
   --pv-danger: #ff7b72;
@@ -82,4 +90,32 @@ html[data-pv] *::after {
 html[data-pv] .pv-app {
   min-height: 100vh;
   background: var(--pv-bg);
+}
+
+html[data-pv]::-webkit-scrollbar,
+html[data-pv] ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+html[data-pv]::-webkit-scrollbar-track,
+html[data-pv] ::-webkit-scrollbar-track {
+  background: var(--pv-scrollbar-track);
+}
+
+html[data-pv]::-webkit-scrollbar-thumb,
+html[data-pv] ::-webkit-scrollbar-thumb {
+  border: 3px solid var(--pv-scrollbar-track);
+  border-radius: 999px;
+  background: var(--pv-scrollbar-thumb);
+}
+
+html[data-pv]::-webkit-scrollbar-thumb:hover,
+html[data-pv] ::-webkit-scrollbar-thumb:hover {
+  background: var(--pv-scrollbar-thumb-hover);
+}
+
+html[data-pv]::-webkit-scrollbar-corner,
+html[data-pv] ::-webkit-scrollbar-corner {
+  background: var(--pv-scrollbar-track);
 }

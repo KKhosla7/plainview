@@ -13,6 +13,9 @@ html[data-pv][data-pv-format="markdown"] {
   --pv-fg-faint: #7b8798;
   --pv-border: #c5d0dd;
   --pv-border-soft: #d8e0e9;
+  --pv-scrollbar-track: #e1e9f6;
+  --pv-scrollbar-thumb: #b8c7da;
+  --pv-scrollbar-thumb-hover: #9fb2cb;
   --pv-grid: rgba(31, 79, 160, 0.07);
   --pv-accent: #1f4fa0;
   --pv-accent-soft: #e1e9f6;
@@ -41,6 +44,9 @@ html[data-pv][data-pv-format="markdown"][data-pv-theme="dark"] {
   --pv-fg-faint: #8399b8;
   --pv-border: #2a4972;
   --pv-border-soft: #224066;
+  --pv-scrollbar-track: #10284a;
+  --pv-scrollbar-thumb: #2f5480;
+  --pv-scrollbar-thumb-hover: #3d6899;
   --pv-grid: rgba(141, 184, 255, 0.07);
   --pv-accent: #8db8ff;
   --pv-accent-soft: #17345f;
