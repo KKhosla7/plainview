@@ -1,7 +1,6 @@
 /* global Plainview */
 /* Windowed JSON tree: expansion state lives by path, rows mount near the viewport. */
 ((root) => {
-  const RowHeight = 24;
   const Overscan = 8;
   const {
     actionButton,
@@ -17,7 +16,8 @@
   } = Plainview.jsonTreeShared;
   const { filterRelevant, setFilter } = Plainview.jsonVirtualFilter;
   const { AutoRows, createState } = Plainview.jsonVirtualState;
-
+  const { RowHeight, applyRowTitle, measureRows, rebuildOffsets, rowTop, visibleRange } =
+    Plainview.jsonVirtualLayout;
   function primePath(state, path, nodeValue, depth) {
     if (!isContainer(nodeValue)) {
       return;
@@ -103,7 +103,7 @@
     state.stats.truncated = false;
     state.stats.values = 0;
     flattenNode({ state, path: [], key: '$', nodeValue: state.value, depth: 0, isRoot: true });
-    state.tree.style.height = `${state.rows.length * RowHeight}px`;
+    rebuildOffsets(state);
     state.indexRef.current.clear();
     state.onStats({ ...state.stats });
   }
@@ -135,10 +135,9 @@
     }
     rebuild(state);
   }
-
   function createRow(state, row, index) {
     const node = Plainview.el('div', 'pv-vrow');
-    node.style.top = `${index * RowHeight}px`;
+    node.style.top = `${rowTop(state, index)}px`;
     node.style.paddingLeft = `${8 + row.depth * 18}px`;
     node.dataset.jsonPath = row.pathText;
     node.classList.toggle('pv-vrow-active', row.pathText === state.activePath);
@@ -173,10 +172,7 @@
     }
     node.append(...rowValue(row), pathButton(row.pathText));
     if (!row.container) {
-      const value = Plainview.jsonToolsShared.primitiveText(row.value);
-      if (value.length > 60) {
-        node.title = value;
-      }
+      applyRowTitle(node, row.value);
     }
     state.indexRef.current.set(row.pathText, {
       isContainer: row.container,
@@ -191,17 +187,19 @@
   }
   function renderRows(state) {
     const rect = state.tree.getBoundingClientRect();
-    const top = Math.max(0, -rect.top);
-    const bottom = Math.min(rect.height, globalThis.innerHeight - rect.top);
-    const start = Math.max(0, Math.floor(top / RowHeight) - Overscan);
-    const end = Math.min(state.rows.length, Math.ceil(bottom / RowHeight) + Overscan);
+    const top = Math.max(0, -rect.top - Overscan * RowHeight);
+    const bottom = Math.min(rect.height, globalThis.innerHeight - rect.top + Overscan * RowHeight);
+    const range = visibleRange(state, top, bottom);
+    const { start, end } = range;
     for (const [index, node] of state.rowElements) {
       if (index < start || index >= end) {
         node.remove();
         state.rowElements.delete(index);
       }
     }
+
     const fragment = document.createDocumentFragment();
+    const measured = [];
     for (let index = start; index < end; index += 1) {
       if (state.rowElements.has(index)) {
         continue;
@@ -209,10 +207,12 @@
       const node = createRow(state, state.rows[index], index);
       state.rowElements.set(index, node);
       fragment.append(node);
+      measured.push({ node, pathText: state.rows[index].pathText });
     }
 
     if (fragment.childNodes.length > 0) {
       state.tree.append(fragment);
+      measureRows(state, measured);
     }
   }
 
@@ -262,7 +262,7 @@
   }
 
   function createVirtualJsonTree({ value, source, options, indexRef, onStats }) {
-    const tree = Plainview.el('div', 'pv-json pv-virtual-tree');
+    const tree = Plainview.el('div', 'pv-json pv-virtual-tree pv-json-virtual');
     const state = createState({
       value,
       options: { ...options, source },

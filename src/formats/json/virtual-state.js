@@ -10,6 +10,8 @@
       autoRows: 0,
       expanded: new Set(['$']),
       frame: 0,
+      heights: new Map(),
+      offsets: [0],
       indexRef,
       onStats,
       pageDepth: options.openDepth ?? openDepth(options.source.length),

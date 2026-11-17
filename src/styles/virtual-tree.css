@@ -77,3 +77,21 @@ html[data-pv] .pv-vrow:hover .pv-json-path,
 html[data-pv] .pv-vrow:focus-within .pv-json-path {
   opacity: 1;
 }
+
+html[data-pv] .pv-json-virtual .pv-vrow {
+  align-items: flex-start;
+  height: auto;
+  min-height: 24px;
+  overflow: visible;
+  white-space: normal;
+}
+
+html[data-pv] .pv-json-virtual .pv-vrow > .pv-json-string,
+html[data-pv] .pv-json-virtual .pv-vrow > .pv-json-number,
+html[data-pv] .pv-json-virtual .pv-vrow > .pv-json-boolean,
+html[data-pv] .pv-json-virtual .pv-vrow > .pv-json-null {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: pre-wrap;
+}
