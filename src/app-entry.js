@@ -68,6 +68,8 @@ import './formats/xml/search.js';
 import './formats/xml/query.js';
 import './formats/xml/tools.js';
 import './formats/xml/render.js';
+import './formats/xml/virtual-rows.js';
+import './formats/xml/virtual-tree.js';
 import './formats/xml/view.js';
 import './formats/mermaid/svg-sanitize.js';
 import './formats/mermaid/loader.js';

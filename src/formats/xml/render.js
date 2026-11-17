@@ -271,17 +271,26 @@
     tree.append(renderElement(rootElement, 0, ctx, true));
 
     if (treeWasTruncated(ctx)) {
-      tree.append(
-        el(
-          'div',
-          'pv-tree-note',
-          `Tree truncated at ${MaxNodes.toLocaleString()} nodes. Use “Source” for the full file.`,
-        ),
-      );
+      const note = `Tree truncated at ${MaxNodes.toLocaleString()} nodes. Use “Source” for the full file.`;
+      tree.append(el('div', 'pv-tree-note', note));
     }
 
     return { element: tree, stats: ctx, byNode: ctx.byNode };
   }
 
-  root.Plainview = Object.assign(root.Plainview || {}, { renderXmlTree });
+  root.Plainview = Object.assign(root.Plainview || {}, {
+    renderXmlTree,
+    xmlTreeShared: {
+      Cdata,
+      Comment,
+      Element,
+      MaxNodes,
+      ProcessingInstruction,
+      Text,
+      closeTag,
+      meaningfulChildren,
+      openTag,
+      pathButton,
+    },
+  });
 })(globalThis);

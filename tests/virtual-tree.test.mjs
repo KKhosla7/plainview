@@ -130,6 +130,22 @@ it('keeps the key visible when a value is long', async () => {
   }
 });
 
+it('renders XML with the virtual tree and reveals search hits', async () => {
+  await setTreeMode('virtual');
+  const { page, errors } = await openPage(context, `${base}/sample.xml`);
+  try {
+    await page.waitForSelector('.pv-xml-virtual');
+    assert.ok((await page.locator('.pv-vrow').count()) > 5);
+    assert.match(await page.locator('.pv-virtual-tree').innerText(), /catalog/u);
+    await page.getByLabel('Search XML elements and text').fill('Nested');
+    await page.waitForSelector('.pv-vrow.pv-xml-hit-active');
+    assert.match(await page.locator('.pv-vrow.pv-xml-hit-active').innerText(), /Nested/u);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+  }
+});
+
 it('keeps the classic tree available by default', async () => {
   await setTreeMode('classic');
   const { page, errors } = await openPage(context, `${base}/sample.json`);
