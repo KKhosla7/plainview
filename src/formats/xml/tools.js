@@ -6,12 +6,12 @@
 ((root) => {
   const { el, CopyResetMs } = Plainview.xmlToolsShared;
 
-  function createXmlTools({ tree, doc, byNode }) {
+  function createXmlTools({ tree, doc, byNode, exportState }) {
     const tools = el('div', 'pv-json-tools pv-xml-tools');
     const status = el('div', 'pv-json-status');
     status.setAttribute('role', 'status');
-    const search = Plainview.createXmlSearch({ byNode, status });
-    const query = Plainview.createXmlQuery({ doc, byNode, status });
+    const search = Plainview.createXmlSearch({ byNode, exportState, status });
+    const query = Plainview.createXmlQuery({ doc, byNode, exportState, status });
 
     Plainview.onAsync(tree, 'click', async (event) => {
       const target = event.target?.closest?.('.pv-xml-path') ?? null;

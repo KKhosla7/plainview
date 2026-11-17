@@ -3,7 +3,7 @@
  * XML element, attribute and text search.
  */
 ((root) => {
-  const { el, button, searchText, mark, unmark, selectHit, SearchDebounceMs } =
+  const { el, button, exportNode, searchText, mark, unmark, selectHit, SearchDebounceMs } =
     Plainview.xmlToolsShared;
 
   function bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch }) {
@@ -41,7 +41,7 @@
     return { count, next, prev, search, searchWrap };
   }
 
-  function createXmlSearch({ byNode, status }) {
+  function createXmlSearch({ byNode, exportState, status }) {
     const { count, next, prev, search, searchWrap } = createSearchElements();
     let searchHits = [];
     let searchIndex = -1;
@@ -54,6 +54,7 @@
       }
       searchHits = [];
       searchIndex = -1;
+      exportState?.clear('search');
       count.textContent = '';
       prev.disabled = true;
       next.disabled = true;
@@ -83,6 +84,13 @@
       prev.disabled = searchHits.length === 0;
       next.disabled = searchHits.length === 0;
       if (searchHits.length > 0) {
+        exportState?.set(
+          'search',
+          searchHits.flatMap((entry) => {
+            const node = exportNode(entry.source);
+            return node ? [node] : [];
+          }),
+        );
         searchIndex = selectHit(searchHits, 0, 'pv-xml-hit-active');
       } else {
         status.textContent = `No elements or text matched ${value}.`;

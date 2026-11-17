@@ -19,6 +19,7 @@ const sourceManifest = JSON.parse(
 const STYLE_FILES = [
   'src/styles/tokens.css',
   'src/styles/topbar.css',
+  'src/styles/export-menu.css',
   'src/styles/layout.css',
   'src/styles/data.css',
   'src/styles/trees.css',
@@ -42,7 +43,7 @@ const katexFonts = path.join(katexDist, 'fonts');
 const vendorBundles = [
   {
     name: 'yaml',
-    contents: `export { DEFAULT_SCHEMA, loadAll } from 'js-yaml';`,
+    contents: `export { DEFAULT_SCHEMA, dump, loadAll } from 'js-yaml';`,
     output: 'yaml.min.mjs',
     target: 'vendor/yaml/js-yaml.min.mjs',
   },
@@ -54,7 +55,7 @@ const vendorBundles = [
   },
   {
     name: 'toml',
-    contents: `export { parse } from 'smol-toml';`,
+    contents: `export { parse, stringify } from 'smol-toml';`,
     output: 'toml.min.mjs',
     target: 'vendor/toml/toml.min.mjs',
   },

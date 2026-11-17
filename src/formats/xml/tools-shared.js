@@ -9,6 +9,8 @@
   const Element = 1;
   const Attribute = 2;
   const Document = 9;
+  const Text = 3;
+  const Cdata = 4;
 
   function button(className, label) {
     const node = el('button', className, label);
@@ -27,6 +29,18 @@
     }
 
     return node.nodeValue || '';
+  }
+
+  function exportNode(node) {
+    if (node.nodeType === Attribute) {
+      return node.ownerElement;
+    }
+
+    if (node.nodeType === Text || node.nodeType === Cdata) {
+      return node.parentElement;
+    }
+
+    return node.nodeType === Document ? node.documentElement : node;
   }
 
   function mark(entry, className) {
@@ -86,6 +100,7 @@
       Attribute,
       Document,
       button,
+      exportNode,
       el,
       mark,
       searchText,

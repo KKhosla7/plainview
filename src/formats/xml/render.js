@@ -21,7 +21,7 @@
   }
 
   function register(ctx, sourceNode, rendered, summary = null) {
-    ctx.byNode.set(sourceNode, { node: rendered, summary });
+    ctx.byNode.set(sourceNode, { node: rendered, source: sourceNode, summary });
   }
 
   function xpathLiteral(value) {

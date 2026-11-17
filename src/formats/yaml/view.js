@@ -61,6 +61,7 @@
     return Plainview.buildJsonValue(value, {
       source,
       copyLabel: 'Copy YAML',
+      exportFormatId: 'yaml',
       suffix,
     });
   }

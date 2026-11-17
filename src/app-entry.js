@@ -20,6 +20,7 @@ import './core/download.js';
 import './core/export-name.js';
 import './core/export-scripts.js';
 import './core/export.js';
+import './core/data-export.js';
 import './core/fonts.js';
 import './formats/shared/error-panel.js';
 import './formats/markdown/core.js';

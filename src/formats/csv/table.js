@@ -246,10 +246,12 @@
     Plainview.tableResize.enable(table, { offset: 1, tableId: 'csv' });
 
     let timer = 0;
+    let visibleRows = [];
 
     function render() {
       const needle = filter.value.trim().toLocaleLowerCase();
       const visible = sortRows(filterRows(dataRows, needle), sortState);
+      visibleRows = visible;
       renderRows(tbody, visible, columns);
       updateHeaders(headerParts.headCells, sortState);
       count.textContent = `${visible.length.toLocaleString()} of ${dataRows.length.toLocaleString()} rows`;
@@ -264,7 +266,13 @@
 
     filter.addEventListener('input', scheduleRender);
     render();
-    return { element: wrap, render, scheduleRender };
+    return {
+      element: wrap,
+      getVisibleRows: () => visibleRows.map((row) => row.cells.slice(0, columns)),
+      isFiltered: () => filter.value.trim() !== '',
+      render,
+      scheduleRender,
+    };
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {

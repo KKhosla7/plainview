@@ -40,85 +40,133 @@
     next.addEventListener('click', () => stepSearch(1));
   }
 
-  function createJsonSearch({ rootValue, indexRef, revealPath, status, searchResults, onClear }) {
-    const { searchWrap, searchRow, search, prev, next, count } = createSearchElements();
-    let searchHits = [];
-    let searchIndex = -1;
-    let searchToken = 0;
-    let timer = 0;
+  function updateSearchExport(exportState, result) {
+    if (result.matches.length === 0) {
+      exportState?.clear('search');
+      return;
+    }
 
-    function clearSearch() {
-      for (const hit of searchHits) {
+    exportState?.set(
+      'search',
+      result.matches.map((item) => item.value),
+    );
+  }
+
+  function ignoreSearchError() {
+    return false;
+  }
+
+  async function executeSearch(options, state, clear) {
+    const {
+      count,
+      exportState,
+      indexRef,
+      next,
+      prev,
+      revealPath,
+      rootValue,
+      search,
+      searchResults,
+      status,
+    } = options;
+    state.token += 1;
+    const { token } = state;
+    clear();
+    const query = search.value.trim();
+    if (!query) {
+      return;
+    }
+
+    const result = await Plainview.jsonSearchRunner.runSearch({
+      count,
+      indexRef,
+      isActive: () => token === state.token,
+      needle: query.toLocaleLowerCase(),
+      next,
+      prev,
+      query,
+      revealPath,
+      rootValue,
+      searchResults,
+      status,
+    });
+    if (!result || token !== state.token) {
+      return;
+    }
+    updateSearchExport(exportState, result);
+    state.hits = result.hits;
+    if (state.hits.length > 0) {
+      state.index = selectHit(state.hits, 0, 'pv-json-hit-active');
+    }
+  }
+
+  function createSearchController(options) {
+    const { count, exportState, next, onClear, prev, searchResults, status } = options;
+    const state = { hits: [], index: -1, timer: 0, token: 0 };
+
+    function clear() {
+      for (const hit of state.hits) {
         Plainview.jsonToolsShared.unmark(hit.entry, 'pv-json-hit');
         Plainview.jsonToolsShared.unmark(hit.entry, 'pv-json-hit-active');
       }
-      searchHits = [];
-      searchIndex = -1;
+      state.hits = [];
+      state.index = -1;
       count.textContent = '';
       prev.disabled = true;
       next.disabled = true;
       searchResults.hidden = true;
       searchResults.replaceChildren();
+      exportState?.clear('search');
       onClear();
     }
 
-    function searchFailed(error) {
+    function failed(error) {
       status.textContent = `Search failed: ${error instanceof Error ? error.message : error}`;
       status.classList.add('is-error');
     }
 
-    async function startSearch() {
-      searchToken += 1;
-      const token = searchToken;
-      clearSearch();
-      const query = search.value.trim();
-      if (!query) {
+    function step(delta) {
+      if (state.hits.length === 0) {
         return;
       }
-
-      const result = await Plainview.jsonSearchRunner.runSearch({
-        count,
-        indexRef,
-        isActive: () => token === searchToken,
-        needle: query.toLocaleLowerCase(),
-        next,
-        prev,
-        query,
-        revealPath,
-        rootValue,
-        searchResults,
-        status,
-      });
-      if (!result || token !== searchToken) {
-        return;
-      }
-      searchHits = result.hits;
-      if (searchHits.length > 0) {
-        searchIndex = selectHit(searchHits, 0, 'pv-json-hit-active');
-      }
+      state.index = selectHit(state.hits, state.index + delta, 'pv-json-hit-active');
     }
 
-    function stepSearch(delta) {
-      if (searchHits.length === 0) {
-        return;
-      }
-      searchIndex = selectHit(searchHits, searchIndex + delta, 'pv-json-hit-active');
-    }
-
-    function scheduleSearch() {
-      globalThis.clearTimeout(timer);
-      timer = globalThis.setTimeout(() => {
-        startSearch().catch(searchFailed);
+    function schedule() {
+      globalThis.clearTimeout(state.timer);
+      state.timer = globalThis.setTimeout(() => {
+        executeSearch(options, state, clear).catch(failed);
       }, SearchDebounceMs);
     }
 
-    const searchClear = inputClear(search, 'Clear search', () => {
-      globalThis.clearTimeout(timer);
-      startSearch().catch(searchFailed);
+    function cancel() {
+      globalThis.clearTimeout(state.timer);
+    }
+
+    return {
+      cancel,
+      start: () => executeSearch(options, state, clear),
+      step,
+      schedule,
+    };
+  }
+
+  function createJsonSearch(options) {
+    const elements = createSearchElements();
+    const controller = createSearchController({ ...options, ...elements });
+    const searchClear = inputClear(elements.search, 'Clear search', () => {
+      controller.cancel();
+      controller.start().catch(ignoreSearchError);
     });
-    searchRow.insertBefore(searchClear, prev);
-    bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch });
-    return searchWrap;
+    elements.searchRow.insertBefore(searchClear, elements.prev);
+    bindSearchEvents({
+      search: elements.search,
+      prev: elements.prev,
+      next: elements.next,
+      stepSearch: controller.step,
+      scheduleSearch: controller.schedule,
+    });
+    return elements.searchWrap;
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, { createJsonSearch });

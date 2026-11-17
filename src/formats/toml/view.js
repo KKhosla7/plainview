@@ -50,6 +50,7 @@
     return Plainview.buildJsonValue(value, {
       source,
       copyLabel: 'Copy TOML',
+      exportFormatId: 'toml',
       suffix: 'TOML',
     });
   }

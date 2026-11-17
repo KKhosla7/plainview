@@ -27,6 +27,23 @@
 
     const tree = Plainview.renderXmlTree(parsed.doc.documentElement);
     const { stats } = tree;
+    const exportState = {
+      kind: '',
+      values: null,
+      set(kind, values) {
+        this.kind = kind;
+        this.values = values;
+      },
+      clear(kind) {
+        if (this.kind === kind) {
+          this.kind = '';
+          this.values = null;
+        }
+      },
+      getFiltered() {
+        return this.values;
+      },
+    };
 
     article.append(
       Plainview.createDataToolbar({
@@ -42,11 +59,28 @@
         tree: tree.element,
         doc: parsed.doc,
         byNode: tree.byNode,
+        exportState,
       }),
       tree.element,
     );
 
-    return { article, stats, error: false };
+    return {
+      article,
+      stats,
+      error: false,
+      exportData: {
+        formatId: 'xml',
+        hasFilter: () => Boolean(exportState.getFiltered()?.length),
+        getData(scope) {
+          const nodes = exportState.getFiltered();
+          if (scope === 'filtered') {
+            return nodes?.length ? { data: nodes, formatId: 'xml', kind: 'xml-nodes' } : null;
+          }
+
+          return { data: source, formatId: 'xml', kind: 'xml' };
+        },
+      },
+    };
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, { buildXml });

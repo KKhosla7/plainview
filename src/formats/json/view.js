@@ -17,6 +17,23 @@
     const source = String(options.source ?? '');
     const article = el('article', 'pv-doc pv-data-doc');
     const indexRef = { current: new Map() };
+    const exportState = {
+      kind: '',
+      values: null,
+      set(kind, values) {
+        this.kind = kind;
+        this.values = values;
+      },
+      clear(kind) {
+        if (this.kind === kind) {
+          this.kind = '';
+          this.values = null;
+        }
+      },
+      getFiltered() {
+        return this.values;
+      },
+    };
     const virtual = document.documentElement.dataset.pvJsonTreeMode === 'virtual';
     const toolbar = Plainview.createDataToolbar({
       article,
@@ -36,9 +53,34 @@
         metaText.textContent = summaryFor(source, options, stats);
       },
     });
-    const tools = Plainview.createJsonTools({ tree, rootValue: value, indexRef, revealPath });
+    const tools = Plainview.createJsonTools({
+      tree,
+      rootValue: value,
+      indexRef,
+      revealPath,
+      exportState,
+    });
     article.append(toolbar, tools, tree);
-    return { article, stats: context, error: false, tree, index: indexRef.current };
+    const formatId = options.exportFormatId || 'json';
+    return {
+      article,
+      stats: context,
+      error: false,
+      tree,
+      index: indexRef.current,
+      exportData: {
+        formatId,
+        hasFilter: () => Boolean(exportState.getFiltered()?.length),
+        getData(scope) {
+          const data = scope === 'filtered' ? exportState.getFiltered() : value;
+          if (!data || (scope === 'filtered' && data.length === 0)) {
+            return null;
+          }
+
+          return { data, formatId, kind: formatId };
+        },
+      },
+    };
   }
 
   function buildJson(source) {
@@ -55,6 +97,7 @@
     return buildJsonValue(parsed.value, {
       source,
       copyLabel: 'Copy JSON',
+      exportFormatId: 'json',
       suffix: parsed.jsonc ? 'JSONC' : '',
     });
   }

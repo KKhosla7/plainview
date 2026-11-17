@@ -133,6 +133,15 @@
       onReveal: ctx.revealPath,
     });
     ctx.onStart();
+    if (items.length > 0) {
+      ctx.exportState?.set(
+        'query',
+        items.map((item) => item.value),
+      );
+    } else {
+      ctx.exportState?.clear('query');
+    }
+
     if (total === 0) {
       ctx.status.textContent = `No matches for ${expression}. Try a shorter path or a wildcard.`;
       ctx.status.classList.add('is-empty');
@@ -215,13 +224,22 @@
     }
   }
 
-  function createJsonQuery({ rootValue, indexRef, revealPath, status, queryResults, onStart }) {
+  function createJsonQuery({
+    rootValue,
+    indexRef,
+    revealPath,
+    exportState,
+    status,
+    queryResults,
+    onStart,
+  }) {
     const { pathWrap, queryRow, language, pathInput, queryButton, queryCount } =
       createQueryElements();
     const ctx = {
       rootValue,
       indexRef,
       revealPath,
+      exportState,
       status,
       queryResults,
       onStart,

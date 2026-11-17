@@ -3,7 +3,8 @@
  * XPath query controls and result mapping.
  */
 ((root) => {
-  const { el, button, mark, unmark, selectHit, Attribute, Document } = Plainview.xmlToolsShared;
+  const { el, button, exportNode, mark, unmark, selectHit, Attribute, Document } =
+    Plainview.xmlToolsShared;
 
   function scalarResult(resultType, result, XPathResultType) {
     if (resultType === XPathResultType.NUMBER_TYPE) {
@@ -101,6 +102,7 @@
   }
 
   function runXPathQuery({ doc, byNode, status, query, queryCount, state }) {
+    state.exportState?.clear('query');
     state.hits = clearQueryHits({
       hits: state.hits,
       queryCount,
@@ -148,6 +150,18 @@
       mark(entry, 'pv-xml-query-hit');
     }
     queryCount.textContent = `${nodes.length} ${nodes.length === 1 ? 'result' : 'results'}`;
+    if (nodes.length > 0) {
+      state.exportState?.set(
+        'query',
+        nodes.flatMap((node) => {
+          const exported = exportNode(node);
+          return exported ? [exported] : [];
+        }),
+      );
+    } else {
+      state.exportState?.clear('query');
+    }
+
     if (nodes.length === 0) {
       status.textContent = `No nodes matched ${expression}.`;
       status.classList.add('is-empty');
@@ -160,9 +174,9 @@
     selectHit(state.hits, 0, 'pv-xml-query-active');
   }
 
-  function createXmlQuery({ doc, byNode, status }) {
+  function createXmlQuery({ doc, byNode, exportState, status }) {
     const { queryWrap, query, queryCount } = createQueryElements();
-    const state = { hits: [] };
+    const state = { exportState, hits: [] };
     queryWrap.addEventListener('submit', (event) => {
       event.preventDefault();
       runXPathQuery({
@@ -177,6 +191,7 @@
     query.addEventListener('input', () => {
       if (!query.value.trim()) {
         state.hits = clearQueryHits({ hits: state.hits, queryCount, status, query });
+        state.exportState?.clear('query');
       }
     });
     return queryWrap;

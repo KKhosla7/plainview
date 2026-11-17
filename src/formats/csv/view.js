@@ -56,8 +56,8 @@
   }
 
   function buildCsv(source, format = {}) {
-    const { delimiter, label: formatLabel } = format;
-    const parsed = Plainview.parseCsv(source, { delimiter });
+    const { label: formatLabel } = format;
+    const parsed = Plainview.parseCsv(source, { delimiter: format.delimiter });
     const article = el('article', 'pv-doc pv-data-doc pv-csv-doc');
     const { rows } = parsed;
     const columns = trimTrailingColumns(rows);
@@ -98,10 +98,35 @@
     });
     article.append(tools, table.element);
     appendCsvCapNote(article, parsed);
+    const { delimiter } = parsed;
+    const formatId = delimiter === '\t' ? 'tsv' : 'csv';
+    const headerCells = header.slice(0, columns);
     return {
       article,
       stats: { rows: rows.length, columns },
       error: Boolean(parsed.error),
+      exportData: {
+        formatId,
+        hasFilter: () => table.isFiltered(),
+        getData(scope) {
+          const visible = table.isFiltered();
+          if (scope === 'filtered' && !visible) {
+            return null;
+          }
+
+          if (scope !== 'filtered') {
+            return { data: source, formatId, kind: 'text' };
+          }
+
+          return {
+            delimiter,
+            formatId,
+            header: headerCells,
+            kind: 'csv',
+            rows: table.getVisibleRows(),
+          };
+        },
+      },
     };
   }
 
