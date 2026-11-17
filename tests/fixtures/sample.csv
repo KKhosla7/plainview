@@ -1,0 +1,5 @@
+Name,Value,Note
+alpha,1,"one, quoted"
+beta,2,"two
+lines"
+gamma,3,"a ""quote"""

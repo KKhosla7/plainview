@@ -6,9 +6,10 @@
  */
 ((root) => {
   function isRawTextDocument() {
-    if (document.getElementById('webkit-xml-viewer-source-xml')) {
+    if (document.querySelector('#webkit-xml-viewer-source-xml')) {
       return true;
     }
+
     if (!document.body) {
       return true; // Firefox raw XML
     }
@@ -22,7 +23,7 @@
   }
 
   function extractSource(format) {
-    const chromeXmlSource = document.getElementById('webkit-xml-viewer-source-xml');
+    const chromeXmlSource = document.querySelector('#webkit-xml-viewer-source-xml');
     if (format.id === 'xml' && chromeXmlSource) {
       return chromeXmlSource.innerHTML;
     }

@@ -5,9 +5,11 @@
     if (className) {
       node.className = className;
     }
+
     if (text !== undefined) {
       node.textContent = text;
     }
+
     return node;
   }
 
@@ -78,6 +80,7 @@
       if (!link || link.hash.length <= 1) {
         return;
       }
+
       if (
         event.defaultPrevented ||
         event.button !== 0 ||
@@ -91,10 +94,13 @@
 
       let target = null;
       try {
-        target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+        target = document.querySelector(
+          `[id=${JSON.stringify(decodeURIComponent(link.hash.slice(1)))}]`,
+        );
       } catch {
         target = null;
       }
+
       if (!target) {
         return;
       }
@@ -102,7 +108,7 @@
       event.preventDefault();
       Plainview.scrollElementIntoViewSmooth(target);
       history.pushState(null, '', link.hash);
-      if (window.matchMedia('(max-width: 1079px)').matches) {
+      if (globalThis.matchMedia('(max-width: 1079px)').matches) {
         close();
       }
     });

@@ -1,0 +1,60 @@
+/* global Plainview */
+/*
+ * Search and query toolbar for the JSON/YAML tree. Controls live in focused
+ * modules; this file composes them and handles path copying.
+ */
+((root) => {
+  const { el, CopyResetMs, clearStatus } = Plainview.jsonToolsShared;
+
+  function createJsonTools({ tree, rootValue, indexRef }) {
+    const tools = el('div', 'pv-json-tools');
+    const status = el('div', 'pv-json-status');
+    status.setAttribute('role', 'status');
+    const searchResults = el('div', 'pv-json-search-results');
+    searchResults.hidden = true;
+    const queryResults = el('div', 'pv-json-search-results pv-json-query-results');
+    queryResults.hidden = true;
+
+    const search = Plainview.createJsonSearch({
+      rootValue,
+      indexRef,
+      status,
+      searchResults,
+      onClear() {
+        queryResults.hidden = true;
+        queryResults.replaceChildren();
+        clearStatus(status);
+      },
+    });
+    const query = Plainview.createJsonQuery({
+      rootValue,
+      indexRef,
+      status,
+      queryResults,
+      onStart() {
+        searchResults.hidden = true;
+      },
+    });
+
+    Plainview.onAsync(tree, 'click', async (event) => {
+      const target = event.target?.closest?.('.pv-json-path') ?? null;
+      if (!target) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      const path = target.getAttribute('data-json-path') || '';
+      const ok = await Plainview.copyText(path);
+      const previous = target.textContent;
+      target.textContent = ok ? 'Copied' : 'Failed';
+      globalThis.setTimeout(() => {
+        target.textContent = previous;
+      }, CopyResetMs);
+    });
+
+    tools.append(search, query, status, searchResults, queryResults);
+    return tools;
+  }
+
+  root.Plainview = Object.assign(root.Plainview || {}, { createJsonTools });
+})(globalThis);

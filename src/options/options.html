@@ -19,19 +19,26 @@
 
     <section class="card">
       <h2>Downloads</h2>
+      <p>Supported Markdown, JSON, XML, YAML, TOML and CSV/TSV downloads open in
+        Plainview first. The download is cancelled and removed; use the reader's
+        <strong>Download</strong> button when you want to save the original file.</p>
+    </section>
+
+    <section class="card">
+      <h2>Source changes</h2>
       <label class="toggle-row">
-        <input id="autoOpen" type="checkbox">
+        <input id="autoReloadSources" type="checkbox">
         <span>
-          <strong>Open supported downloads in Plainview</strong>
-          <small>When a Markdown, JSON or XML download finishes, open it in a new tab.</small>
+          <strong>Reload automatically when the source changes</strong>
+          <small>When the file on disk updates, reload the reader instead of asking first.</small>
         </span>
       </label>
       <p class="note">
-        This only applies to new downloads. It does not change the operating
-        system's default app, so clicking an already-downloaded file later still
-        opens whatever the OS has configured.
+        This is off by default. Without it, Plainview shows a prompt with
+        <strong>Reload</strong> and <strong>Dismiss</strong> so a file change never
+        replaces what you are reading unexpectedly.
       </p>
-      <p id="status" class="status" role="status"></p>
+      <p id="sourceStatus" class="status" role="status"></p>
     </section>
 
     <section class="card">
@@ -41,7 +48,7 @@
         app for these file types in your OS:
       </p>
       <div class="types">
-        <code>.md</code><code>.markdown</code><code>.json</code><code>.jsonc</code><code>.xml</code><code>.rss</code><code>.atom</code>
+        <code>.md</code><code>.markdown</code><code>.json</code><code>.jsonc</code><code>.yaml</code><code>.toml</code><code>.csv</code><code>.tsv</code><code>.xml</code><code>.rss</code><code>.atom</code>
       </div>
       <details>
         <summary>Linux</summary>
@@ -71,6 +78,43 @@ xdg-mime default google-chrome.desktop application/xml</code></pre>
     </section>
 
     <section class="card">
+      <h2>Export</h2>
+      <label class="toggle-row">
+        <input id="exportUncompressed" type="checkbox">
+        <span>
+          <strong>Export uncompressed HTML</strong>
+          <small>Default exports are compressed for sharing; enable this if you want to edit the HTML.</small>
+        </span>
+      </label>
+      <p id="exportStatus" class="status" role="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Keyboard shortcuts</h2>
+      <label class="toggle-row" for="shortcutPreset">
+        <span>
+          <strong>Switch between HTML and Source</strong>
+          <small>Arrow keys are never captured while typing in a field.</small>
+        </span>
+      </label>
+      <select id="shortcutPreset">
+        <option value="alt-s">Alt + S</option>
+        <option value="alt-arrows">Alt + Left / Right</option>
+        <option value="ctrl-shift-arrows">Ctrl/⌘ + Shift + Left / Right</option>
+        <option value="off">Off</option>
+      </select>
+      <p id="shortcutStatus" class="status" role="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Support Plainview</h2>
+      <p>If Plainview saves you time, you can buy me a coffee. It is optional and
+        never required for any feature.</p>
+      <a class="coffee" href="https://buymeacoffee.com/karan.khosla"
+        target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a>
+    </section>
+
+    <section class="card">
       <h2>File access</h2>
       <p><strong>Chrome:</strong> open <code>chrome://extensions</code> → Plainview →
         Details → enable <strong>Allow access to file URLs</strong>.</p>
@@ -80,9 +124,11 @@ xdg-mime default google-chrome.desktop application/xml</code></pre>
         through <code>about:debugging</code> do not receive file access.</p>
     </section>
 
-    <footer class="foot">Plainview · Markdown, JSON and XML reader</footer>
+    <footer class="foot">Plainview · Markdown, data and markup reader</footer>
   </main>
   <script defer src="../core/fonts.js"></script>
+  <script defer src="../core/setting-keys.js"></script>
+  <script defer src="../core/events.js"></script>
   <script defer src="options.js"></script>
 </body>
 </html>

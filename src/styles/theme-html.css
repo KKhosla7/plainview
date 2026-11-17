@@ -243,7 +243,7 @@ html[data-pv][data-pv-format="markdown"] .pv-raw-source {
   }
 
   html[data-pv][data-pv-format="markdown"] .pv-app.pv-toc-open .pv-scrim {
-    display: none !important;
+    display: none;
   }
 
   html[data-pv][data-pv-format="markdown"] .pv-action-toc {

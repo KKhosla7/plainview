@@ -25,6 +25,35 @@
         'application/geo+json',
       ],
     },
+    yaml: {
+      id: 'yaml',
+      label: 'YAML',
+      name: 'YAML',
+      extensions: ['yaml', 'yml'],
+      types: ['application/yaml', 'text/yaml', 'application/x-yaml', 'text/x-yaml'],
+    },
+    toml: {
+      id: 'toml',
+      label: 'TOML',
+      name: 'TOML',
+      extensions: ['toml'],
+      types: ['application/toml', 'text/toml', 'application/x-toml'],
+    },
+    csv: {
+      id: 'csv',
+      label: 'CSV',
+      name: 'CSV',
+      extensions: ['csv'],
+      types: ['text/csv', 'application/csv'],
+    },
+    tsv: {
+      id: 'csv',
+      label: 'TSV',
+      name: 'TSV',
+      delimiter: '\t',
+      extensions: ['tsv'],
+      types: ['text/tab-separated-values'],
+    },
     xml: {
       id: 'xml',
       label: 'XML',
@@ -51,6 +80,7 @@
     if (dot < 0 || dot === last.length - 1) {
       return '';
     }
+
     return last.slice(dot + 1).toLowerCase();
   }
 
@@ -60,6 +90,7 @@
         return format;
       }
     }
+
     return null;
   }
 
@@ -69,6 +100,7 @@
         return format;
       }
     }
+
     return null;
   }
 
@@ -76,12 +108,15 @@
     if (SkipTypes.has(type)) {
       return true;
     }
+
     if (type.startsWith('image/')) {
       return true;
     }
+
     if (type.startsWith('audio/') || type.startsWith('video/')) {
       return true;
     }
+
     return extension === 'svg';
   }
 

@@ -1,8 +1,8 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
@@ -32,9 +32,22 @@ for (const browser of ['chrome', 'firefox']) {
 
 const sourceZip = path.join(dist, `plainview-${pkg.version}-source.zip`);
 fs.rmSync(sourceZip, { force: true });
+// Build the source archive from the working tree so packaging works without a
+// git repository and never reads from a remote.
 const archive = spawnSync(
-  'git',
-  ['archive', '--format=zip', `--prefix=plainview-${pkg.version}/`, 'HEAD', '-o', sourceZip],
+  'zip',
+  [
+    '-qr',
+    sourceZip,
+    '.',
+    '-x',
+    '.git/*',
+    'node_modules/*',
+    'dist/*',
+    'test-results/*',
+    'playwright-report/*',
+    '*.log',
+  ],
   { cwd: project, stdio: 'inherit' },
 );
 if (archive.status !== 0) {

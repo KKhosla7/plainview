@@ -68,8 +68,8 @@ it('highlights the current section in Contents', async () => {
     const root = document.documentElement;
     const previous = root.style.scrollBehavior;
     root.style.scrollBehavior = 'auto';
-    const target = document.getElementById('table');
-    window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY - 80);
+    const target = document.querySelector('#table');
+    globalThis.scrollTo(0, target.getBoundingClientRect().top + globalThis.scrollY - 80);
     root.style.scrollBehavior = previous;
   });
   await page.waitForFunction(
@@ -89,5 +89,46 @@ it('renders Mermaid diagrams', async () => {
 
   assert.ok((await page.locator('.pv-mermaid svg').count()) >= 1);
   assertNoErrors(errors);
+  await page.close();
+});
+it('highlights fenced code with the local highlighter', async () => {
+  const { page, errors } = await openPage(context, `${base}/sample.md`);
+  await page.waitForSelector('.pv-code-highlighted', { timeout: 10_000 });
+
+  assert.ok((await page.locator('.pv-code-highlighted .hljs-string').count()) >= 1);
+  assert.ok((await page.locator('.pv-code-highlighted .hljs-title').count()) >= 1);
+
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('renders inline and display math while leaving code literal', async () => {
+  const { page, errors } = await openPage(context, `${base}/rich.md`);
+  await page.waitForSelector('.katex-display', { timeout: 10_000 });
+
+  assert.ok((await page.locator('.pv-markdown .katex').count()) >= 2);
+  assert.equal(await page.locator('.pv-markdown code .katex').count(), 0);
+  assert.ok(
+    (await page.locator('.pv-markdown p code').allTextContents()).some((text) =>
+      text.includes('$not math$'),
+    ),
+  );
+
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('does not fetch code or math vendors for a plain document', async () => {
+  const page = await context.newPage();
+  const requests = [];
+  page.on('request', (request) => requests.push(request.url()));
+  await page.goto(`${base}/simple.md`);
+  await page.waitForSelector('.pv-markdown');
+  await page.waitForTimeout(500);
+
+  assert.equal(
+    requests.some((url) => url.includes('/vendor/highlight/') || url.includes('/vendor/katex/')),
+    false,
+  );
   await page.close();
 });

@@ -12,6 +12,7 @@
     } catch {
       return null;
     }
+
     if (doc.querySelector('parsererror')) {
       return null;
     }

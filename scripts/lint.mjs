@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
@@ -37,6 +37,7 @@ console.error('Biome diagnostics:', bySeverity);
 for (const [rule, count] of Object.entries(byRule).sort((a, b) => b[1] - a[1])) {
   console.error(`  ${count} ${rule}`);
 }
+
 for (const diagnostic of diagnostics.slice(0, 100)) {
   const { location } = diagnostic;
   console.error(

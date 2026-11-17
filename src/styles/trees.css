@@ -79,7 +79,7 @@ html[data-pv] .pv-xml-leaf {
 }
 
 html[data-pv] .pv-xml-close {
-  padding-left: 1.25em;
+  padding-left: 0;
 }
 
 html[data-pv] .pv-xml-tag {

@@ -1,0 +1,18 @@
+<script>
+(() => {
+  const root = document.documentElement;
+  const buttons = [...document.querySelectorAll('[data-pv-export-theme]')];
+  function apply(theme) {
+    root.dataset.pvTheme = theme;
+    for (const button of buttons) {
+      const selected = button.dataset.pvExportTheme === theme;
+      button.setAttribute('aria-selected', String(selected));
+      button.setAttribute('aria-pressed', String(selected));
+    }
+  }
+  for (const button of buttons) {
+    button.addEventListener('click', () => apply(button.dataset.pvExportTheme));
+  }
+  apply(root.dataset.pvTheme || 'light');
+})();
+</script>

@@ -1,0 +1,15 @@
+title = "Plainview sample"
+enabled = true
+ratio = 0.5
+
+[owner]
+name = "local"
+tags = ["one", "two"]
+
+[[book]]
+title = "TOML"
+year = 2026
+
+[[book]]
+title = "Plainview"
+year = 2026

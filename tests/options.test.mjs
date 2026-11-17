@@ -19,21 +19,31 @@ after(async () => {
   await closeExtension({ context, profile });
 });
 
-it('settings page loads and remembers the auto-open option', async () => {
+it('settings page loads and remembers the auto-reload option', async () => {
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
 
   await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
-  await page.waitForSelector('#autoOpen');
-  assert.equal(await page.isChecked('#autoOpen'), false);
+  await page.waitForSelector('#autoReloadSources');
+  assert.equal(await page.isChecked('#autoReloadSources'), false);
+  assert.equal(await page.locator('#shortcutPreset').inputValue(), 'alt-s');
+  assert.equal(await page.isChecked('#exportUncompressed'), false);
 
-  await page.check('#autoOpen');
+  await page.check('#autoReloadSources');
+  await page.check('#exportUncompressed');
+  await page.locator('#shortcutPreset').selectOption('off');
   await page.waitForTimeout(150);
   await page.reload();
-  await page.waitForSelector('#autoOpen');
-  assert.equal(await page.isChecked('#autoOpen'), true);
+  await page.waitForSelector('#autoReloadSources');
+  assert.equal(await page.isChecked('#autoReloadSources'), true);
+  assert.equal(await page.locator('#shortcutPreset').inputValue(), 'off');
+  assert.equal(await page.isChecked('#exportUncompressed'), true);
   assert.match(await page.locator('#version').textContent(), /^\d+\.\d+\.\d+$/u);
+  assert.match(
+    await page.getByRole('link', { name: /Buy me a coffee/u }).getAttribute('href'),
+    /buymeacoffee\.com\/karan\.khosla/u,
+  );
 
   assertNoErrors(errors);
   await page.close();

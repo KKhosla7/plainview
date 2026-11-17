@@ -1,0 +1,27 @@
+<script>
+(() => {
+  const button = document.querySelector('.pv-export-top');
+  if (!button) return;
+  button.addEventListener('click', () => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      globalThis.scrollTo(0, 0);
+      return;
+    }
+    const startY = globalThis.scrollY;
+    if (startY <= 0) return;
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    const started = performance.now();
+    const duration = Math.min(700, Math.max(250, startY * 0.35));
+    function step(now) {
+      const progress = Math.min(1, (now - started) / duration);
+      const eased = 1 - (1 - progress) ** 3;
+      globalThis.scrollTo(0, Math.round(startY * (1 - eased)));
+      if (progress < 1) requestAnimationFrame(step);
+      else root.style.scrollBehavior = previous;
+    }
+    requestAnimationFrame(step);
+  });
+})();
+</script>

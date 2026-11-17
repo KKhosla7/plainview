@@ -5,9 +5,11 @@
     if (className) {
       node.className = className;
     }
+
     if (text !== undefined) {
       node.textContent = text;
     }
+
     return node;
   }
 
@@ -20,6 +22,7 @@
         el('div', 'pv-error-location', `Line ${line}${column ? `, column ${column}` : ''}`),
       );
     }
+
     return panel;
   }
 

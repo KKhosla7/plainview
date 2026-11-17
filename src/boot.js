@@ -21,6 +21,7 @@
     if (document.documentElement?.getAttribute?.('data-pv')) {
       return;
     }
+
     if (!(document.body || Plainview.isRawTextDocument())) {
       return;
     }
@@ -32,6 +33,7 @@
     if (!format) {
       return;
     }
+
     if (!Plainview.isRawTextDocument()) {
       return;
     }
@@ -42,14 +44,13 @@
 
     document.documentElement.setAttribute('data-pv-version', version);
     document.documentElement.setAttribute('data-pv', 'pending');
-    // biome-ignore lint/suspicious/noConsole: version diagnostic helps identify stale installs
-    console.info(`Plainview ${version} · ${format.id}`);
 
     try {
       await import(runtime.getURL('app.js'));
       if (format.id === 'xml') {
         Plainview.ensureHtmlShellForXml();
       }
+
       if (!document.body) {
         return;
       }
@@ -63,8 +64,6 @@
         'data-pv-error',
         String(error instanceof Error ? error.message : error),
       );
-      // biome-ignore lint/suspicious/noConsole: mount failures must be visible
-      console.error(`Plainview ${version}: failed to mount the reader`, error);
     }
   }
 

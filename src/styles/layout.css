@@ -1,3 +1,4 @@
+/* biome-ignore-all lint/style/noExcessiveLinesPerFile: layout components stay together. */
 /* ------------------------------------------------------------------ shell */
 
 html[data-pv] .pv-shell {
@@ -108,11 +109,31 @@ html[data-pv] .pv-raw-head {
 }
 
 html[data-pv] .pv-raw-label {
+  flex: 0 0 auto;
   color: var(--pv-fg-faint);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+html[data-pv] .pv-raw-status {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--pv-fg-muted);
+  font-size: 11px;
+  text-align: right;
+}
+
+html[data-pv] .pv-raw-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+}
+
+html[data-pv] .pv-raw-full[hidden] {
+  display: none;
 }
 
 html[data-pv] .pv-raw-source {
@@ -193,8 +214,214 @@ html[data-pv] .pv-zoom-value:focus-visible {
   outline-offset: 1px;
 }
 
+html[data-pv] .pv-scroll-top {
+  position: fixed;
+  right: 20px;
+  bottom: 72px;
+  z-index: 24;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--pv-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pv-bg) 90%, transparent);
+  box-shadow: 0 4px 18px rgb(0 0 0 / 14%);
+  color: var(--pv-fg-muted);
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+html[data-pv] .pv-scroll-top[hidden] {
+  display: none;
+}
+
+html[data-pv] .pv-scroll-top:hover {
+  border-color: var(--pv-accent);
+  color: var(--pv-fg);
+}
+
+html[data-pv] .pv-scroll-top:focus-visible {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  html[data-pv] .pv-scroll-top {
+    right: 14px;
+    bottom: 64px;
+  }
+}
+
 /* ------------------------------------------------------------------ scrim */
 
 html[data-pv] .pv-scrim {
   display: none;
+}
+
+/* ------------------------------------------------------- source changes */
+
+html[data-pv] .pv-change-banner {
+  position: fixed;
+  top: calc(var(--pv-topbar) + 12px);
+  left: 50%;
+  z-index: 46;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(760px, calc(100vw - 40px));
+  padding: 10px 12px 10px 14px;
+  transform: translateX(-50%);
+  border: 1px solid var(--pv-border);
+  border-left: 3px solid var(--pv-accent);
+  border-radius: 6px;
+  background: var(--pv-bg-soft);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+  color: var(--pv-fg);
+  font-family: var(--pv-sans);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+html[data-pv] .pv-change-banner[hidden] {
+  display: none;
+}
+
+html[data-pv] .pv-change-text {
+  min-width: 0;
+}
+
+html[data-pv] .pv-change-text strong {
+  font-weight: 650;
+}
+
+html[data-pv] .pv-change-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+html[data-pv] .pv-change-reload,
+html[data-pv] .pv-change-dismiss {
+  appearance: none;
+  padding: 4px 8px;
+  border: 1px solid var(--pv-border);
+  border-radius: 4px;
+  background: var(--pv-bg);
+  color: var(--pv-fg);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+html[data-pv] .pv-change-reload {
+  border-color: var(--pv-accent);
+  background: var(--pv-accent);
+  color: var(--pv-bg-soft);
+}
+
+html[data-pv] .pv-change-reload:hover {
+  filter: brightness(1.08);
+}
+
+html[data-pv] .pv-change-dismiss:hover {
+  background: var(--pv-bg-inset);
+}
+
+html[data-pv] .pv-change-reload:focus-visible,
+html[data-pv] .pv-change-dismiss:focus-visible {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  html[data-pv] .pv-change-banner {
+    top: calc(var(--pv-topbar) + 8px);
+    right: 12px;
+    left: 12px;
+    max-width: none;
+    transform: none;
+    flex-wrap: wrap;
+  }
+}
+
+/* ------------------------------------------------------- HTML export */
+
+html[data-pv] .pv-export-credit {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+  padding: 7px 10px;
+  border: 1px solid var(--pv-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pv-bg-soft) 92%, transparent);
+  box-shadow: 0 4px 18px rgb(0 0 0 / 14%);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-sans);
+  font-size: 11px;
+  line-height: 1.2;
+  backdrop-filter: blur(10px);
+}
+
+html[data-pv] .pv-export-credit a {
+  color: var(--pv-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+html[data-pv] .pv-export-credit a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  html[data-pv] .pv-export-credit {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 1079px) {
+  html[data-pv] .pv-export .pv-toc {
+    position: static;
+    width: auto;
+    max-height: none;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    border: 1px solid var(--pv-border);
+    background: var(--pv-bg-soft);
+    box-shadow: none;
+    transform: none;
+  }
+
+  html[data-pv] .pv-export .pv-shell {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------- viewer page */
+
+html[data-pv] .pv-viewer-error {
+  max-width: 56rem;
+  margin: 12vh auto;
+  padding: 0 24px;
+  font-family: var(--pv-sans);
+}
+
+html[data-pv] .pv-viewer-error h1 {
+  margin: 0 0 0.5em;
+  color: var(--pv-danger);
+  font-size: 1.6rem;
+}
+
+html[data-pv] .pv-viewer-error p {
+  margin: 0 0 1em;
+  color: var(--pv-fg-muted);
+}
+
+html[data-pv] .pv-viewer-link {
+  color: var(--pv-accent);
 }

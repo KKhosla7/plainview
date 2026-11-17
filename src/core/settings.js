@@ -1,18 +1,38 @@
 /* global Plainview */
 ((root) => {
   const Themes = ['light', 'dark'];
-  const ThemeKey = 'plainview.theme';
-  const ZoomKey = 'plainview.zoom';
+  const Keys = Plainview.SETTING_KEYS;
+  const ThemeKey = Keys.Theme;
+  const ZoomKey = Keys.Zoom;
+  const ShortcutKey = Keys.Shortcuts;
+  const ExportUncompressedKey = Keys.ExportUncompressed;
   const ZoomMin = 50;
   const ZoomMax = 250;
   const ZoomStep = 10;
-  // Legacy namespace kept only for the one-time settings migration.
-  const LegacyPrefix = 'mdview.';
-  const Prefix = 'plainview.';
+  const LegacyPrefix = Plainview.LEGACY_SETTING_PREFIX;
+  const Prefix = Plainview.SETTING_PREFIX;
 
   function storageArea() {
     const api = root.browser ?? root.chrome;
     return api?.storage?.local ?? null;
+  }
+
+  function loadLocalSetting(key, fallback) {
+    try {
+      const value = localStorage.getItem(key);
+      return value === null ? fallback : value;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function saveLocalSetting(key, value) {
+    try {
+      localStorage.setItem(key, String(value));
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async function loadSetting(key, fallback) {
@@ -25,14 +45,10 @@
         }
       }
     } catch {
-      /* fall through */
+      return loadLocalSetting(key, fallback);
     }
-    try {
-      const value = localStorage.getItem(key);
-      return value === null ? fallback : value;
-    } catch {
-      return fallback;
-    }
+
+    return loadLocalSetting(key, fallback);
   }
 
   function saveSetting(key, value) {
@@ -41,18 +57,19 @@
       if (area) {
         const result = area.set({ [key]: value });
         if (result && typeof result.catch === 'function') {
-          result.catch(() => undefined);
+          result.then(
+            () => true,
+            () => false,
+          );
         }
-        return;
+
+        return true;
       }
     } catch {
-      /* fall through */
+      return saveLocalSetting(key, value);
     }
-    try {
-      localStorage.setItem(key, String(value));
-    } catch {
-      /* ignore */
-    }
+
+    return saveLocalSetting(key, value);
   }
 
   function validTheme(value) {
@@ -77,13 +94,16 @@
         updates[Prefix + key.slice(LegacyPrefix.length)] = value;
         removals.push(key);
       }
+
       if (removals.length > 0) {
         await area.set(updates);
         await area.remove(removals);
       }
     } catch {
-      /* keep the old keys if extension storage is unavailable */
+      return false;
     }
+
+    return true;
   }
 
   function migrateLocalStorage() {
@@ -92,6 +112,7 @@
       for (let i = 0; i < localStorage.length; i += 1) {
         keys.push(localStorage.key(i));
       }
+
       for (const key of keys) {
         if (!key?.startsWith(LegacyPrefix)) {
           continue;
@@ -100,8 +121,10 @@
         localStorage.removeItem(key);
       }
     } catch {
-      /* localStorage is only a fallback */
+      return false;
     }
+
+    return true;
   }
 
   function migrateLegacySettings() {
@@ -119,6 +142,8 @@
     migrateLegacySettings,
     THEME_KEY: ThemeKey,
     ZOOM_KEY: ZoomKey,
+    SHORTCUT_KEY: ShortcutKey,
+    EXPORT_UNCOMPRESSED_KEY: ExportUncompressedKey,
     ZOOM_MIN: ZoomMin,
     ZOOM_MAX: ZoomMax,
     ZOOM_STEP: ZoomStep,

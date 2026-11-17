@@ -1,13 +1,13 @@
 import { spawnSync } from 'node:child_process';
-import fs from 'node:fs';
+import fs, { mkdtempSync, rmSync } from 'node:fs';
 import http from 'node:http';
-import path from 'node:path';
-import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
+const LocalOrigin = 'http://127.0.0.1';
 const project = path.resolve(here, '..');
 const fixtures = path.join(project, 'store', 'fixtures');
 const dist = path.join(project, 'dist', 'chrome');
@@ -29,10 +29,7 @@ if (!process.env.PLAYWRIGHT_BROWSERS_PATH) {
 const { chromium } = await import('@playwright/test');
 
 const server = http.createServer((request, response) => {
-  const file = path.join(
-    fixtures,
-    new URL(request.url, 'http://127.0.0.1').pathname.replace(/^\//u, ''),
-  );
+  const file = path.join(fixtures, new URL(request.url, LocalOrigin).pathname.replace(/^\//u, ''));
   if (!(file.startsWith(fixtures) && fs.existsSync(file))) {
     response.writeHead(404);
     response.end('not found');
@@ -44,7 +41,7 @@ const server = http.createServer((request, response) => {
   response.end(fs.readFileSync(file));
 });
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-const base = `http://127.0.0.1:${server.address().port}`;
+const base = `${LocalOrigin}:${server.address().port}`;
 
 const profile = mkdtempSync(path.join(tmpdir(), 'plainview-shots-'));
 const context = await chromium.launchPersistentContext(profile, {
@@ -100,30 +97,7 @@ async function instantScrollTo(page, selector) {
   await page.waitForTimeout(250);
 }
 
-const docs = {};
-try {
-  docs.markdownLight = await capture('markdown-light', 'showcase.md', async (page) => {
-    await page.getByRole('button', { name: 'Light theme' }).click();
-  });
-  docs.markdownDark = await capture('markdown-dark', 'showcase.md', async (page) => {
-    await page.getByRole('button', { name: 'Dark theme' }).click();
-  });
-  docs.markdownMermaid = await capture('markdown-mermaid', 'showcase.md', async (page) => {
-    await page.getByRole('button', { name: 'Dark theme' }).click();
-    await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20_000 });
-    await instantScrollTo(page, '#the-dusk-sequence');
-  });
-  docs.markdownSource = await capture('markdown-source', 'showcase.md', async (page) => {
-    await page.getByRole('button', { name: 'Light theme' }).click();
-    await page.getByRole('tab', { name: 'Source' }).click();
-  });
-  docs.json = await capture('json', 'showcase.json', async (page) => {
-    await page.getByRole('button', { name: 'Light theme' }).click();
-  });
-  docs.xml = await capture('xml', 'showcase.xml', async (page) => {
-    await page.getByRole('button', { name: 'Light theme' }).click();
-  });
-
+function writeScreenshotAssets() {
   for (const name of ['markdown-light', 'markdown-mermaid', 'markdown-source', 'json', 'xml']) {
     resize(path.join(docsDir, `${name}.png`), path.join(storeDir, `${name}.png`));
     console.log('wrote', path.relative(project, path.join(storeDir, `${name}.png`)));
@@ -154,6 +128,33 @@ try {
     throw new Error('could not create demo.webp');
   }
   console.log('wrote docs/demo.webp');
+}
+
+const docs = {};
+try {
+  docs.markdownLight = await capture('markdown-light', 'showcase.md', async (page) => {
+    await page.getByRole('button', { name: 'Light theme' }).click();
+  });
+  docs.markdownDark = await capture('markdown-dark', 'showcase.md', async (page) => {
+    await page.getByRole('button', { name: 'Dark theme' }).click();
+  });
+  docs.markdownMermaid = await capture('markdown-mermaid', 'showcase.md', async (page) => {
+    await page.getByRole('button', { name: 'Dark theme' }).click();
+    await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20_000 });
+    await instantScrollTo(page, '#the-dusk-sequence');
+  });
+  docs.markdownSource = await capture('markdown-source', 'showcase.md', async (page) => {
+    await page.getByRole('button', { name: 'Light theme' }).click();
+    await page.getByRole('tab', { name: 'Source' }).click();
+  });
+  docs.json = await capture('json', 'showcase.json', async (page) => {
+    await page.getByRole('button', { name: 'Light theme' }).click();
+  });
+  docs.xml = await capture('xml', 'showcase.xml', async (page) => {
+    await page.getByRole('button', { name: 'Light theme' }).click();
+  });
+
+  writeScreenshotAssets();
 } finally {
   await context.close();
   rmSync(profile, { recursive: true, force: true });

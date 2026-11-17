@@ -5,9 +5,11 @@
     if (className) {
       node.className = className;
     }
+
     if (text !== undefined) {
       node.textContent = text;
     }
+
     return node;
   }
 
@@ -35,6 +37,11 @@
           `${stats.attributes.toLocaleString()} attributes · ` +
           Plainview.formatBytes(source.length),
         copyLabel: 'Copy XML',
+      }),
+      Plainview.createXmlTools({
+        tree: tree.element,
+        doc: parsed.doc,
+        byNode: tree.byNode,
       }),
       tree.element,
     );

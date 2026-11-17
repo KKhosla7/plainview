@@ -12,7 +12,7 @@
   }
 
   function scrollToInstant(top) {
-    withAutoBehavior(() => window.scrollTo(0, top));
+    withAutoBehavior(() => globalThis.scrollTo(0, top));
   }
 
   function scrollElementIntoViewInstant(target) {
@@ -20,7 +20,7 @@
   }
 
   function scrollElementIntoViewSmooth(target) {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       scrollElementIntoViewInstant(target);
       return;
     }

@@ -5,9 +5,11 @@
     if (className) {
       node.className = className;
     }
+
     if (text !== undefined) {
       node.textContent = text;
     }
+
     return node;
   }
 
@@ -69,8 +71,17 @@
     const downloadButton = button('pv-action pv-action-download', 'Download');
     downloadButton.title = 'Download this file';
 
-    actions.append(tocButton, el('span', 'pv-theme-label', 'Theme'), themes, downloadButton);
-    return { actions, tocButton, lightButton, darkButton, downloadButton };
+    const exportButton = button('pv-action pv-action-export', 'Export');
+    exportButton.title = 'Export a standalone HTML copy';
+
+    actions.append(
+      tocButton,
+      el('span', 'pv-theme-label', 'Theme'),
+      themes,
+      downloadButton,
+      exportButton,
+    );
+    return { actions, tocButton, lightButton, darkButton, downloadButton, exportButton };
   }
 
   function createTopbar({ fileName, url, formatLabel }) {
@@ -90,6 +101,7 @@
       lightButton: controls.lightButton,
       darkButton: controls.darkButton,
       downloadButton: controls.downloadButton,
+      exportButton: controls.exportButton,
     };
   }
 

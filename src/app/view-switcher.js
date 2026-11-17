@@ -11,7 +11,7 @@
     persistKey,
   }) {
     let view = initialView === 'source' ? 'source' : 'html';
-    let htmlScroll = window.scrollY;
+    let htmlScroll = globalThis.scrollY;
     let sourceScroll = 0;
 
     function applyState() {
@@ -26,10 +26,11 @@
       if (next === view) {
         return;
       }
+
       if (view === 'html') {
-        htmlScroll = window.scrollY;
+        htmlScroll = globalThis.scrollY;
       } else {
-        sourceScroll = window.scrollY;
+        sourceScroll = globalThis.scrollY;
       }
 
       view = next;
@@ -59,16 +60,6 @@
 
     htmlTab.addEventListener('click', () => setView('html'));
     sourceTab.addEventListener('click', () => setView('source'));
-
-    app.addEventListener('keydown', (event) => {
-      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
-        return;
-      }
-      event.preventDefault();
-      const next = view === 'html' ? 'source' : 'html';
-      setView(next);
-      (next === 'html' ? htmlTab : sourceTab).focus();
-    });
 
     return {
       setView,

@@ -6,44 +6,59 @@
   const Inline =
     /(`[^`\n]*`)|(!?\[[^\]\n]*\]\([^)\n]*\))|(\*\*[^*\n]+\*\*)|(__[^_\n]+__)|(\*[^*\n]+\*)|(_[^_\n]+_)|(~~[^~\n]+~~)|(<[^>\n]+>)/gu;
 
+  function inlineClass(token) {
+    if (token.startsWith('**') || token.startsWith('__')) {
+      return 'pv-syn-strong';
+    }
+
+    if (token.startsWith('*') || token.startsWith('_')) {
+      return 'pv-syn-em';
+    }
+
+    if (token.startsWith('~~')) {
+      return 'pv-syn-strike';
+    }
+
+    if (token.startsWith('<')) {
+      return 'pv-syn-html';
+    }
+
+    return '';
+  }
+
+  function renderInlineToken(token) {
+    if (token.startsWith('`')) {
+      return `<span class="pv-syn-code">${escapeHtml(token)}</span>`;
+    }
+
+    if (token.startsWith('![') || token.startsWith('[')) {
+      const link = /^(!?)\[([^\]]*)\]\(([^)]*)\)$/u.exec(token);
+      if (link) {
+        return (
+          `<span class="pv-syn-link">${escapeHtml(`${link[1]}[${link[2]}]`)}</span>` +
+          `<span class="pv-syn-url">${escapeHtml(`(${link[3]})`)}</span>`
+        );
+      }
+
+      return escapeHtml(token);
+    }
+    const className = inlineClass(token);
+    return className ? `<span class="${className}">${escapeHtml(token)}</span>` : escapeHtml(token);
+  }
+
   function highlightInline(text) {
     let out = '';
     let last = 0;
     Inline.lastIndex = 0;
     let match = Inline.exec(text);
-
     while (match) {
       out += escapeHtml(text.slice(last, match.index));
-      const [token] = match;
-
-      if (token.startsWith('`')) {
-        out += `<span class="pv-syn-code">${escapeHtml(token)}</span>`;
-      } else if (token.startsWith('![') || token.startsWith('[')) {
-        const link = /^(!?)\[([^\]]*)\]\(([^)]*)\)$/u.exec(token);
-        if (link) {
-          out += `<span class="pv-syn-link">${escapeHtml(`${link[1]}[${link[2]}]`)}</span>`;
-          out += `<span class="pv-syn-url">${escapeHtml(`(${link[3]})`)}</span>`;
-        } else {
-          out += escapeHtml(token);
-        }
-      } else if (token.startsWith('**') || token.startsWith('__')) {
-        out += `<span class="pv-syn-strong">${escapeHtml(token)}</span>`;
-      } else if (token.startsWith('*') || token.startsWith('_')) {
-        out += `<span class="pv-syn-em">${escapeHtml(token)}</span>`;
-      } else if (token.startsWith('~~')) {
-        out += `<span class="pv-syn-strike">${escapeHtml(token)}</span>`;
-      } else if (token.startsWith('<')) {
-        out += `<span class="pv-syn-html">${escapeHtml(token)}</span>`;
-      } else {
-        out += escapeHtml(token);
-      }
-
-      last = match.index + token.length;
+      out += renderInlineToken(match[0]);
+      last = match.index + match[0].length;
       match = Inline.exec(text);
     }
 
-    out += escapeHtml(text.slice(last));
-    return out;
+    return out + escapeHtml(text.slice(last));
   }
 
   function highlightHeading(line) {
@@ -51,6 +66,7 @@
     if (!match) {
       return null;
     }
+
     return (
       `${escapeHtml(match[1])}` +
       `<span class="pv-syn-heading-marker">${match[2]}</span>` +

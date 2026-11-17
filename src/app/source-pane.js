@@ -1,0 +1,115 @@
+/* global Plainview */
+/*
+ * The source tab. It renders a bounded preview first, then lets the reader
+ * explicitly load the full source without freezing the page.
+ */
+((root) => {
+  const CopyResetMs = 1200;
+  const PreviewChars = 200_000;
+  const HighlightChars = 500_000;
+  const PreviewCutRatio = 0.8;
+  const { el } = Plainview;
+
+  function previewSource(source, full) {
+    if (full || source.length <= PreviewChars) {
+      return { preview: false, text: source };
+    }
+    let text = source.slice(0, PreviewChars);
+    const lastNewline = text.lastIndexOf('\n');
+    if (lastNewline > PreviewChars * PreviewCutRatio) {
+      text = text.slice(0, lastNewline);
+    }
+
+    return { preview: true, text };
+  }
+
+  function applySourceText(code, text, format) {
+    if (text.length > HighlightChars) {
+      code.textContent = text;
+      return;
+    }
+    Plainview.replaceWithGeneratedHtml(code, Plainview.sourceHighlight.highlight(text, format.id));
+  }
+
+  function updateSourceStatus({ status, fullButton, preview, total, text, full }) {
+    if (preview) {
+      status.textContent =
+        `Preview · first ${Plainview.formatBytes(text.length)} of ` +
+        `${Plainview.formatBytes(total)}`;
+      fullButton.hidden = false;
+    } else if (text.length > HighlightChars) {
+      status.textContent = `Full source · ${Plainview.formatBytes(total)} · highlighting off`;
+    } else if (total > PreviewChars) {
+      status.textContent = `Full source · ${Plainview.formatBytes(total)}`;
+    } else {
+      status.textContent = '';
+    }
+    fullButton.disabled = full;
+    if (full) {
+      fullButton.hidden = true;
+    }
+  }
+
+  function createSourcePane(source, format) {
+    const pane = el('div', 'pv-raw-pane');
+    const head = el('div', 'pv-raw-head');
+    const label = el('div', 'pv-raw-label', 'Original source');
+    const status = el('div', 'pv-raw-status', '');
+    const actions = el('span', 'pv-raw-actions');
+    const copy = el('button', 'pv-meta-button pv-raw-copy', 'Copy source');
+    copy.type = 'button';
+    copy.title = 'Copy the original file text';
+    Plainview.onAsync(copy, 'click', async () => {
+      const ok = await Plainview.copyText(source);
+      copy.textContent = ok ? 'Copied' : 'Copy failed';
+      globalThis.setTimeout(() => {
+        copy.textContent = 'Copy source';
+      }, CopyResetMs);
+    });
+
+    const fullButton = el('button', 'pv-meta-button pv-raw-full', 'Load full source');
+    fullButton.type = 'button';
+    fullButton.hidden = true;
+    fullButton.title = 'Render the entire file. Large files may take a moment.';
+
+    const pre = el('pre', 'pv-raw-source');
+    const code = el('code', 'pv-raw-code');
+    pre.append(code);
+
+    let populated = false;
+    let full = false;
+
+    function render() {
+      const total = source.length;
+      const { preview, text } = previewSource(source, full);
+      applySourceText(code, text, format);
+      updateSourceStatus({ status, fullButton, preview, total, text, full });
+    }
+
+    function populate(useFull = false) {
+      if (populated && !useFull) {
+        return;
+      }
+
+      if (populated && full) {
+        return;
+      }
+      populated = true;
+      full = full || useFull;
+      render();
+    }
+
+    fullButton.addEventListener('click', () => {
+      fullButton.disabled = true;
+      fullButton.textContent = 'Loading full source…';
+      globalThis.setTimeout(() => populate(true), 0);
+    });
+
+    actions.append(copy, fullButton);
+    head.append(label, status, actions);
+    pane.append(head, pre);
+    return { element: pane, populate };
+  }
+
+  root.Plainview = Object.assign(root.Plainview || {}, { createSourcePane });
+})(globalThis);

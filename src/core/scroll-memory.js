@@ -5,6 +5,40 @@
  * debounce. When there is no saved value, the caller's hash fallback runs.
  */
 ((root) => {
+  const SaveDelayMs = 250;
+  const RestoreDelayMs = 200;
+
+  function restoreAfterFonts({ target, isUserMoved, applyAndReport }) {
+    if (target === null || !document.fonts?.ready) {
+      return;
+    }
+
+    document.fonts.ready.then(
+      () => {
+        if (!isUserMoved()) {
+          applyAndReport(null);
+        }
+
+        return true;
+      },
+      () => false,
+    );
+  }
+
+  function bindRestoreEvents({ saveNow, onScroll, markMoved }) {
+    globalThis.addEventListener('wheel', markMoved, { passive: true });
+    globalThis.addEventListener('touchstart', markMoved, { passive: true });
+    globalThis.addEventListener('pointerdown', markMoved, { passive: true });
+    globalThis.addEventListener('keydown', markMoved);
+    globalThis.addEventListener('scroll', onScroll, { passive: true });
+    globalThis.addEventListener('pagehide', saveNow);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        saveNow();
+      }
+    });
+  }
+
   function createScrollMemory({ key, initialY, onRestored }) {
     const parsed = Number(initialY);
     const target =
@@ -18,7 +52,7 @@
       if (!armed) {
         return;
       }
-      Plainview.saveSetting(key, window.scrollY);
+      Plainview.saveSetting(key, globalThis.scrollY);
     }
 
     function onScroll() {
@@ -27,7 +61,7 @@
       }
       userMoved = true;
       clearTimeout(timer);
-      timer = window.setTimeout(saveNow, 250);
+      timer = globalThis.setTimeout(saveNow, SaveDelayMs);
     }
 
     function markMoved() {
@@ -49,7 +83,7 @@
       }
       requestAnimationFrame(() => {
         if (onRestored) {
-          onRestored(window.scrollY);
+          onRestored(globalThis.scrollY);
         }
       });
     }
@@ -65,32 +99,13 @@
       applyAndReport(fallback);
 
       requestAnimationFrame(() => {
-        window.setTimeout(() => {
+        globalThis.setTimeout(() => {
           armed = true;
-        }, 200);
+        }, RestoreDelayMs);
       });
 
-      if (target !== null && document.fonts?.ready) {
-        document.fonts.ready
-          .then(() => {
-            if (!userMoved) {
-              applyAndReport(null);
-            }
-          })
-          .catch(() => undefined);
-      }
-
-      window.addEventListener('wheel', markMoved, { passive: true });
-      window.addEventListener('touchstart', markMoved, { passive: true });
-      window.addEventListener('pointerdown', markMoved, { passive: true });
-      window.addEventListener('keydown', markMoved);
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('pagehide', saveNow);
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden') {
-          saveNow();
-        }
-      });
+      restoreAfterFonts({ target, isUserMoved: () => userMoved, applyAndReport });
+      bindRestoreEvents({ saveNow, onScroll, markMoved });
     }
 
     return { restore, reapply };

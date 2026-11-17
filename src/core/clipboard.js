@@ -7,8 +7,9 @@
         return true;
       }
     } catch {
-      /* permission denied or no secure context */
+      return false;
     }
+
     return false;
   }
 

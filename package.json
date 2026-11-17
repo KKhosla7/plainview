@@ -1,25 +1,35 @@
 {
   "name": "plainview",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
-  "description": "Browser extension that renders Markdown, JSON and XML files opened in Chrome or Firefox",
+  "description": "Browser extension that renders Markdown, JSON, XML, YAML, TOML and CSV files opened in Chrome or Firefox",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "npm run build && node scripts/test.mjs",
+    "test": "npm run build && node scripts/test.mjs && node scripts/ast-gate.mjs",
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "lint:firefox": "web-ext lint --source-dir dist/firefox",
     "package": "npm run build && node scripts/package.mjs",
     "lint": "node scripts/lint.mjs",
     "lint:fix": "biome check --write .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "report:ast": "npm run ast:check",
+    "ast:gate": "node scripts/ast-gate.mjs",
+    "ast:check": "node node_modules/@kkhosla7/dwarpal-core/bin/dwarpal.js --config ast-slop.config.mjs --root ."
   },
   "dependencies": {
+    "highlight.js": "^11.12.0",
+    "jmespath": "^0.16.0",
+    "js-yaml": "^4.3.2",
+    "katex": "^0.19.1",
     "marked": "^18.2.0",
-    "mermaid": "^11.12.0"
+    "mermaid": "^12.3.0",
+    "smol-toml": "^1.9.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",
+    "@kkhosla7/dwarpal-core": "file:tools/kkhosla7-dwarpal-core-0.4.0.tgz",
+    "@kkhosla7/dwarpal-js": "file:tools/kkhosla7-dwarpal-js-0.4.0.tgz",
     "@playwright/test": "1.64.1",
     "esbuild": "^0.28.2",
     "web-ext": "^10.8.0"

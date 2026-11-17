@@ -48,7 +48,7 @@ it('Source view highlights Markdown and uses the full width', async () => {
 
   const widths = await page.evaluate(() => ({
     pane: document.querySelector('.pv-raw-pane').getBoundingClientRect().width,
-    viewport: window.innerWidth,
+    viewport: globalThis.innerWidth,
   }));
   assert.ok(widths.pane >= widths.viewport - 1, 'source pane spans the viewport');
 
@@ -110,17 +110,17 @@ it('Source view, theme and reading position survive a reload', async () => {
   await page.getByRole('tab', { name: 'HTML' }).click();
   await page.waitForSelector('.pv-markdown', { state: 'visible' });
   const y = await page.evaluate(
-    () => document.getElementById('table').getBoundingClientRect().top + window.scrollY - 80,
+    () => document.querySelector('#table').getBoundingClientRect().top + globalThis.scrollY - 80,
   );
-  await page.evaluate((top) => window.scrollTo(0, top), y);
+  await page.evaluate((top) => globalThis.scrollTo(0, top), y);
   await page.waitForTimeout(700);
-  const saved = await page.evaluate(() => window.scrollY);
+  const saved = await page.evaluate(() => globalThis.scrollY);
   assert.ok(saved > 100);
 
   await page.reload();
   await page.waitForSelector('.pv-markdown');
   await page.waitForTimeout(1500);
-  const restored = await page.evaluate(() => window.scrollY);
+  const restored = await page.evaluate(() => globalThis.scrollY);
   assert.ok(Math.abs(restored - saved) <= 4, `${restored} ~= ${saved}`);
 
   assertNoErrors(errors);
@@ -155,7 +155,7 @@ it('zoom enlarges the content without a page-level horizontal scrollbar', async 
       scrollWidth: document.documentElement.scrollWidth,
       mainScrollWidth: main.scrollWidth,
       mainClientWidth: main.clientWidth,
-      viewport: window.innerWidth,
+      viewport: globalThis.innerWidth,
     };
   });
 
@@ -190,7 +190,7 @@ it('clicking Contents lands on the heading and highlights the same item', async 
     () => document.querySelector('.pv-toc-link.is-active')?.textContent.trim() === 'Table',
   );
   const top = await page.evaluate(
-    () => document.getElementById('table').getBoundingClientRect().top,
+    () => document.querySelector('#table').getBoundingClientRect().top,
   );
   assert.ok(top >= 60 && top <= 110, `heading is below the sticky bar (${top})`);
 

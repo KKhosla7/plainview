@@ -12,14 +12,72 @@
     if (className) {
       node.className = className;
     }
+
     if (text !== undefined) {
       node.textContent = text;
     }
+
     return node;
   }
 
-  function span(className, text) {
-    return el('span', className, text);
+  function register(ctx, sourceNode, rendered, summary = null) {
+    ctx.byNode.set(sourceNode, { node: rendered, summary });
+  }
+
+  function xpathLiteral(value) {
+    return `'${value}'`;
+  }
+
+  function sameElementSiblings(current) {
+    if (!current.parentNode) {
+      return [current];
+    }
+
+    return [...current.parentNode.children].filter(
+      (sibling) =>
+        sibling.localName === current.localName && sibling.namespaceURI === current.namespaceURI,
+    );
+  }
+
+  function xpathFor(element, rootElement) {
+    const useLocalName = [element, ...ancestors(element)].some(
+      (ancestor) => ancestor.namespaceURI || ancestor.prefix,
+    );
+    const segments = [];
+    let node = element;
+    while (node && node.nodeType === Element) {
+      const siblings = sameElementSiblings(node);
+      const index = siblings.indexOf(node) + 1;
+      const name = useLocalName ? `*[local-name()=${xpathLiteral(node.localName)}]` : node.nodeName;
+      segments.unshift(node === rootElement ? name : `${name}[${index}]`);
+      if (node === rootElement) {
+        break;
+      }
+      node = node.parentNode;
+    }
+
+    return `/${segments.join('/')}`;
+  }
+
+  function ancestors(element) {
+    const list = [];
+    let node = element.parentNode;
+    while (node && node.nodeType === Element) {
+      list.push(node);
+      node = node.parentNode;
+    }
+
+    return list;
+  }
+
+  function pathButton(element, rootElement) {
+    const path = xpathFor(element, rootElement);
+    const node = el('button', 'pv-json-path pv-xml-path', '⧉');
+    node.type = 'button';
+    node.title = `Copy XPath ${path}`;
+    node.setAttribute('aria-label', `Copy XPath ${path}`);
+    node.setAttribute('data-xpath', path);
+    return node;
   }
 
   function meaningfulChildren(element) {
@@ -27,61 +85,66 @@
       if (node.nodeType === Element) {
         return true;
       }
+
       if (node.nodeType === Text) {
         return Boolean(node.nodeValue?.trim());
       }
+
       return [Cdata, Comment, ProcessingInstruction].includes(node.nodeType);
     });
   }
 
   function openTag(element, selfClosing = false) {
     const fragment = document.createDocumentFragment();
-    const tag = span('pv-xml-tag', element.nodeName);
+    const tag = el('span', 'pv-xml-tag', element.nodeName);
     if (element.namespaceURI) {
       tag.title = element.namespaceURI;
     }
-    fragment.append(span('pv-xml-punct', '<'), tag);
+    fragment.append(el('span', 'pv-xml-punct', '<'), tag);
 
     for (const attr of element.attributes) {
       fragment.append(
         document.createTextNode(' '),
-        span('pv-xml-attr-name', attr.name),
-        span('pv-xml-punct', '='),
-        span('pv-xml-attr-value', `"${attr.value}"`),
+        el('span', 'pv-xml-attr-name', attr.name),
+        el('span', 'pv-xml-punct', '='),
+        el('span', 'pv-xml-attr-value', `"${attr.value}"`),
       );
     }
 
-    fragment.append(span('pv-xml-punct', selfClosing ? '/>' : '>'));
+    fragment.append(el('span', 'pv-xml-punct', selfClosing ? '/>' : '>'));
     return fragment;
   }
 
   function closeTag(element) {
     const fragment = document.createDocumentFragment();
     fragment.append(
-      span('pv-xml-punct', '</'),
-      span('pv-xml-tag', element.nodeName),
-      span('pv-xml-punct', '>'),
+      el('span', 'pv-xml-punct', '</'),
+      el('span', 'pv-xml-tag', element.nodeName),
+      el('span', 'pv-xml-punct', '>'),
     );
     return fragment;
   }
 
-  function renderEmptyElement(element) {
+  function renderEmptyElement(element, ctx) {
     const row = el('div', 'pv-xml-leaf');
-    row.append(openTag(element, true));
+    row.append(openTag(element, true), pathButton(element, ctx.rootElement));
+    register(ctx, element, row);
     return row;
   }
 
-  function renderTextOnlyElement(element, children) {
+  function renderTextOnlyElement(element, children, ctx) {
     const row = el('div', 'pv-xml-leaf');
     row.append(openTag(element));
     for (const child of children) {
       if (child.nodeType === Cdata) {
-        row.append(span('pv-xml-cdata', `<![CDATA[${child.nodeValue}]]>`));
+        row.append(el('span', 'pv-xml-cdata', `<![CDATA[${child.nodeValue}]]>`));
       } else {
-        row.append(span('pv-xml-text', child.nodeValue.trim()));
+        row.append(el('span', 'pv-xml-text', child.nodeValue.trim()));
       }
+      register(ctx, child, row);
     }
-    row.append(closeTag(element));
+    row.append(closeTag(element), pathButton(element, ctx.rootElement));
+    register(ctx, element, row);
     return row;
   }
 
@@ -99,6 +162,7 @@
           : renderNonElement(child, ctx),
       );
     }
+
     return body;
   }
 
@@ -107,8 +171,13 @@
     details.open = isRoot || depth < 2;
 
     const summary = el('summary', 'pv-xml-summary');
-    summary.append(openTag(element), span('pv-xml-count', `${children.length} nodes`));
+    summary.append(
+      openTag(element),
+      el('span', 'pv-xml-count', `${children.length} nodes`),
+      pathButton(element, ctx.rootElement),
+    );
     details.append(summary, renderElementChildren(children, depth, ctx));
+    register(ctx, element, details, summary);
 
     const closing = el('div', 'pv-xml-close');
     closing.append(closeTag(element));
@@ -129,12 +198,12 @@
 
     const children = meaningfulChildren(element);
     if (children.length === 0) {
-      return renderEmptyElement(element);
+      return renderEmptyElement(element, ctx);
     }
 
     const textOnly = children.every((node) => node.nodeType === Text || node.nodeType === Cdata);
     if (textOnly) {
-      return renderTextOnlyElement(element, children);
+      return renderTextOnlyElement(element, children, ctx);
     }
 
     return renderElementContainer(element, children, depth, ctx, isRoot);
@@ -149,28 +218,40 @@
 
     if (node.nodeType === Text) {
       ctx.text += 1;
-      return el('div', 'pv-xml-text-block', node.nodeValue.trim());
+      const row = el('div', 'pv-xml-text-block', node.nodeValue.trim());
+      register(ctx, node, row);
+      return row;
     }
 
     if (node.nodeType === Cdata) {
       ctx.text += 1;
-      return el('div', 'pv-xml-cdata-block', `<![CDATA[${node.nodeValue}]]>`);
+      const row = el('div', 'pv-xml-cdata-block', `<![CDATA[${node.nodeValue}]]>`);
+      register(ctx, node, row);
+      return row;
     }
 
     if (node.nodeType === Comment) {
       ctx.comments += 1;
-      return el('div', 'pv-xml-comment', `<!--${node.nodeValue}-->`);
+      const row = el('div', 'pv-xml-comment', `<!--${node.nodeValue}-->`);
+      register(ctx, node, row);
+      return row;
     }
 
     if (node.nodeType === ProcessingInstruction) {
-      return el(
+      const row = el(
         'div',
         'pv-xml-pi',
         `<?${node.nodeName}${node.nodeValue ? ` ${node.nodeValue}` : ''}?>`,
       );
+      register(ctx, node, row);
+      return row;
     }
 
     return document.createDocumentFragment();
+  }
+
+  function treeWasTruncated(context) {
+    return context.truncated;
   }
 
   function renderXmlTree(rootElement) {
@@ -182,13 +263,14 @@
       comments: 0,
       depth: 0,
       truncated: false,
+      byNode: new Map(),
+      rootElement,
     };
 
     const tree = el('div', 'pv-xml');
     tree.append(renderElement(rootElement, 0, ctx, true));
 
-    // biome-ignore lint/suspicious/noUnnecessaryConditions: truncated is set by recursive renderElement
-    if (ctx.truncated) {
+    if (treeWasTruncated(ctx)) {
       tree.append(
         el(
           'div',
@@ -198,7 +280,7 @@
       );
     }
 
-    return { element: tree, stats: ctx };
+    return { element: tree, stats: ctx, byNode: ctx.byNode };
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, { renderXmlTree });

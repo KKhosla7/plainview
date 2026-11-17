@@ -28,9 +28,11 @@
         if (!mermaid || typeof mermaid.render !== 'function') {
           throw new Error('Mermaid module did not expose a render() API');
         }
+
         return mermaid;
       });
     }
+
     return loader;
   }
 
@@ -168,7 +170,9 @@
     renderGeneration += 1;
     const generation = renderGeneration;
     const isDark =
-      typeof options?.isDark === 'function' ? options.isDark() : Boolean(options?.isDark);
+      Plainview.valueKind(options?.isDark) === 'function'
+        ? options.isDark()
+        : Boolean(options?.isDark);
 
     let mermaid;
     try {
@@ -177,9 +181,11 @@
       if (generation !== renderGeneration) {
         return;
       }
+
       for (const block of blocks) {
         showError(block, `could not load Mermaid (${error.message})`);
       }
+
       return;
     }
 
@@ -193,16 +199,20 @@
       for (const block of blocks) {
         showError(block, error.message);
       }
+
       return;
     }
 
-    for (const block of blocks) {
-      if (generation !== renderGeneration) {
+    async function renderSequentially(index) {
+      if (index >= blocks.length || generation !== renderGeneration) {
         return;
       }
-      // biome-ignore lint/performance/noAwaitInLoops: sequential rendering keeps Mermaid DOM state deterministic
-      await renderBlock(mermaid, block, generation);
+
+      await renderBlock(mermaid, blocks[index], generation);
+      await renderSequentially(index + 1);
     }
+
+    await renderSequentially(0);
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {

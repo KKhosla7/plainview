@@ -5,9 +5,11 @@
     if (className) {
       node.className = className;
     }
+
     if (text !== undefined) {
       node.textContent = text;
     }
+
     return node;
   }
 
@@ -17,6 +19,7 @@
     if (ariaLabel) {
       button.setAttribute('aria-label', ariaLabel);
     }
+
     return button;
   }
 

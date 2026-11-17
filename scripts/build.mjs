@@ -1,13 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { build, transform } from 'esbuild';
-import process from 'node:process';
+
+import { copyCommon } from './build-copy.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
 const dist = path.join(project, 'dist');
 const pkg = JSON.parse(fs.readFileSync(path.join(project, 'package.json'), 'utf8'));
+const HttpMatchPattern = 'http://*/*';
+const HttpsMatchPattern = 'https://*/*';
 const sourceManifest = JSON.parse(
   fs.readFileSync(path.join(project, 'src', 'manifest.json'), 'utf8'),
 );
@@ -20,6 +24,7 @@ const STYLE_FILES = [
   'src/styles/trees.css',
   'src/styles/mermaid.css',
   'src/styles/source.css',
+  'src/styles/code-highlight.css',
   'src/styles/responsive.css',
   'src/styles/theme-html.css',
   'src/styles/theme-html-doc.css',
@@ -28,6 +33,41 @@ const STYLE_FILES = [
 const mermaidDist = path.join(project, 'node_modules', 'mermaid', 'dist');
 const mermaidMain = path.join(mermaidDist, 'mermaid.esm.min.mjs');
 const mermaidChunks = path.join(mermaidDist, 'chunks', 'mermaid.esm.min');
+const katexDist = path.join(project, 'node_modules', 'katex', 'dist');
+const katexFonts = path.join(katexDist, 'fonts');
+
+const vendorBundles = [
+  {
+    name: 'yaml',
+    contents: `export { DEFAULT_SCHEMA, loadAll } from 'js-yaml';`,
+    output: 'yaml.min.mjs',
+    target: 'vendor/yaml/js-yaml.min.mjs',
+  },
+  {
+    name: 'jmespath',
+    contents: `export { search } from 'jmespath';`,
+    output: 'jmespath.min.mjs',
+    target: 'vendor/jmespath/jmespath.min.mjs',
+  },
+  {
+    name: 'toml',
+    contents: `export { parse } from 'smol-toml';`,
+    output: 'toml.min.mjs',
+    target: 'vendor/toml/toml.min.mjs',
+  },
+  {
+    name: 'highlight',
+    contents: `export { default } from 'highlight.js/lib/common';`,
+    output: 'highlight.min.mjs',
+    target: 'vendor/highlight/highlight.min.mjs',
+  },
+  {
+    name: 'katex',
+    contents: `export { default as katex } from 'katex';\nexport { default as renderMathInElement } from 'katex/contrib/auto-render';`,
+    output: 'katex.min.mjs',
+    target: 'vendor/katex/katex.min.mjs',
+  },
+];
 
 function fail(message) {
   console.error(`build: ${message}`);
@@ -37,6 +77,10 @@ function fail(message) {
 for (const required of [
   path.join(project, 'src', 'app-entry.js'),
   path.join(project, 'src', 'boot-entry.js'),
+  path.join(project, 'src', 'viewer-entry.js'),
+  path.join(project, 'src', 'viewer.html'),
+  path.join(katexDist, 'katex.min.css'),
+  katexFonts,
   mermaidMain,
   mermaidChunks,
   path.join(project, 'assets', 'icon-16.png'),
@@ -58,10 +102,31 @@ const fontFiles = fs
   .readdirSync(path.join(project, 'src', 'fonts'))
   .filter((name) => name.endsWith('.woff2'))
   .sort();
+const katexFontFiles = fs
+  .readdirSync(katexFonts)
+  .filter((name) => name.endsWith('.woff2'))
+  .sort();
 
 if (chunkFiles.length === 0) {
   fail('no mermaid ESM chunks found');
 }
+
+if (katexFontFiles.length === 0) {
+  fail('no KaTeX woff2 fonts found');
+}
+
+const rawKatexCss = fs.readFileSync(path.join(katexDist, 'katex.min.css'), 'utf8');
+const katexCss = rawKatexCss.replace(
+  /,url\(fonts\/[^)]+\.woff\) format\("woff"\),url\(fonts\/[^)]+\.ttf\) format\("truetype"\)/gu,
+  '',
+);
+if (/\.woff\)|\.ttf\)/u.test(katexCss)) {
+  fail('could not trim non-woff2 KaTeX font sources');
+}
+const katexExportCss = katexCss.replace(/url\(fonts\/([^)]+\.woff2)\)/gu, (_match, name) => {
+  const data = fs.readFileSync(path.join(katexFonts, name));
+  return `url(data:font/woff2;base64,${data.toString('base64')})`;
+});
 
 const css = (
   await transform(
@@ -73,25 +138,8 @@ const css = (
 const bundleDir = path.join(dist, '.bundle');
 fs.mkdirSync(bundleDir, { recursive: true });
 
-// esbuild filters are Go regexes; they must not carry the JavaScript unicode flag.
-// biome-ignore lint/style/useUnicodeRegex: esbuild filters reject the unicode flag
-const ViewerCssFilter = /^virtual:viewer-css$/;
-// biome-ignore lint/style/useUnicodeRegex: esbuild filters reject the unicode flag
-const AllFilter = /.*/;
-
-const cssPlugin = {
-  name: 'viewer-css',
-  setup(buildApi) {
-    buildApi.onResolve({ filter: ViewerCssFilter }, () => ({
-      path: 'viewer-css',
-      namespace: 'viewer',
-    }));
-    buildApi.onLoad({ filter: AllFilter, namespace: 'viewer' }, () => ({
-      contents: `globalThis.PLAINVIEW_CSS = ${JSON.stringify(css)};`,
-      loader: 'js',
-    }));
-  },
-};
+const CssModule = path.join(bundleDir, 'viewer-css.js');
+fs.writeFileSync(CssModule, `globalThis.PLAINVIEW_CSS = ${JSON.stringify(css)};\n`);
 
 await build({
   entryPoints: [path.join(project, 'src', 'boot-entry.js')],
@@ -111,84 +159,48 @@ await build({
   minify: true,
   legalComments: 'none',
   target: ['chrome120', 'firefox142'],
+  loader: { '.html': 'text', '.txt': 'text' },
   outfile: path.join(bundleDir, 'app.js'),
-  plugins: [cssPlugin],
+  alias: { 'virtual:viewer-css': CssModule },
   logLevel: 'silent',
 });
 
+await build({
+  entryPoints: [path.join(project, 'src', 'viewer-entry.js')],
+  bundle: true,
+  format: 'esm',
+  minify: true,
+  legalComments: 'none',
+  target: ['chrome120', 'firefox142'],
+  loader: { '.html': 'text', '.txt': 'text' },
+  outfile: path.join(bundleDir, 'viewer.js'),
+  alias: { 'virtual:viewer-css': CssModule },
+  logLevel: 'silent',
+});
+
+// Parsers and renderers that are only shipped for their own document type.
+// They are separate ESM files so opening JSON or Markdown never pays for them.
+await Promise.all(
+  vendorBundles.map((vendor) =>
+    build({
+      stdin: {
+        contents: vendor.contents,
+        resolveDir: project,
+        sourcefile: `${vendor.name}-vendor.js`,
+        loader: 'js',
+      },
+      bundle: true,
+      format: 'esm',
+      minify: true,
+      legalComments: 'none',
+      target: ['chrome120', 'firefox142'],
+      outfile: path.join(bundleDir, vendor.name, vendor.output),
+      logLevel: 'silent',
+    }),
+  ),
+);
+
 fs.writeFileSync(path.join(bundleDir, 'styles.css'), css);
-
-function copyCommon(target) {
-  fs.mkdirSync(path.join(target, 'src', 'core'), { recursive: true });
-  fs.mkdirSync(path.join(target, 'src', 'fonts'), { recursive: true });
-  fs.mkdirSync(path.join(target, 'src', 'options'), { recursive: true });
-  fs.mkdirSync(path.join(target, 'assets'), { recursive: true });
-  fs.mkdirSync(path.join(target, 'vendor', 'mermaid', 'chunks', 'mermaid.esm.min'), {
-    recursive: true,
-  });
-
-  // Only runtime files are shipped; the rest is bundled into boot.js/app.js.
-  fs.copyFileSync(
-    path.join(project, 'src', 'background.js'),
-    path.join(target, 'src', 'background.js'),
-  );
-  fs.copyFileSync(
-    path.join(project, 'src', 'core', 'fonts.js'),
-    path.join(target, 'src', 'core', 'fonts.js'),
-  );
-  fs.cpSync(path.join(project, 'src', 'options'), path.join(target, 'src', 'options'), {
-    recursive: true,
-  });
-  fs.cpSync(path.join(project, 'src', 'fonts'), path.join(target, 'src', 'fonts'), {
-    recursive: true,
-  });
-  fs.cpSync(path.join(project, 'assets'), path.join(target, 'assets'), {
-    recursive: true,
-  });
-
-  for (const file of ['LICENSE', 'THIRD_PARTY_NOTICES.md']) {
-    const source = path.join(project, file);
-    if (fs.existsSync(source)) {
-      fs.copyFileSync(source, path.join(target, file));
-    }
-  }
-
-  fs.copyFileSync(path.join(bundleDir, 'boot.js'), path.join(target, 'boot.js'));
-  fs.copyFileSync(path.join(bundleDir, 'app.js'), path.join(target, 'app.js'));
-  fs.copyFileSync(path.join(bundleDir, 'styles.css'), path.join(target, 'styles.css'));
-
-  for (const licenseName of ['LICENSE.md', 'LICENSE']) {
-    const markedLicense = path.join(project, 'node_modules', 'marked', licenseName);
-    if (fs.existsSync(markedLicense)) {
-      fs.copyFileSync(markedLicense, path.join(target, 'vendor', 'marked.LICENSE'));
-      break;
-    }
-  }
-
-  fs.copyFileSync(mermaidMain, path.join(target, 'vendor', 'mermaid', 'mermaid.esm.min.mjs'));
-
-  for (const name of chunkFiles) {
-    const source = fs.readFileSync(path.join(mermaidChunks, name), 'utf8');
-    const patched = source
-      .replaceAll('Function("return this")()', 'globalThis')
-      .replaceAll('(0,eval)(r)', 'void 0');
-    if (patched.includes('Function("return this")()')) {
-      fail(`could not patch Firefox CSP workaround in ${name}`);
-    }
-    if (patched.includes('(0,eval)(')) {
-      fail(`could not patch Firefox eval workaround in ${name}`);
-    }
-    fs.writeFileSync(
-      path.join(target, 'vendor', 'mermaid', 'chunks', 'mermaid.esm.min', name),
-      patched,
-    );
-  }
-
-  const mermaidLicense = path.join(project, 'node_modules', 'mermaid', 'LICENSE');
-  if (fs.existsSync(mermaidLicense)) {
-    fs.copyFileSync(mermaidLicense, path.join(target, 'vendor', 'mermaid', 'LICENSE'));
-  }
-}
 
 function manifestFor(browser) {
   const manifest = structuredClone(sourceManifest);
@@ -200,10 +212,18 @@ function manifestFor(browser) {
       resources: [
         'app.js',
         'vendor/mermaid/mermaid.esm.min.mjs',
+        'vendor/yaml/js-yaml.min.mjs',
+        'vendor/toml/toml.min.mjs',
+        'vendor/jmespath/jmespath.min.mjs',
+        'vendor/highlight/highlight.min.mjs',
+        'vendor/katex/katex.min.mjs',
+        'vendor/katex/katex.min.css',
+        'vendor/katex/katex-export.css',
+        ...katexFontFiles.map((name) => `vendor/katex/fonts/${name}`),
         ...chunkFiles.map((name) => `vendor/mermaid/chunks/mermaid.esm.min/${name}`),
         ...fontFiles.map((name) => `src/fonts/${name}`),
       ],
-      matches: ['http://*/*', 'https://*/*', 'file:///*'],
+      matches: [HttpMatchPattern, HttpsMatchPattern, 'file:///*'],
     },
   ];
 
@@ -231,7 +251,21 @@ function manifestFor(browser) {
 for (const browser of ['chrome', 'firefox']) {
   const target = path.join(dist, browser);
   fs.mkdirSync(target, { recursive: true });
-  copyCommon(target);
+  copyCommon(
+    {
+      project,
+      bundleDir,
+      vendorBundles,
+      mermaidMain,
+      katexCss,
+      katexExportCss,
+      katexFonts,
+      katexFontFiles,
+      chunkFiles,
+      fail,
+    },
+    target,
+  );
   fs.writeFileSync(
     path.join(target, 'manifest.json'),
     `${JSON.stringify(manifestFor(browser), null, 2)}\n`,
@@ -243,4 +277,7 @@ fs.rmSync(bundleDir, { recursive: true, force: true });
 const size = (file) => `${(fs.statSync(file).size / 1024).toFixed(1)} KB`;
 console.log(
   `built dist/chrome and dist/firefox (v${pkg.version}) · boot ${size(path.join(dist, 'chrome', 'boot.js'))} · app ${size(path.join(dist, 'chrome', 'app.js'))} · css ${size(path.join(dist, 'chrome', 'styles.css'))} · ${chunkFiles.length} mermaid chunks`,
+);
+console.log(
+  `lazy vendors · yaml ${size(path.join(dist, 'chrome', 'vendor', 'yaml', 'js-yaml.min.mjs'))} · highlight ${size(path.join(dist, 'chrome', 'vendor', 'highlight', 'highlight.min.mjs'))} · katex ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex.min.mjs'))} js + ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex.min.css'))} css + ${(katexFontFiles.reduce((total, name) => total + fs.statSync(path.join(katexFonts, name)).size, 0) / 1024).toFixed(1)} KB fonts · export css ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex-export.css'))}`,
 );

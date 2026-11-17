@@ -19,6 +19,7 @@
       }
       index += 1;
     }
+
     return { value: text.slice(start), end: text.length };
   }
 
@@ -27,6 +28,7 @@
     while (index < text.length && text[index] !== '\n') {
       index += 1;
     }
+
     return index;
   }
 
@@ -39,6 +41,7 @@
       }
       index += 1;
     }
+
     return { newlines, end: Math.min(index + 2, text.length) };
   }
 
@@ -54,12 +57,15 @@
     if (text[index] !== '/') {
       return null;
     }
+
     if (text[index + 1] === '/') {
       return { newlines: '', end: skipLineComment(text, index) };
     }
+
     if (text[index + 1] === '*') {
       return skipBlockComment(text, index);
     }
+
     return null;
   }
 
@@ -152,6 +158,7 @@
           },
         };
       }
+
       try {
         return { value: JSON.parse(stripped), jsonc: true };
       } catch {
@@ -165,14 +172,19 @@
     }
   }
 
+  const BytesPerKilobyte = 1024;
+  const BytesPerMegabyte = 1024 * 1024;
+
   function formatBytes(bytes) {
-    if (bytes < 1024) {
+    if (bytes < BytesPerKilobyte) {
       return `${bytes} B`;
     }
-    if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(1)} KB`;
+
+    if (bytes < BytesPerMegabyte) {
+      return `${(bytes / BytesPerKilobyte).toFixed(1)} KB`;
     }
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+
+    return `${(bytes / BytesPerMegabyte).toFixed(1)} MB`;
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {

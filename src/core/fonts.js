@@ -30,17 +30,25 @@
       return;
     }
 
-    for (const [family, file, weight, style] of Faces) {
+    function installFace([family, file, weight, style]) {
       try {
         const face = new FontFace(family, `url("${runtime.getURL(`src/fonts/${file}`)}")`, {
           weight,
           style,
         });
         document.fonts.add(face);
-        face.load().catch(() => undefined);
+        face.load().then(
+          () => true,
+          () => false,
+        );
+        return true;
       } catch {
-        /* fallback fonts are fine */
+        return false;
       }
+    }
+
+    for (const face of Faces) {
+      installFace(face);
     }
   }
 

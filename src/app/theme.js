@@ -4,17 +4,19 @@
     const { THEME_KEY, saveSetting, validTheme } = Plainview;
     const stored = validTheme(initialTheme);
     let theme =
-      stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      stored || (globalThis.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     let onChange = null;
 
     function effectiveDark() {
       if (theme === 'dark') {
         return true;
       }
+
       if (theme === 'light') {
         return false;
       }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      return globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
     }
 
     function apply() {

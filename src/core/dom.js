@@ -12,5 +12,27 @@
     return factory.createElement(tag);
   }
 
-  root.Plainview = Object.assign(root.Plainview || {}, { createElement });
+  function el(tag, className, text) {
+    const node = createElement(tag);
+    if (className) {
+      node.className = className;
+    }
+
+    if (text !== undefined) {
+      node.textContent = text;
+    }
+
+    return node;
+  }
+
+  function replaceWithGeneratedHtml(element, html) {
+    const parsed = new DOMParser().parseFromString(String(html ?? ''), 'text/html');
+    element.replaceChildren(...parsed.body.childNodes);
+  }
+
+  root.Plainview = Object.assign(root.Plainview || {}, {
+    createElement,
+    el,
+    replaceWithGeneratedHtml,
+  });
 })(globalThis);

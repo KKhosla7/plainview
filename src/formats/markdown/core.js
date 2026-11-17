@@ -41,6 +41,7 @@
     if (!parser) {
       parser = createParser();
     }
+
     return parser.parse(String(source ?? ''));
   }
 
@@ -49,13 +50,14 @@
    * Relative URLs stay relative so they resolve against the markdown file.
    */
   function sanitizeUrl(raw, kind) {
-    if (typeof raw !== 'string') {
+    if (Plainview.valueKind(raw) !== 'string') {
       return null;
     }
     const value = raw.trim();
     if (!value) {
       return null;
     }
+
     if (value.startsWith('#')) {
       return value;
     }
@@ -73,6 +75,7 @@
       if (protocol === 'data:') {
         return /^data:image\/(?:png|jpe?g|gif|webp|avif|bmp);/iu.test(value) ? value : null;
       }
+
       return ['http:', 'https:', 'file:'].includes(protocol) ? value : null;
     }
 

@@ -27,7 +27,7 @@ it('escapes raw HTML and blocks javascript: links', async () => {
   const { page, errors } = await openPage(context, `${base}/xss.md`);
   await page.waitForSelector('.pv-markdown');
 
-  assert.equal(await page.evaluate(() => window.__plainviewXss), undefined);
+  assert.equal(await page.evaluate(() => globalThis.__plainviewXss), undefined);
   assert.equal(await page.locator('.pv-markdown script').count(), 0);
   assert.equal(await page.locator('.pv-markdown img').count(), 0);
   assert.equal(await page.locator('.pv-markdown .pv-link-blocked').count(), 1);

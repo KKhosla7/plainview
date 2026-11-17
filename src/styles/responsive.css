@@ -94,7 +94,7 @@
   html[data-pv] *,
   html[data-pv] *::before,
   html[data-pv] *::after {
-    transition-duration: 0.01ms !important;
+    transition-duration: 0.01ms;
   }
 }
 
@@ -113,7 +113,7 @@
   html[data-pv] .pv-zoom,
   html[data-pv] .pv-copy,
   html[data-pv] .pv-code-bar {
-    display: none !important;
+    display: none;
   }
 
   html[data-pv] .pv-shell,
@@ -124,8 +124,8 @@
   }
 
   html[data-pv] .pv-zoom-surface {
-    zoom: 1 !important;
-    width: 100% !important;
+    zoom: 1;
+    width: 100%;
   }
 
   html[data-pv] .pv-main {

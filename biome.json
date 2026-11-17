@@ -8,6 +8,7 @@
   "files": {
     "includes": [
       "src/**",
+      "!src/core/export/*.html",
       "scripts/**",
       "tests/**",
       "package.json",
@@ -35,9 +36,7 @@
         "useQwikValidLexicalScope": "off",
         "noUnresolvedImports": "off"
       },
-      "security": {
-        "noSecrets": "off"
-      },
+      "security": {},
       "suspicious": {
         "useBaseline": "off"
       },
@@ -50,8 +49,6 @@
         "noMagicNumbers": "off",
         "noContinue": "off",
         "useNamedCaptureGroup": "off",
-        "useGlobalThis": "off",
-        "useDomQuerySelector": "off",
         "useNamingConvention": "off",
         "noExcessiveLinesPerFile": {
           "level": "error",
@@ -62,7 +59,6 @@
         }
       },
       "complexity": {
-        "noImportantStyles": "off",
         "noExcessiveLinesPerFunction": {
           "level": "error",
           "options": {
@@ -113,9 +109,7 @@
   },
   "assist": {
     "actions": {
-      "source": {
-        "organizeImports": "off"
-      }
+      "source": {}
     }
   },
   "overrides": [

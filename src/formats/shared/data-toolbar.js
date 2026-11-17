@@ -1,13 +1,17 @@
 /* global Plainview */
 ((root) => {
+  const CopyResetMs = 1200;
+
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
     if (className) {
       node.className = className;
     }
+
     if (text !== undefined) {
       node.textContent = text;
     }
+
     return node;
   }
 
@@ -37,12 +41,12 @@
     });
 
     const copy = metaButton(copyLabel);
-    copy.addEventListener('click', async () => {
+    Plainview.onAsync(copy, 'click', async () => {
       const ok = await Plainview.copyText(source);
       copy.textContent = ok ? 'Copied' : 'Copy failed';
-      window.setTimeout(() => {
+      globalThis.setTimeout(() => {
         copy.textContent = copyLabel;
-      }, 1200);
+      }, CopyResetMs);
     });
 
     actions.append(expand, collapse, copy);

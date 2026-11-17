@@ -1,0 +1,112 @@
+/* highlight.js token classes, mapped to the reader's existing palette. */
+
+html[data-pv] .pv-code pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  background: transparent;
+  color: var(--pv-code-fg);
+}
+
+html[data-pv] .hljs-comment,
+html[data-pv] .hljs-quote {
+  color: var(--pv-syn-comment);
+  font-style: italic;
+}
+
+html[data-pv] .hljs-keyword,
+html[data-pv] .hljs-selector-tag,
+html[data-pv] .hljs-subst {
+  color: var(--pv-syn-key);
+  font-weight: 500;
+}
+
+html[data-pv] .hljs-string,
+html[data-pv] .hljs-doctag,
+html[data-pv] .hljs-regexp {
+  color: var(--pv-syn-string);
+}
+
+html[data-pv] .hljs-number,
+html[data-pv] .hljs-literal,
+html[data-pv] .hljs-variable,
+html[data-pv] .hljs-template-variable {
+  color: var(--pv-syn-number);
+}
+
+html[data-pv] .hljs-attr,
+html[data-pv] .hljs-attribute,
+html[data-pv] .hljs-property {
+  color: var(--pv-syn-key);
+}
+
+html[data-pv] .hljs-title,
+html[data-pv] .hljs-section,
+html[data-pv] .hljs-selector-id,
+html[data-pv] .hljs-title.function_,
+html[data-pv] .hljs-title.class_ {
+  color: var(--pv-syn-bool);
+}
+
+html[data-pv] .hljs-type,
+html[data-pv] .hljs-built_in,
+html[data-pv] .hljs-class .hljs-title {
+  color: var(--pv-syn-tag);
+}
+
+html[data-pv] .hljs-tag,
+html[data-pv] .hljs-name,
+html[data-pv] .hljs-selector-class {
+  color: var(--pv-syn-tag);
+}
+
+html[data-pv] .hljs-meta,
+html[data-pv] .hljs-meta .hljs-keyword {
+  color: var(--pv-fg-muted);
+}
+
+html[data-pv] .hljs-symbol,
+html[data-pv] .hljs-bullet,
+html[data-pv] .hljs-link {
+  color: var(--pv-accent);
+}
+
+html[data-pv] .hljs-emphasis {
+  font-style: italic;
+}
+
+html[data-pv] .hljs-strong {
+  font-weight: 600;
+}
+
+html[data-pv] .hljs-addition {
+  background: color-mix(in srgb, var(--pv-syn-tag) 16%, transparent);
+}
+
+html[data-pv] .hljs-deletion {
+  background: color-mix(in srgb, var(--pv-danger) 16%, transparent);
+}
+
+/* --------------------------------------------------------------- KaTeX */
+
+html[data-pv] .pv-markdown .katex {
+  font-size: 1.08em;
+}
+
+html[data-pv] .pv-markdown .katex-display {
+  margin: 1.2em 0;
+  padding: 0.25em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+html[data-pv] .pv-markdown .katex-display > .katex {
+  white-space: normal;
+}
+
+html[data-pv] .pv-markdown .katex .katex-html {
+  color: var(--pv-fg);
+}
+
+html[data-pv] .pv-markdown .katex-error {
+  color: var(--pv-danger);
+}
