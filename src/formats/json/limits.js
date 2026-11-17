@@ -6,9 +6,9 @@
 ((root) => {
   const SmallSourceBytes = 100_000;
   const MediumSourceBytes = 500_000;
-  const SmallPageSize = 150;
-  const MediumPageSize = 100;
-  const LargePageSize = 75;
+  const SmallPageSize = 200;
+  const MediumPageSize = 200;
+  const LargePageSize = 200;
   const SmallOpenDepth = 3;
   const MediumOpenDepth = 2;
   const LargeOpenDepth = 1;
