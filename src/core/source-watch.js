@@ -142,6 +142,20 @@
     };
   }
 
+  function notifyChange({ autoReload, banner, onReload, isStopped }) {
+    if (autoReload.enabled) {
+      banner.setAuto('Reloading automatically…');
+      banner.show();
+      globalThis.setTimeout(() => {
+        if (!isStopped()) {
+          reloadDocument(onReload);
+        }
+      }, AutoReloadDelayMs);
+      return;
+    }
+    banner.show();
+  }
+
   function watchSource({ source, url, app, onReload, format }) {
     if (!(source && url)) {
       return { checkNow: () => undefined, stop: () => undefined };
@@ -160,20 +174,6 @@
     let timer = 0;
     const autoReload = createAutoReloadState();
 
-    function notify() {
-      if (autoReload.enabled) {
-        banner.setAuto('Reloading automatically…');
-        banner.show();
-        globalThis.setTimeout(() => {
-          if (!stopped) {
-            reloadDocument(onReload);
-          }
-        }, AutoReloadDelayMs);
-        return;
-      }
-      banner.show();
-    }
-
     async function checkNow() {
       if (stopped || inFlight || (document.visibilityState === 'hidden' && timer !== 0)) {
         return;
@@ -185,11 +185,22 @@
           return;
         }
         const normalized = normalizeSource(current, format?.id);
-        if (normalized === baseline || normalized === lastNotified) {
+        if (normalized === baseline) {
+          lastNotified = null;
+          banner.hide();
+          return;
+        }
+
+        if (normalized === lastNotified) {
           return;
         }
         lastNotified = normalized;
-        notify();
+        notifyChange({
+          autoReload,
+          banner,
+          onReload,
+          isStopped: () => stopped,
+        });
       } finally {
         inFlight = false;
       }

@@ -21,11 +21,13 @@ let context;
 let profile;
 let watched = '# Watched\n\nfirst version\n';
 let automatic = '# Auto\n\nfirst version\n';
+let flip = '# Flip\n\nA\n';
 
 before(async () => {
   ({ server, base } = await startServer({
     '/watched.md': () => ({ body: watched, type: 'text/markdown; charset=utf-8' }),
     '/auto.md': () => ({ body: automatic, type: 'text/markdown; charset=utf-8' }),
+    '/flip.md': () => ({ body: flip, type: 'text/markdown; charset=utf-8' }),
   }));
   ({ context, profile } = await launchExtension());
 });
@@ -108,5 +110,28 @@ it('prompts for a changed local file after the reader regains focus', async () =
   } finally {
     await page.close();
     rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+it('prompts again after the source returns to baseline and changes again', async () => {
+  flip = '# Flip\n\nA\n';
+  const { page, errors } = await openPage(context, `${base}/flip.md`);
+  try {
+    await page.waitForSelector('.pv-markdown h1');
+    flip = '# Flip\n\nB\n';
+    await page.evaluate(() => globalThis.dispatchEvent(new Event('focus')));
+    await page.waitForSelector('.pv-change-banner:not([hidden])', { timeout: 5000 });
+
+    flip = '# Flip\n\nA\n';
+    await page.evaluate(() => globalThis.dispatchEvent(new Event('focus')));
+    await page.waitForSelector('.pv-change-banner', { state: 'hidden', timeout: 5000 });
+
+    flip = '# Flip\n\nB\n';
+    await page.evaluate(() => globalThis.dispatchEvent(new Event('focus')));
+    await page.waitForSelector('.pv-change-banner:not([hidden])', { timeout: 5000 });
+    assert.match(await page.locator('.pv-change-text').innerText(), /Source changed/u);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
   }
 });
