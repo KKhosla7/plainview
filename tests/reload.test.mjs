@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { after, before, test as it } from 'node:test';
+import { pathToFileURL } from 'node:url';
 import { expect } from '@playwright/test';
 import {
   assertNoErrors,
@@ -87,4 +91,22 @@ it('auto-reloads a changed source when the setting is enabled', async () => {
   assertNoErrors(errors);
   await page.close();
   await setAutoReload(false);
+});
+
+it('prompts for a changed local file after the reader regains focus', async () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'plainview-watch-'));
+  const file = path.join(dir, 'local.md');
+  writeFileSync(file, '# Local\n\nfirst version\n');
+  const { page, errors } = await openPage(context, pathToFileURL(file).href);
+  try {
+    await page.waitForSelector('.pv-markdown h1');
+    writeFileSync(file, '# Local\n\nsecond version\n');
+    await page.evaluate(() => globalThis.dispatchEvent(new Event('focus')));
+    await page.waitForSelector('.pv-change-banner:not([hidden])', { timeout: 5000 });
+    assert.match(await page.locator('.pv-change-text').innerText(), /Source changed/u);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

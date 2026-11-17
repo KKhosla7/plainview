@@ -54,6 +54,20 @@
     }
   }
 
+  async function requestTextExtension(url) {
+    const runtime = root.browser?.runtime ?? root.chrome?.runtime;
+    if (!runtime?.sendMessage) {
+      return null;
+    }
+
+    try {
+      const response = await runtime.sendMessage({ type: 'plainview:read-source', url });
+      return Plainview.valueKind(response?.text) === 'string' ? response.text : null;
+    } catch {
+      return null;
+    }
+  }
+
   function requestResponse(url, options) {
     return requestSource(url, options);
   }
@@ -61,6 +75,7 @@
   root.Plainview = Object.assign(root.Plainview || {}, {
     requestResponse,
     requestText,
+    requestTextExtension,
     requestTextXhr: requestSourceXhr,
   });
 })(globalThis);

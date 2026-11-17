@@ -5,7 +5,7 @@
  * Auto-reload is opt-in from Settings.
  */
 ((root) => {
-  const PollInterval = 30_000;
+  const PollInterval = 10_000;
   const FirstCheckDelay = 2500;
   const AutoReloadKey = Plainview.SETTING_KEYS.AutoReload;
   const AutoReloadDelayMs = 900;
@@ -30,6 +30,13 @@
   }
 
   async function readSource(url) {
+    if (url.startsWith('file:')) {
+      const viaExtension = await Plainview.requestTextExtension(url);
+      if (viaExtension !== null) {
+        return viaExtension;
+      }
+    }
+
     const fetched = await Plainview.requestText(url, {
       cache: 'no-store',
       credentials: 'same-origin',
@@ -203,6 +210,7 @@
         checkNow();
       }
     });
+    globalThis.addEventListener('focus', checkNow);
 
     schedule(FirstCheckDelay);
 
