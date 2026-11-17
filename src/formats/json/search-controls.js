@@ -41,33 +41,12 @@
     next.addEventListener('click', () => stepSearch(1));
   }
 
-  function valueAtPath(rootValue, path) {
-    let value = rootValue;
-    for (const segment of path) {
-      if (value === null || Plainview.valueKind(value) !== 'object') {
-        return;
-      }
-      value = value[segment];
-    }
-
-    return value;
-  }
-
   function recordsForMatches(rootValue, matches) {
     const records = [];
     const seen = new Set();
-    for (const { path, value } of matches) {
-      const isRecord = value !== null && Plainview.valueKind(value) === 'object';
-      const parentPath = path.slice(0, -1);
-      const parent = valueAtPath(rootValue, parentPath);
-      const parentIsRecord =
-        parent !== null && Plainview.valueKind(parent) === 'object' && !Array.isArray(parent);
-      let record = value;
-      let recordPath = path;
-      if (!isRecord && parentIsRecord) {
-        record = parent;
-        recordPath = parentPath;
-      }
+    for (const { path } of matches) {
+      const recordPath = Plainview.jsonToolsShared.recordPathFor(rootValue, path);
+      const record = Plainview.jsonToolsShared.valueAtPath(rootValue, recordPath);
       const pathText = Plainview.jsonPath.pathToJsonPath(recordPath);
       if (seen.has(pathText)) {
         continue;
@@ -77,6 +56,22 @@
     }
 
     return records;
+  }
+
+  function recordPathsForMatches(rootValue, matches) {
+    const paths = [];
+    const seen = new Set();
+    for (const { path } of matches) {
+      const recordPath = Plainview.jsonToolsShared.recordPathFor(rootValue, path);
+      const pathText = Plainview.jsonPath.pathToJsonPath(recordPath);
+      if (seen.has(pathText)) {
+        continue;
+      }
+      seen.add(pathText);
+      paths.push(recordPath);
+    }
+
+    return paths;
   }
 
   function updateSearchExport(exportState, result, rootValue, query) {
@@ -136,7 +131,10 @@
     updateSearchExport(exportState, result, rootValue, query);
     tree.dispatchEvent(
       new CustomEvent('pv-json-filter', {
-        detail: { hitClass: 'pv-json-hit', paths: result.matches.map((match) => match.path) },
+        detail: {
+          hitClass: 'pv-json-hit',
+          paths: recordPathsForMatches(rootValue, result.matches),
+        },
       }),
     );
     state.hits = result.hits;

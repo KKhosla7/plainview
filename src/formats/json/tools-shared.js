@@ -64,6 +64,28 @@
     return String(value).slice(0, 160);
   }
 
+  function valueAtPath(rootValue, path) {
+    let value = rootValue;
+    for (const segment of path) {
+      if (value === null || Plainview.valueKind(value) !== 'object') {
+        return;
+      }
+      value = value[segment];
+    }
+
+    return value;
+  }
+
+  function recordPathFor(rootValue, path) {
+    const value = valueAtPath(rootValue, path);
+    const parentPath = path.slice(0, -1);
+    const parent = valueAtPath(rootValue, parentPath);
+    const isRecord = value !== null && Plainview.valueKind(value) === 'object';
+    const parentIsRecord =
+      parent !== null && Plainview.valueKind(parent) === 'object' && !Array.isArray(parent);
+    return !isRecord && parentIsRecord ? parentPath : path;
+  }
+
   function mark(entry, className) {
     entry.node.classList.add(className);
     if (entry.summary) {
@@ -250,6 +272,8 @@
       mark,
       previewValue,
       primitiveText,
+      recordPathFor,
+      valueAtPath,
       stickyOffset,
       renderResults,
       scrollResultIntoView,

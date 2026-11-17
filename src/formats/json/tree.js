@@ -192,13 +192,23 @@
     return renderContainer(key, value, { ...meta, path, isRoot: Boolean(isRoot) }, ctx);
   }
 
-  function applyClassicFilter({ hitClass, tree }) {
-    if (!tree.querySelector(`.${hitClass}`)) {
-      return;
-    }
+  function pathAllowed(pathText, filterPaths) {
+    return filterPaths.some(
+      (filterPath) =>
+        pathText === filterPath ||
+        pathText.startsWith(`${filterPath}.`) ||
+        pathText.startsWith(`${filterPath}[`) ||
+        filterPath.startsWith(`${pathText}.`) ||
+        filterPath.startsWith(`${pathText}[`),
+    );
+  }
 
+  function applyClassicFilter({ paths, tree }) {
+    const filterPaths = paths.map((path) => Plainview.jsonPath.pathToJsonPath(path));
     for (const node of tree.querySelectorAll('.pv-json-leaf, .pv-json-node')) {
-      node.hidden = !(node.classList.contains(hitClass) || node.querySelector(`.${hitClass}`));
+      const pathText =
+        node.dataset.jsonPath || node.querySelector('.pv-json-path')?.dataset.jsonPath || '';
+      node.hidden = !pathAllowed(pathText, filterPaths);
     }
   }
 
@@ -245,7 +255,7 @@
         return;
       }
 
-      applyClassicFilter({ hitClass: event.detail.hitClass || 'pv-json-hit', tree });
+      applyClassicFilter({ paths: event.detail.paths || [], tree });
     });
     return { tree, context: ctx.stats, revealPath };
   }

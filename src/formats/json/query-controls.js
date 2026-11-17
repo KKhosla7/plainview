@@ -140,7 +140,9 @@
       new CustomEvent('pv-json-filter', {
         detail: {
           hitClass: 'pv-json-query-hit',
-          paths: items.flatMap((item) => (item.path ? [item.path] : [])),
+          paths: items.flatMap((item) =>
+            item.path ? [Plainview.jsonToolsShared.recordPathFor(ctx.rootValue, item.path)] : [],
+          ),
         },
       }),
     );

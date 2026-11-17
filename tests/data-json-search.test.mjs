@@ -66,8 +66,10 @@ it('filters the JSON tree to matching entries and restores on clear', async () =
   await page.waitForSelector('.pv-json-leaf.pv-json-hit');
   await page.waitForFunction(() => document.querySelectorAll('.pv-json-leaf[hidden]').length > 0);
   const visible = await page.locator('.pv-json-leaf:not([hidden])').count();
-  assert.equal(visible, 2);
-  assert.match(await page.locator('.pv-json-leaf:not([hidden])').first().innerText(), /label/u);
+  assert.equal(visible, 4);
+  const filtered = await page.locator('.pv-json-leaf:not([hidden])').allInnerTexts();
+  assert.ok(filtered.some((text) => text.includes('id')));
+  assert.ok(filtered.some((text) => text.includes('label')));
 
   await page.getByRole('button', { name: 'Clear search' }).click();
   await page.waitForFunction(() => document.querySelectorAll('.pv-json-leaf[hidden]').length === 0);
