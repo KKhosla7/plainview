@@ -1,5 +1,11 @@
 /* ---------------------------------------------------------------- JSON tree */
 
+html[data-pv] .pv-json,
+html[data-pv] .pv-xml {
+  padding-left: 28px;
+  line-height: 24px;
+}
+
 html[data-pv] .pv-json-node {
   margin: 0;
 }
@@ -109,14 +115,17 @@ html[data-pv] .pv-xml-tag {
 }
 
 html[data-pv] .pv-xml-attr-name {
+  margin: 0 0.1em;
   color: var(--pv-syn-attr);
 }
 
 html[data-pv] .pv-xml-attr-value {
+  margin: 0 0.1em;
   color: var(--pv-syn-string);
 }
 
 html[data-pv] .pv-xml-punct {
+  margin: 0 0.12em;
   color: var(--pv-fg-muted);
 }
 
