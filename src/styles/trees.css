@@ -13,6 +13,7 @@ html[data-pv] .pv-json-node {
 
 html[data-pv] .pv-json-summary,
 html[data-pv] .pv-xml-summary {
+  margin-left: -12px;
   cursor: pointer;
   list-style: none;
 }
@@ -112,7 +113,7 @@ html[data-pv] .pv-xml-children {
 }
 
 html[data-pv] .pv-xml-leaf {
-  padding-left: 0;
+  padding-left: 4px;
   white-space: pre-wrap;
 }
 
