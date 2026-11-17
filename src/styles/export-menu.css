@@ -48,3 +48,51 @@ html[data-pv] .pv-export-menu button:focus-visible {
   background: var(--pv-accent-soft);
   outline: none;
 }
+
+html[data-pv] .pv-export-progress {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  overflow: hidden;
+  background: var(--pv-accent-soft);
+}
+
+html[data-pv] .pv-export-progress[hidden] {
+  display: none;
+}
+
+html[data-pv] .pv-export-progress::after {
+  display: block;
+  width: 35%;
+  height: 100%;
+  background: var(--pv-accent);
+  animation: pv-export-progress 1s ease-in-out infinite;
+  content: "";
+}
+
+@keyframes pv-export-progress {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(285%);
+  }
+}
+
+html[data-pv] .pv-export-error {
+  position: fixed;
+  top: calc(var(--pv-topbar) + 16px);
+  right: 20px;
+  z-index: 60;
+  max-width: min(440px, calc(100vw - 40px));
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--pv-danger) 45%, var(--pv-border));
+  border-radius: 7px;
+  background: var(--pv-bg);
+  color: var(--pv-danger);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  font-size: 12px;
+}

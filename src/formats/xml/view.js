@@ -28,14 +28,17 @@
     const tree = Plainview.renderXmlTree(parsed.doc.documentElement);
     const { stats } = tree;
     const exportState = {
+      filter: null,
       kind: '',
       values: null,
-      set(kind, values) {
+      set(kind, values, filter = null) {
         this.kind = kind;
         this.values = values;
+        this.filter = filter;
       },
       clear(kind) {
         if (this.kind === kind) {
+          this.filter = null;
           this.kind = '';
           this.values = null;
         }
@@ -72,7 +75,7 @@
         formatId: 'xml',
         hasFilter: () => Boolean(exportState.getFiltered()?.length),
         getDocument() {
-          return { formatId: 'xml', source };
+          return { filter: exportState.filter, formatId: 'xml', source };
         },
         getData(scope) {
           const nodes = exportState.getFiltered();

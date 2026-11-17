@@ -157,6 +157,7 @@
           const exported = exportNode(node);
           return exported ? [exported] : [];
         }),
+        { kind: 'query', text: expression },
       );
     } else {
       state.exportState?.clear('query');

@@ -4,6 +4,8 @@
  * state class instead of escaping as unhandled promise rejections.
  */
 ((root) => {
+  const ExportErrorResetMs = 8000;
+
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);
     if (className) {
@@ -42,7 +44,7 @@
     return { refreshMermaid, refreshExtras };
   }
 
-  function exportHtml({ content, fileName, format, refreshExtras }) {
+  function exportHtml({ content, fileName, format, refreshExtras, scope = 'complete' }) {
     return async () => {
       await refreshExtras();
       const uncompressed = await Plainview.loadSetting(Plainview.EXPORT_UNCOMPRESSED_KEY, false);
@@ -51,6 +53,7 @@
         exportData: content.exportData,
         fileName,
         format,
+        scope,
         theme: document.documentElement.dataset.pvTheme || 'light',
         uncompressed: Boolean(uncompressed),
       });
@@ -74,7 +77,48 @@
       : `Download complete data (${label})`;
   }
 
-  function createExportMenu({ topbar, content, fileName, format, refreshExtras }) {
+  function createExportFeedback(topbar) {
+    const progress = el('div', 'pv-export-progress');
+    progress.setAttribute('role', 'progressbar');
+    progress.setAttribute('aria-label', 'Preparing export');
+    progress.hidden = true;
+    topbar.element.append(progress);
+
+    function start() {
+      topbar.exportButton.disabled = true;
+      topbar.exportButton.textContent = 'Exporting…';
+      progress.hidden = false;
+    }
+
+    function finish() {
+      topbar.exportButton.disabled = false;
+      topbar.exportButton.textContent = 'Export';
+      progress.hidden = true;
+    }
+
+    function fail(error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const notice = el('div', 'pv-export-error', `Export failed: ${message}`);
+      notice.setAttribute('role', 'alert');
+      document.body.append(notice);
+      globalThis.setTimeout(() => notice.remove(), ExportErrorResetMs);
+    }
+
+    return {
+      async run(task) {
+        start();
+        try {
+          await task();
+        } catch (error) {
+          fail(error);
+        } finally {
+          finish();
+        }
+      },
+    };
+  }
+
+  function createExportMenu({ feedback, topbar, content, fileName, format, refreshExtras }) {
     const menu = el('div', 'pv-export-menu');
     menu.setAttribute('role', 'menu');
     menu.hidden = true;
@@ -93,7 +137,7 @@
         filtered.type = 'button';
         Plainview.onAsync(filtered, 'click', async () => {
           close();
-          await exportNative(content, fileName, 'filtered')();
+          await feedback.run(() => exportNative(content, fileName, 'filtered')());
         });
         menu.append(filtered);
       }
@@ -102,13 +146,28 @@
       complete.type = 'button';
       Plainview.onAsync(complete, 'click', async () => {
         close();
-        await exportNative(content, fileName, 'complete')();
+        await feedback.run(() => exportNative(content, fileName, 'complete')());
       });
-      const html = el('button', '', 'Download HTML page');
+      if (content.exportData.hasFilter()) {
+        const filteredHtml = el('button', '', 'Download filtered HTML page');
+        filteredHtml.type = 'button';
+        Plainview.onAsync(filteredHtml, 'click', async () => {
+          close();
+          await feedback.run(() =>
+            exportHtml({ content, fileName, format, refreshExtras, scope: 'filtered' })(),
+          );
+        });
+        menu.append(filteredHtml);
+      }
+      const html = el(
+        'button',
+        '',
+        content.exportData.hasFilter() ? 'Download complete HTML page' : 'Download HTML page',
+      );
       html.type = 'button';
       Plainview.onAsync(html, 'click', async () => {
         close();
-        await exportHtml({ content, fileName, format, refreshExtras })();
+        await feedback.run(() => exportHtml({ content, fileName, format, refreshExtras })());
       });
       menu.append(complete, html);
       menu.hidden = false;
@@ -140,22 +199,16 @@
   }
 
   function wireViewerExport({ topbar, refreshExtras, content, fileName, format }) {
+    const feedback = createExportFeedback(topbar);
     if (!content.exportData) {
       topbar.exportButton.title = 'Export a standalone HTML copy';
       Plainview.onAsync(topbar.exportButton, 'click', async () => {
-        topbar.exportButton.disabled = true;
-        topbar.exportButton.textContent = 'Exporting…';
-        try {
-          await exportHtml({ content, fileName, format, refreshExtras })();
-        } finally {
-          topbar.exportButton.disabled = false;
-          topbar.exportButton.textContent = 'Export';
-        }
+        await feedback.run(() => exportHtml({ content, fileName, format, refreshExtras })());
       });
       return;
     }
 
-    createExportMenu({ topbar, content, fileName, format, refreshExtras });
+    createExportMenu({ feedback, topbar, content, fileName, format, refreshExtras });
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {

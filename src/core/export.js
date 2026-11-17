@@ -158,7 +158,7 @@ import DocumentTemplate from './export/document.html';
     return output;
   }
 
-  async function buildDataPayload(exportData, fileName) {
+  async function buildDataPayload(exportData, fileName, scope) {
     if (!exportData) {
       return '';
     }
@@ -169,6 +169,10 @@ import DocumentTemplate from './export/document.html';
     }
 
     const documentData = exportData.getDocument?.() ?? null;
+    if (documentData && scope !== 'filtered') {
+      documentData.filter = null;
+    }
+
     return JSON.stringify({ document: documentData, entries: data.entries }).replace(
       /</gu,
       '\\u003c',
@@ -203,11 +207,22 @@ import DocumentTemplate from './export/document.html';
     return `<main class="pv-main"><div class="pv-zoom-surface">${clone.outerHTML}</div></main>`;
   }
 
+  async function packageExport({ dataViewer, html, title, uncompressed, version }) {
+    if (uncompressed) {
+      return html;
+    }
+
+    const compact = dataViewer ? html : minifyHtml(html);
+    const compressed = await gzipBase64(compact);
+    return compressed ? compressedWrapper(compressed, title, version) : compact;
+  }
+
   async function buildExportHtml({
     article,
     exportData,
     fileName,
     format,
+    scope = 'complete',
     theme,
     uncompressed = false,
   }) {
@@ -219,7 +234,7 @@ import DocumentTemplate from './export/document.html';
     const themeName = theme === 'dark' ? 'dark' : 'light';
     const version = document.documentElement.getAttribute('data-pv-version') || '';
     const hasToc = Boolean(clone.querySelector('.pv-toc-link'));
-    const dataPayload = await buildDataPayload(exportData, title);
+    const dataPayload = await buildDataPayload(exportData, title, scope);
     const dataViewer = dataPayload ? await buildDataViewer(exportData) : null;
     const content = exportContent({ clone, dataViewer, shell });
     const generator = version
@@ -247,11 +262,7 @@ import DocumentTemplate from './export/document.html';
       TABLE_RESIZE_SCRIPT: Plainview.exportScripts.TableResizeScript,
       TOC_SCRIPT: hasToc ? Plainview.exportScripts.TocScript : '',
     });
-    if (uncompressed) {
-      return html;
-    }
-    const compressed = await gzipBase64(minifyHtml(html));
-    return compressed ? compressedWrapper(compressed, title, version) : minifyHtml(html);
+    return packageExport({ dataViewer, html, title, uncompressed, version });
   }
 
   async function exportHtml(options) {

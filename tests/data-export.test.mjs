@@ -48,7 +48,10 @@ it('exports filtered and complete JSON', async () => {
     await page.waitForFunction(() => document.querySelectorAll('.pv-json-hit').length >= 2);
     const filtered = await exportScope(page, /Download filtered results/u);
     assert.equal(filtered.fileName, 'sample.json');
-    assert.deepEqual(JSON.parse(filtered.text), ['one', 'two']);
+    assert.deepEqual(JSON.parse(filtered.text), [
+      { id: 1, label: 'one' },
+      { id: 2, label: 'two' },
+    ]);
 
     const complete = await exportScope(page, /Download complete data/u);
     assert.equal(JSON.parse(complete.text).name, 'plainview');
@@ -154,7 +157,7 @@ it('keeps clean data downloads inside a compressed HTML export', async () => {
     await page.waitForSelector('.pv-json');
     await page.getByLabel('Search JSON keys and values').fill('label');
     await page.waitForFunction(() => document.querySelectorAll('.pv-json-hit').length >= 2);
-    const html = await exportScope(page, /Download HTML page/u);
+    const html = await exportScope(page, /Download complete HTML page/u);
     const file = path.join(dir, 'sample.html');
     fs.writeFileSync(file, html.text);
 
@@ -178,7 +181,10 @@ it('keeps clean data downloads inside a compressed HTML export', async () => {
         exported.waitForEvent('download'),
         exported.getByRole('button', { name: /Download filtered JSON/u }).click(),
       ]);
-      assert.deepEqual(JSON.parse(fs.readFileSync(await download.path(), 'utf8')), ['one', 'two']);
+      assert.deepEqual(JSON.parse(fs.readFileSync(await download.path(), 'utf8')), [
+        { id: 1, label: 'one' },
+        { id: 2, label: 'two' },
+      ]);
     } finally {
       await exported.close();
     }
@@ -209,6 +215,37 @@ it('keeps search, query and complete data in a standalone data HTML export', asy
       await exported.locator('.pv-json-search-result').first().click();
       await exported.waitForSelector('.pv-vrow-active');
       assert.match(await exported.locator('.pv-vrow-active').innerText(), /item-406/u);
+    } finally {
+      await exported.close();
+    }
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+it('applies the active search in a filtered HTML export', async () => {
+  const { page, errors } = await openPage(context, `${base}/sample.json`);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-filtered-html-'));
+  try {
+    await page.waitForSelector('.pv-json');
+    await page.getByLabel('Search JSON keys and values').fill('label');
+    await page.waitForSelector('.pv-json-search-results:not([hidden])');
+    const html = await exportScope(page, /Download filtered HTML page/u);
+    const file = path.join(dir, 'filtered.html');
+    fs.writeFileSync(file, html.text);
+
+    const exported = await context.newPage();
+    try {
+      await exported.goto(pathToFileURL(file).href);
+      await exported.waitForSelector('.pv-json');
+      assert.equal(await exported.getByLabel('Search JSON keys and values').inputValue(), 'label');
+      await exported.waitForSelector('.pv-json-search-results:not([hidden])');
+      assert.match(
+        await exported.locator('.pv-json-search-results:not(.pv-json-query-results)').innerText(),
+        /one/u,
+      );
     } finally {
       await exported.close();
     }

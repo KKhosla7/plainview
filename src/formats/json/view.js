@@ -26,20 +26,20 @@
     const article = el('article', 'pv-doc pv-data-doc');
     const indexRef = { current: new Map() };
     const exportState = {
+      filter: null,
       kind: '',
       values: null,
-      set(kind, values) {
+      set(kind, values, filter = null) {
         this.kind = kind;
         this.values = values;
+        this.filter = filter;
       },
       clear(kind) {
         if (this.kind === kind) {
+          this.filter = null;
           this.kind = '';
           this.values = null;
         }
-      },
-      getFiltered() {
-        return this.values;
       },
     };
     const virtual = document.documentElement.dataset.pvJsonTreeMode === 'virtual';
@@ -78,9 +78,10 @@
       index: indexRef.current,
       exportData: {
         formatId,
-        hasFilter: () => Boolean(exportState.getFiltered()?.length),
+        hasFilter: () => Boolean(exportState.values?.length),
         getDocument() {
           return {
+            filter: exportState.filter,
             formatId,
             label: options.copyLabel?.replace(/^Copy /u, '') || 'JSON',
             source,
@@ -89,7 +90,7 @@
           };
         },
         getData(scope) {
-          const data = scope === 'filtered' ? exportState.getFiltered() : value;
+          const data = scope === 'filtered' ? exportState.values : value;
           if (!data || (scope === 'filtered' && data.length === 0)) {
             return null;
           }

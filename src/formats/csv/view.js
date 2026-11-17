@@ -55,6 +55,39 @@
     article.append(el('div', 'pv-tree-note', `Table capped: ${notes.join('; ')}.`));
   }
 
+  function createCsvExportData({ delimiter, filter, formatId, headerCells, label, source, table }) {
+    return {
+      formatId,
+      hasFilter: () => table.isFiltered(),
+      getDocument() {
+        return {
+          delimiter,
+          filter: table.isFiltered() ? { kind: 'csv', text: filter.value } : null,
+          formatId,
+          label,
+          source,
+        };
+      },
+      getData(scope) {
+        if (scope !== 'filtered') {
+          return { data: source, formatId, kind: 'text' };
+        }
+
+        if (!table.isFiltered()) {
+          return null;
+        }
+
+        return {
+          delimiter,
+          formatId,
+          header: headerCells,
+          kind: 'csv',
+          rows: table.getVisibleRows(),
+        };
+      },
+    };
+  }
+
   function buildCsv(source, format = {}) {
     const { label: formatLabel } = format;
     const parsed = Plainview.parseCsv(source, { delimiter: format.delimiter });
@@ -105,31 +138,15 @@
       article,
       stats: { rows: rows.length, columns },
       error: Boolean(parsed.error),
-      exportData: {
+      exportData: createCsvExportData({
+        delimiter,
+        filter,
         formatId,
-        hasFilter: () => table.isFiltered(),
-        getDocument() {
-          return { delimiter, formatId, label, source };
-        },
-        getData(scope) {
-          const visible = table.isFiltered();
-          if (scope === 'filtered' && !visible) {
-            return null;
-          }
-
-          if (scope !== 'filtered') {
-            return { data: source, formatId, kind: 'text' };
-          }
-
-          return {
-            delimiter,
-            formatId,
-            header: headerCells,
-            kind: 'csv',
-            rows: table.getVisibleRows(),
-          };
-        },
-      },
+        headerCells,
+        label,
+        source,
+        table,
+      }),
     };
   }
 

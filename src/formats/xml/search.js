@@ -90,6 +90,7 @@
             const node = exportNode(entry.source);
             return node ? [node] : [];
           }),
+          { kind: 'search', text: value },
         );
         searchIndex = selectHit(searchHits, 0, 'pv-xml-hit-active');
       } else {

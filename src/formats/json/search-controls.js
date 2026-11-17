@@ -41,16 +41,54 @@
     next.addEventListener('click', () => stepSearch(1));
   }
 
-  function updateSearchExport(exportState, result) {
+  function valueAtPath(rootValue, path) {
+    let value = rootValue;
+    for (const segment of path) {
+      if (value === null || Plainview.valueKind(value) !== 'object') {
+        return;
+      }
+      value = value[segment];
+    }
+
+    return value;
+  }
+
+  function recordsForMatches(rootValue, matches) {
+    const records = [];
+    const seen = new Set();
+    for (const { path, value } of matches) {
+      const isRecord = value !== null && Plainview.valueKind(value) === 'object';
+      const parentPath = path.slice(0, -1);
+      const parent = valueAtPath(rootValue, parentPath);
+      const parentIsRecord =
+        parent !== null && Plainview.valueKind(parent) === 'object' && !Array.isArray(parent);
+      let record = value;
+      let recordPath = path;
+      if (!isRecord && parentIsRecord) {
+        record = parent;
+        recordPath = parentPath;
+      }
+      const pathText = Plainview.jsonPath.pathToJsonPath(recordPath);
+      if (seen.has(pathText)) {
+        continue;
+      }
+      seen.add(pathText);
+      records.push(record);
+    }
+
+    return records;
+  }
+
+  function updateSearchExport(exportState, result, rootValue, query) {
     if (result.matches.length === 0) {
       exportState?.clear('search');
       return;
     }
 
-    exportState?.set(
-      'search',
-      result.matches.map((item) => item.value),
-    );
+    exportState?.set('search', recordsForMatches(rootValue, result.matches), {
+      kind: 'search',
+      text: query,
+    });
   }
 
   function ignoreSearchError() {
@@ -94,7 +132,7 @@
     if (!result || token !== state.token) {
       return;
     }
-    updateSearchExport(exportState, result);
+    updateSearchExport(exportState, result, rootValue, query);
     state.hits = result.hits;
     if (state.hits.length > 0) {
       state.index = selectHit(state.hits, 0, 'pv-json-hit-active');
