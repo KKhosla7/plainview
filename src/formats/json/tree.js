@@ -30,11 +30,12 @@
     if (!isRoot) {
       row.append(renderKey(key), span('pv-json-punct', ': '));
     }
-    row.append(span(valueClass(value), renderValue(value)));
+    const valueBox = el('span', 'pv-json-value');
+    valueBox.append(span(valueClass(value), renderValue(value)));
     if (!isLast) {
-      row.append(span('pv-json-punct', ','));
+      valueBox.append(span('pv-json-punct', ','));
     }
-    row.append(pathButton(Plainview.jsonPath.pathToJsonPath(path)));
+    row.append(valueBox, pathButton(Plainview.jsonPath.pathToJsonPath(path)));
     registerNode(ctx, { path, node: row, value, isContainer: false, summary: null });
     return row;
   }

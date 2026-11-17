@@ -22,8 +22,27 @@ html[data-pv] .pv-json-children {
 }
 
 html[data-pv] .pv-json-leaf {
+  display: flex;
+  align-items: baseline;
   padding-left: 1.25em;
+}
+
+.pv-json-leaf > .pv-json-key,
+.pv-json-leaf > .pv-json-index,
+.pv-json-leaf > .pv-json-punct {
+  flex: 0 0 auto;
+  white-space: pre;
+}
+
+.pv-json-value {
+  flex: 1 1 auto;
+  min-width: 0;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pv-json-value > .pv-json-punct {
+  white-space: pre;
 }
 
 html[data-pv] .pv-json-key {

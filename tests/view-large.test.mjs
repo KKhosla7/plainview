@@ -16,11 +16,12 @@ const MaxSourcePreviewChars = 210_000;
 const MinimumFullSourceChars = 500_000;
 
 let server;
+let base;
 let context;
 let profile;
 
 before(async () => {
-  ({ server } = await startServer());
+  ({ server, base } = await startServer());
   ({ context, profile } = await launchExtension());
 });
 
@@ -70,6 +71,31 @@ it('progressively renders a large JSON tree', async () => {
   } finally {
     await page.close();
     fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+it('hangs wrapped JSON values under the value column', async () => {
+  const { page, errors } = await openPage(context, `${base}/wrapped.json`);
+  try {
+    await page.waitForSelector('.pv-json');
+    const metrics = await page
+      .locator('.pv-json-leaf')
+      .filter({ hasText: 'Donec' })
+      .evaluate((node) => {
+        const value = node.querySelector('.pv-json-value');
+        const range = document.createRange();
+        range.selectNodeContents(value);
+        const lefts = [...range.getClientRects()].map((rect) => rect.left);
+        return {
+          lefts,
+          valueLeft: value.getBoundingClientRect().left,
+        };
+      });
+    assert.ok(metrics.lefts.length > 2);
+    assert.ok(Math.min(...metrics.lefts) >= metrics.valueLeft - 1);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
   }
 });
 
