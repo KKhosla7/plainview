@@ -138,3 +138,19 @@ it('reports empty and malformed JSONPath queries', async () => {
   assertNoErrors(errors);
   await page.close();
 });
+
+it('runs root-array JMESPath indexes', async () => {
+  const { page, errors } = await openPage(context, `${base}/long.json`);
+  await page.waitForSelector('.pv-json');
+  const language = page.getByLabel('Query language');
+  await language.selectOption('jmespath');
+  const query = page.getByLabel('Query expression');
+  await query.fill('[1].name');
+  await page.getByRole('button', { name: 'Query', exact: true }).click();
+  await page.waitForFunction(() =>
+    document.querySelector('.pv-json-query .pv-json-count')?.textContent.includes('1 result'),
+  );
+  assert.match(await page.locator('.pv-json-query-results').innerText(), /\$\[1\]\.name/u);
+  assertNoErrors(errors);
+  await page.close();
+});
