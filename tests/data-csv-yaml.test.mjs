@@ -88,6 +88,7 @@ it('renders CSV as a bounded table with quoted fields', async () => {
   assert.equal(await page.locator('.pv-csv-table tbody tr').count(), 3);
   assert.match(await page.locator('.pv-csv-table').innerText(), /one, quoted/u);
   assert.match(await page.locator('.pv-csv-table').innerText(), /two\s+lines/u);
+  assert.ok((await page.locator('.pv-csv-doc').evaluate((node) => node.clientWidth)) > 900);
 
   const filter = page.getByLabel('Filter CSV rows');
   await filter.fill('beta');

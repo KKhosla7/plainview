@@ -23,3 +23,11 @@ html[data-pv][data-pv-format="markdown"][data-pv-table-layout="wrap"] .pv-table-
   overflow-wrap: anywhere;
   white-space: normal;
 }
+
+html[data-pv][data-pv-format="csv"] .pv-shell {
+  width: min(1560px, 100%);
+}
+
+html[data-pv][data-pv-format="csv"] .pv-csv-doc {
+  width: 100%;
+}
