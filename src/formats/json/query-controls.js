@@ -7,24 +7,19 @@
     Plainview.jsonToolsShared;
 
   function findEntry(value, used, indexRef) {
+    let found = null;
     for (const entry of indexRef.current.values()) {
-      if (used.has(entry)) {
+      if (used.has(entry) || entry.value !== value) {
         continue;
       }
 
-      if (entry.value === value) {
-        return entry;
+      if (found) {
+        return null;
       }
-
-      if (
-        (value === null || Plainview.valueKind(value) !== 'object') &&
-        Object.is(entry.value, value)
-      ) {
-        return entry;
-      }
+      found = entry;
     }
 
-    return null;
+    return found;
   }
 
   function resultValues(result) {
@@ -39,24 +34,33 @@
     return [];
   }
 
-  function resultItems(values, indexRef, queryHits) {
+  function resultItems(values, indexRef, queryHits, paths) {
     const used = new Set();
     const items = [];
-    for (const value of values) {
-      const entry = findEntry(value, used, indexRef);
-      if (!entry) {
-        items.push({ pathText: '(value)', value, rendered: false });
+    for (let index = 0; index < values.length; index += 1) {
+      const value = values[index];
+      const path = paths?.[index];
+      const pathText = path ? Plainview.jsonPath.pathToJsonPath(path) : null;
+      const entry = pathText ? indexRef.current.get(pathText) : findEntry(value, used, indexRef);
+      if (entry) {
+        used.add(entry);
+        queryHits.push({ entry, pathText: entry.pathText });
+        items.push({
+          path: entry.path,
+          pathText: entry.pathText,
+          value: entry.value,
+          rendered: true,
+        });
+        mark(entry, 'pv-json-query-hit');
         continue;
       }
-      used.add(entry);
-      queryHits.push({ entry, pathText: entry.pathText });
+
       items.push({
-        path: entry.path,
-        pathText: entry.pathText,
-        value: entry.value,
-        rendered: true,
+        path,
+        pathText: pathText || '(value)',
+        value,
+        rendered: false,
       });
-      mark(entry, 'pv-json-query-hit');
     }
 
     return items;
@@ -186,7 +190,9 @@
       return;
     }
     const values = resultValues(result);
-    const items = resultItems(values, ctx.indexRef, ctx.queryHits);
+    const paths = Plainview.jmespathPath.pathsFor(ctx.rootValue, expression);
+    const mappedPaths = paths?.length === values.length ? paths : null;
+    const items = resultItems(values, ctx.indexRef, ctx.queryHits, mappedPaths);
     const scalar = scalarValue(result);
     if (items.length === 0 && scalar !== undefined) {
       items.push({ pathText: 'Result', value: scalar, rendered: false });

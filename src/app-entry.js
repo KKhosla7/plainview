@@ -40,6 +40,7 @@ import './formats/json/jsonpath-filter.js';
 import './formats/json/jsonpath-eval.js';
 import './formats/json/search.js';
 import './formats/jmespath/loader.js';
+import './formats/json/jmespath-path.js';
 import './formats/shared/data-toolbar.js';
 import './formats/json/tools-shared.js';
 import './formats/json/search-runner.js';

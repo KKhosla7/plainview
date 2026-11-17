@@ -170,3 +170,21 @@ it('keeps the active search hit below the sticky tools', async () => {
   assertNoErrors(errors);
   await page.close();
 });
+
+it('maps JMESPath root-array indexes to the actual index', async () => {
+  const { page, errors } = await openPage(context, `${base}/indexed.json`);
+  await page.waitForSelector('.pv-json');
+  const language = page.getByLabel('Query language');
+  await language.selectOption('jmespath');
+  const query = page.getByLabel('Query expression');
+  await query.fill('[11].language');
+  await page.getByRole('button', { name: 'Query', exact: true }).click();
+  await page.waitForSelector('.pv-json-query-results:not([hidden])');
+  assert.match(await page.locator('.pv-json-query-results').innerText(), /\$\[11\]\.language/u);
+  assert.doesNotMatch(
+    await page.locator('.pv-json-query-results').innerText(),
+    /\$\[3\]\.language/u,
+  );
+  assertNoErrors(errors);
+  await page.close();
+});
