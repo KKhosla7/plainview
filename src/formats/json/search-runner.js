@@ -56,9 +56,6 @@
     } else if (ctx.total > ctx.maxResults) {
       ctx.status.textContent = `First ${ctx.maxResults.toLocaleString()} matches shown; refine the search.`;
       ctx.status.classList.add('is-empty');
-    } else if (ctx.external > 0) {
-      ctx.status.textContent = `${ctx.external} match(es) can be opened from the result list.`;
-      ctx.status.classList.add('is-empty');
     } else {
       ctx.status.textContent = '';
     }
@@ -110,9 +107,6 @@
       }
       const item = matchItem(entry, ctx.indexRef, ctx.hits);
       ctx.matches.push(item);
-      if (!item.rendered) {
-        ctx.external += 1;
-      }
     }
 
     renderBatch(ctx, ctx.done);
@@ -124,7 +118,6 @@
     const ctx = {
       ...options,
       done: false,
-      external: 0,
       hits: [],
       lastRender: 0,
       matches: [],

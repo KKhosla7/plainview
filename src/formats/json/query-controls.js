@@ -72,6 +72,8 @@
 
   function createQueryElements() {
     const pathWrap = el('form', 'pv-json-query');
+    const queryRow = el('div', 'pv-json-query-row');
+    const countRow = el('div', 'pv-json-count-row');
     const language = el('select', 'pv-json-input pv-json-language');
     language.setAttribute('aria-label', 'Query language');
     for (const [value, label] of [
@@ -90,8 +92,10 @@
     const queryButton = button('pv-meta-button', 'Query');
     queryButton.type = 'submit';
     const queryCount = el('span', 'pv-json-count', '');
-    pathWrap.append(language, pathInput, queryButton, queryCount);
-    return { pathWrap, language, pathInput, queryButton, queryCount };
+    queryRow.append(language, pathInput, queryButton);
+    countRow.append(queryCount);
+    pathWrap.append(queryRow, countRow);
+    return { pathWrap, queryRow, language, pathInput, queryButton, queryCount };
   }
 
   function clearQuery(ctx) {
@@ -131,12 +135,10 @@
       return;
     }
 
-    if (scalar !== undefined) {
-      ctx.status.textContent = `Result: ${JSON.stringify(scalar)}`;
-    } else if (ctx.queryHits.length < total) {
-      ctx.status.textContent = `${total - ctx.queryHits.length} result(s) can be opened from the list.`;
-    } else {
+    if (scalar === undefined) {
       clearStatus(ctx.status);
+    } else {
+      ctx.status.textContent = `Result: ${JSON.stringify(scalar)}`;
     }
     selectHit(ctx.queryHits, 0, 'pv-json-query-active');
   }
@@ -208,7 +210,8 @@
   }
 
   function createJsonQuery({ rootValue, indexRef, revealPath, status, queryResults, onStart }) {
-    const { pathWrap, language, pathInput, queryButton, queryCount } = createQueryElements();
+    const { pathWrap, queryRow, language, pathInput, queryButton, queryCount } =
+      createQueryElements();
     const ctx = {
       rootValue,
       indexRef,
@@ -222,7 +225,7 @@
       language,
     };
     const queryClear = inputClear(pathInput, 'Clear query', () => clearQuery(ctx));
-    pathWrap.insertBefore(queryClear, queryButton);
+    queryRow.insertBefore(queryClear, queryButton);
     pathWrap.addEventListener('submit', (event) => {
       event.preventDefault();
       runQuery(ctx);

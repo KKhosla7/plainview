@@ -126,10 +126,25 @@ html[data-pv] .pv-json-tools {
 html[data-pv] .pv-json-search,
 html[data-pv] .pv-json-query {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 4px;
   margin: 0;
   min-width: 0;
+}
+
+html[data-pv] .pv-json-search-row,
+html[data-pv] .pv-json-query-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+html[data-pv] .pv-json-count-row {
+  display: flex;
+  align-items: center;
+  min-height: 15px;
 }
 
 html[data-pv] .pv-json-search {
@@ -192,8 +207,6 @@ html[data-pv] .pv-json-step:disabled {
 }
 
 html[data-pv] .pv-json-count {
-  flex: 0 0 auto;
-  min-width: 4.2em;
   color: var(--pv-fg-muted);
   font-size: 11px;
   white-space: nowrap;

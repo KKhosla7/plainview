@@ -7,6 +7,8 @@
 
   function createSearchElements() {
     const searchWrap = el('div', 'pv-json-search');
+    const searchRow = el('div', 'pv-json-search-row');
+    const countRow = el('div', 'pv-json-count-row');
     const search = el('input', 'pv-json-input');
     search.type = 'search';
     search.placeholder = 'Search keys and values…';
@@ -19,8 +21,10 @@
     next.title = 'Next match';
     next.setAttribute('aria-label', 'Next match');
     const count = el('span', 'pv-json-count', '');
-    searchWrap.append(search, prev, next, count);
-    return { searchWrap, search, prev, next, count };
+    searchRow.append(search, prev, next);
+    countRow.append(count);
+    searchWrap.append(searchRow, countRow);
+    return { countRow, searchWrap, searchRow, search, prev, next, count };
   }
 
   function bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch }) {
@@ -37,7 +41,7 @@
   }
 
   function createJsonSearch({ rootValue, indexRef, revealPath, status, searchResults, onClear }) {
-    const { searchWrap, search, prev, next, count } = createSearchElements();
+    const { searchWrap, searchRow, search, prev, next, count } = createSearchElements();
     let searchHits = [];
     let searchIndex = -1;
     let searchToken = 0;
@@ -112,7 +116,7 @@
       globalThis.clearTimeout(timer);
       startSearch().catch(searchFailed);
     });
-    searchWrap.insertBefore(searchClear, prev);
+    searchRow.insertBefore(searchClear, prev);
     bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch });
     return searchWrap;
   }
