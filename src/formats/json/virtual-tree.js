@@ -279,6 +279,9 @@
       state.activePath = '';
       rebuild(state);
     });
+    const observer = new globalThis.ResizeObserver(() => scheduleRender(state));
+    observer.observe(tree);
+    globalThis.requestAnimationFrame(() => scheduleRender(state));
     globalThis.addEventListener('scroll', () => scheduleRender(state), { passive: true });
     globalThis.addEventListener('resize', () => scheduleRender(state));
     return {

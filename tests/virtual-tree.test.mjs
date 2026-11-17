@@ -59,8 +59,10 @@ it('renders a virtualized tree and reveals a search result', async () => {
   try {
     await page.waitForSelector('.pv-virtual-tree');
     assert.equal(await page.locator('.pv-tree-more').count(), 0);
+    assert.ok((await page.locator('.pv-vrow').count()) > 8);
     assert.ok((await page.locator('.pv-vrow').count()) < 100);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /item-0/u);
+    assert.match(await page.locator('.pv-virtual-tree').innerText(), /item-1/u);
 
     const search = page.getByLabel('Search JSON keys and values');
     await search.fill('item-1199');
@@ -73,6 +75,20 @@ it('renders a virtualized tree and reveals a search result', async () => {
   } finally {
     await page.close();
     fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+it('mounts every row when the virtual tree is shorter than the viewport', async () => {
+  await setTreeMode('virtual');
+  const { page, errors } = await openPage(context, `${base}/sample.yaml`);
+  try {
+    await page.waitForSelector('.pv-virtual-tree');
+    await page.waitForFunction(() => document.querySelectorAll('.pv-vrow').length > 8);
+    assert.match(await page.locator('.pv-virtual-tree').innerText(), /ratio/u);
+    assert.match(await page.locator('.pv-virtual-tree').innerText(), /keywords/u);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
   }
 });
 
