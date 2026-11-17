@@ -15,12 +15,13 @@
     span,
     valueClass,
   } = Plainview.jsonTreeShared;
-  const { autoOpenChildLimit, openDepth } = Plainview.jsonLimits;
+  const { openDepth } = Plainview.jsonLimits;
+  const AutoRows = 20_000;
 
   function createState({ value, options, indexRef, onStats, tree }) {
     return {
       activePath: '',
-      childLimit: options.autoOpenChildLimit ?? autoOpenChildLimit,
+      autoRows: 0,
       expanded: new Set(['$']),
       frame: 0,
       indexRef,
@@ -39,8 +40,18 @@
       return;
     }
     const total = entryCount(nodeValue);
-    if (depth > 0 && (depth >= state.pageDepth || total > state.childLimit)) {
+    if (depth > 0 && depth >= state.pageDepth) {
       return;
+    }
+
+    const cost = total + 1;
+    if (depth === 0) {
+      state.autoRows = cost;
+    } else {
+      if (state.autoRows + cost > AutoRows) {
+        return;
+      }
+      state.autoRows += cost;
     }
     state.expanded.add(pathTextFor(path));
     for (let index = 0; index < total; index += 1) {
@@ -215,25 +226,6 @@
     });
   }
 
-  function expandAll(state) {
-    const seen = new WeakSet();
-    function walk(nodeValue, path) {
-      if (!isContainer(nodeValue) || seen.has(nodeValue)) {
-        return;
-      }
-
-      seen.add(nodeValue);
-      state.expanded.add(pathTextFor(path));
-      for (let index = 0; index < entryCount(nodeValue); index += 1) {
-        const [key, child] = childEntries(nodeValue, index);
-        walk(child, [...path, key]);
-      }
-    }
-
-    walk(state.value, []);
-    rebuild(state);
-  }
-
   function rebuild(state) {
     flatten(state);
     state.rowElements = new Map();
@@ -279,7 +271,9 @@
     primePath(state, [], value, 0);
     flatten(state);
     renderRows(state);
-    tree.addEventListener('pv-expand-all', () => expandAll(state));
+    tree.addEventListener('pv-expand-all', () =>
+      Plainview.virtualTreeActions.expandAll(state, rebuild),
+    );
     tree.addEventListener('pv-collapse-all', () => {
       state.expanded.clear();
       state.activePath = '';

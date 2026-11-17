@@ -39,9 +39,10 @@ it('searches JSON values and clears the search field', async () => {
   await search.fill('label');
   await page.waitForFunction(() => document.querySelectorAll('.pv-json-hit').length >= 2);
   assert.match(await page.locator('.pv-json-count').first().innerText(), /2 matches/u);
-  const searchBox = await search.boundingBox();
-  const searchCountBox = await page.locator('.pv-json-search .pv-json-count').boundingBox();
-  assert.ok(searchCountBox.y >= searchBox.y + searchBox.height);
+  assert.equal(
+    await page.locator('.pv-json-search-row + .pv-json-count-row .pv-json-count').count(),
+    1,
+  );
 
   await page.getByRole('button', { name: 'Clear search' }).click();
   assert.equal(await search.inputValue(), '');
@@ -97,9 +98,10 @@ it('runs JSONPath and JMESPath queries', async () => {
   await page.getByRole('button', { name: 'Query', exact: true }).click();
   await page.waitForFunction(() => document.querySelectorAll('.pv-json-query-hit').length === 2);
   assert.match(await page.locator('.pv-json-query .pv-json-count').innerText(), /2 results/u);
-  const queryBox = await query.boundingBox();
-  const queryCountBox = await page.locator('.pv-json-query .pv-json-count').boundingBox();
-  assert.ok(queryCountBox.y >= queryBox.y + queryBox.height);
+  assert.equal(
+    await page.locator('.pv-json-query-row + .pv-json-count-row .pv-json-count').count(),
+    1,
+  );
   await page.waitForSelector('.pv-json-query-results:not([hidden])');
   assert.match(await page.locator('.pv-json-query-results').innerText(), /\$\.items\[0\]\.id/u);
 

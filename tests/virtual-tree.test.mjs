@@ -60,6 +60,7 @@ it('renders a virtualized tree and reveals a search result', async () => {
     await page.waitForSelector('.pv-virtual-tree');
     assert.equal(await page.locator('.pv-tree-more').count(), 0);
     assert.ok((await page.locator('.pv-vrow').count()) < 100);
+    assert.match(await page.locator('.pv-virtual-tree').innerText(), /item-0/u);
 
     const search = page.getByLabel('Search JSON keys and values');
     await search.fill('item-1199');
