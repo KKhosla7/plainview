@@ -57,6 +57,14 @@
     return Supported.has(extensionOf(value));
   }
 
+  function isExtensionDownload(item) {
+    const urls = [item?.url, item?.finalUrl].filter(Boolean);
+    return (
+      Boolean(item?.byExtensionId || item?.byExtensionName) ||
+      urls.some((url) => /^(?:blob|data):/iu.test(url))
+    );
+  }
+
   function nameFromUrl(value) {
     try {
       return new URL(value).pathname.split('/').filter(Boolean).pop() || 'Document';
@@ -174,10 +182,10 @@
       return;
     }
 
-    const target = item.finalUrl || item.url || '';
-    if (/^(?:blob|data):/iu.test(target)) {
+    if (isExtensionDownload(item)) {
       return;
     }
+    const target = item.finalUrl || item.url || '';
     const name = item.filename?.split(/[\\/]/u).pop() || nameFromUrl(target);
     if (!(supported(name) || supported(target))) {
       return;
@@ -217,9 +225,8 @@
     if (!(supported(item.filename) || supported(item.url))) {
       return;
     }
-    // Extension-initiated blob downloads (the Download button) are not
-    // downloads of a remote source document.
-    if (/^(?:blob|data):/iu.test(item.url || '')) {
+
+    if (isExtensionDownload(item)) {
       return;
     }
 

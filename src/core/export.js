@@ -186,7 +186,8 @@ import DocumentTemplate from './export/document.html';
     }
 
     return {
-      content: '<main class="pv-main"><div class="pv-zoom-surface" id="pv-data-root"></div></main>',
+      content:
+        '<div class="pv-shell"><main class="pv-main"><div class="pv-zoom-surface" id="pv-data-root"></div></main></div>',
       script: source.replace(/<\/script/giu, '<\\/script'),
     };
   }

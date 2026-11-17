@@ -205,11 +205,16 @@
     }
 
     return [...rows].sort((left, right) => {
+      const leftCell = String(left.cells[sortState.column] ?? '').trim();
+      const rightCell = String(right.cells[sortState.column] ?? '').trim();
+      if (!leftCell !== !rightCell) {
+        return leftCell ? -1 : 1;
+      }
+
       const compared = compareCells(left.cells[sortState.column], right.cells[sortState.column]);
       return compared * sortState.direction || left.number - right.number;
     });
   }
-
   function renderRows(tbody, rows, columns) {
     const fragment = document.createDocumentFragment();
     for (const row of rows) {
@@ -283,7 +288,6 @@
       scheduleRender,
     };
   }
-
   root.Plainview = Object.assign(root.Plainview || {}, {
     csvTable: {
       FilterDebounceMs: 120,
