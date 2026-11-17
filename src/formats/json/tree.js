@@ -25,25 +25,26 @@
   }
 
   function renderLeaf(key, value, meta, ctx) {
-    const { isLast, isRoot, path } = meta;
+    const { isRoot, path } = meta;
     const row = el('div', 'pv-json-leaf');
-    if (!isRoot) {
+    if (isRoot) {
+      row.append(renderKey('$'), span('pv-json-punct', ' '));
+    } else {
       row.append(renderKey(key), span('pv-json-punct', ': '));
     }
     const valueBox = el('span', 'pv-json-value');
     valueBox.append(span(valueClass(value), renderValue(value)));
-    if (!isLast) {
-      valueBox.append(span('pv-json-punct', ','));
-    }
     row.append(valueBox, pathButton(Plainview.jsonPath.pathToJsonPath(path)));
     registerNode(ctx, { path, node: row, value, isContainer: false, summary: null });
     return row;
   }
 
   function renderSummary(key, array, count, meta) {
-    const { isLast, isRoot, path } = meta;
+    const { isRoot, path } = meta;
     const summary = el('summary', 'pv-json-summary');
-    if (!isRoot) {
+    if (isRoot) {
+      summary.append(renderKey('$'), span('pv-json-punct', ' '));
+    } else {
       summary.append(renderKey(key), span('pv-json-punct', ': '));
     }
     summary.append(
@@ -51,9 +52,6 @@
       span('pv-json-count', `${count} ${array ? 'items' : 'keys'}`),
       span('pv-json-punct', array ? ']' : '}'),
     );
-    if (!isLast) {
-      summary.append(span('pv-json-punct', ','));
-    }
     summary.append(pathButton(Plainview.jsonPath.pathToJsonPath(path)));
     return summary;
   }

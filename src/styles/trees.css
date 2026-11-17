@@ -24,6 +24,7 @@ html[data-pv] .pv-json-children {
 html[data-pv] .pv-json-leaf {
   display: flex;
   align-items: baseline;
+  gap: 4px;
   padding-left: 1.25em;
 }
 
