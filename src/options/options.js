@@ -5,12 +5,18 @@
   const api = globalThis.browser ?? globalThis.chrome;
   const autoReload = document.querySelector('#autoReloadSources');
   const tableBorders = document.querySelector('#tableBorders');
+  const tableResize = document.querySelector('#tableResize');
   const tableStatus = document.querySelector('#tableStatus');
   const sourceStatus = document.querySelector('#sourceStatus');
-  const shortcutPreset = document.querySelector('#shortcutPreset');
+  const shortcutSelects = [...document.querySelectorAll('[data-shortcut]')];
   const shortcutStatus = document.querySelector('#shortcutStatus');
   const exportUncompressed = document.querySelector('#exportUncompressed');
   const exportStatus = document.querySelector('#exportStatus');
+  const controls = [...document.querySelectorAll('input, select')];
+
+  for (const control of controls) {
+    control.disabled = true;
+  }
 
   Plainview.installFonts?.();
 
@@ -18,14 +24,23 @@
     const data = await api.storage.local.get({
       [Keys.AutoReload]: false,
       [Keys.TableBorders]: false,
+      [Keys.TableResize]: true,
       [Keys.Shortcuts]: 'alt-s',
       [Keys.ExportUncompressed]: false,
     });
     autoReload.checked = Boolean(data[Keys.AutoReload]);
     tableBorders.checked = Boolean(data[Keys.TableBorders]);
-    shortcutPreset.value = data[Keys.Shortcuts];
+    tableResize.checked = Boolean(data[Keys.TableResize]);
+    const shortcuts = Plainview.shortcutConfig.normalizeShortcuts(data[Keys.Shortcuts]);
+    for (const select of shortcutSelects) {
+      select.value = shortcuts[select.dataset.shortcut];
+    }
     exportUncompressed.checked = Boolean(data[Keys.ExportUncompressed]);
     document.querySelector('#version').textContent = api.runtime.getManifest().version;
+    for (const control of controls) {
+      control.disabled = false;
+    }
+    document.documentElement.dataset.pvOptionsReady = 'true';
   }
 
   Plainview.onAsync(exportUncompressed, 'change', async () => {
@@ -39,18 +54,32 @@
     globalThis.setTimeout(() => exportStatus.classList.remove('visible'), StatusResetMs);
   });
 
-  Plainview.onAsync(shortcutPreset, 'change', async () => {
-    await api.storage.local.set({ [Keys.Shortcuts]: shortcutPreset.value });
-    shortcutStatus.textContent = 'Shortcut saved';
-    shortcutStatus.classList.add('visible');
-    globalThis.setTimeout(() => shortcutStatus.classList.remove('visible'), StatusResetMs);
-  });
+  for (const select of shortcutSelects) {
+    Plainview.onAsync(select, 'change', async () => {
+      const shortcuts = Object.fromEntries(
+        shortcutSelects.map((item) => [item.dataset.shortcut, item.value]),
+      );
+      await api.storage.local.set({ [Keys.Shortcuts]: shortcuts });
+      shortcutStatus.textContent = 'Shortcut saved';
+      shortcutStatus.classList.add('visible');
+      globalThis.setTimeout(() => shortcutStatus.classList.remove('visible'), StatusResetMs);
+    });
+  }
 
   Plainview.onAsync(tableBorders, 'change', async () => {
     await api.storage.local.set({ [Keys.TableBorders]: tableBorders.checked });
     tableStatus.textContent = tableBorders.checked
       ? 'Column borders enabled'
       : 'Column borders disabled';
+    tableStatus.classList.add('visible');
+    globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
+  });
+
+  Plainview.onAsync(tableResize, 'change', async () => {
+    await api.storage.local.set({ [Keys.TableResize]: tableResize.checked });
+    tableStatus.textContent = tableResize.checked
+      ? 'Column resizing enabled'
+      : 'Column resizing disabled';
     tableStatus.classList.add('visible');
     globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
   });

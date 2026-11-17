@@ -6,6 +6,8 @@
   const ZoomKey = Keys.Zoom;
   const ShortcutKey = Keys.Shortcuts;
   const ExportUncompressedKey = Keys.ExportUncompressed;
+  const TableBordersKey = Keys.TableBorders;
+  const TableResizeKey = Keys.TableResize;
   const ZoomMin = 50;
   const ZoomMax = 250;
   const ZoomStep = 10;
@@ -144,6 +146,8 @@
     ZOOM_KEY: ZoomKey,
     SHORTCUT_KEY: ShortcutKey,
     EXPORT_UNCOMPRESSED_KEY: ExportUncompressedKey,
+    TABLE_BORDERS_KEY: TableBordersKey,
+    TABLE_RESIZE_KEY: TableResizeKey,
     ZOOM_MIN: ZoomMin,
     ZOOM_MAX: ZoomMax,
     ZOOM_STEP: ZoomStep,

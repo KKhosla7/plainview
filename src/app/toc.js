@@ -57,20 +57,16 @@
       button.focus();
     }
 
-    function show() {
+    function toggle() {
+      if (open) {
+        close();
+        return;
+      }
       open = true;
       app.classList.add('pv-toc-open');
       button.setAttribute('aria-expanded', 'true');
       scrim.hidden = false;
       nav.querySelector('a')?.focus();
-    }
-
-    function toggle() {
-      if (open) {
-        close();
-      } else {
-        show();
-      }
     }
 
     button.addEventListener('click', toggle);
@@ -114,7 +110,13 @@
     });
 
     const spy = Plainview.createScrollSpy({ nav, headings: usable });
-    return { element: nav, close, isOpen: () => open, update: spy.update };
+    return {
+      element: nav,
+      close,
+      isOpen: () => open,
+      toggle,
+      update: spy.update,
+    };
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, { createTocDrawer });

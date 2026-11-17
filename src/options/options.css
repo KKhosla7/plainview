@@ -266,3 +266,18 @@ pre code {
   font-size: 0.78rem;
   line-height: 1.6;
 }
+.shortcut-list {
+  display: grid;
+  gap: 10px;
+}
+
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.shortcut-row select {
+  min-width: 160px;
+}

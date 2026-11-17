@@ -86,6 +86,13 @@ xdg-mime default google-chrome.desktop application/xml</code></pre>
           <small>Add stronger vertical borders to Markdown and CSV/TSV tables.</small>
         </span>
       </label>
+      <label class="toggle-row">
+        <input id="tableResize" type="checkbox">
+        <span>
+          <strong>Enable column resizing</strong>
+          <small>Drag a column header edge to resize Markdown and CSV/TSV tables.</small>
+        </span>
+      </label>
       <p id="tableStatus" class="status" role="status"></p>
     </section>
 
@@ -103,18 +110,45 @@ xdg-mime default google-chrome.desktop application/xml</code></pre>
 
     <section class="card">
       <h2>Keyboard shortcuts</h2>
-      <label class="toggle-row" for="shortcutPreset">
-        <span>
-          <strong>Switch between HTML and Source</strong>
-          <small>Arrow keys are never captured while typing in a field.</small>
-        </span>
-      </label>
-      <select id="shortcutPreset">
-        <option value="alt-s">Alt + S</option>
-        <option value="alt-arrows">Alt + Left / Right</option>
-        <option value="ctrl-shift-arrows">Ctrl/⌘ + Shift + Left / Right</option>
-        <option value="off">Off</option>
-      </select>
+      <div class="shortcut-list">
+        <label class="shortcut-row" for="shortcutPreset">
+          <span>Switch HTML / Source</span>
+          <select id="shortcutPreset" data-shortcut="view">
+            <option value="alt-s">Alt + S</option>
+            <option value="alt-arrows">Alt + Left / Right</option>
+            <option value="ctrl-shift-arrows">Ctrl/⌘ + Shift + Left / Right</option>
+            <option value="off">Off</option>
+          </select>
+        </label>
+        <label class="shortcut-row" for="shortcutTheme">
+          <span>Toggle theme</span>
+          <select id="shortcutTheme" data-shortcut="theme">
+            <option value="alt-t">Alt + T</option>
+            <option value="off">Off</option>
+          </select>
+        </label>
+        <label class="shortcut-row" for="shortcutContents">
+          <span>Toggle contents</span>
+          <select id="shortcutContents" data-shortcut="contents">
+            <option value="alt-c">Alt + C</option>
+            <option value="off">Off</option>
+          </select>
+        </label>
+        <label class="shortcut-row" for="shortcutSearch">
+          <span>Focus search / query</span>
+          <select id="shortcutSearch" data-shortcut="search">
+            <option value="alt-f">Alt + F</option>
+            <option value="off">Off</option>
+          </select>
+        </label>
+        <label class="shortcut-row" for="shortcutExport">
+          <span>Export HTML</span>
+          <select id="shortcutExport" data-shortcut="export">
+            <option value="alt-e">Alt + E</option>
+            <option value="off">Off</option>
+          </select>
+        </label>
+      </div>
       <p id="shortcutStatus" class="status" role="status"></p>
     </section>
 
@@ -139,7 +173,9 @@ xdg-mime default google-chrome.desktop application/xml</code></pre>
     <footer class="foot">Plainview · Markdown, data and markup reader</footer>
   </main>
   <script defer src="../core/fonts.js"></script>
+  <script defer src="../core/value.js"></script>
   <script defer src="../core/setting-keys.js"></script>
+  <script defer src="../core/shortcut-config.js"></script>
   <script defer src="../core/events.js"></script>
   <script defer src="options.js"></script>
 </body>

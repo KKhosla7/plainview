@@ -26,28 +26,46 @@ it('settings page loads and remembers the auto-reload option', async () => {
 
   await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
   await page.waitForSelector('#autoReloadSources');
+  await page.waitForSelector('html[data-pv-options-ready="true"]');
   assert.equal(await page.isChecked('#autoReloadSources'), false);
   assert.equal(await page.locator('#shortcutPreset').inputValue(), 'alt-s');
   assert.equal(await page.isChecked('#exportUncompressed'), false);
-  assert.equal(await page.isChecked('#tableBorders'), false);
 
   await page.check('#autoReloadSources');
   await page.check('#exportUncompressed');
-  await page.check('#tableBorders');
   await page.locator('#shortcutPreset').selectOption('off');
   await page.waitForTimeout(150);
   await page.reload();
   await page.waitForSelector('#autoReloadSources');
+  await page.waitForSelector('html[data-pv-options-ready="true"]');
   assert.equal(await page.isChecked('#autoReloadSources'), true);
   assert.equal(await page.locator('#shortcutPreset').inputValue(), 'off');
   assert.equal(await page.isChecked('#exportUncompressed'), true);
-  assert.equal(await page.isChecked('#tableBorders'), true);
   assert.match(await page.locator('#version').textContent(), /^\d+\.\d+\.\d+$/u);
   assert.match(
     await page.getByRole('link', { name: /Buy me a coffee/u }).getAttribute('href'),
     /buymeacoffee\.com\/karan\.khosla/u,
   );
 
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('settings page remembers table options', async () => {
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
+  await page.waitForSelector('#tableBorders');
+  await page.waitForSelector('html[data-pv-options-ready="true"]');
+  assert.equal(await page.isChecked('#tableResize'), true);
+
+  await page.uncheck('#tableResize');
+  await page.waitForTimeout(150);
+  await page.reload();
+  await page.waitForSelector('#tableBorders');
+  await page.waitForSelector('html[data-pv-options-ready="true"]');
+  assert.equal(await page.isChecked('#tableResize'), false);
   assertNoErrors(errors);
   await page.close();
 });

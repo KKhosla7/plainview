@@ -51,6 +51,9 @@
 
     return {
       effectiveDark,
+      toggle() {
+        setTheme(theme === 'dark' ? 'light' : 'dark');
+      },
       setOnChange(fn) {
         onChange = fn;
       },

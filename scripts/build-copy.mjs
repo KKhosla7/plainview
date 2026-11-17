@@ -23,7 +23,13 @@ function copyRuntimeFiles({ project }, target) {
     path.join(project, 'src', 'background.js'),
     path.join(target, 'src', 'background.js'),
   );
-  for (const runtimeFile of ['fonts.js', 'events.js', 'setting-keys.js']) {
+  for (const runtimeFile of [
+    'fonts.js',
+    'events.js',
+    'setting-keys.js',
+    'value.js',
+    'shortcut-config.js',
+  ]) {
     fs.copyFileSync(
       path.join(project, 'src', 'core', runtimeFile),
       path.join(target, 'src', 'core', runtimeFile),

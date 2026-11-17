@@ -108,7 +108,6 @@
     columnFilters,
     onSort,
     onFilter,
-    onResize,
   }) {
     const title = header[column] || `column ${column + 1}`;
     const th = el('th', 'pv-csv-header');
@@ -130,12 +129,12 @@
       onFilter,
     });
     headTools.append(sort, filterToggle);
-    th.append(headTools, Plainview.csvResize.createResizeHandle(column, onResize));
+    th.append(headTools);
     columnFilters.push('');
     return th;
   }
 
-  function createHeader({ header, columns, filterRow, onSort, onFilter, onResize }) {
+  function createHeader({ header, columns, filterRow, onSort, onFilter }) {
     const thead = el('thead');
     const headRow = el('tr');
     headRow.append(el('th', 'pv-csv-corner', '#'));
@@ -154,7 +153,6 @@
         columnFilters,
         onSort,
         onFilter,
-        onResize,
       });
       headCells.push(th);
       headRow.append(th);
@@ -238,24 +236,15 @@
         render();
       },
       onFilter: () => scheduleRender(),
-      onResize: (event, column) => resizeColumn(event, column),
     });
 
     const wrap = el('div', 'pv-csv-wrap');
     const table = el('table', 'pv-csv-table');
-    const colgroup = el('colgroup');
-    for (let column = 0; column < columns + 1; column += 1) {
-      colgroup.append(el('col'));
-    }
-    const cols = [...colgroup.children];
-    const resizeColumn = Plainview.csvResize.createColumnResizer({
-      table,
-      cols,
-      headCells: headerParts.headCells,
-    });
     const tbody = el('tbody');
-    table.append(colgroup, headerParts.thead, tbody);
+    table.append(headerParts.thead, tbody);
     wrap.append(table);
+    Plainview.tableResize.enable(table, { offset: 1 });
+
     let timer = 0;
 
     function render() {

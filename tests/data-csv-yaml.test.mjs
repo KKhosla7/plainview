@@ -8,6 +8,8 @@ import {
   startServer,
 } from './helpers.mjs';
 
+const TableBordersKey = 'plainview.tableBorders';
+
 let server;
 let base;
 let context;
@@ -47,6 +49,17 @@ async function openCsvFixture(name = 'sample.csv') {
   }
   await page.waitForSelector('.pv-csv-table');
   return { page, errors };
+}
+
+async function setTableBorders(value) {
+  let workers = context.serviceWorkers();
+  if (workers.length === 0) {
+    workers = [await context.waitForEvent('serviceworker', { timeout: 10_000 })];
+  }
+  await workers[0].evaluate(({ enabled, key }) => chrome.storage.local.set({ [key]: enabled }), {
+    enabled: value,
+    key: TableBordersKey,
+  });
 }
 
 it('renders CSV as a bounded table with quoted fields', async () => {
@@ -120,6 +133,25 @@ it('drops a trailing empty CSV column', async () => {
   await page.close();
 });
 
+it('applies optional column borders to Markdown tables', async () => {
+  await setTableBorders(true);
+  const { page, errors } = await openPage(context, `${base}/sample.md`);
+  try {
+    await page.waitForSelector('.pv-markdown table');
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.pvTableBorders), 'on');
+    const border = await page
+      .locator('.pv-markdown table th')
+      .first()
+      .evaluate((node) => getComputedStyle(node).borderRightWidth);
+    assert.notEqual(border, '0px');
+    assert.ok((await page.locator('.pv-table-resize').count()) > 0);
+    assertNoErrors(errors);
+  } finally {
+    await setTableBorders(false);
+    await page.close();
+  }
+});
+
 it('renders TSV with the tab delimiter', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.tsv`);
   await page.waitForSelector('.pv-csv-table');
@@ -159,7 +191,7 @@ it('ignores whitespace-only trailing CSV columns', async () => {
 
 it('exposes column resize handles', async () => {
   const { page, errors } = await openCsvFixture();
-  assert.equal(await page.locator('.pv-csv-resize').count(), 3);
+  assert.equal(await page.locator('.pv-table-resize').count(), 3);
   assertNoErrors(errors);
   await page.close();
 });

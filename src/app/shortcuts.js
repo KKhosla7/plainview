@@ -9,41 +9,45 @@
     return Boolean(editable && editable.getAttribute('contenteditable') !== 'false');
   }
 
-  function handleViewKey(event, viewSwitcher, shortcuts) {
-    let toggle = false;
-    if (
-      shortcuts === 'alt-s' &&
-      event.altKey &&
-      !event.ctrlKey &&
-      !event.metaKey &&
-      !event.shiftKey &&
-      (event.key.toLowerCase() === 's' || event.code === 'KeyS')
-    ) {
-      toggle = true;
-    } else if (
-      shortcuts === 'alt-arrows' &&
-      event.altKey &&
-      !event.ctrlKey &&
-      !event.metaKey &&
-      !event.shiftKey &&
-      (event.key === 'ArrowLeft' || event.key === 'ArrowRight')
-    ) {
-      toggle = true;
-    } else if (
-      shortcuts === 'ctrl-shift-arrows' &&
-      (event.ctrlKey || event.metaKey) &&
-      event.shiftKey &&
-      !event.altKey &&
-      (event.key === 'ArrowLeft' || event.key === 'ArrowRight')
-    ) {
-      toggle = true;
+  function focusSearch(app) {
+    const input = app.querySelector('.pv-json-search .pv-json-input, .pv-json-path-input');
+    input?.focus();
+    return Boolean(input);
+  }
+
+  function handleConfiguredKey(event, { viewSwitcher, toc, theme, topbar, app, shortcuts }) {
+    const config = Plainview.shortcutConfig;
+    if (config.matchesView(event, shortcuts.view)) {
+      event.preventDefault();
+      viewSwitcher.setView(viewSwitcher.getView() === 'html' ? 'source' : 'html');
+      return true;
     }
 
-    if (!toggle) {
-      return;
+    if (config.matchesKey(event, shortcuts.theme)) {
+      event.preventDefault();
+      theme.toggle();
+      return true;
     }
-    event.preventDefault();
-    viewSwitcher.setView(viewSwitcher.getView() === 'html' ? 'source' : 'html');
+
+    if (config.matchesKey(event, shortcuts.contents)) {
+      event.preventDefault();
+      toc.toggle();
+      return true;
+    }
+
+    if (config.matchesKey(event, shortcuts.search)) {
+      event.preventDefault();
+      focusSearch(app);
+      return true;
+    }
+
+    if (config.matchesKey(event, shortcuts.export)) {
+      event.preventDefault();
+      topbar.exportButton.click();
+      return true;
+    }
+
+    return false;
   }
 
   function handleEscape(viewSwitcher, toc) {
@@ -74,8 +78,9 @@
     }
   }
 
-  function wireShortcuts({ viewSwitcher, zoom, toc, shortcuts }) {
+  function wireShortcuts({ viewSwitcher, zoom, toc, theme, topbar, app, shortcuts }) {
     const { ZOOM_STEP } = Plainview;
+    const resolved = Plainview.shortcutConfig.normalizeShortcuts(shortcuts);
 
     document.addEventListener(
       'wheel',
@@ -98,8 +103,17 @@
         handleEscape(viewSwitcher, toc);
         return;
       }
-      handleViewKey(event, viewSwitcher, shortcuts);
-      handleZoomKey(event, viewSwitcher, zoom, ZOOM_STEP);
+      const handled = handleConfiguredKey(event, {
+        viewSwitcher,
+        toc,
+        theme,
+        topbar,
+        app,
+        shortcuts: resolved,
+      });
+      if (!handled) {
+        handleZoomKey(event, viewSwitcher, zoom, ZOOM_STEP);
+      }
     });
   }
 

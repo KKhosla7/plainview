@@ -8,6 +8,7 @@
   const ExportUncompressedKey = 'plainview.exportUncompressed';
   const ShortcutsKey = 'plainview.shortcuts';
   const TableBordersKey = 'plainview.tableBorders';
+  const TableResizeKey = 'plainview.tableResize';
   const ThemeKey = 'plainview.theme';
   const ZoomKey = 'plainview.zoom';
   const Prefix = 'plainview.';
@@ -19,6 +20,7 @@
       ExportUncompressed: ExportUncompressedKey,
       Shortcuts: ShortcutsKey,
       TableBorders: TableBordersKey,
+      TableResize: TableResizeKey,
       Theme: ThemeKey,
       Zoom: ZoomKey,
     }),

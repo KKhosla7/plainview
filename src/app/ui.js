@@ -89,6 +89,7 @@
       Plainview.loadSetting(Plainview.ZOOM_KEY, 100),
       Plainview.loadSetting(Plainview.SHORTCUT_KEY, 'alt-s'),
       Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
+      Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
     ]);
     return {
       viewKey,
@@ -99,7 +100,34 @@
       savedZoom: settings[3],
       savedShortcuts: settings[4],
       savedTableBorders: settings[5],
+      savedTableResize: settings[6],
     };
+  }
+
+  function restoreScrollState({
+    scrollKey,
+    savedScroll,
+    viewSwitcher,
+    toc,
+    format,
+    refreshExtras,
+  }) {
+    const fallback = () => scrollToHash(format);
+    const scrollMemory = Plainview.createScrollMemory({
+      key: scrollKey,
+      initialY: savedScroll,
+      onRestored: (y) => viewSwitcher.syncScroll(y),
+    });
+    scrollMemory.restore(fallback);
+    if (toc.update) {
+      toc.update();
+    }
+    refreshExtras().then(() => {
+      scrollMemory.reapply(fallback);
+      if (toc.update) {
+        toc.update();
+      }
+    });
   }
 
   async function mountViewer({ source, url, format, fileName: requestedName }) {
@@ -114,9 +142,11 @@
       savedZoom,
       savedShortcuts,
       savedTableBorders,
+      savedTableResize,
     } = await loadViewerSettings(url);
 
     document.documentElement.dataset.pvTableBorders = savedTableBorders ? 'on' : 'off';
+    document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
 
     if (format.id === 'markdown') {
       Plainview.installFonts();
@@ -141,7 +171,16 @@
       Plainview.downloadText(source, fileName, format);
     });
     Plainview.wireViewerExport({ topbar, refreshExtras, content, fileName, format });
-    Plainview.wireShortcuts({ viewSwitcher, zoom, toc, shortcuts: savedShortcuts });
+    const shortcutBindings = {
+      viewSwitcher,
+      zoom,
+      toc,
+      theme,
+      topbar,
+      app,
+      shortcuts: savedShortcuts,
+    };
+    Plainview.wireShortcuts(shortcutBindings);
 
     if (viewSwitcher.getView() === 'source') {
       sourcePane.populate();
@@ -159,23 +198,7 @@
     globalThis.addEventListener('pagehide', () => sourceWatch.stop(), { once: true });
 
     applyDocumentChrome({ app, format, fileName });
-
-    const fallback = () => scrollToHash(format);
-    const scrollMemory = Plainview.createScrollMemory({
-      key: scrollKey,
-      initialY: savedScroll,
-      onRestored: (y) => viewSwitcher.syncScroll(y),
-    });
-    scrollMemory.restore(fallback);
-    if (toc.update) {
-      toc.update();
-    }
-    refreshExtras().then(() => {
-      scrollMemory.reapply(fallback);
-      if (toc.update) {
-        toc.update();
-      }
-    });
+    restoreScrollState({ scrollKey, savedScroll, viewSwitcher, toc, format, refreshExtras });
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, { mountViewer });

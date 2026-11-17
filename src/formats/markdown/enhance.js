@@ -119,6 +119,7 @@
       wrapper.className = 'pv-table-wrap';
       table.replaceWith(wrapper);
       wrapper.append(table);
+      Plainview.tableResize.enable(table);
     }
   }
 

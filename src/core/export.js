@@ -40,6 +40,7 @@ import DocumentTemplate from './export/document.html';
       '.pv-json-path',
       '.pv-anchor',
       '.pv-copy',
+      '.pv-table-resize',
       'button',
       'input',
       'form',

@@ -1,3 +1,7 @@
+html[data-pv] .pv-csv-table th {
+  position: relative;
+}
+
 html[data-pv-table-borders="on"] .pv-csv-table th,
 html[data-pv-table-borders="on"] .pv-csv-table td {
   border-right-color: var(--pv-border);
@@ -6,6 +10,10 @@ html[data-pv-table-borders="on"] .pv-csv-table td {
 html[data-pv-table-borders="on"] .pv-csv-table th:last-child,
 html[data-pv-table-borders="on"] .pv-csv-table td:last-child {
   border-right: 0;
+}
+
+html[data-pv] .pv-markdown .pv-table-wrap th {
+  position: relative;
 }
 
 html[data-pv-table-borders="on"] .pv-markdown .pv-table-wrap th,
@@ -18,15 +26,12 @@ html[data-pv-table-borders="on"] .pv-markdown .pv-table-wrap td:last-child {
   border-right: 0;
 }
 
-html[data-pv] .pv-csv-table.pv-csv-resizable {
+html[data-pv] .pv-csv-table.pv-table-resizable,
+html[data-pv] .pv-markdown .pv-table-wrap table.pv-table-resizable {
   table-layout: fixed;
 }
 
-html[data-pv] .pv-csv-header {
-  position: relative;
-}
-
-html[data-pv] .pv-csv-resize {
+html[data-pv] .pv-table-resize {
   position: absolute;
   inset: 0 0 0 auto;
   width: 7px;
