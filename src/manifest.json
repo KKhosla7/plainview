@@ -17,6 +17,12 @@
       "css": ["styles.css"],
       "run_at": "document_end",
       "all_frames": false
+    },
+    {
+      "matches": ["http://*/*", "https://*/*", "file:///*"],
+      "js": ["download-hook.js"],
+      "run_at": "document_start",
+      "all_frames": false
     }
   ],
   "web_accessible_resources": [

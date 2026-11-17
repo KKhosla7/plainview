@@ -13,6 +13,7 @@
     const link = Plainview.createElement('a');
     link.href = url;
     link.download = fileName || 'document.txt';
+    link.dataset.pvDownload = 'ignore';
     link.style.display = 'none';
     document.body.append(link);
     link.click();

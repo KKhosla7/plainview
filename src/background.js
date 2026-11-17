@@ -71,6 +71,30 @@
     return remote ? `${url}&remote=${encodeURIComponent(remote)}` : url;
   }
 
+  function payloadViewerUrl(key, name) {
+    const base = api.runtime.getURL('src/viewer.html');
+    return `${base}?payload=${encodeURIComponent(key)}&name=${encodeURIComponent(name || '')}`;
+  }
+
+  function ignoreDownloadError() {
+    return false;
+  }
+
+  async function openBlobDownload(message) {
+    const name = String(message?.name || '');
+    if (!supported(name)) {
+      return false;
+    }
+
+    const area = api.storage.session ?? api.storage.local;
+    const key = `plainview-download-${crypto.randomUUID()}`;
+    await area.set({
+      [key]: { name, text: String(message?.text ?? '') },
+    });
+    await api.tabs.create({ url: payloadViewerUrl(key, name) });
+    return true;
+  }
+
   async function discardDownload(id) {
     const results = await Promise.allSettled([
       api.downloads.removeFile(id),
@@ -122,6 +146,11 @@
   }
 
   api.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message?.type === 'plainview:open-download') {
+      openBlobDownload(message).catch(ignoreDownloadError);
+      return false;
+    }
+
     const url = String(message?.url ?? '');
     const senderUrl = String(sender.tab?.url ?? sender.url ?? '');
     if (message?.type !== 'plainview:read-source' || !url) {

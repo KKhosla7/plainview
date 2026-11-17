@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Blob downloads</title></head>
+<body>
+<button id="download-toml">toml</button>
+<button id="download-csv">csv</button>
+<script>
+const files = {
+  toml: { name: 'sample.toml', text: 'title = "Blob TOML"\n[owner]\nname = "Plainview"\n' },
+  csv: { name: 'blob.csv', text: 'Name,Value\nalpha,1\nbeta,2\n' },
+};
+for (const [key, file] of Object.entries(files)) {
+  document.getElementById('download-' + key).addEventListener('click', () => {
+    const blob = new Blob([file.text], { type: 'text/plain' });
+    const anchor = document.createElement('a');
+    anchor.href = URL.createObjectURL(blob);
+    anchor.download = file.name;
+    document.body.appendChild(anchor);
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(anchor.href), 100);
+  });
+}
+</script>
+</body>
+</html>

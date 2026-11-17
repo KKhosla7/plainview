@@ -32,8 +32,85 @@
     return dot < 0 ? '' : last.slice(dot + 1).toLowerCase();
   }
 
+  function payloadStore() {
+    return (
+      globalThis.chrome?.storage?.session ??
+      globalThis.browser?.storage?.session ??
+      globalThis.chrome?.storage?.local ??
+      globalThis.browser?.storage?.local
+    );
+  }
+
+  async function readPayload(key) {
+    const area = payloadStore();
+    if (!area) {
+      return null;
+    }
+
+    const data = await area.get(key);
+    await area.remove(key);
+    return data?.[key] ?? null;
+  }
+
+  async function mountPayload(key, params) {
+    const payload = await readPayload(key);
+    if (!payload) {
+      showError('Could not open this download', 'The downloaded content is no longer available.');
+      return;
+    }
+
+    const fileName = String(payload.name || params.get('name') || 'Document');
+    const format = Plainview.detectFormat(String(payload.type || ''), fileName);
+    if (!format) {
+      showError(
+        'Unsupported file type',
+        `${extensionOf(fileName) || 'This file'} is not supported.`,
+      );
+      return;
+    }
+
+    const runtime = globalThis.chrome?.runtime ?? globalThis.browser?.runtime;
+    const version = runtime?.getManifest?.().version || 'dev';
+    document.documentElement.setAttribute('data-pv-version', version);
+    document.documentElement.setAttribute('data-pv', 'pending');
+    document.title = fileName;
+    await Plainview.mountViewer({
+      source: String(payload.text ?? ''),
+      url: '',
+      format,
+      fileName,
+    });
+  }
+
+  async function mountFromPayloadParams(params) {
+    const key = params.get('payload');
+    if (!key) {
+      return false;
+    }
+
+    await mountPayload(key, params);
+    return true;
+  }
+
+  function detectDocumentFormat(contentType, fallbackName, pathname) {
+    let format = Plainview.detectFormat(contentType, pathname);
+    if (!format) {
+      format = Plainview.detectFormat('', fallbackName);
+    }
+
+    if (!format) {
+      format = Plainview.detectFormat('', pathname);
+    }
+
+    return format;
+  }
+
   async function main() {
     const params = new URLSearchParams(location.search);
+    if (await mountFromPayloadParams(params)) {
+      return;
+    }
+
     const target = params.get('url');
     if (!target) {
       showError('No file to open', 'The viewer was opened without a file URL.');
@@ -76,15 +153,7 @@
 
     const source = await response.text();
     const contentType = response.headers.get('content-type') || params.get('type') || '';
-    let format = Plainview.detectFormat(contentType, parsed.pathname);
-    if (!format) {
-      format = Plainview.detectFormat('', fallbackName);
-    }
-
-    if (!format) {
-      format = Plainview.detectFormat('', parsed.pathname);
-    }
-
+    const format = detectDocumentFormat(contentType, fallbackName, parsed.pathname);
     if (!format) {
       showError(
         'Unsupported file type',

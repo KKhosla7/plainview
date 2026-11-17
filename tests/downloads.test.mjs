@@ -97,3 +97,31 @@ it('opens a local CSV file through the viewer', async () => {
   await viewer.close();
   await sourcePage.close();
 });
+
+it('opens a page-generated Blob TOML download', async () => {
+  const page = await context.newPage();
+  await page.goto(`${base}/blob-download.html`);
+  const [viewer] = await Promise.all([
+    context.waitForEvent('page', { timeout: 15_000 }),
+    page.click('#download-toml'),
+  ]);
+  await viewer.waitForSelector('.pv-json', { timeout: 15_000 });
+  assert.match(await viewer.locator('.pv-badge').innerText(), /TOML/u);
+  assert.match(await viewer.locator('.pv-json').innerText(), /Blob TOML/u);
+  await viewer.close();
+  await page.close();
+});
+
+it('opens a page-generated Blob CSV download', async () => {
+  const page = await context.newPage();
+  await page.goto(`${base}/blob-download.html`);
+  const [viewer] = await Promise.all([
+    context.waitForEvent('page', { timeout: 15_000 }),
+    page.click('#download-csv'),
+  ]);
+  await viewer.waitForSelector('.pv-csv-table', { timeout: 15_000 });
+  assert.match(await viewer.locator('.pv-badge').innerText(), /CSV/u);
+  assert.match(await viewer.locator('.pv-csv-table').innerText(), /alpha\s+1/u);
+  await viewer.close();
+  await page.close();
+});
