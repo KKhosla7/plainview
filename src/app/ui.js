@@ -136,7 +136,7 @@
 
   function watchTableSettings() {
     Plainview.watchSetting(Plainview.TABLE_BORDERS_KEY, (value) => {
-      document.documentElement.dataset.pvTableBorders = value ? 'on' : 'off';
+      Plainview.tableBorders.apply(value);
     });
     Plainview.watchSetting(Plainview.TABLE_RESIZE_KEY, (value) => {
       Plainview.tableResize.apply(Boolean(value));
@@ -169,7 +169,7 @@
       savedJsonTreeMode,
     } = await loadViewerSettings(url);
 
-    document.documentElement.dataset.pvTableBorders = savedTableBorders ? 'on' : 'off';
+    Plainview.tableBorders.apply(savedTableBorders);
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
     document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);
     document.documentElement.dataset.pvJsonTreeMode =

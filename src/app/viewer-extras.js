@@ -60,19 +60,6 @@
     };
   }
 
-  function formatGlyph(formatLabel) {
-    const glyphs = {
-      CSV: ',',
-      JSON: '{}',
-      MD: '#',
-      TOML: '[=]',
-      TSV: '⇥',
-      XML: '<>',
-      YAML: '-:',
-    };
-    return glyphs[formatLabel] || '{}';
-  }
-
   function exportNative(content, fileName, scope) {
     return async () => {
       await Plainview.dataExport.exportNative({
@@ -189,7 +176,7 @@
       button.append(
         kind === 'html'
           ? Plainview.icons.html()
-          : el('span', 'pv-format-glyph', formatGlyph(label)),
+          : el('span', 'pv-format-glyph', Plainview.formatGlyph(label)),
         document.createTextNode(label),
       );
       Plainview.onAsync(button, 'click', async () => {

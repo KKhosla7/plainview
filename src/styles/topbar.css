@@ -201,6 +201,14 @@ html[data-pv] .pv-icon-action {
   border-color: transparent;
 }
 
+html[data-pv] .pv-theme-toggle {
+  color: var(--pv-accent);
+}
+
+html[data-pv] .pv-theme-toggle:hover {
+  color: var(--pv-accent);
+}
+
 html[data-pv] .pv-icon-action:hover {
   border-color: transparent;
   background: var(--pv-accent-soft);

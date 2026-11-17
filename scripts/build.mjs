@@ -82,6 +82,7 @@ for (const required of [
   path.join(project, 'src', 'app-entry.js'),
   path.join(project, 'src', 'boot-entry.js'),
   path.join(project, 'src', 'viewer-entry.js'),
+  path.join(project, 'src', 'export-chrome-entry.js'),
   path.join(project, 'src', 'export-data-entry.js'),
   path.join(project, 'src', 'viewer.html'),
   path.join(katexDist, 'katex.min.css'),
@@ -146,52 +147,33 @@ fs.mkdirSync(bundleDir, { recursive: true });
 const CssModule = path.join(bundleDir, 'viewer-css.js');
 fs.writeFileSync(CssModule, `globalThis.PLAINVIEW_CSS = ${JSON.stringify(css)};\n`);
 
-await build({
-  entryPoints: [path.join(project, 'src', 'boot-entry.js')],
+const BuildOptions = {
   bundle: true,
-  format: 'iife',
   minify: true,
   legalComments: 'none',
   target: ['chrome120', 'firefox142'],
-  outfile: path.join(bundleDir, 'boot.js'),
   logLevel: 'silent',
-});
-await build({
-  entryPoints: [path.join(project, 'src', 'app-entry.js')],
-  bundle: true,
-  format: 'esm',
-  minify: true,
-  legalComments: 'none',
-  target: ['chrome120', 'firefox142'],
+};
+const pageBuild = {
   loader: { '.html': 'text', '.txt': 'text' },
-  outfile: path.join(bundleDir, 'app.js'),
   alias: { 'virtual:viewer-css': CssModule },
-  logLevel: 'silent',
-});
-await build({
-  entryPoints: [path.join(project, 'src', 'export-data-entry.js')],
-  bundle: true,
-  format: 'iife',
-  minify: true,
-  legalComments: 'none',
-  target: ['chrome120', 'firefox142'],
-  loader: { '.html': 'text', '.txt': 'text' },
-  outfile: path.join(bundleDir, 'export-data.js'),
-  alias: { 'virtual:viewer-css': CssModule },
-  logLevel: 'silent',
-});
-await build({
-  entryPoints: [path.join(project, 'src', 'viewer-entry.js')],
-  bundle: true,
-  format: 'esm',
-  minify: true,
-  legalComments: 'none',
-  target: ['chrome120', 'firefox142'],
-  loader: { '.html': 'text', '.txt': 'text' },
-  outfile: path.join(bundleDir, 'viewer.js'),
-  alias: { 'virtual:viewer-css': CssModule },
-  logLevel: 'silent',
-});
+};
+
+function bundle(entry, output, format, extra = {}) {
+  return build({
+    ...BuildOptions,
+    entryPoints: [path.join(project, 'src', entry)],
+    format,
+    outfile: path.join(bundleDir, output),
+    ...extra,
+  });
+}
+
+await bundle('boot-entry.js', 'boot.js', 'iife');
+await bundle('app-entry.js', 'app.js', 'esm', pageBuild);
+await bundle('export-chrome-entry.js', 'export-chrome.js', 'iife');
+await bundle('export-data-entry.js', 'export-data.js', 'iife', pageBuild);
+await bundle('viewer-entry.js', 'viewer.js', 'esm', pageBuild);
 
 // Parsers and renderers that are only shipped for their own document type.
 // They are separate ESM files so opening JSON or Markdown never pays for them.
@@ -226,6 +208,7 @@ function manifestFor(browser) {
     {
       resources: [
         'app.js',
+        'export-chrome.js',
         'export-data.js',
         'vendor/mermaid/mermaid.esm.min.mjs',
         'vendor/yaml/js-yaml.min.mjs',

@@ -42,6 +42,14 @@ async function toggleColumnLines(exported) {
   };
 }
 
+function exportControlCounts(exported) {
+  return Promise.all([
+    exported.getByRole('button', { name: 'Export', exact: true }).count(),
+    exported.getByRole('button', { name: 'Download HTML page' }).count(),
+    exported.getByRole('button', { name: 'Toggle theme' }).count(),
+  ]);
+}
+
 async function downloadHtml(page) {
   await page.getByRole('button', { name: 'Export', exact: true }).click();
   await page.waitForSelector('.pv-export-menu:not([hidden])');
@@ -92,6 +100,7 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
       'fixed',
     );
     assert.equal(await exported.locator('.pv-code-bar').count(), 0);
+    assert.deepEqual(await exportControlCounts(exported), [0, 0, 1]);
     assert.equal(await exported.locator('.pv-doc-meta').count(), 0);
     assert.deepEqual(await toggleColumnLines(exported), {
       afterVisible: true,
@@ -189,7 +198,12 @@ it('allows column resizing in exported HTML', async () => {
     await exported.mouse.down();
     await exported.mouse.move(handle.x + 43, y, { steps: 5 });
     await exported.mouse.up();
-    assert.ok((await header.boundingBox()).width > startWidth);
+    const resized = (await header.boundingBox()).width;
+    assert.ok(resized > startWidth);
+    await exported.reload();
+    await exported.waitForSelector('.pv-table-resize');
+    const reloaded = (await header.boundingBox()).width;
+    assert.ok(Math.abs(reloaded - resized) < 3);
   } finally {
     await exported.close();
     fs.rmSync(exportDir, { recursive: true, force: true });

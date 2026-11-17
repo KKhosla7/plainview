@@ -23,7 +23,7 @@
       root.document.documentElement.dataset.pvTheme = theme;
       const dark = theme === 'dark';
       button.setAttribute('aria-pressed', String(dark));
-      button.title = dark ? 'Switch to light theme' : 'Switch to dark theme';
+      button.title = dark ? 'Dark theme · Switch to light' : 'Light theme · Switch to dark';
     }
 
     function setTheme(next) {

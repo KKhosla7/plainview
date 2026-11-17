@@ -5,8 +5,9 @@
 ((root) => {
   const { el } = Plainview;
   const MinColumnWidth = 60;
-  const WidthStorageKey = `plainview.tableWidths:${location.href}`;
-  let widthLoad = null;
+  function widthKey(tableId) {
+    return `plainview.tableWidths:${location.href}:${tableId}`;
+  }
 
   function createHandle(column, onResize) {
     const handle = el('span', 'pv-table-resize');
@@ -31,27 +32,15 @@
     return false;
   }
 
-  function readWidths() {
-    widthLoad ??= Plainview.loadSetting(WidthStorageKey, null);
-    return widthLoad;
-  }
-
   function saveWidths(tableId, cols) {
     if (!tableId) {
       return;
     }
 
-    readWidths()
-      .then((data) => {
-        const stored = Plainview.valueKind(data) === 'object' && data !== null ? data : {};
-        const next = {
-          ...stored,
-          [tableId]: cols.map((col) => Math.round(col.getBoundingClientRect().width)),
-        };
-        widthLoad = Promise.resolve(next);
-        Plainview.saveSetting(WidthStorageKey, next);
-      })
-      .catch(ignoreWidthStorage);
+    Plainview.saveSetting(
+      widthKey(tableId),
+      cols.map((col) => Math.round(col.getBoundingClientRect().width)),
+    );
   }
 
   async function restoreWidths(table, cols, tableId) {
@@ -59,8 +48,7 @@
       return;
     }
 
-    const data = await readWidths();
-    const widths = data?.[tableId];
+    const widths = await Plainview.loadSetting(widthKey(tableId), null).catch(ignoreWidthStorage);
     if (!Array.isArray(widths) || widths.length !== cols.length) {
       return;
     }
