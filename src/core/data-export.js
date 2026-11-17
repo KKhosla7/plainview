@@ -136,22 +136,49 @@
     return xmlNodesText(exported.data);
   }
 
-  async function exportNative({ exportData, scope, fileName }) {
+  async function serializeNative({ exportData, scope, fileName }) {
     const exported = exportData.getData(scope);
     if (!exported) {
-      return false;
+      return null;
     }
 
     const text = await nativeText(exported);
     const formatId = exported.formatId || exportData.formatId;
-    const blob = new Blob([text], {
-      type: Mime[formatId] || 'text/plain;charset=utf-8',
+    return {
+      fileName: dataFileName(fileName, formatId),
+      formatId,
+      scope,
+      text,
+    };
+  }
+
+  async function serializeScopes({ exportData, fileName }) {
+    const results = await Promise.all(
+      ['filtered', 'complete'].map((scope) => {
+        if (scope === 'filtered' && !exportData.hasFilter()) {
+          return Promise.resolve(null);
+        }
+
+        return serializeNative({ exportData, scope, fileName });
+      }),
+    );
+    return { entries: results.filter(Boolean), fileName };
+  }
+
+  async function exportNative({ exportData, scope, fileName }) {
+    const entry = await serializeNative({ exportData, scope, fileName });
+    if (!entry) {
+      return false;
+    }
+
+    const blob = new Blob([entry.text], {
+      type: Mime[entry.formatId] || 'text/plain;charset=utf-8',
     });
-    Plainview.downloadBlob(blob, dataFileName(fileName, formatId));
+    Plainview.downloadBlob(blob, entry.fileName);
     return true;
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {
-    dataExport: { dataFileName, exportNative },
+    dataExport: { dataFileName, exportNative, serializeScopes },
   });
 })(globalThis);

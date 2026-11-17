@@ -11,12 +11,14 @@
 </style>
 </head>
 <body>
+<script type="application/json" id="pv-export-data">{{DATA_EXPORTS}}</script>
 <div class="pv-app pv-export">
 {{TOPBAR}}
 {{CONTENT}}
 <button class="pv-scroll-top pv-export-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
 <div class="pv-export-credit"{{CREDIT_VERSION}}>Created with <a href="https://github.com/KKhosla7/plainview" target="_blank" rel="noopener noreferrer">Plainview</a></div>
 </div>
+{{DATA_EXPORT_SCRIPT}}
 {{THEME_SCRIPT}}
 {{TOP_SCRIPT}}
 {{TABLE_RESIZE_SCRIPT}}

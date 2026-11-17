@@ -3,6 +3,7 @@
  * Standalone-export browser scripts, kept separate from HTML assembly.
  */
 
+import dataExportScript from './export/data-export.txt';
 import tableResizeScript from './export/table-resize.txt';
 import themeScript from './export/theme.txt';
 import tocScript from './export/toc.txt';
@@ -13,6 +14,7 @@ import topScript from './export/top.txt';
     exportScripts: {
       ThemeScript: themeScript,
       TopScript: topScript,
+      DataExportScript: dataExportScript,
       TableResizeScript: tableResizeScript,
       TocScript: tocScript,
     },

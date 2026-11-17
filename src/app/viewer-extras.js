@@ -48,6 +48,7 @@
       const uncompressed = await Plainview.loadSetting(Plainview.EXPORT_UNCOMPRESSED_KEY, false);
       await Plainview.exportHtml({
         article: content.article,
+        exportData: content.exportData,
         fileName,
         format,
         theme: document.documentElement.dataset.pvTheme || 'light',

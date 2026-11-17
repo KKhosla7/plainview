@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { after, before, test as it } from 'node:test';
+import { pathToFileURL } from 'node:url';
 import {
   assertNoErrors,
   closeExtension,
@@ -141,5 +144,45 @@ it('keeps standalone HTML export in the data export menu', async () => {
     assertNoErrors(errors);
   } finally {
     await page.close();
+  }
+});
+
+it('keeps clean data downloads inside a compressed HTML export', async () => {
+  const { page, errors } = await openPage(context, `${base}/sample.json`);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-data-export-'));
+  try {
+    await page.waitForSelector('.pv-json');
+    await page.getByLabel('Search JSON keys and values').fill('label');
+    await page.waitForFunction(() => document.querySelectorAll('.pv-json-hit').length >= 2);
+    const html = await exportScope(page, /Download HTML page/u);
+    const file = path.join(dir, 'sample.html');
+    fs.writeFileSync(file, html.text);
+
+    const exported = await context.newPage();
+    try {
+      await exported.goto(pathToFileURL(file).href);
+      await exported.waitForSelector('.pv-json');
+      await exported.getByRole('button', { name: 'Export data', exact: true }).click();
+      await exported.waitForSelector('.pv-export-menu:not([hidden])');
+      assert.match(
+        await exported.locator('.pv-export-menu').innerText(),
+        /Download filtered JSON/u,
+      );
+      assert.match(
+        await exported.locator('.pv-export-menu').innerText(),
+        /Download complete JSON/u,
+      );
+      const [download] = await Promise.all([
+        exported.waitForEvent('download'),
+        exported.getByRole('button', { name: /Download filtered JSON/u }).click(),
+      ]);
+      assert.deepEqual(JSON.parse(fs.readFileSync(await download.path(), 'utf8')), ['one', 'two']);
+    } finally {
+      await exported.close();
+    }
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });

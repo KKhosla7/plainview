@@ -158,7 +158,23 @@ import DocumentTemplate from './export/document.html';
     return output;
   }
 
-  async function buildExportHtml({ article, fileName, format, theme, uncompressed = false }) {
+  async function buildDataPayload(exportData, fileName) {
+    if (!exportData) {
+      return '';
+    }
+
+    const data = await Plainview.dataExport.serializeScopes({ exportData, fileName });
+    return data.entries.length > 0 ? JSON.stringify(data).replace(/</gu, '\\u003c') : '';
+  }
+
+  async function buildExportHtml({
+    article,
+    exportData,
+    fileName,
+    format,
+    theme,
+    uncompressed = false,
+  }) {
     const shell = article.closest('.pv-shell');
     const clone = cloneForExport(shell || article);
     const katex = await katexExportCss(clone);
@@ -174,12 +190,14 @@ import DocumentTemplate from './export/document.html';
       ? `<meta name="generator" content="Plainview ${escapeHtml(version)}">`
       : '';
     const creditVersion = version ? ` data-plainview-version="${escapeHtml(version)}"` : '';
+    const dataPayload = await buildDataPayload(exportData, title);
     const html = fillTemplate(DocumentTemplate, {
       FORMAT: formatId,
       THEME: themeName,
       TABLE_BORDERS: document.documentElement.dataset.pvTableBorders || 'off',
       TABLE_RESIZE: document.documentElement.dataset.pvTableResize || 'on',
       TABLE_LAYOUT: Plainview.validTableLayout(document.documentElement.dataset.pvTableLayout),
+      DATA_EXPORTS: dataPayload,
       GENERATOR: generator,
       TITLE: escapeHtml(title),
       CSS: String(root.PLAINVIEW_CSS || ''),
@@ -187,6 +205,7 @@ import DocumentTemplate from './export/document.html';
       TOPBAR: cloneTopbar(),
       CONTENT: content,
       CREDIT_VERSION: creditVersion,
+      DATA_EXPORT_SCRIPT: dataPayload ? Plainview.exportScripts.DataExportScript : '',
       THEME_SCRIPT: Plainview.exportScripts.ThemeScript,
       TOP_SCRIPT: Plainview.exportScripts.TopScript,
       TABLE_RESIZE_SCRIPT: Plainview.exportScripts.TableResizeScript,

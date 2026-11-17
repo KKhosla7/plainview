@@ -1,0 +1,68 @@
+<script>
+(() => {
+  const dataNode = document.getElementById('pv-export-data');
+  if (!dataNode) return;
+  let payload;
+  try {
+    payload = JSON.parse(dataNode.textContent);
+  } catch {
+    return;
+  }
+  if (!payload || !Array.isArray(payload.entries) || payload.entries.length === 0) return;
+  const actions = document.querySelector('.pv-export-actions');
+  if (!actions) return;
+
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'pv-action pv-export-data-action';
+  button.textContent = 'Export data';
+  button.setAttribute('aria-haspopup', 'menu');
+  button.setAttribute('aria-expanded', 'false');
+  const menu = document.createElement('div');
+  menu.className = 'pv-export-menu';
+  menu.setAttribute('role', 'menu');
+  menu.hidden = true;
+  const title = document.createElement('div');
+  title.className = 'pv-export-menu-title';
+  title.textContent = 'Clean data';
+  menu.append(title);
+
+  function close() {
+    menu.hidden = true;
+    button.setAttribute('aria-expanded', 'false');
+  }
+
+  function download(entry) {
+    const blob = new Blob([entry.text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = entry.fileName;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    globalThis.setTimeout(() => URL.revokeObjectURL(url), 10_000);
+    close();
+  }
+
+  for (const entry of payload.entries) {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.textContent = `${entry.scope === 'filtered' ? 'Download filtered' : 'Download complete'} ${entry.formatId.toUpperCase()}`;
+    item.addEventListener('click', () => download(entry));
+    menu.append(item);
+  }
+
+  button.addEventListener('click', (event) => {
+    event.stopPropagation();
+    menu.hidden = !menu.hidden;
+    button.setAttribute('aria-expanded', String(!menu.hidden));
+  });
+  menu.addEventListener('click', (event) => event.stopPropagation());
+  document.addEventListener('click', close);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !menu.hidden) close();
+  });
+  actions.append(button, menu);
+})();
+</script>
