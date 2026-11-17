@@ -3,6 +3,7 @@
 html[data-pv] .pv-json,
 html[data-pv] .pv-xml {
   padding-left: 28px;
+  font-size: 12px;
   line-height: 24px;
 }
 
@@ -13,12 +14,26 @@ html[data-pv] .pv-json-node {
 html[data-pv] .pv-json-summary,
 html[data-pv] .pv-xml-summary {
   cursor: pointer;
-  list-style-position: outside;
+  list-style: none;
 }
 
-html[data-pv] .pv-json-summary::marker,
-html[data-pv] .pv-xml-summary::marker {
+html[data-pv] .pv-json-summary::-webkit-details-marker,
+html[data-pv] .pv-xml-summary::-webkit-details-marker {
+  display: none;
+}
+
+html[data-pv] .pv-json-summary::before,
+html[data-pv] .pv-xml-summary::before {
+  content: "▸";
+  display: inline-block;
+  width: 16px;
   color: var(--pv-fg-faint);
+  font-size: 12px;
+}
+
+html[data-pv] details[open] > .pv-json-summary::before,
+html[data-pv] details[open] > .pv-xml-summary::before {
+  content: "▾";
 }
 
 html[data-pv] .pv-json-children {
