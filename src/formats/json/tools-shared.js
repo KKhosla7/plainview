@@ -188,6 +188,39 @@
     return row;
   }
 
+  function bindResultDismiss({ anchor, list, reopen }) {
+    function close() {
+      list.hidden = true;
+    }
+
+    function show() {
+      if (list.childElementCount > 0) {
+        list.hidden = false;
+      }
+    }
+
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key !== 'Escape' || list.hidden) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        close();
+      },
+      true,
+    );
+    document.addEventListener('click', (event) => {
+      if (!(list.hidden || anchor.contains(event.target))) {
+        close();
+      }
+    });
+    reopen?.addEventListener('focus', show);
+    reopen?.addEventListener('click', show);
+    return { close };
+  }
+
   function renderResults({ hitClass, list, matches, indexRef, onReveal }) {
     if (matches.length === 0) {
       list.hidden = true;
@@ -210,6 +243,7 @@
     jsonToolsShared: {
       CopyResetMs,
       SearchDebounceMs,
+      bindResultDismiss,
       button,
       clearStatus,
       el,

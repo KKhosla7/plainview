@@ -3,7 +3,8 @@
  * JSON search controls. The walk itself lives in search-runner.js.
  */
 ((root) => {
-  const { el, button, inputClear, selectHit, SearchDebounceMs } = Plainview.jsonToolsShared;
+  const { el, button, bindResultDismiss, inputClear, selectHit, SearchDebounceMs } =
+    Plainview.jsonToolsShared;
 
   function createSearchElements() {
     const searchWrap = el('div', 'pv-json-search');
@@ -154,6 +155,11 @@
   function createJsonSearch(options) {
     const elements = createSearchElements();
     const controller = createSearchController({ ...options, ...elements });
+    bindResultDismiss({
+      anchor: elements.searchWrap,
+      list: options.searchResults,
+      reopen: elements.search,
+    });
     const searchClear = inputClear(elements.search, 'Clear search', () => {
       controller.cancel();
       controller.start().catch(ignoreSearchError);

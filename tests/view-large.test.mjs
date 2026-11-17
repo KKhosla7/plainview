@@ -63,6 +63,7 @@ it('progressively renders a large JSON tree', async () => {
       (previousCount) => document.querySelectorAll('.pv-json-node').length > previousCount,
       nodesBefore,
     );
+    await search.click();
     await results.locator('.pv-json-search-result').first().click();
     await page.waitForSelector('.pv-json-path[data-json-path="$[1199].name"]');
     assertNoErrors(errors);

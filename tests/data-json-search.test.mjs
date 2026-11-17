@@ -188,3 +188,30 @@ it('maps JMESPath root-array indexes to the actual index', async () => {
   assertNoErrors(errors);
   await page.close();
 });
+
+it('dismisses search and query results with Escape or an outside click', async () => {
+  const { page, errors } = await openJson();
+  const search = page.getByLabel('Search JSON keys and values');
+  await search.fill('label');
+  await page.waitForSelector('.pv-json-search-results:not([hidden])');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('.pv-json-search-results', { state: 'hidden' });
+  await search.click();
+  await page.waitForSelector('.pv-json-search-results:not([hidden])');
+  await page.locator('.pv-topbar').click({ position: { x: 5, y: 5 } });
+  await page.waitForSelector('.pv-json-search-results', { state: 'hidden' });
+
+  const query = page.getByLabel('Query expression');
+  await query.fill('$.items[*].id');
+  await page.getByRole('button', { name: 'Query', exact: true }).click();
+  await page.waitForSelector('.pv-json-query-results:not([hidden])');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('.pv-json-query-results', { state: 'hidden' });
+  await query.click();
+  await page.waitForSelector('.pv-json-query-results:not([hidden])');
+  await page.locator('.pv-topbar').click({ position: { x: 5, y: 5 } });
+  await page.waitForSelector('.pv-json-query-results', { state: 'hidden' });
+  assert.equal(await page.locator('.pv-json-query-results').isHidden(), true);
+  assertNoErrors(errors);
+  await page.close();
+});

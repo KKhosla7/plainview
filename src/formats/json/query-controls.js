@@ -3,7 +3,7 @@
  * JSONPath and JMESPath query controls.
  */
 ((root) => {
-  const { el, button, inputClear, mark, unmark, selectHit, renderResults } =
+  const { el, button, bindResultDismiss, inputClear, mark, unmark, selectHit, renderResults } =
     Plainview.jsonToolsShared;
 
   function findEntry(value, used, indexRef) {
@@ -248,6 +248,7 @@
       pathInput,
       language,
     };
+    bindResultDismiss({ anchor: pathWrap, list: queryResults, reopen: pathInput });
     const queryClear = inputClear(pathInput, 'Clear query', () => clearQuery(ctx));
     queryRow.insertBefore(queryClear, queryButton);
     pathWrap.addEventListener('submit', (event) => {
