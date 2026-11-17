@@ -18,6 +18,7 @@
       rows: [],
       rowElements: new Map(),
       stats: { arrays: 0, depth: 0, nodes: 0, objects: 0, truncated: false, values: 0 },
+      syntax: options.exportFormatId === 'yaml' ? 'yaml' : '',
       tree,
       value,
     };

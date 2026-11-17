@@ -107,7 +107,9 @@ it('opens a page-generated Blob TOML download', async () => {
   ]);
   await viewer.waitForSelector('.pv-json', { timeout: 15_000 });
   assert.match(await viewer.locator('.pv-badge').innerText(), /TOML/u);
-  assert.match(await viewer.locator('.pv-json').innerText(), /Blob TOML/u);
+  await viewer.waitForFunction(() =>
+    document.querySelector('.pv-json')?.textContent.includes('Blob TOML'),
+  );
   await viewer.close();
   await page.close();
 });

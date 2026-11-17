@@ -28,12 +28,12 @@
     const { isRoot, path } = meta;
     const row = el('div', 'pv-json-leaf');
     if (isRoot) {
-      row.append(renderKey('$'), span('pv-json-punct', ' '));
+      row.append(renderKey('$', ctx.syntax), span('pv-json-punct', ' '));
     } else {
-      row.append(renderKey(key), span('pv-json-punct', ': '));
+      row.append(renderKey(key, ctx.syntax), span('pv-json-punct', ': '));
     }
     const valueBox = el('span', 'pv-json-value');
-    valueBox.append(span(valueClass(value), renderValue(value)));
+    valueBox.append(span(valueClass(value), renderValue(value, ctx.syntax)));
     row.append(valueBox, pathButton(Plainview.jsonPath.pathToJsonPath(path)));
     registerNode(ctx, { path, node: row, value, isContainer: false, summary: null });
     return row;
@@ -51,9 +51,9 @@
     const { isRoot, path } = meta;
     const summary = el('summary', 'pv-json-summary');
     if (isRoot) {
-      summary.append(renderKey('$'), span('pv-json-punct', ' '));
+      summary.append(renderKey('$', meta.syntax), span('pv-json-punct', ' '));
     } else {
-      summary.append(renderKey(key), span('pv-json-punct', ': '));
+      summary.append(renderKey(key, meta.syntax), span('pv-json-punct', ': '));
     }
     summary.append(
       span('pv-json-punct', array ? '[ ' : '{ '),
@@ -143,7 +143,7 @@
       meta.isRoot || (depth < ctx.openDepth && total <= ctx.autoOpenChildLimit),
     );
     details.setAttribute('data-json-path', pathText);
-    const summary = renderSummary(key, array, total, meta);
+    const summary = renderSummary(key, array, total, { ...meta, syntax: ctx.syntax });
     const children = el('div', 'pv-json-children');
     details.append(summary, children);
     const state = {
@@ -221,6 +221,7 @@
   function createJsonTree({ value, source, options, indexRef, onStats }) {
     const tree = el('div', 'pv-json');
     const ctx = {
+      syntax: options.exportFormatId === 'yaml' ? 'yaml' : '',
       autoOpenChildLimit: options.autoOpenChildLimit ?? autoOpenChildLimit,
       indexRef,
       openDepth: options.openDepth ?? openDepth(source.length),

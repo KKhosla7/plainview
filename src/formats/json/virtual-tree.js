@@ -108,9 +108,9 @@
     state.onStats({ ...state.stats });
   }
 
-  function rowValue(row) {
+  function rowValue(state, row) {
     if (!row.container) {
-      return [span(valueClass(row.value), renderValue(row.value))];
+      return [span(valueClass(row.value), renderValue(row.value, state.syntax))];
     }
 
     const array = Array.isArray(row.value);
@@ -166,11 +166,11 @@
     }
 
     if (row.isRoot) {
-      node.append(renderKey('$'), span('pv-json-punct', ' '));
+      node.append(renderKey('$', state.syntax), span('pv-json-punct', ' '));
     } else {
-      node.append(renderKey(row.key), span('pv-json-punct', ': '));
+      node.append(renderKey(row.key, state.syntax), span('pv-json-punct', ': '));
     }
-    node.append(...rowValue(row), pathButton(row.pathText));
+    node.append(...rowValue(state, row), pathButton(row.pathText));
     if (!row.container) {
       applyRowTitle(node, row.value);
     }

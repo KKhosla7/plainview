@@ -35,9 +35,9 @@
     return 'pv-json-boolean';
   }
 
-  function renderValue(value) {
+  function renderValue(value, syntax) {
     if (Plainview.valueKind(value) === 'string') {
-      return JSON.stringify(value);
+      return syntax === 'yaml' ? value : JSON.stringify(value);
     }
 
     if (value === null) {
@@ -47,12 +47,12 @@
     return String(value);
   }
 
-  function renderKey(key) {
+  function renderKey(key, syntax) {
     if (Plainview.valueKind(key) === 'number') {
       return span('pv-json-index', String(key));
     }
 
-    return span('pv-json-key', JSON.stringify(key));
+    return span('pv-json-key', syntax === 'yaml' ? String(key) : JSON.stringify(key));
   }
 
   function pathTextFor(path) {
