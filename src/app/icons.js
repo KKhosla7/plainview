@@ -26,7 +26,18 @@
     return svg;
   }
 
+  function createIconButton(className, label, iconNode) {
+    const button = Plainview.createElement('button');
+    button.type = 'button';
+    button.className = className;
+    button.setAttribute('aria-label', label);
+    button.title = label;
+    button.append(iconNode);
+    return button;
+  }
+
   root.Plainview = Object.assign(root.Plainview || {}, {
+    createIconButton,
     icons: {
       data: () =>
         icon([

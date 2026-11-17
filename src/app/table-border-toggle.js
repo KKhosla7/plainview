@@ -4,6 +4,16 @@
     root.document.documentElement.dataset.pvTableBorders = on ? 'on' : 'off';
   }
 
+  function createTableBordersButton() {
+    const button = Plainview.createIconButton(
+      'pv-action pv-icon-action pv-table-borders-toggle',
+      'Show column lines',
+      Plainview.icons.table(),
+    );
+    createTableBordersToggle({ button });
+    return button;
+  }
+
   function createTableBordersToggle({ button }) {
     const documentRoot = root.document.documentElement;
 
@@ -23,6 +33,7 @@
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {
+    createTableBordersButton,
     createTableBordersToggle,
     tableBorders: { apply: applyTableBorders },
   });

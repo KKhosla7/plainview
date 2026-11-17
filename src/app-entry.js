@@ -74,6 +74,7 @@ import './formats/mermaid/loader.js';
 import './app/icons.js';
 import './app/format-glyph.js';
 import './app/table-border-toggle.js';
+import './app/export-menu.js';
 import './app/topbar.js';
 import './app/scroll-spy.js';
 import './app/toc.js';

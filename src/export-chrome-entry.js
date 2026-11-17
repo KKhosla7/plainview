@@ -11,5 +11,7 @@ import './app/icons.js';
 import './app/format-glyph.js';
 import './app/theme.js';
 import './app/table-border-toggle.js';
+import './app/export-menu.js';
+import './app/topbar.js';
 import './app/scroll-top.js';
 import './export/chrome.js';

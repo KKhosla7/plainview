@@ -157,30 +157,19 @@
   }
 
   function createExportMenu({ feedback, topbar, content, fileName, format, refreshExtras }) {
-    const menu = el('div', 'pv-export-menu');
-    menu.setAttribute('role', 'menu');
-    menu.hidden = true;
-    const title = el('div', 'pv-export-menu-title', 'Export');
+    const { menu, title } = Plainview.createMenuShell('Export');
     const { formatId } = content.exportData;
 
-    function close() {
-      menu.hidden = true;
-      topbar.exportButton.setAttribute('aria-expanded', 'false');
-    }
-
     function action(label, ariaLabel, task, kind) {
-      const button = el('button', 'pv-export-cell');
-      button.type = 'button';
-      button.setAttribute('aria-label', ariaLabel);
-      button.title = `Download ${label}`;
-      button.append(
-        kind === 'html'
-          ? Plainview.icons.html()
-          : el('span', 'pv-format-glyph', Plainview.formatGlyph(label)),
-        document.createTextNode(label),
-      );
+      const button = Plainview.createExportCell({
+        ariaLabel,
+        glyphLabel: label,
+        kind,
+        label,
+        title: `Download ${label}`,
+      });
       Plainview.onAsync(button, 'click', async () => {
-        close();
+        controller.close();
         await feedback.run(task);
       });
       return button;
@@ -198,32 +187,16 @@
         refreshExtras,
       });
       menu.append(grid);
-      menu.hidden = false;
-      topbar.exportButton.setAttribute('aria-expanded', 'true');
-      menu.querySelector('button')?.focus();
     }
 
-    topbar.exportButton.setAttribute('aria-haspopup', 'menu');
-    topbar.exportButton.setAttribute('aria-expanded', 'false');
     topbar.exportButton.title = 'Export data or standalone HTML';
-    topbar.exportButton.addEventListener('click', (event) => {
-      event.stopPropagation();
-      if (menu.hidden) {
-        open();
-      } else {
-        close();
-      }
-    });
-    menu.addEventListener('click', (event) => event.stopPropagation());
-    document.addEventListener('click', close);
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !menu.hidden) {
-        close();
-        topbar.exportButton.focus();
-      }
+    const controller = Plainview.createMenuController({
+      button: topbar.exportButton,
+      menu,
+      onOpen: open,
     });
     topbar.exportButton.parentElement.append(menu);
-    return { close };
+    return { close: controller.close };
   }
 
   function wireViewerExport({ topbar, refreshExtras, content, fileName, format }) {

@@ -56,32 +56,56 @@
     return { views, htmlTab, sourceTab };
   }
 
-  function createActions({ showDownload }) {
+  function createActions({
+    showDownload = true,
+    showExport = true,
+    showTableBorders = false,
+    showToc = true,
+  } = {}) {
     const actions = el('div', 'pv-actions');
 
     const tocButton = button('pv-action pv-action-toc', 'TOC');
     tocButton.setAttribute('aria-expanded', 'false');
     tocButton.title = 'Table of contents';
 
-    const themeButton = button('pv-action pv-icon-action pv-theme-toggle');
-    themeButton.setAttribute('aria-label', 'Toggle theme');
-    themeButton.title = 'Toggle theme';
-    themeButton.append(Plainview.icons.theme());
+    const themeButton = Plainview.createThemeButton();
+    const tableBordersButton = showTableBorders ? Plainview.createTableBordersButton() : null;
 
     const downloadButton = button('pv-action pv-action-download', 'Download');
     downloadButton.title = 'Download the original file';
 
-    const exportButton = button('pv-action pv-icon-action pv-action-export');
-    exportButton.setAttribute('aria-label', 'Export');
+    const exportButton = Plainview.createIconButton(
+      'pv-action pv-icon-action pv-action-export',
+      'Export',
+      Plainview.icons.export(),
+    );
     exportButton.title = 'Export data or standalone HTML';
-    exportButton.append(Plainview.icons.export());
 
-    actions.append(tocButton, themeButton);
+    if (showToc) {
+      actions.append(tocButton);
+    }
+    actions.append(themeButton);
+
+    if (tableBordersButton) {
+      actions.append(tableBordersButton);
+    }
+
     if (showDownload) {
       actions.append(downloadButton);
     }
-    actions.append(exportButton);
-    return { actions, tocButton, themeButton, downloadButton, exportButton };
+
+    if (showExport) {
+      actions.append(exportButton);
+    }
+
+    return {
+      actions,
+      downloadButton,
+      exportButton,
+      tableBordersButton,
+      themeButton,
+      tocButton,
+    };
   }
 
   function createTopbar({ fileName, url, formatLabel, showDownload }) {
@@ -101,8 +125,12 @@
       themeButton: controls.themeButton,
       downloadButton: controls.downloadButton,
       exportButton: controls.exportButton,
+      tableBordersButton: controls.tableBordersButton,
     };
   }
 
-  root.Plainview = Object.assign(root.Plainview || {}, { createTopbar });
+  root.Plainview = Object.assign(root.Plainview || {}, {
+    createTopbar,
+    createTopbarActions: createActions,
+  });
 })(globalThis);

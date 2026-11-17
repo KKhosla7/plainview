@@ -1,5 +1,13 @@
 /* global Plainview */
 ((root) => {
+  function createThemeButton() {
+    return Plainview.createIconButton(
+      'pv-action pv-icon-action pv-theme-toggle',
+      'Toggle theme',
+      Plainview.icons.theme(),
+    );
+  }
+
   function createTheme({ button, initialTheme }) {
     const { THEME_KEY, saveSetting, validTheme } = Plainview;
     const stored = validTheme(initialTheme);
@@ -55,5 +63,5 @@
     };
   }
 
-  root.Plainview = Object.assign(root.Plainview || {}, { createTheme });
+  root.Plainview = Object.assign(root.Plainview || {}, { createTheme, createThemeButton });
 })(globalThis);
