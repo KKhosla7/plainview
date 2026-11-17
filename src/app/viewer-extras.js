@@ -124,21 +124,33 @@
     if (hasFilter) {
       grid.append(
         el('span', 'pv-export-grid-label', 'Filtered Results'),
-        action(formatLabel, `Download filtered results (${formatLabel})`, () =>
-          exportNative(content, fileName, 'filtered')(),
+        action(
+          formatLabel,
+          `Download filtered results (${formatLabel})`,
+          () => exportNative(content, fileName, 'filtered')(),
+          'data',
         ),
-        action('HTML', 'Download filtered HTML page', () =>
-          exportHtml({ content, fileName, format, refreshExtras, scope: 'filtered' })(),
+        action(
+          'HTML',
+          'Download filtered HTML page',
+          () => exportHtml({ content, fileName, format, refreshExtras, scope: 'filtered' })(),
+          'html',
         ),
       );
     }
     grid.append(
       el('span', 'pv-export-grid-label', 'Complete Data'),
-      action(formatLabel, `Download complete data (${formatLabel})`, () =>
-        exportNative(content, fileName, 'complete')(),
+      action(
+        formatLabel,
+        `Download complete data (${formatLabel})`,
+        () => exportNative(content, fileName, 'complete')(),
+        'data',
       ),
-      action('HTML', hasFilter ? 'Download complete HTML page' : 'Download HTML page', () =>
-        exportHtml({ content, fileName, format, refreshExtras })(),
+      action(
+        'HTML',
+        hasFilter ? 'Download complete HTML page' : 'Download HTML page',
+        () => exportHtml({ content, fileName, format, refreshExtras })(),
+        'html',
       ),
     );
     return grid;
@@ -160,8 +172,8 @@
       const button = el('button', 'pv-export-cell');
       button.type = 'button';
       button.setAttribute('aria-label', ariaLabel);
+      button.title = `Download ${label}`;
       button.append(
-        Plainview.icons.download(),
         kind === 'html' ? Plainview.icons.html() : Plainview.icons.data(),
         document.createTextNode(label),
       );
