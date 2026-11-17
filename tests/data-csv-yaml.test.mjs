@@ -9,6 +9,7 @@ import {
 } from './helpers.mjs';
 
 const TableBordersKey = 'plainview.tableBorders';
+const TableResizeKey = 'plainview.tableResize';
 
 let server;
 let base;
@@ -51,15 +52,29 @@ async function openCsvFixture(name = 'sample.csv') {
   return { page, errors };
 }
 
-async function setTableBorders(value) {
+async function setStoredSetting(key, value) {
   let workers = context.serviceWorkers();
   if (workers.length === 0) {
     workers = [await context.waitForEvent('serviceworker', { timeout: 10_000 })];
   }
-  await workers[0].evaluate(({ enabled, key }) => chrome.storage.local.set({ [key]: enabled }), {
-    enabled: value,
-    key: TableBordersKey,
-  });
+  await workers[0].evaluate(
+    ({ enabled, storageKey }) =>
+      chrome.storage.local.set({
+        [storageKey]: enabled,
+      }),
+    {
+      enabled: value,
+      storageKey: key,
+    },
+  );
+}
+
+async function setTableBorders(value) {
+  await setStoredSetting(TableBordersKey, value);
+}
+
+async function setTableResize(value) {
+  await setStoredSetting(TableResizeKey, value);
 }
 
 it('renders CSV as a bounded table with quoted fields', async () => {
@@ -134,16 +149,15 @@ it('drops a trailing empty CSV column', async () => {
 });
 
 it('applies optional column borders to Markdown tables', async () => {
-  await setTableBorders(true);
+  await setTableBorders(false);
   const { page, errors } = await openPage(context, `${base}/sample.md`);
   try {
     await page.waitForSelector('.pv-markdown table');
-    assert.equal(await page.evaluate(() => document.documentElement.dataset.pvTableBorders), 'on');
-    const border = await page
-      .locator('.pv-markdown table th')
-      .first()
-      .evaluate((node) => getComputedStyle(node).borderRightWidth);
-    assert.notEqual(border, '0px');
+    const cell = page.locator('.pv-markdown table th').first();
+    assert.equal(await cell.evaluate((node) => getComputedStyle(node).borderRightWidth), '0px');
+    await setTableBorders(true);
+    await page.waitForFunction(() => document.documentElement.dataset.pvTableBorders === 'on');
+    assert.notEqual(await cell.evaluate((node) => getComputedStyle(node).borderRightWidth), '0px');
     assert.ok((await page.locator('.pv-table-resize').count()) > 0);
     assertNoErrors(errors);
   } finally {
@@ -190,8 +204,15 @@ it('ignores whitespace-only trailing CSV columns', async () => {
 });
 
 it('exposes column resize handles', async () => {
+  await setTableResize(false);
   const { page, errors } = await openCsvFixture();
-  assert.equal(await page.locator('.pv-table-resize').count(), 3);
-  assertNoErrors(errors);
-  await page.close();
+  try {
+    assert.equal(await page.locator('.pv-table-resize').count(), 0);
+    await setTableResize(true);
+    await page.waitForFunction(() => document.querySelectorAll('.pv-table-resize').length === 3);
+    assertNoErrors(errors);
+  } finally {
+    await setTableResize(true);
+    await page.close();
+  }
 });

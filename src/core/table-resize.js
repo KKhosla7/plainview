@@ -86,7 +86,34 @@
     }
   }
 
+  function disableAll() {
+    for (const table of document.querySelectorAll(
+      '.pv-csv-table, .pv-markdown .pv-table-wrap table',
+    )) {
+      for (const handle of table.querySelectorAll('.pv-table-resize')) {
+        handle.remove();
+      }
+      table.querySelector('colgroup')?.remove();
+      table.classList.remove('pv-table-resizable');
+      delete table.dataset.pvResizable;
+    }
+  }
+
+  function apply(enabled) {
+    document.documentElement.dataset.pvTableResize = enabled ? 'on' : 'off';
+    if (!enabled) {
+      disableAll();
+      return;
+    }
+
+    for (const table of document.querySelectorAll(
+      '.pv-csv-table, .pv-markdown .pv-table-wrap table',
+    )) {
+      enable(table, { offset: table.classList.contains('pv-csv-table') ? 1 : 0 });
+    }
+  }
+
   root.Plainview = Object.assign(root.Plainview || {}, {
-    tableResize: { enable },
+    tableResize: { apply, enable },
   });
 })(globalThis);

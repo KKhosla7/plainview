@@ -198,6 +198,12 @@
     globalThis.addEventListener('pagehide', () => sourceWatch.stop(), { once: true });
 
     applyDocumentChrome({ app, format, fileName });
+    Plainview.watchSetting(Plainview.TABLE_BORDERS_KEY, (value) => {
+      document.documentElement.dataset.pvTableBorders = value ? 'on' : 'off';
+    });
+    Plainview.watchSetting(Plainview.TABLE_RESIZE_KEY, (value) => {
+      Plainview.tableResize.apply(Boolean(value));
+    });
     restoreScrollState({ scrollKey, savedScroll, viewSwitcher, toc, format, refreshExtras });
   }
 

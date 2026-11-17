@@ -53,6 +53,22 @@
     return loadLocalSetting(key, fallback);
   }
 
+  function watchSetting(key, onChange) {
+    const api = root.browser ?? root.chrome;
+    try {
+      api?.storage?.onChanged?.addListener((changes, area) => {
+        if (area !== 'local' || !changes?.[key]) {
+          return;
+        }
+        onChange(changes[key].newValue);
+      });
+    } catch (error) {
+      if (!(error instanceof TypeError)) {
+        throw error;
+      }
+    }
+  }
+
   function saveSetting(key, value) {
     try {
       const area = storageArea();
@@ -153,6 +169,7 @@
     ZOOM_STEP: ZoomStep,
     loadSetting,
     saveSetting,
+    watchSetting,
     validTheme,
   });
 })(globalThis);
