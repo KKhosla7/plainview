@@ -1,0 +1,89 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { after, before, test as it } from 'node:test';
+import { pathToFileURL } from 'node:url';
+import {
+  assertNoErrors,
+  closeExtension,
+  launchExtension,
+  openPage,
+  startServer,
+} from './helpers.mjs';
+
+const TreeModeKey = 'plainview.jsonTreeMode';
+
+let server;
+let base;
+let context;
+let profile;
+
+before(async () => {
+  ({ server, base } = await startServer());
+  ({ context, profile } = await launchExtension());
+});
+
+after(async () => {
+  await closeExtension({ context, profile });
+  await new Promise((resolve) => server.close(resolve));
+});
+
+async function setTreeMode(value) {
+  let workers = context.serviceWorkers();
+  if (workers.length === 0) {
+    workers = [await context.waitForEvent('serviceworker', { timeout: 10_000 })];
+  }
+  await workers[0].evaluate(({ key, mode }) => chrome.storage.local.set({ [key]: mode }), {
+    key: TreeModeKey,
+    mode: value,
+  });
+}
+
+function createLargeJson() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-virtual-'));
+  const file = path.join(dir, 'large.json');
+  const rows = Array.from({ length: 1200 }, (_, index) => ({
+    id: index,
+    name: `item-${index}`,
+    enabled: index % 2 === 0,
+  }));
+  fs.writeFileSync(file, JSON.stringify(rows));
+  return { dir, file };
+}
+
+it('renders a virtualized tree and reveals a search result', async () => {
+  await setTreeMode('virtual');
+  const { dir, file } = createLargeJson();
+  const { page, errors } = await openPage(context, pathToFileURL(file).href);
+  try {
+    await page.waitForSelector('.pv-virtual-tree');
+    assert.equal(await page.locator('.pv-tree-more').count(), 0);
+    assert.ok((await page.locator('.pv-vrow').count()) < 100);
+
+    const search = page.getByLabel('Search JSON keys and values');
+    await search.fill('item-1199');
+    await page.waitForSelector('.pv-json-search-results:not([hidden])');
+    await page.locator('.pv-json-search-result').first().click();
+    await page.waitForSelector('.pv-vrow-active');
+    assert.match(await page.locator('.pv-vrow-active').innerText(), /item-1199/u);
+    assert.ok((await page.locator('.pv-vrow').count()) < 100);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+it('keeps the classic tree available by default', async () => {
+  await setTreeMode('classic');
+  const { page, errors } = await openPage(context, `${base}/sample.json`);
+  try {
+    await page.waitForSelector('.pv-json');
+    assert.equal(await page.locator('.pv-virtual-tree').count(), 0);
+    assert.ok((await page.locator('.pv-json-key').count()) >= 5);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+  }
+});

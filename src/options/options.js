@@ -22,11 +22,13 @@
   Plainview.installFonts?.();
 
   async function load() {
+    const jsonTreeMode = document.querySelector('#jsonTreeMode');
     const data = await api.storage.local.get({
       [Keys.AutoReload]: false,
       [Keys.TableBorders]: false,
       [Keys.TableResize]: true,
       [Keys.TableLayout]: 'wrap',
+      [Keys.JsonTreeMode]: 'classic',
       [Keys.Shortcuts]: 'alt-s',
       [Keys.ExportUncompressed]: false,
     });
@@ -34,6 +36,7 @@
     tableBorders.checked = Boolean(data[Keys.TableBorders]);
     tableResize.checked = Boolean(data[Keys.TableResize]);
     tableLayout.value = data[Keys.TableLayout] === 'scroll' ? 'scroll' : 'wrap';
+    jsonTreeMode.value = data[Keys.JsonTreeMode] === 'virtual' ? 'virtual' : 'classic';
     const shortcuts = Plainview.shortcutConfig.normalizeShortcuts(data[Keys.Shortcuts]);
     for (const select of shortcutSelects) {
       select.value = shortcuts[select.dataset.shortcut];
@@ -93,6 +96,10 @@
       tableLayout.value === 'wrap' ? 'Wide tables wrap text' : 'Wide tables scroll sideways';
     tableStatus.classList.add('visible');
     globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
+  });
+
+  Plainview.onAsync(document.querySelector('#jsonTreeMode'), 'change', async (event) => {
+    await api.storage.local.set({ [Keys.JsonTreeMode]: event.currentTarget.value });
   });
 
   Plainview.onAsync(autoReload, 'change', async () => {

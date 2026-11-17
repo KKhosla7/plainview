@@ -168,6 +168,7 @@
     TABLE_BORDERS_KEY: TableBordersKey,
     TABLE_RESIZE_KEY: TableResizeKey,
     TABLE_LAYOUT_KEY: Keys.TableLayout,
+    JSON_TREE_MODE_KEY: Keys.JsonTreeMode,
     ZOOM_MIN: ZoomMin,
     ZOOM_MAX: ZoomMax,
     ZOOM_STEP: ZoomStep,

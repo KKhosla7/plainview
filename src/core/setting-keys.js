@@ -10,6 +10,7 @@
   const TableBordersKey = 'plainview.tableBorders';
   const TableResizeKey = 'plainview.tableResize';
   const TableLayoutKey = 'plainview.tableLayout';
+  const JsonTreeModeKey = 'plainview.jsonTreeMode';
   const ThemeKey = 'plainview.theme';
   const ZoomKey = 'plainview.zoom';
   const Prefix = 'plainview.';
@@ -23,6 +24,7 @@
       TableBorders: TableBordersKey,
       TableResize: TableResizeKey,
       TableLayout: TableLayoutKey,
+      JsonTreeMode: JsonTreeModeKey,
       Theme: ThemeKey,
       Zoom: ZoomKey,
     }),

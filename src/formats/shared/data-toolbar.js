@@ -21,13 +21,19 @@
     return button;
   }
 
-  function createDataToolbar({ article, source, summary, copyLabel }) {
+  function createDataToolbar({ article, source, summary, copyLabel, treeMode }) {
     const meta = el('div', 'pv-doc-meta');
     const text = el('span', 'pv-meta-text', summary);
     const actions = el('span', 'pv-meta-actions');
 
     const expand = metaButton('Expand all');
     expand.addEventListener('click', () => {
+      const virtualTree = article.querySelector('.pv-virtual-tree');
+      if (virtualTree) {
+        virtualTree.dispatchEvent(new CustomEvent('pv-expand-all'));
+        return;
+      }
+
       for (const details of article.querySelectorAll('details')) {
         details.open = true;
       }
@@ -35,6 +41,12 @@
 
     const collapse = metaButton('Collapse all');
     collapse.addEventListener('click', () => {
+      const virtualTree = article.querySelector('.pv-virtual-tree');
+      if (virtualTree) {
+        virtualTree.dispatchEvent(new CustomEvent('pv-collapse-all'));
+        return;
+      }
+
       for (const details of article.querySelectorAll('details')) {
         details.open = false;
       }
@@ -49,7 +61,20 @@
       }, CopyResetMs);
     });
 
-    actions.append(expand, collapse, copy);
+    actions.append(expand, collapse);
+    if (treeMode) {
+      const mode = metaButton(treeMode === 'virtual' ? 'Classic tree' : 'Virtual tree');
+      mode.title = treeMode === 'virtual' ? 'Use the paged tree' : 'Use the virtualized tree';
+      mode.addEventListener('click', () => {
+        Plainview.saveSetting(
+          Plainview.JSON_TREE_MODE_KEY,
+          treeMode === 'virtual' ? 'classic' : 'virtual',
+        );
+        location.reload();
+      });
+      actions.append(mode);
+    }
+    actions.append(copy);
     meta.append(text, actions);
     return meta;
   }

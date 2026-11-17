@@ -17,14 +17,17 @@
     const source = String(options.source ?? '');
     const article = el('article', 'pv-doc pv-data-doc');
     const indexRef = { current: new Map() };
+    const virtual = document.documentElement.dataset.pvJsonTreeMode === 'virtual';
     const toolbar = Plainview.createDataToolbar({
       article,
       source,
       summary: '',
       copyLabel: options.copyLabel || 'Copy JSON',
+      treeMode: virtual ? 'virtual' : 'classic',
     });
     const metaText = toolbar.querySelector('.pv-meta-text');
-    const { tree, context, revealPath } = Plainview.createJsonTree({
+    const factory = virtual ? Plainview.createVirtualJsonTree : Plainview.createJsonTree;
+    const { tree, context, revealPath } = factory({
       value,
       source,
       options,

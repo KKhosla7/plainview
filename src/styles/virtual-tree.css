@@ -1,0 +1,66 @@
+html[data-pv] .pv-virtual-tree {
+  position: relative;
+  margin: 1em 0;
+  min-height: 12em;
+  font-family: var(--pv-mono);
+  font-size: 12px;
+}
+
+html[data-pv] .pv-vrow {
+  position: absolute;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  overflow: hidden;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+html[data-pv] .pv-vrow:hover {
+  background: var(--pv-bg-soft);
+}
+
+html[data-pv] .pv-vrow-active {
+  background: color-mix(in srgb, var(--pv-accent) 12%, transparent);
+  outline: 2px solid var(--pv-accent);
+  outline-offset: -2px;
+}
+
+html[data-pv] .pv-vrow-toggle {
+  flex: 0 0 16px;
+  width: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--pv-fg-faint);
+  font: inherit;
+  cursor: pointer;
+}
+
+html[data-pv] .pv-vrow-toggle:hover {
+  color: var(--pv-fg);
+}
+
+html[data-pv] .pv-vrow-spacer {
+  flex: 0 0 16px;
+  width: 16px;
+}
+
+html[data-pv] .pv-vrow > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html[data-pv] .pv-vrow .pv-json-path {
+  flex: 0 0 auto;
+  opacity: 0;
+}
+
+html[data-pv] .pv-vrow:hover .pv-json-path,
+html[data-pv] .pv-vrow:focus-within .pv-json-path {
+  opacity: 1;
+}

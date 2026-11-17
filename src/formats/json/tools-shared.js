@@ -120,6 +120,36 @@
     pathInput?.removeAttribute('aria-invalid');
   }
 
+  async function openResult({ hitClass, indexRef, item, list, onReveal }) {
+    if (onReveal && item.path) {
+      const revealed = await onReveal(item.path);
+      if (revealed?.handled) {
+        list.hidden = true;
+        return true;
+      }
+
+      if (revealed) {
+        if (hitClass) {
+          mark(revealed, hitClass);
+        }
+        reveal(revealed);
+        list.hidden = true;
+        return true;
+      }
+    }
+
+    if (!item.rendered) {
+      return false;
+    }
+    const entry = indexRef.current.get(item.pathText);
+    if (!entry) {
+      return false;
+    }
+    reveal(entry);
+    list.hidden = true;
+    return true;
+  }
+
   function resultRow({ hitClass, item, list, indexRef, onReveal }) {
     const row = el('button', 'pv-json-search-result');
     row.type = 'button';
@@ -128,25 +158,7 @@
     const value = el('span', 'pv-json-search-value', previewValue(item.value));
     row.append(path, value);
     Plainview.onAsync(row, 'click', async () => {
-      if (onReveal && item.path) {
-        const revealed = await onReveal(item.path);
-        if (revealed) {
-          if (hitClass) {
-            mark(revealed, hitClass);
-          }
-          reveal(revealed);
-          list.hidden = true;
-          return;
-        }
-      }
-
-      if (item.rendered) {
-        const entry = indexRef.current.get(item.pathText);
-        if (entry) {
-          reveal(entry);
-          list.hidden = true;
-        }
-
+      if (await openResult({ hitClass, indexRef, item, list, onReveal })) {
         return;
       }
       const ok = await Plainview.copyText(item.pathText);

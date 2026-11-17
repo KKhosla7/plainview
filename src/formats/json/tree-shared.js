@@ -55,6 +55,27 @@
     return span('pv-json-key', JSON.stringify(key));
   }
 
+  function pathTextFor(path) {
+    return Plainview.jsonPath.pathToJsonPath(path);
+  }
+
+  function isContainer(value) {
+    return value !== null && Plainview.valueKind(value) === 'object';
+  }
+
+  function entryCount(value) {
+    return Array.isArray(value) ? value.length : Object.keys(value).length;
+  }
+
+  function childEntries(value, index) {
+    if (Array.isArray(value)) {
+      return [index, value[index]];
+    }
+
+    const key = Object.keys(value)[index];
+    return [key, value[key]];
+  }
+
   function keyIndex(state, segment) {
     if (state.array) {
       return Number(segment);
@@ -75,7 +96,11 @@
   root.Plainview = Object.assign(root.Plainview || {}, {
     jsonTreeShared: {
       actionButton,
+      childEntries,
+      entryCount,
+      isContainer,
       keyIndex,
+      pathTextFor,
       pathButton,
       renderKey,
       renderValue,
