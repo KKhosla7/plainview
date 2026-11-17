@@ -86,6 +86,13 @@ it('mounts every row when the virtual tree is shorter than the viewport', async 
     await page.waitForFunction(() => document.querySelectorAll('.pv-vrow').length > 8);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /ratio/u);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /keywords/u);
+    assert.match(await page.locator('.pv-virtual-tree').innerText(), /7 keys/u);
+    const rootBraces = await page
+      .locator('.pv-vrow')
+      .first()
+      .locator('.pv-json-punct')
+      .allTextContents();
+    assert.equal(rootBraces.filter((text) => text === '{' || text === '}').length, 2);
     assertNoErrors(errors);
   } finally {
     await page.close();

@@ -124,13 +124,17 @@
 
   function rowValue(row) {
     if (!row.container) {
-      return span(valueClass(row.value), renderValue(row.value));
+      return [span(valueClass(row.value), renderValue(row.value))];
     }
 
-    const label = Array.isArray(row.value)
-      ? `${row.total} ${row.total === 1 ? 'item' : 'items'}`
-      : `${row.total} ${row.total === 1 ? 'key' : 'keys'}`;
-    return span('pv-json-count', label);
+    const array = Array.isArray(row.value);
+    const noun = array ? 'item' : 'key';
+    const label = `${row.total} ${noun}${row.total === 1 ? '' : 's'}`;
+    return [
+      span('pv-json-punct', array ? '[' : '{'),
+      span('pv-json-count', label),
+      span('pv-json-punct', array ? ']' : '}'),
+    ];
   }
 
   function toggleRow(state, row) {
@@ -176,7 +180,7 @@
     } else {
       node.append(renderKey(row.key), span('pv-json-punct', ': '));
     }
-    node.append(rowValue(row), pathButton(row.pathText));
+    node.append(...rowValue(row), pathButton(row.pathText));
     state.indexRef.current.set(row.pathText, {
       isContainer: row.container,
       isRoot: row.isRoot,
