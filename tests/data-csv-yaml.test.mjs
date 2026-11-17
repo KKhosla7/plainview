@@ -41,6 +41,10 @@ it('renders a YAML tree and its source syntax', async () => {
 
 async function openCsvFixture(name = 'sample.csv') {
   const { page, errors } = await openPage(context, `${base}/${name}`);
+  await page.waitForSelector('.pv-app');
+  if (await page.locator('.pv-app.pv-show-source').count()) {
+    await page.getByRole('tab', { name: 'HTML' }).click();
+  }
   await page.waitForSelector('.pv-csv-table');
   return { page, errors };
 }
@@ -141,6 +145,21 @@ it('renders a TOML tree and its source syntax', async () => {
   await page.waitForSelector('.pv-raw-code .pv-syn-key');
   assert.ok((await page.locator('.pv-raw-code .pv-syn-string').count()) >= 1);
 
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('ignores whitespace-only trailing CSV columns', async () => {
+  const { page, errors } = await openCsvFixture('trailing-space.csv');
+  assert.match(await page.locator('.pv-doc-meta').innerText(), /2 data rows · 2 columns/u);
+  assert.equal(await page.locator('.pv-csv-header').count(), 2);
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('exposes column resize handles', async () => {
+  const { page, errors } = await openCsvFixture();
+  assert.equal(await page.locator('.pv-csv-resize').count(), 3);
   assertNoErrors(errors);
   await page.close();
 });

@@ -172,6 +172,7 @@ import DocumentTemplate from './export/document.html';
     const html = fillTemplate(DocumentTemplate, {
       FORMAT: formatId,
       THEME: themeName,
+      TABLE_BORDERS: document.documentElement.dataset.pvTableBorders || 'off',
       GENERATOR: generator,
       TITLE: escapeHtml(title),
       CSS: String(root.PLAINVIEW_CSS || ''),

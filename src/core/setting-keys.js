@@ -7,6 +7,7 @@
   const AutoReloadKey = 'plainview.autoReloadSource';
   const ExportUncompressedKey = 'plainview.exportUncompressed';
   const ShortcutsKey = 'plainview.shortcuts';
+  const TableBordersKey = 'plainview.tableBorders';
   const ThemeKey = 'plainview.theme';
   const ZoomKey = 'plainview.zoom';
   const Prefix = 'plainview.';
@@ -17,6 +18,7 @@
       AutoReload: AutoReloadKey,
       ExportUncompressed: ExportUncompressedKey,
       Shortcuts: ShortcutsKey,
+      TableBorders: TableBordersKey,
       Theme: ThemeKey,
       Zoom: ZoomKey,
     }),

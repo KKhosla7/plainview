@@ -29,9 +29,11 @@ it('settings page loads and remembers the auto-reload option', async () => {
   assert.equal(await page.isChecked('#autoReloadSources'), false);
   assert.equal(await page.locator('#shortcutPreset').inputValue(), 'alt-s');
   assert.equal(await page.isChecked('#exportUncompressed'), false);
+  assert.equal(await page.isChecked('#tableBorders'), false);
 
   await page.check('#autoReloadSources');
   await page.check('#exportUncompressed');
+  await page.check('#tableBorders');
   await page.locator('#shortcutPreset').selectOption('off');
   await page.waitForTimeout(150);
   await page.reload();
@@ -39,6 +41,7 @@ it('settings page loads and remembers the auto-reload option', async () => {
   assert.equal(await page.isChecked('#autoReloadSources'), true);
   assert.equal(await page.locator('#shortcutPreset').inputValue(), 'off');
   assert.equal(await page.isChecked('#exportUncompressed'), true);
+  assert.equal(await page.isChecked('#tableBorders'), true);
   assert.match(await page.locator('#version').textContent(), /^\d+\.\d+\.\d+$/u);
   assert.match(
     await page.getByRole('link', { name: /Buy me a coffee/u }).getAttribute('href'),

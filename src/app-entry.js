@@ -50,6 +50,7 @@ import './formats/yaml/view.js';
 import './formats/toml/loader.js';
 import './formats/toml/view.js';
 import './formats/csv/parse.js';
+import './formats/csv/resize.js';
 import './formats/csv/table.js';
 import './formats/csv/view.js';
 import './formats/xml/parse.js';

@@ -7,7 +7,7 @@
 
   function columnIsEmpty(rows, index) {
     for (const row of rows) {
-      if (String(row[index] ?? '') !== '') {
+      if (String(row[index] ?? '').trim() !== '') {
         return false;
       }
     }

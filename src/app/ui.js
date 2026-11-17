@@ -88,6 +88,7 @@
       Plainview.loadSetting(Plainview.THEME_KEY, null),
       Plainview.loadSetting(Plainview.ZOOM_KEY, 100),
       Plainview.loadSetting(Plainview.SHORTCUT_KEY, 'alt-s'),
+      Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
     ]);
     return {
       viewKey,
@@ -97,14 +98,25 @@
       savedTheme: settings[2],
       savedZoom: settings[3],
       savedShortcuts: settings[4],
+      savedTableBorders: settings[5],
     };
   }
 
   async function mountViewer({ source, url, format, fileName: requestedName }) {
     await Plainview.migrateLegacySettings();
     const fileName = requestedName || fileNameFromUrl(url);
-    const { viewKey, scrollKey, savedView, savedScroll, savedTheme, savedZoom, savedShortcuts } =
-      await loadViewerSettings(url);
+    const {
+      viewKey,
+      scrollKey,
+      savedView,
+      savedScroll,
+      savedTheme,
+      savedZoom,
+      savedShortcuts,
+      savedTableBorders,
+    } = await loadViewerSettings(url);
+
+    document.documentElement.dataset.pvTableBorders = savedTableBorders ? 'on' : 'off';
 
     if (format.id === 'markdown') {
       Plainview.installFonts();
