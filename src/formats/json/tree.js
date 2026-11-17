@@ -1,73 +1,19 @@
 /* global Plainview */
 /*
- * Builds the bounded JSON tree, including progressive node loading.
+ * Lazily materialized JSON tree. Closed containers create only their summary;
+ * opening one renders a small page of children. Search can reveal a path by
+ * opening its ancestors without rendering unrelated branches.
  */
 ((root) => {
-  const { MaxNodeLimit, firstNodeLimit, nodeChunk } = Plainview.jsonLimits;
+  const { openDepth, pageSize } = Plainview.jsonLimits;
   const { el } = Plainview;
 
-  function span(className, text) {
-    return el('span', className, text);
-  }
+  const { actionButton, pathButton, renderKey, renderValue, span, valueClass } =
+    Plainview.jsonTreeShared;
 
-  function actionButton(className, label) {
-    const node = el('button', className, label);
-    node.type = 'button';
-    return node;
-  }
-
-  function valueClass(value) {
-    if (value === null) {
-      return 'pv-json-null';
-    }
-
-    if (Plainview.valueKind(value) === 'string') {
-      return 'pv-json-string';
-    }
-
-    if (Plainview.valueKind(value) === 'number') {
-      return 'pv-json-number';
-    }
-
-    if (Plainview.valueKind(value) === 'boolean') {
-      return 'pv-json-boolean';
-    }
-
-    return 'pv-json-boolean';
-  }
-
-  function renderValue(value) {
-    if (Plainview.valueKind(value) === 'string') {
-      return JSON.stringify(value);
-    }
-
-    if (value === null) {
-      return 'null';
-    }
-
-    return String(value);
-  }
-
-  function renderKey(key) {
-    if (Plainview.valueKind(key) === 'number') {
-      return span('pv-json-index', String(key));
-    }
-
-    return span('pv-json-key', JSON.stringify(key));
-  }
-
-  function pathButton(pathText) {
-    const node = el('button', 'pv-json-path', '⧉');
-    node.type = 'button';
-    node.title = `Copy path ${pathText}`;
-    node.setAttribute('aria-label', `Copy path ${pathText}`);
-    node.setAttribute('data-json-path', pathText);
-    return node;
-  }
-
-  function registerNode({ ctx, path, node, value, isContainer, summary }) {
+  function registerNode(ctx, { path, node, value, isContainer, summary }) {
     const pathText = Plainview.jsonPath.pathToJsonPath(path);
-    ctx.byPath.set(pathText, {
+    ctx.indexRef.current.set(pathText, {
       node,
       summary,
       value,
@@ -89,7 +35,7 @@
       row.append(span('pv-json-punct', ','));
     }
     row.append(pathButton(Plainview.jsonPath.pathToJsonPath(path)));
-    registerNode({ ctx, path, node: row, value, isContainer: false, summary: null });
+    registerNode(ctx, { path, node: row, value, isContainer: false, summary: null });
     return row;
   }
 
@@ -111,144 +57,175 @@
     return summary;
   }
 
-  function renderChildren(entries, depth, ctx, parentPath) {
-    const children = el('div', 'pv-json-children');
-    for (let i = 0; i < entries.length; i += 1) {
-      if (ctx.nodes >= ctx.limit) {
-        ctx.truncated = true;
-        children.append(el('div', 'pv-tree-note', '…'));
-        break;
-      }
-      const [childKey, childValue] = entries[i];
-      children.append(
+  function childEntry(state, index) {
+    const key = state.array ? index : state.keys[index];
+    return [key, state.value[key]];
+  }
+
+  function updateMoreButton(state, ctx) {
+    state.moreButton?.remove();
+    state.moreButton = null;
+    if (state.rendered >= state.total) {
+      return;
+    }
+    const remaining = state.total - state.rendered;
+    const more = actionButton(
+      'pv-meta-button pv-tree-more',
+      `Show next ${Math.min(ctx.pageSize, remaining).toLocaleString()}`,
+    );
+    more.addEventListener('click', () => {
+      more.disabled = true;
+      materializePage(state, ctx);
+    });
+    state.children.append(more);
+    state.moreButton = more;
+    ctx.stats.truncated = true;
+  }
+
+  function materializePage(state, ctx) {
+    const end = Math.min(state.rendered + ctx.pageSize, state.total);
+    const fragment = document.createDocumentFragment();
+    for (let index = state.rendered; index < end; index += 1) {
+      const [key, value] = childEntry(state, index);
+      fragment.append(
         renderNode(
-          childKey,
-          childValue,
+          key,
+          value,
           {
-            depth: depth + 1,
-            isLast: i === entries.length - 1,
-            path: [...parentPath, childKey],
+            depth: state.depth + 1,
+            isLast: index === state.total - 1,
+            path: [...state.path, key],
             isRoot: false,
+            chain: state.chain,
           },
           ctx,
           false,
         ),
       );
     }
+    state.rendered = end;
+    state.loaded = true;
+    if (!state.completed && state.rendered >= state.total) {
+      state.completed = true;
+      ctx.pending -= 1;
+    }
 
-    return children;
+    if (state.moreButton) {
+      state.children.insertBefore(fragment, state.moreButton);
+    } else {
+      state.children.append(fragment);
+    }
+    updateMoreButton(state, ctx);
+    ctx.report();
   }
 
   function renderContainer(key, value, meta, ctx) {
-    const { depth, path, isRoot } = meta;
-    if (ctx.stack.has(value)) {
-      ctx.values += 1;
-      return renderLeaf(key, '[circular]', meta, ctx);
-    }
-    ctx.stack.add(value);
+    const { depth, path } = meta;
     const array = Array.isArray(value);
+    const keys = array ? null : Object.keys(value);
+    const total = array ? value.length : keys.length;
     if (array) {
-      ctx.arrays += 1;
+      ctx.stats.arrays += 1;
     } else {
-      ctx.objects += 1;
+      ctx.stats.objects += 1;
     }
 
-    const entries = array ? value.map((item, index) => [index, item]) : Object.entries(value);
+    const pathText = Plainview.jsonPath.pathToJsonPath(path);
     const details = el('details', 'pv-json-node');
-    details.open = isRoot || depth < 2;
-    details.setAttribute('data-json-path', Plainview.jsonPath.pathToJsonPath(path));
-    const summary = renderSummary(key, array, entries.length, meta);
-    details.append(summary);
-    details.append(renderChildren(entries, depth, ctx, path));
-    registerNode({ ctx, path, node: details, value, isContainer: true, summary });
-    ctx.stack.delete(value);
+    details.open = Boolean(meta.isRoot || depth < ctx.openDepth);
+    details.setAttribute('data-json-path', pathText);
+    const summary = renderSummary(key, array, total, meta);
+    const children = el('div', 'pv-json-children');
+    details.append(summary, children);
+    const state = {
+      array,
+      chain: [...meta.chain, value],
+      children,
+      depth,
+      details,
+      keys,
+      completed: total === 0,
+      loaded: false,
+      moreButton: null,
+      path,
+      pathText,
+      rendered: 0,
+      total,
+      value,
+    };
+    ctx.states.set(pathText, state);
+    if (total > 0) {
+      ctx.pending += 1;
+    }
+    registerNode(ctx, { path, node: details, value, isContainer: true, summary });
+    details.addEventListener('toggle', () => {
+      if (details.open && !state.loaded) {
+        materializePage(state, ctx);
+      }
+    });
+    if (details.open) {
+      materializePage(state, ctx);
+    }
+
     return details;
   }
 
   function renderNode(key, value, meta, ctx, isRoot) {
-    const { depth, isLast, path } = meta;
+    const { depth, path } = meta;
     ctx.depth = Math.max(ctx.depth, depth);
-    ctx.nodes += 1;
-    if (ctx.nodes > ctx.limit) {
-      ctx.truncated = true;
-      return el('div', 'pv-tree-note', '…');
-    }
-
-    const nodeMeta = { depth, isLast, path, isRoot };
+    ctx.stats.nodes += 1;
+    ctx.stats.depth = Math.max(ctx.stats.depth, depth);
     const isContainer = value !== null && Plainview.valueKind(value) === 'object';
-    if (!isContainer) {
-      ctx.values += 1;
-      return renderLeaf(key, value, nodeMeta, ctx);
+    if (isContainer && meta.chain.includes(value)) {
+      ctx.stats.values += 1;
+      return renderLeaf(key, '[circular]', meta, ctx);
     }
 
-    return renderContainer(key, value, nodeMeta, ctx);
-  }
+    if (!isContainer) {
+      ctx.stats.values += 1;
+      return renderLeaf(key, value, meta, ctx);
+    }
 
-  function treeWasTruncated(treeState) {
-    return treeState.truncated;
+    return renderContainer(key, value, { ...meta, path, isRoot: Boolean(isRoot) }, ctx);
   }
 
   function createJsonTree({ value, source, options, indexRef, onStats }) {
     const tree = el('div', 'pv-json');
-    const chunk = nodeChunk(source.length);
-
-    function renderTree(limit) {
-      const openState = new Map();
-      for (const details of tree.querySelectorAll('details[data-json-path]')) {
-        openState.set(details.getAttribute('data-json-path'), details.open);
-      }
-      const context = {
+    const ctx = {
+      indexRef,
+      openDepth: options.openDepth ?? openDepth(source.length),
+      pageSize: options.pageSize ?? pageSize(source.length),
+      pending: 0,
+      materializePage: null,
+      report() {
+        this.stats.truncated = this.pending > 0;
+        onStats({ ...this.stats });
+      },
+      states: new Map(),
+      stats: {
+        arrays: 0,
+        depth: 0,
         nodes: 0,
         objects: 0,
-        arrays: 0,
-        values: 0,
-        depth: 0,
         truncated: false,
-        limit,
-        byPath: new Map(),
-        stack: new WeakSet(),
-      };
-      const rootNode = renderNode('$', value, { depth: 0, isLast: true, path: [] }, context, true);
-      const parts = [rootNode];
-      if (treeWasTruncated(context)) {
-        const note = el('div', 'pv-tree-note');
-        note.append(`Tree capped at ${context.nodes.toLocaleString()} nodes. `);
-        if (limit < MaxNodeLimit) {
-          const more = actionButton(
-            'pv-meta-button pv-tree-more',
-            `Load next ${chunk.toLocaleString()} nodes`,
-          );
-          more.addEventListener('click', () => {
-            more.disabled = true;
-            more.textContent = 'Loading…';
-            globalThis.setTimeout(() => renderTree(Math.min(limit + chunk, MaxNodeLimit)), 0);
-          });
-          note.append(more);
-        } else {
-          note.append('Maximum tree size reached; use “Source” for the full file.');
-        }
-        parts.push(note);
-      }
-      tree.replaceChildren(...parts);
-      indexRef.current = context.byPath;
-      if (openState.size > 0) {
-        for (const details of tree.querySelectorAll('details[data-json-path]')) {
-          const path = details.getAttribute('data-json-path');
-          if (openState.has(path)) {
-            details.open = openState.get(path);
-          }
-        }
-      }
-      onStats(context);
-      return context;
-    }
-
-    const initialLimit = Math.max(
-      1,
-      Math.min(options.nodeLimit || firstNodeLimit(source.length), MaxNodeLimit),
+        values: 0,
+      },
+    };
+    ctx.materializePage = (state) => materializePage(state, ctx);
+    const rootNode = renderNode(
+      '$',
+      value,
+      { chain: [], depth: 0, isLast: true, isRoot: true, path: [] },
+      ctx,
+      true,
     );
-    const context = renderTree(initialLimit);
-    return { tree, context };
+    tree.append(rootNode);
+    ctx.report();
+    return {
+      tree,
+      context: ctx.stats,
+      revealPath: Plainview.jsonTreeReveal.createReveal(ctx),
+    };
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, { createJsonTree });

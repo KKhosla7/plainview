@@ -120,7 +120,7 @@
     pathInput?.removeAttribute('aria-invalid');
   }
 
-  function resultRow({ item, list, indexRef }) {
+  function resultRow({ hitClass, item, list, indexRef, onReveal }) {
     const row = el('button', 'pv-json-search-result');
     row.type = 'button';
     row.title = item.rendered ? `Go to ${item.pathText}` : `Copy path ${item.pathText}`;
@@ -128,6 +128,18 @@
     const value = el('span', 'pv-json-search-value', previewValue(item.value));
     row.append(path, value);
     Plainview.onAsync(row, 'click', async () => {
+      if (onReveal && item.path) {
+        const revealed = await onReveal(item.path);
+        if (revealed) {
+          if (hitClass) {
+            mark(revealed, hitClass);
+          }
+          reveal(revealed);
+          list.hidden = true;
+          return;
+        }
+      }
+
       if (item.rendered) {
         const entry = indexRef.current.get(item.pathText);
         if (entry) {
@@ -147,7 +159,7 @@
     return row;
   }
 
-  function renderResults({ list, matches, indexRef }) {
+  function renderResults({ hitClass, list, matches, indexRef, onReveal }) {
     if (matches.length === 0) {
       list.hidden = true;
       list.replaceChildren();
@@ -155,7 +167,7 @@
     }
     const fragment = document.createDocumentFragment();
     for (const item of matches.slice(0, 50)) {
-      fragment.append(resultRow({ item, list, indexRef }));
+      fragment.append(resultRow({ hitClass, item, list, indexRef, onReveal }));
     }
 
     if (matches.length > 50) {

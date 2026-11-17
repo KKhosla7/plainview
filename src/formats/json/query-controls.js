@@ -50,7 +50,12 @@
       }
       used.add(entry);
       queryHits.push({ entry, pathText: entry.pathText });
-      items.push({ pathText: entry.pathText, value: entry.value, rendered: true });
+      items.push({
+        path: entry.path,
+        pathText: entry.pathText,
+        value: entry.value,
+        rendered: true,
+      });
       mark(entry, 'pv-json-query-hit');
     }
 
@@ -112,7 +117,13 @@
 
   function finishQuery(ctx, expression, total, scalar, items) {
     ctx.queryCount.textContent = `${total} ${total === 1 ? 'result' : 'results'}`;
-    renderResults({ list: ctx.queryResults, matches: items, indexRef: ctx.indexRef });
+    renderResults({
+      hitClass: 'pv-json-query-hit',
+      list: ctx.queryResults,
+      matches: items,
+      indexRef: ctx.indexRef,
+      onReveal: ctx.revealPath,
+    });
     ctx.onStart();
     if (total === 0) {
       ctx.status.textContent = `No matches for ${expression}. Try a shorter path or a wildcard.`;
@@ -123,7 +134,7 @@
     if (scalar !== undefined) {
       ctx.status.textContent = `Result: ${JSON.stringify(scalar)}`;
     } else if (ctx.queryHits.length < total) {
-      ctx.status.textContent = `${total - ctx.queryHits.length} result(s) are below the tree cap.`;
+      ctx.status.textContent = `${total - ctx.queryHits.length} result(s) can be opened from the list.`;
     } else {
       clearStatus(ctx.status);
     }
@@ -147,7 +158,12 @@
     for (const result of results) {
       const pathText = Plainview.jsonPath.pathToJsonPath(result.path);
       const entry = ctx.indexRef.current.get(pathText);
-      items.push({ pathText, value: result.value, rendered: Boolean(entry) });
+      items.push({
+        path: result.path,
+        pathText,
+        value: result.value,
+        rendered: Boolean(entry),
+      });
       if (entry) {
         ctx.queryHits.push({ entry, pathText });
         mark(entry, 'pv-json-query-hit');
@@ -191,11 +207,12 @@
     }
   }
 
-  function createJsonQuery({ rootValue, indexRef, status, queryResults, onStart }) {
+  function createJsonQuery({ rootValue, indexRef, revealPath, status, queryResults, onStart }) {
     const { pathWrap, language, pathInput, queryButton, queryCount } = createQueryElements();
     const ctx = {
       rootValue,
       indexRef,
+      revealPath,
       status,
       queryResults,
       onStart,

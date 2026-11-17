@@ -136,13 +136,16 @@ it('keeps JSON tools visible while scrolling and resolves indexed paths', async 
   const query = page.getByLabel('Query expression');
   await query.fill('$[406].name');
   await page.getByRole('button', { name: 'Query', exact: true }).click();
-  await page.waitForFunction(() => document.querySelectorAll('.pv-json-query-hit').length === 1);
+  await page.waitForSelector('.pv-json-query-results:not([hidden])');
   assert.match(await page.locator('.pv-json-query .pv-json-count').innerText(), /1 result/u);
+  await page.locator('.pv-json-query-results .pv-json-search-result').first().click();
+  await page.waitForFunction(() => document.querySelectorAll('.pv-json-query-hit').length === 1);
 
   await query.fill('$[?(@.id >= 406 && @.id <= 408)].name');
   await page.getByRole('button', { name: 'Query', exact: true }).click();
-  await page.waitForFunction(() => document.querySelectorAll('.pv-json-query-hit').length === 3);
+  await page.waitForSelector('.pv-json-query-results:not([hidden])');
   assert.match(await page.locator('.pv-json-query .pv-json-count').innerText(), /3 results/u);
+  assert.match(await page.locator('.pv-json-query-results').innerText(), /\$\[406\]\.name/u);
 
   assertNoErrors(errors);
   await page.close();

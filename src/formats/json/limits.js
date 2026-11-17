@@ -1,44 +1,43 @@
 /* global Plainview */
 /*
- * JSON tree sizing policy. Kept separate from rendering so the limits can be
- * changed without touching the DOM builder.
+ * JSON tree sizing policy. Large documents render only the branch the reader
+ * opens, with small per-container pages instead of one global node budget.
  */
 ((root) => {
-  const InitialNodeLimit = 8000;
-  const NodeChunk = 8000;
-  const MaxNodeLimit = 120_000;
-  const LargeSourceBytes = 2_000_000;
+  const SmallSourceBytes = 100_000;
   const MediumSourceBytes = 500_000;
-  const LargeNodeLimit = 500;
-  const MediumNodeLimit = 3000;
-  const LargeNodeChunk = 2000;
-  const MediumNodeChunk = 4000;
+  const SmallPageSize = 150;
+  const MediumPageSize = 100;
+  const LargePageSize = 75;
+  const SmallOpenDepth = 3;
+  const MediumOpenDepth = 2;
+  const LargeOpenDepth = 1;
 
-  function firstNodeLimit(sourceLength) {
-    if (sourceLength > LargeSourceBytes) {
-      return LargeNodeLimit;
-    }
-
+  function pageSize(sourceLength) {
     if (sourceLength > MediumSourceBytes) {
-      return MediumNodeLimit;
+      return LargePageSize;
     }
 
-    return InitialNodeLimit;
+    if (sourceLength > SmallSourceBytes) {
+      return MediumPageSize;
+    }
+
+    return SmallPageSize;
   }
 
-  function nodeChunk(sourceLength) {
-    if (sourceLength > LargeSourceBytes) {
-      return LargeNodeChunk;
-    }
-
+  function openDepth(sourceLength) {
     if (sourceLength > MediumSourceBytes) {
-      return MediumNodeChunk;
+      return LargeOpenDepth;
     }
 
-    return NodeChunk;
+    if (sourceLength > SmallSourceBytes) {
+      return MediumOpenDepth;
+    }
+
+    return SmallOpenDepth;
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {
-    jsonLimits: { MaxNodeLimit, firstNodeLimit, nodeChunk },
+    jsonLimits: { openDepth, pageSize },
   });
 })(globalThis);

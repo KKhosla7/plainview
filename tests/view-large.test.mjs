@@ -57,11 +57,14 @@ it('progressively renders a large JSON tree', async () => {
     assert.match(await results.innerText(), /\$\[1199\]\.name/u);
     assert.match(await results.innerText(), /item-1199/u);
 
-    const leavesBefore = await page.locator('.pv-json-leaf').count();
-    await page.locator('.pv-tree-more').click();
-    await page.locator('.pv-tree-more').waitFor({ state: 'detached' });
-    const leavesAfter = await page.locator('.pv-json-leaf').count();
-    assert.ok(leavesAfter > leavesBefore, `${leavesAfter} leaves after loading more`);
+    const nodesBefore = await page.locator('.pv-json-node').count();
+    await page.locator('.pv-tree-more').first().click();
+    await page.waitForFunction(
+      (previousCount) => document.querySelectorAll('.pv-json-node').length > previousCount,
+      nodesBefore,
+    );
+    await results.locator('.pv-json-search-result').first().click();
+    await page.waitForSelector('.pv-json-path[data-json-path="$[1199].name"]');
     assertNoErrors(errors);
   } finally {
     await page.close();

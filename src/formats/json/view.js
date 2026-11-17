@@ -24,7 +24,7 @@
       copyLabel: options.copyLabel || 'Copy JSON',
     });
     const metaText = toolbar.querySelector('.pv-meta-text');
-    const { tree, context } = Plainview.createJsonTree({
+    const { tree, context, revealPath } = Plainview.createJsonTree({
       value,
       source,
       options,
@@ -33,7 +33,7 @@
         metaText.textContent = summaryFor(source, options, stats);
       },
     });
-    const tools = Plainview.createJsonTools({ tree, rootValue: value, indexRef });
+    const tools = Plainview.createJsonTools({ tree, rootValue: value, indexRef, revealPath });
     article.append(toolbar, tools, tree);
     return { article, stats: context, error: false, tree, index: indexRef.current };
   }

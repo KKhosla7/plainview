@@ -6,7 +6,7 @@
 ((root) => {
   const { el, CopyResetMs, clearStatus } = Plainview.jsonToolsShared;
 
-  function createJsonTools({ tree, rootValue, indexRef }) {
+  function createJsonTools({ tree, rootValue, indexRef, revealPath }) {
     const tools = el('div', 'pv-json-tools');
     const status = el('div', 'pv-json-status');
     status.setAttribute('role', 'status');
@@ -18,6 +18,7 @@
     const search = Plainview.createJsonSearch({
       rootValue,
       indexRef,
+      revealPath,
       status,
       searchResults,
       onClear() {
@@ -29,6 +30,7 @@
     const query = Plainview.createJsonQuery({
       rootValue,
       indexRef,
+      revealPath,
       status,
       queryResults,
       onStart() {

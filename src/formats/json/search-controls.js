@@ -1,44 +1,9 @@
 /* global Plainview */
 /*
- * JSON tree search controls.
+ * JSON search controls. The walk itself lives in search-runner.js.
  */
 ((root) => {
-  const {
-    el,
-    button,
-    inputClear,
-    mark,
-    unmark,
-    selectHit,
-    previewValue,
-    primitiveText,
-    renderResults,
-    SearchDebounceMs,
-  } = Plainview.jsonToolsShared;
-
-  function searchable(entry) {
-    const key = entry.isRoot ? '' : String(entry.key);
-    const quotedKey = entry.isRoot ? '' : JSON.stringify(String(entry.key));
-    const primitive = primitiveText(entry.value);
-    const quotedValue =
-      Plainview.valueKind(entry.value) === 'string' ? JSON.stringify(entry.value) : primitive;
-    const preview = primitive || previewValue(entry.value);
-    return [
-      entry.pathText,
-      key,
-      quotedKey,
-      primitive,
-      quotedValue,
-      preview,
-      key ? `${key}: ${primitive}` : '',
-      key ? `${key}:${primitive}` : '',
-      quotedKey ? `${quotedKey}: ${quotedValue}` : '',
-      quotedKey ? `${quotedKey}:${quotedValue}` : '',
-      key ? `${key} ${primitive}` : '',
-    ]
-      .join(' ')
-      .toLocaleLowerCase();
-  }
+  const { el, button, inputClear, selectHit, SearchDebounceMs } = Plainview.jsonToolsShared;
 
   function createSearchElements() {
     const searchWrap = el('div', 'pv-json-search');
@@ -71,46 +36,17 @@
     next.addEventListener('click', () => stepSearch(1));
   }
 
-  function ensureFullIndex(rootValue, indexState) {
-    if (!indexState.fullIndex) {
-      indexState.fullIndex = Plainview.jsonSearch.build(rootValue);
-    }
-
-    return indexState.fullIndex;
-  }
-
-  function collectSearchMatches({ needle, rootValue, indexRef, indexState }) {
-    const matches = [];
-    const hits = [];
-    let external = 0;
-    for (const entry of ensureFullIndex(rootValue, indexState)) {
-      if (!searchable(entry).includes(needle)) {
-        continue;
-      }
-      const node = indexRef.current.get(entry.pathText);
-      matches.push({ ...entry, rendered: Boolean(node) });
-      if (node) {
-        hits.push({ entry: node });
-        mark(node, 'pv-json-hit');
-      } else {
-        external += 1;
-      }
-    }
-
-    return { matches, hits, external };
-  }
-
-  function createJsonSearch({ rootValue, indexRef, status, searchResults, onClear }) {
+  function createJsonSearch({ rootValue, indexRef, revealPath, status, searchResults, onClear }) {
     const { searchWrap, search, prev, next, count } = createSearchElements();
     let searchHits = [];
     let searchIndex = -1;
+    let searchToken = 0;
     let timer = 0;
-    const indexState = { fullIndex: null };
 
     function clearSearch() {
       for (const hit of searchHits) {
-        unmark(hit.entry, 'pv-json-hit');
-        unmark(hit.entry, 'pv-json-hit-active');
+        Plainview.jsonToolsShared.unmark(hit.entry, 'pv-json-hit');
+        Plainview.jsonToolsShared.unmark(hit.entry, 'pv-json-hit-active');
       }
       searchHits = [];
       searchIndex = -1;
@@ -122,33 +58,39 @@
       onClear();
     }
 
-    function runSearch() {
+    function searchFailed(error) {
+      status.textContent = `Search failed: ${error instanceof Error ? error.message : error}`;
+      status.classList.add('is-error');
+    }
+
+    async function startSearch() {
+      searchToken += 1;
+      const token = searchToken;
       clearSearch();
       const query = search.value.trim();
       if (!query) {
         return;
       }
-      const needle = query.toLocaleLowerCase();
-      const { matches, hits, external } = collectSearchMatches({
-        needle,
-        rootValue,
+
+      const result = await Plainview.jsonSearchRunner.runSearch({
+        count,
         indexRef,
-        indexState,
+        isActive: () => token === searchToken,
+        needle: query.toLocaleLowerCase(),
+        next,
+        prev,
+        query,
+        revealPath,
+        rootValue,
+        searchResults,
+        status,
       });
-      searchHits = hits;
-      count.textContent = `${matches.length} ${matches.length === 1 ? 'match' : 'matches'}`;
-      prev.disabled = searchHits.length === 0;
-      next.disabled = searchHits.length === 0;
+      if (!result || token !== searchToken) {
+        return;
+      }
+      searchHits = result.hits;
       if (searchHits.length > 0) {
         searchIndex = selectHit(searchHits, 0, 'pv-json-hit-active');
-      }
-      renderResults({ list: searchResults, matches, indexRef });
-      if (matches.length === 0) {
-        status.textContent = `No matches for ${query}.`;
-        status.classList.add('is-empty');
-      } else if (external > 0) {
-        status.textContent = `${external} match(es) outside the loaded tree are listed below.`;
-        status.classList.add('is-empty');
       }
     }
 
@@ -161,12 +103,14 @@
 
     function scheduleSearch() {
       globalThis.clearTimeout(timer);
-      timer = globalThis.setTimeout(runSearch, SearchDebounceMs);
+      timer = globalThis.setTimeout(() => {
+        startSearch().catch(searchFailed);
+      }, SearchDebounceMs);
     }
 
     const searchClear = inputClear(search, 'Clear search', () => {
       globalThis.clearTimeout(timer);
-      runSearch();
+      startSearch().catch(searchFailed);
     });
     searchWrap.insertBefore(searchClear, prev);
     bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch });

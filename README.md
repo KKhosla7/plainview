@@ -230,7 +230,7 @@ see [ROADMAP.md](ROADMAP.md).
 
 - Raw HTML, MDX/JSX and YAML/TOML are not rendered; MDX files fall back to Markdown with JSX shown as
   text.
-- Very large JSON/XML trees stop at 40,000 nodes; the Source view has the full file.
+- Large JSON trees render small pages and open only the branches you use; search covers the full document in batches. XML trees stop at 40,000 rendered nodes; the Source view has the full file.
 - Source highlighting is skipped above 1.5 MB and the source is shown as plain text.
 - A server that forces a download (`Content-Disposition: attachment`) never opens a page, so the
   extension cannot render it. Open the downloaded file locally instead.
