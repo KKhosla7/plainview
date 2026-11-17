@@ -45,7 +45,7 @@
 
   function flattenNode({ state, path, key, nodeValue, depth, isRoot }) {
     const pathText = pathTextFor(path);
-    if (!filterRelevant(state, pathText)) {
+    if (!filterRelevant(state, pathText, path)) {
       return;
     }
     const container = isContainer(nodeValue);
@@ -143,7 +143,7 @@
     node.dataset.jsonPath = row.pathText;
     node.classList.toggle('pv-vrow-active', row.pathText === state.activePath);
 
-    if (state.filterPaths?.includes(row.pathText)) {
+    if (state.filterPaths?.has(row.pathText)) {
       node.classList.add(state.filterHitClass || 'pv-json-hit');
     }
 

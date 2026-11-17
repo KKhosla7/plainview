@@ -98,10 +98,12 @@ html[data-pv] .pv-xml-leaf {
 }
 
 html[data-pv] .pv-xml-close {
+  display: none;
   padding-left: 0;
 }
 
 html[data-pv] .pv-xml-tag {
+  margin: 0 0.15em;
   color: var(--pv-syn-tag);
 }
 
@@ -118,11 +120,13 @@ html[data-pv] .pv-xml-punct {
 }
 
 html[data-pv] .pv-xml-text {
+  margin: 0 0.2em;
   color: var(--pv-fg);
 }
 
 html[data-pv] .pv-xml-cdata,
 html[data-pv] .pv-xml-cdata-block {
+  margin: 0 0.2em;
   color: var(--pv-syn-string);
   white-space: pre-wrap;
 }
