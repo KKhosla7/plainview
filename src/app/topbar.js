@@ -38,59 +38,59 @@
     views.setAttribute('role', 'tablist');
     views.setAttribute('aria-label', 'Document view');
 
-    const htmlTab = button('pv-view-tab', 'HTML');
+    const htmlTab = button('pv-view-tab pv-icon-tab');
     htmlTab.setAttribute('role', 'tab');
+    htmlTab.setAttribute('aria-label', 'HTML');
     htmlTab.setAttribute('aria-selected', 'true');
-    htmlTab.title = 'Rendered view';
+    htmlTab.title = 'Rendered HTML view';
+    htmlTab.append(Plainview.icons.html());
 
-    const sourceTab = button('pv-view-tab', 'Source');
+    const sourceTab = button('pv-view-tab pv-icon-tab');
     sourceTab.setAttribute('role', 'tab');
+    sourceTab.setAttribute('aria-label', 'Source');
     sourceTab.setAttribute('aria-selected', 'false');
-    sourceTab.title = 'Original file text';
+    sourceTab.title = 'Raw source';
 
+    sourceTab.append(Plainview.icons.source());
     views.append(htmlTab, sourceTab);
     return { views, htmlTab, sourceTab };
   }
 
-  function createActions() {
+  function createActions({ showDownload }) {
     const actions = el('div', 'pv-actions');
 
     const tocButton = button('pv-action pv-action-toc', 'TOC');
     tocButton.setAttribute('aria-expanded', 'false');
     tocButton.title = 'Table of contents';
 
-    const themes = el('div', 'pv-themes');
-    themes.setAttribute('role', 'group');
-    themes.setAttribute('aria-label', 'Theme');
-    const lightButton = button('pv-theme-tab', 'Light');
-    lightButton.setAttribute('aria-label', 'Light theme');
-    const darkButton = button('pv-theme-tab', 'Dark');
-    darkButton.setAttribute('aria-label', 'Dark theme');
-    themes.append(lightButton, darkButton);
+    const themeButton = button('pv-action pv-icon-action pv-theme-toggle');
+    themeButton.setAttribute('aria-label', 'Toggle theme');
+    themeButton.title = 'Toggle theme';
+    themeButton.append(Plainview.icons.theme());
 
     const downloadButton = button('pv-action pv-action-download', 'Download');
-    downloadButton.title = 'Download this file';
+    downloadButton.title = 'Download the original file';
 
-    const exportButton = button('pv-action pv-action-export', 'Export');
-    exportButton.title = 'Export a standalone HTML copy';
+    const exportButton = button('pv-action pv-icon-action pv-action-export');
+    exportButton.setAttribute('aria-label', 'Export');
+    exportButton.title = 'Export data or standalone HTML';
+    exportButton.append(Plainview.icons.export());
 
-    actions.append(
-      tocButton,
-      el('span', 'pv-theme-label', 'Theme'),
-      themes,
-      downloadButton,
-      exportButton,
-    );
-    return { actions, tocButton, lightButton, darkButton, downloadButton, exportButton };
+    actions.append(tocButton, themeButton);
+    if (showDownload) {
+      actions.append(downloadButton);
+    }
+    actions.append(exportButton);
+    return { actions, tocButton, themeButton, downloadButton, exportButton };
   }
 
-  function createTopbar({ fileName, url, formatLabel }) {
+  function createTopbar({ fileName, url, formatLabel, showDownload }) {
     const topbar = el('header', 'pv-topbar');
     const brand = createBrand({ fileName, url, formatLabel });
     const tabs = createViewTabs();
-    const controls = createActions();
+    const controls = createActions({ showDownload });
 
-    controls.actions.prepend(el('span', 'pv-view-label', 'View'), tabs.views);
+    controls.actions.prepend(tabs.views);
     topbar.append(brand, controls.actions);
 
     return {
@@ -98,8 +98,7 @@
       htmlTab: tabs.htmlTab,
       sourceTab: tabs.sourceTab,
       tocButton: controls.tocButton,
-      lightButton: controls.lightButton,
-      darkButton: controls.darkButton,
+      themeButton: controls.themeButton,
       downloadButton: controls.downloadButton,
       exportButton: controls.exportButton,
     };

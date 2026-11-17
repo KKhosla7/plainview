@@ -235,3 +235,16 @@ it('does not show a source-change prompt for unchanged XML', async () => {
   assertNoErrors(errors);
   await page.close();
 });
+
+it('opens nested containers in small trees', async () => {
+  const { page, errors } = await openPage(context, `${base}/nested.json`);
+  await page.waitForSelector('.pv-json');
+  assert.equal(await page.locator('.pv-json-node').count(), 5);
+  assert.equal(
+    await page.locator('.pv-json-node').evaluateAll((nodes) => nodes.every((node) => node.open)),
+    true,
+  );
+  assert.equal(await page.locator('.pv-json-number').innerText(), '1');
+  assertNoErrors(errors);
+  await page.close();
+});

@@ -40,8 +40,7 @@ it('renders a normal Markdown document with the HTML theme', async () => {
   assert.equal(await page.locator('.pv-pill').count(), 0);
 
   assert.equal(await page.locator('.pv-toc-title').textContent(), 'Contents');
-  assert.equal(await page.locator('.pv-theme-label').textContent(), 'Theme');
-  assert.equal(await page.locator('.pv-theme-tab[aria-selected="true"]').count(), 1);
+  assert.equal(await page.locator('.pv-theme-toggle').count(), 1);
   assert.deepEqual(await page.locator('.pv-toc-link').allTextContents(), [
     'Plainview sample',
     'Lists',

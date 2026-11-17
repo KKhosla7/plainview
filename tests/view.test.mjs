@@ -84,10 +84,10 @@ it('Source view, theme and reading position survive a reload', async () => {
   await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20_000 });
 
   await page.getByRole('tab', { name: 'Source' }).click();
-  await page.getByRole('button', { name: 'Dark theme' }).click();
+  await page.getByRole('button', { name: 'Toggle theme' }).click();
   await page.waitForFunction(() => document.documentElement.dataset.pvTheme === 'dark');
   assert.equal(
-    await page.getByRole('button', { name: 'Dark theme' }).getAttribute('aria-selected'),
+    await page.getByRole('button', { name: 'Toggle theme' }).getAttribute('aria-pressed'),
     'true',
   );
 
@@ -103,7 +103,7 @@ it('Source view, theme and reading position survive a reload', async () => {
     'block',
   );
   assert.equal(
-    await page.getByRole('button', { name: 'Dark theme' }).getAttribute('aria-selected'),
+    await page.getByRole('button', { name: 'Toggle theme' }).getAttribute('aria-pressed'),
     'true',
   );
 

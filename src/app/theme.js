@@ -1,6 +1,6 @@
 /* global Plainview */
 ((root) => {
-  function createTheme({ lightButton, darkButton, initialTheme }) {
+  function createTheme({ button, initialTheme }) {
     const { THEME_KEY, saveSetting, validTheme } = Plainview;
     const stored = validTheme(initialTheme);
     let theme =
@@ -21,15 +21,9 @@
 
     function apply() {
       root.document.documentElement.dataset.pvTheme = theme;
-      for (const [name, button] of [
-        ['light', lightButton],
-        ['dark', darkButton],
-      ]) {
-        const selected = theme === name;
-        button.setAttribute('aria-selected', String(selected));
-        button.setAttribute('aria-pressed', String(selected));
-        button.classList.toggle('is-active', selected);
-      }
+      const dark = theme === 'dark';
+      button.setAttribute('aria-pressed', String(dark));
+      button.title = dark ? 'Switch to light theme' : 'Switch to dark theme';
     }
 
     function setTheme(next) {
@@ -44,8 +38,9 @@
       }
     }
 
-    lightButton.addEventListener('click', () => setTheme('light'));
-    darkButton.addEventListener('click', () => setTheme('dark'));
+    button.addEventListener('click', () => {
+      setTheme(theme === 'dark' ? 'light' : 'dark');
+    });
 
     apply();
 

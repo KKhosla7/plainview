@@ -9,8 +9,8 @@
   const SmallPageSize = 200;
   const MediumPageSize = 200;
   const LargePageSize = 200;
-  const SmallOpenDepth = 3;
-  const MediumOpenDepth = 2;
+  const SmallOpenDepth = 8;
+  const MediumOpenDepth = 4;
   const LargeOpenDepth = 2;
   const AutoOpenChildLimit = 40;
 

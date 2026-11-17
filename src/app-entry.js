@@ -71,6 +71,7 @@ import './formats/xml/render.js';
 import './formats/xml/view.js';
 import './formats/mermaid/svg-sanitize.js';
 import './formats/mermaid/loader.js';
+import './app/icons.js';
 import './app/topbar.js';
 import './app/scroll-spy.js';
 import './app/toc.js';

@@ -79,13 +79,13 @@
 
     function start() {
       topbar.exportButton.disabled = true;
-      topbar.exportButton.textContent = 'Exporting…';
+      topbar.exportButton.setAttribute('aria-label', 'Exporting…');
       progress.hidden = false;
     }
 
     function finish() {
       topbar.exportButton.disabled = false;
-      topbar.exportButton.textContent = 'Export';
+      topbar.exportButton.setAttribute('aria-label', 'Export');
       progress.hidden = true;
     }
 
@@ -121,11 +121,6 @@
     refreshExtras,
   }) {
     const grid = el('div', 'pv-export-grid');
-    grid.append(
-      el('span', 'pv-export-grid-blank', ''),
-      el('span', 'pv-export-grid-head', formatLabel),
-      el('span', 'pv-export-grid-head', 'HTML'),
-    );
     if (hasFilter) {
       grid.append(
         el('span', 'pv-export-grid-label', 'Filtered Results'),
@@ -161,10 +156,15 @@
       topbar.exportButton.setAttribute('aria-expanded', 'false');
     }
 
-    function action(label, ariaLabel, task) {
-      const button = el('button', 'pv-export-cell', label);
+    function action(label, ariaLabel, task, kind) {
+      const button = el('button', 'pv-export-cell');
       button.type = 'button';
       button.setAttribute('aria-label', ariaLabel);
+      button.append(
+        Plainview.icons.download(),
+        kind === 'html' ? Plainview.icons.html() : Plainview.icons.data(),
+        document.createTextNode(label),
+      );
       Plainview.onAsync(button, 'click', async () => {
         close();
         await feedback.run(task);

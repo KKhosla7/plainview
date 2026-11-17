@@ -8,7 +8,7 @@ html[data-pv] .pv-export-menu {
   right: 0;
   z-index: 40;
   display: grid;
-  min-width: 240px;
+  min-width: min(340px, calc(100vw - 40px));
   padding: 6px;
   border: 1px solid var(--pv-border);
   border-radius: 8px;
@@ -32,6 +32,7 @@ html[data-pv] .pv-export-menu-title {
 
 html[data-pv] .pv-export-menu button {
   appearance: none;
+  white-space: nowrap;
   padding: 8px 10px;
   border: 0;
   border-radius: 5px;
@@ -126,13 +127,18 @@ html[data-pv] .pv-export-grid-label {
 }
 
 html[data-pv] .pv-export-menu .pv-export-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   min-width: 58px;
   padding: 6px 8px;
-  border: 1px solid var(--pv-border);
+  border: 0;
   text-align: center;
 }
 
 html[data-pv] .pv-export-menu .pv-export-cell:hover,
 html[data-pv] .pv-export-menu .pv-export-cell:focus-visible {
-  border-color: var(--pv-accent);
+  background: var(--pv-accent-soft);
+  color: var(--pv-fg);
 }

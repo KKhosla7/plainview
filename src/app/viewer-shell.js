@@ -25,6 +25,7 @@
       fileName,
       url,
       formatLabel: format.label,
+      showDownload: format.id === 'markdown',
     });
     const sourcePane = Plainview.createSourcePane(source, format);
     const shell = el('div', 'pv-shell');
@@ -65,8 +66,7 @@
     });
 
     const theme = Plainview.createTheme({
-      lightButton: topbar.lightButton,
-      darkButton: topbar.darkButton,
+      button: topbar.themeButton,
       initialTheme: savedTheme,
     });
 
