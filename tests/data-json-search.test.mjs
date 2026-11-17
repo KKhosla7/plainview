@@ -154,3 +154,19 @@ it('runs root-array JMESPath indexes', async () => {
   assertNoErrors(errors);
   await page.close();
 });
+
+it('keeps the active search hit below the sticky tools', async () => {
+  const { page, errors } = await openJson();
+  await page.evaluate(() => globalThis.scrollTo(0, document.documentElement.scrollHeight));
+  const search = page.getByLabel('Search JSON keys and values');
+  await search.fill('label');
+  await page.waitForSelector('.pv-json-hit-active');
+  const positions = await page.evaluate(() => {
+    const active = document.querySelector('.pv-json-hit-active').getBoundingClientRect();
+    const tools = document.querySelector('.pv-json-tools').getBoundingClientRect();
+    return { activeTop: active.top, toolsBottom: tools.bottom };
+  });
+  assert.ok(positions.activeTop >= positions.toolsBottom - 1);
+  assertNoErrors(errors);
+  await page.close();
+});

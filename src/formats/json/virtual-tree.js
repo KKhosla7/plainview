@@ -17,7 +17,6 @@
   } = Plainview.jsonTreeShared;
   const { openDepth } = Plainview.jsonLimits;
   const AutoRows = 20_000;
-
   function createState({ value, options, indexRef, onStats, tree }) {
     return {
       activePath: '',
@@ -256,8 +255,9 @@
     }
     state.activePath = target;
     rebuild(state);
+    const offset = Plainview.jsonToolsShared.stickyOffset();
     const top =
-      globalThis.scrollY + state.tree.getBoundingClientRect().top + index * RowHeight - 120;
+      globalThis.scrollY + state.tree.getBoundingClientRect().top + index * RowHeight - offset;
     globalThis.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
     scheduleRender(state);
     return { handled: true };

@@ -92,10 +92,27 @@
     }
   }
 
+  function stickyOffset() {
+    const topbar = document.querySelector('.pv-topbar');
+    const tools = document.querySelector('.pv-json-tools');
+    return (topbar?.offsetHeight || 0) + (tools?.offsetHeight || 0) + 16;
+  }
+
+  function scrollResultIntoView(node) {
+    const offset = stickyOffset();
+    const rect = node.getBoundingClientRect();
+    if (rect.top >= offset && rect.bottom <= globalThis.innerHeight) {
+      return;
+    }
+
+    const top = globalThis.scrollY + rect.top - offset;
+    globalThis.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }
+
   function reveal(entry) {
     openAncestors(entry);
     requestAnimationFrame(() => {
-      entry.node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      scrollResultIntoView(entry.node);
     });
   }
 
@@ -200,7 +217,9 @@
       mark,
       previewValue,
       primitiveText,
+      stickyOffset,
       renderResults,
+      scrollResultIntoView,
       selectHit,
       unmark,
     },

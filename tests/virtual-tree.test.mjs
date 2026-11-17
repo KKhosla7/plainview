@@ -77,6 +77,12 @@ it('renders a virtualized tree and reveals a search result', async () => {
     await page.locator('.pv-json-search-result').first().click();
     await page.waitForSelector('.pv-vrow-active');
     assert.match(await page.locator('.pv-vrow-active').innerText(), /item-1199/u);
+    const positions = await page.evaluate(() => {
+      const active = document.querySelector('.pv-vrow-active').getBoundingClientRect();
+      const tools = document.querySelector('.pv-json-tools').getBoundingClientRect();
+      return { activeTop: active.top, toolsBottom: tools.bottom };
+    });
+    assert.ok(positions.activeTop >= positions.toolsBottom - 1);
     assert.ok((await page.locator('.pv-vrow').count()) < 100);
     assertNoErrors(errors);
   } finally {
