@@ -70,7 +70,9 @@ import DocumentTemplate from './export/document.html';
       return '';
     }
     const clone = topbar.cloneNode(true);
-    for (const node of clone.querySelectorAll('.pv-views, .pv-actions')) {
+    for (const node of clone.querySelectorAll(
+      '.pv-views, .pv-actions, .pv-export-progress, .pv-export-error',
+    )) {
       node.remove();
     }
 
@@ -169,8 +171,18 @@ import DocumentTemplate from './export/document.html';
     }
 
     const documentData = exportData.getDocument?.() ?? null;
-    if (documentData && scope !== 'filtered') {
+    if (documentData) {
       documentData.filter = null;
+      if (scope === 'filtered') {
+        const filtered = data.entries.find((entry) => entry.scope === 'filtered');
+        if (filtered) {
+          const value = exportData.getData('filtered');
+          if (value && (value.kind === 'json' || value.kind === 'yaml' || value.kind === 'toml')) {
+            documentData.value = value.data;
+          }
+          documentData.source = filtered.text;
+        }
+      }
     }
 
     return JSON.stringify({ document: documentData, entries: data.entries }).replace(

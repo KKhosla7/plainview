@@ -240,12 +240,9 @@ it('applies the active search in a filtered HTML export', async () => {
     try {
       await exported.goto(pathToFileURL(file).href);
       await exported.waitForSelector('.pv-json');
-      assert.equal(await exported.getByLabel('Search JSON keys and values').inputValue(), 'label');
-      await exported.waitForSelector('.pv-json-search-results:not([hidden])');
-      assert.match(
-        await exported.locator('.pv-json-search-results:not(.pv-json-query-results)').innerText(),
-        /one/u,
-      );
+      assert.match(await exported.locator('.pv-json').innerText(), /one/u);
+      assert.match(await exported.locator('.pv-json').innerText(), /two/u);
+      assert.doesNotMatch(await exported.locator('.pv-json').innerText(), /keywords/u);
     } finally {
       await exported.close();
     }
