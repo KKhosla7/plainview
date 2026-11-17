@@ -19,8 +19,10 @@
     next.addEventListener('click', () => stepSearch(1));
   }
 
-  function createXmlSearch({ byNode, status }) {
+  function createSearchElements() {
     const searchWrap = el('div', 'pv-json-search');
+    const searchRow = el('div', 'pv-json-search-row');
+    const countRow = el('div', 'pv-json-count-row');
     const search = el('input', 'pv-json-input');
     search.type = 'search';
     search.placeholder = 'Search elements, attributes and text…';
@@ -33,8 +35,14 @@
     next.title = 'Next match';
     next.setAttribute('aria-label', 'Next match');
     const count = el('span', 'pv-json-count', '');
-    searchWrap.append(search, prev, next, count);
+    searchRow.append(search, prev, next);
+    countRow.append(count);
+    searchWrap.append(searchRow, countRow);
+    return { count, next, prev, search, searchWrap };
+  }
 
+  function createXmlSearch({ byNode, status }) {
+    const { count, next, prev, search, searchWrap } = createSearchElements();
     let searchHits = [];
     let searchIndex = -1;
     let searchTimer = 0;

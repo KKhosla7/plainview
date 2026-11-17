@@ -245,3 +245,31 @@ it('wraps wide tables by default and can scroll them', async () => {
     await page.close();
   }
 });
+
+it('remembers Markdown column widths after reload', async () => {
+  await setTableResize(true);
+  const { page, errors } = await openPage(context, `${base}/sample.md?widths=1`);
+  try {
+    await page.waitForSelector('.pv-markdown .pv-table-resize');
+    const header = page.locator('.pv-markdown table th').first();
+    const handle = page.locator('.pv-markdown .pv-table-resize').first();
+    await handle.scrollIntoViewIfNeeded();
+    const initialWidth = (await header.boundingBox()).width;
+    const box = await handle.boundingBox();
+    const y = box.y + box.height / 2;
+    await page.mouse.move(box.x + 3, y);
+    await page.mouse.down();
+    await page.mouse.move(box.x + 63, y, { steps: 5 });
+    await page.mouse.up();
+    const resized = (await header.boundingBox()).width;
+    assert.ok(resized > initialWidth);
+    await page.waitForTimeout(300);
+    await page.reload();
+    await page.waitForSelector('.pv-markdown .pv-table-resize');
+    const restored = (await header.boundingBox()).width;
+    assert.ok(Math.abs(restored - resized) < 3);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+  }
+});

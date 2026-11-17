@@ -182,3 +182,41 @@ it('allows column resizing in exported HTML', async () => {
   assertNoErrors(errors);
   await page.close();
 });
+
+it('preserves resized column widths in exported HTML', async () => {
+  const { page, errors } = await openSample();
+  const sourceHeader = page.locator('.pv-markdown table th').first();
+  const sourceHandle = page.locator('.pv-markdown .pv-table-resize').first();
+  await sourceHandle.scrollIntoViewIfNeeded();
+  const sourceWidth = (await sourceHeader.boundingBox()).width;
+  const box = await sourceHandle.boundingBox();
+  const y = box.y + box.height / 2;
+  await page.mouse.move(box.x + 3, y);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 63, y, { steps: 5 });
+  await page.mouse.up();
+  const resizedWidth = (await sourceHeader.boundingBox()).width;
+  assert.ok(resizedWidth > sourceWidth);
+  await page.waitForTimeout(300);
+
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Export', exact: true }).click(),
+  ]);
+  const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-export-'));
+  const exportFile = path.join(exportDir, 'sample.html');
+  fs.copyFileSync(await download.path(), exportFile);
+  const exported = await context.newPage();
+  try {
+    await exported.goto(pathToFileURL(exportFile).href);
+    await exported.waitForSelector('.pv-markdown table');
+    const exportedWidth = (await exported.locator('.pv-markdown table th').first().boundingBox())
+      .width;
+    assert.ok(Math.abs(exportedWidth - resizedWidth) < 3);
+  } finally {
+    await exported.close();
+    fs.rmSync(exportDir, { recursive: true, force: true });
+  }
+  assertNoErrors(errors);
+  await page.close();
+});

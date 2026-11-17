@@ -114,12 +114,14 @@
   }
 
   function wrapTables(article) {
+    let index = 0;
     for (const table of article.querySelectorAll('table')) {
       const wrapper = Plainview.createElement('div');
       wrapper.className = 'pv-table-wrap';
       table.replaceWith(wrapper);
       wrapper.append(table);
-      Plainview.tableResize.enable(table);
+      Plainview.tableResize.enable(table, { tableId: `markdown-${index}` });
+      index += 1;
     }
   }
 

@@ -5,6 +5,8 @@
 ((root) => {
   const { el } = Plainview;
   const MinColumnWidth = 60;
+  const WidthStorageKey = `plainview.tableWidths:${location.href}`;
+  let widthLoad = null;
 
   function createHandle(column, onResize) {
     const handle = el('span', 'pv-table-resize');
@@ -25,7 +27,53 @@
     return [...colgroup.children];
   }
 
-  function resizeColumn({ event, column, table, cols, offset, headers }) {
+  function ignoreWidthStorage() {
+    return false;
+  }
+
+  function readWidths() {
+    widthLoad ??= Plainview.loadSetting(WidthStorageKey, null);
+    return widthLoad;
+  }
+
+  function saveWidths(tableId, cols) {
+    if (!tableId) {
+      return;
+    }
+
+    readWidths()
+      .then((data) => {
+        const stored = Plainview.valueKind(data) === 'object' && data !== null ? data : {};
+        const next = {
+          ...stored,
+          [tableId]: cols.map((col) => Math.round(col.getBoundingClientRect().width)),
+        };
+        widthLoad = Promise.resolve(next);
+        Plainview.saveSetting(WidthStorageKey, next);
+      })
+      .catch(ignoreWidthStorage);
+  }
+
+  async function restoreWidths(table, cols, tableId) {
+    if (!tableId) {
+      return;
+    }
+
+    const data = await readWidths();
+    const widths = data?.[tableId];
+    if (!Array.isArray(widths) || widths.length !== cols.length) {
+      return;
+    }
+
+    for (let index = 0; index < widths.length; index += 1) {
+      if (Plainview.valueKind(widths[index]) === 'number' && widths[index] > 0) {
+        cols[index].style.width = `${widths[index]}px`;
+      }
+    }
+    table.classList.add('pv-table-resizable');
+  }
+
+  function resizeColumn({ event, column, table, tableId, cols, offset, headers }) {
     event.preventDefault();
     event.stopPropagation();
     const wrap = document.documentElement.dataset.pvTableLayout !== 'scroll';
@@ -72,12 +120,13 @@
     function end() {
       handle.removeEventListener('pointermove', move);
       handle.removeEventListener('pointerup', end);
+      saveWidths(tableId, cols);
     }
     handle.addEventListener('pointermove', move);
     handle.addEventListener('pointerup', end);
   }
 
-  function enable(table, { offset = 0 } = {}) {
+  function enable(table, { offset = 0, tableId } = {}) {
     if (!table || table.dataset.pvResizable === 'true') {
       return;
     }
@@ -97,13 +146,18 @@
       ? [...table.querySelector('colgroup').children]
       : createColGroup(table, headerRow.cells.length);
     table.dataset.pvResizable = 'true';
+    if (tableId) {
+      table.dataset.pvTableId = tableId;
+    }
+
     for (let index = 0; index < headers.length; index += 1) {
       headers[index].append(
         createHandle(offset + index, (event, column) =>
-          resizeColumn({ event, column, table, cols, offset, headers }),
+          resizeColumn({ event, column, table, tableId, cols, offset, headers }),
         ),
       );
     }
+    restoreWidths(table, cols, tableId).catch(ignoreWidthStorage);
   }
 
   function disableAll() {
@@ -123,7 +177,10 @@
     for (const table of document.querySelectorAll(
       '.pv-csv-table, .pv-markdown .pv-table-wrap table',
     )) {
-      enable(table, { offset: table.classList.contains('pv-csv-table') ? 1 : 0 });
+      enable(table, {
+        offset: table.classList.contains('pv-csv-table') ? 1 : 0,
+        tableId: table.dataset.pvTableId,
+      });
     }
   }
 

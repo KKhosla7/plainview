@@ -72,6 +72,8 @@
 
   function createQueryElements() {
     const queryWrap = el('form', 'pv-json-query');
+    const queryRow = el('div', 'pv-json-query-row');
+    const countRow = el('div', 'pv-json-count-row');
     const query = el('input', 'pv-json-input pv-json-path-input');
     query.type = 'text';
     query.placeholder = 'XPath, e.g. //book[@id="2"]/title';
@@ -80,7 +82,9 @@
     const queryButton = button('pv-meta-button', 'Query');
     queryButton.type = 'submit';
     const queryCount = el('span', 'pv-json-count', '');
-    queryWrap.append(query, queryButton, queryCount);
+    queryRow.append(query, queryButton);
+    countRow.append(queryCount);
+    queryWrap.append(queryRow, countRow);
     return { queryWrap, query, queryCount };
   }
 

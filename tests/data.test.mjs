@@ -166,6 +166,10 @@ it('searches XML and evaluates XPath queries', async () => {
   await search.fill('Markdown');
   await page.waitForFunction(() => document.querySelectorAll('.pv-xml-hit').length > 0);
   assert.match(await page.locator('.pv-xml-tools .pv-json-count').first().innerText(), /1 match/u);
+  assert.equal(
+    await page.locator('.pv-xml-tools .pv-json-search-row + .pv-json-count-row').count(),
+    1,
+  );
 
   const query = page.getByLabel('XPath query');
   await query.fill('//book/title');
@@ -174,6 +178,10 @@ it('searches XML and evaluates XPath queries', async () => {
   assert.match(
     await page.locator('.pv-xml-tools .pv-json-query .pv-json-count').innerText(),
     /2 results/u,
+  );
+  assert.equal(
+    await page.locator('.pv-xml-tools .pv-json-query-row + .pv-json-count-row').count(),
+    1,
   );
 
   await query.fill('count(//book)');

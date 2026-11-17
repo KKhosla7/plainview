@@ -243,7 +243,7 @@
     const tbody = el('tbody');
     table.append(headerParts.thead, tbody);
     wrap.append(table);
-    Plainview.tableResize.enable(table, { offset: 1 });
+    Plainview.tableResize.enable(table, { offset: 1, tableId: 'csv' });
 
     let timer = 0;
 
