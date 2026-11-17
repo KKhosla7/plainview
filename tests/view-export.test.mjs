@@ -144,3 +144,35 @@ it('embeds KaTeX styles and fonts when exporting math', async () => {
   assertNoErrors(errors);
   await page.close();
 });
+
+it('allows column resizing in exported HTML', async () => {
+  const { page, errors } = await openSample();
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Export', exact: true }).click(),
+  ]);
+  const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-export-'));
+  const exportFile = path.join(exportDir, 'sample.html');
+  fs.copyFileSync(await download.path(), exportFile);
+  const exported = await context.newPage();
+  try {
+    await exported.goto(pathToFileURL(exportFile).href);
+    await exported.waitForSelector('.pv-table-resize');
+    const handleLocator = exported.locator('.pv-table-resize').first();
+    await handleLocator.scrollIntoViewIfNeeded();
+    const header = exported.locator('.pv-markdown table th').first();
+    const startWidth = (await header.boundingBox()).width;
+    const handle = await handleLocator.boundingBox();
+    const y = handle.y + handle.height / 2;
+    await exported.mouse.move(handle.x + 3, y);
+    await exported.mouse.down();
+    await exported.mouse.move(handle.x + 43, y, { steps: 5 });
+    await exported.mouse.up();
+    assert.ok((await header.boundingBox()).width > startWidth);
+  } finally {
+    await exported.close();
+    fs.rmSync(exportDir, { recursive: true, force: true });
+  }
+  assertNoErrors(errors);
+  await page.close();
+});

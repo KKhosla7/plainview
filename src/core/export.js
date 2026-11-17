@@ -52,6 +52,10 @@ import DocumentTemplate from './export/document.html';
       }
     }
 
+    for (const table of clone.querySelectorAll('table')) {
+      delete table.dataset.pvResizable;
+    }
+
     for (const link of clone.querySelectorAll('.pv-toc-link')) {
       link.classList.remove('is-active');
       link.removeAttribute('aria-current');
@@ -174,6 +178,7 @@ import DocumentTemplate from './export/document.html';
       FORMAT: formatId,
       THEME: themeName,
       TABLE_BORDERS: document.documentElement.dataset.pvTableBorders || 'off',
+      TABLE_RESIZE: document.documentElement.dataset.pvTableResize || 'on',
       GENERATOR: generator,
       TITLE: escapeHtml(title),
       CSS: String(root.PLAINVIEW_CSS || ''),
@@ -183,6 +188,7 @@ import DocumentTemplate from './export/document.html';
       CREDIT_VERSION: creditVersion,
       THEME_SCRIPT: Plainview.exportScripts.ThemeScript,
       TOP_SCRIPT: Plainview.exportScripts.TopScript,
+      TABLE_RESIZE_SCRIPT: Plainview.exportScripts.TableResizeScript,
       TOC_SCRIPT: hasToc ? Plainview.exportScripts.TocScript : '',
     });
     if (uncompressed) {
