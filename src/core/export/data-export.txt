@@ -48,7 +48,9 @@
   for (const entry of payload.entries) {
     const item = document.createElement('button');
     item.type = 'button';
-    item.textContent = `${entry.scope === 'filtered' ? 'Download filtered' : 'Download complete'} ${entry.formatId.toUpperCase()}`;
+    item.textContent = payload.entries.length === 1
+      ? `Download ${entry.formatId.toUpperCase()}`
+      : `${entry.scope === 'filtered' ? 'Download filtered' : 'Download complete'} ${entry.formatId.toUpperCase()}`;
     item.addEventListener('click', () => download(entry));
     menu.append(item);
   }

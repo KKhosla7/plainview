@@ -169,22 +169,13 @@ it('keeps clean data downloads inside a compressed HTML export', async () => {
       assert.equal(await exported.getByLabel('Query expression').count(), 1);
       await exported.getByRole('button', { name: 'Export data', exact: true }).click();
       await exported.waitForSelector('.pv-export-menu:not([hidden])');
-      assert.match(
-        await exported.locator('.pv-export-menu').innerText(),
-        /Download filtered JSON/u,
-      );
-      assert.match(
-        await exported.locator('.pv-export-menu').innerText(),
-        /Download complete JSON/u,
-      );
+      assert.match(await exported.locator('.pv-export-menu').innerText(), /Download JSON/u);
+      assert.doesNotMatch(await exported.locator('.pv-export-menu').innerText(), /filtered/u);
       const [download] = await Promise.all([
         exported.waitForEvent('download'),
-        exported.getByRole('button', { name: /Download filtered JSON/u }).click(),
+        exported.getByRole('button', { name: /Download JSON/u }).click(),
       ]);
-      assert.deepEqual(JSON.parse(fs.readFileSync(await download.path(), 'utf8')), [
-        { id: 1, label: 'one' },
-        { id: 2, label: 'two' },
-      ]);
+      assert.equal(JSON.parse(fs.readFileSync(await download.path(), 'utf8')).name, 'plainview');
     } finally {
       await exported.close();
     }
@@ -243,6 +234,18 @@ it('applies the active search in a filtered HTML export', async () => {
       assert.match(await exported.locator('.pv-json').innerText(), /one/u);
       assert.match(await exported.locator('.pv-json').innerText(), /two/u);
       assert.doesNotMatch(await exported.locator('.pv-json').innerText(), /keywords/u);
+      await exported.getByRole('button', { name: 'Export data', exact: true }).click();
+      await exported.waitForSelector('.pv-export-menu:not([hidden])');
+      assert.match(await exported.locator('.pv-export-menu').innerText(), /Download JSON/u);
+      assert.doesNotMatch(await exported.locator('.pv-export-menu').innerText(), /complete/u);
+      const [download] = await Promise.all([
+        exported.waitForEvent('download'),
+        exported.getByRole('button', { name: /Download JSON/u }).click(),
+      ]);
+      assert.deepEqual(JSON.parse(fs.readFileSync(await download.path(), 'utf8')), [
+        { id: 1, label: 'one' },
+        { id: 2, label: 'two' },
+      ]);
     } finally {
       await exported.close();
     }

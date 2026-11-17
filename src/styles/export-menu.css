@@ -96,3 +96,43 @@ html[data-pv] .pv-export-error {
   box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
   font-size: 12px;
 }
+
+html[data-pv] .pv-export-grid {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) auto auto;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+html[data-pv] .pv-export-grid-blank {
+  min-height: 1px;
+}
+
+html[data-pv] .pv-export-grid-head {
+  padding: 2px 0;
+  color: var(--pv-fg-faint);
+  font-family: var(--pv-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+html[data-pv] .pv-export-grid-label {
+  padding: 4px 10px;
+  color: var(--pv-fg-muted);
+  font-size: 11px;
+}
+
+html[data-pv] .pv-export-menu .pv-export-cell {
+  min-width: 58px;
+  padding: 6px 8px;
+  border: 1px solid var(--pv-border);
+  text-align: center;
+}
+
+html[data-pv] .pv-export-menu .pv-export-cell:hover,
+html[data-pv] .pv-export-menu .pv-export-cell:focus-visible {
+  border-color: var(--pv-accent);
+}

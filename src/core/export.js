@@ -185,10 +185,8 @@ import DocumentTemplate from './export/document.html';
       }
     }
 
-    return JSON.stringify({ document: documentData, entries: data.entries }).replace(
-      /</gu,
-      '\\u003c',
-    );
+    const entries = data.entries.filter((entry) => entry.scope === scope);
+    return JSON.stringify({ document: documentData, entries }).replace(/</gu, '\\u003c');
   }
 
   async function buildDataViewer(exportData) {

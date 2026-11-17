@@ -70,13 +70,6 @@
     };
   }
 
-  function exportLabel(formatId, scope) {
-    const label = String(formatId || 'data').toUpperCase();
-    return scope === 'filtered'
-      ? `Download filtered results (${label})`
-      : `Download complete data (${label})`;
-  }
-
   function createExportFeedback(topbar) {
     const progress = el('div', 'pv-export-progress');
     progress.setAttribute('role', 'progressbar');
@@ -118,6 +111,44 @@
     };
   }
 
+  function exportGrid({
+    action,
+    content,
+    fileName,
+    format,
+    formatLabel,
+    hasFilter,
+    refreshExtras,
+  }) {
+    const grid = el('div', 'pv-export-grid');
+    grid.append(
+      el('span', 'pv-export-grid-blank', ''),
+      el('span', 'pv-export-grid-head', formatLabel),
+      el('span', 'pv-export-grid-head', 'HTML'),
+    );
+    if (hasFilter) {
+      grid.append(
+        el('span', 'pv-export-grid-label', 'Filtered Results'),
+        action(formatLabel, `Download filtered results (${formatLabel})`, () =>
+          exportNative(content, fileName, 'filtered')(),
+        ),
+        action('HTML', 'Download filtered HTML page', () =>
+          exportHtml({ content, fileName, format, refreshExtras, scope: 'filtered' })(),
+        ),
+      );
+    }
+    grid.append(
+      el('span', 'pv-export-grid-label', 'Complete Data'),
+      action(formatLabel, `Download complete data (${formatLabel})`, () =>
+        exportNative(content, fileName, 'complete')(),
+      ),
+      action('HTML', hasFilter ? 'Download complete HTML page' : 'Download HTML page', () =>
+        exportHtml({ content, fileName, format, refreshExtras })(),
+      ),
+    );
+    return grid;
+  }
+
   function createExportMenu({ feedback, topbar, content, fileName, format, refreshExtras }) {
     const menu = el('div', 'pv-export-menu');
     menu.setAttribute('role', 'menu');
@@ -130,46 +161,29 @@
       topbar.exportButton.setAttribute('aria-expanded', 'false');
     }
 
+    function action(label, ariaLabel, task) {
+      const button = el('button', 'pv-export-cell', label);
+      button.type = 'button';
+      button.setAttribute('aria-label', ariaLabel);
+      Plainview.onAsync(button, 'click', async () => {
+        close();
+        await feedback.run(task);
+      });
+      return button;
+    }
+
     function open() {
       menu.replaceChildren(title);
-      if (content.exportData.hasFilter()) {
-        const filtered = el('button', '', exportLabel(formatId, 'filtered'));
-        filtered.type = 'button';
-        Plainview.onAsync(filtered, 'click', async () => {
-          close();
-          await feedback.run(() => exportNative(content, fileName, 'filtered')());
-        });
-        menu.append(filtered);
-      }
-
-      const complete = el('button', '', exportLabel(formatId, 'complete'));
-      complete.type = 'button';
-      Plainview.onAsync(complete, 'click', async () => {
-        close();
-        await feedback.run(() => exportNative(content, fileName, 'complete')());
+      const grid = exportGrid({
+        action,
+        content,
+        fileName,
+        format,
+        formatLabel: String(formatId || 'data').toUpperCase(),
+        hasFilter: content.exportData.hasFilter(),
+        refreshExtras,
       });
-      if (content.exportData.hasFilter()) {
-        const filteredHtml = el('button', '', 'Download filtered HTML page');
-        filteredHtml.type = 'button';
-        Plainview.onAsync(filteredHtml, 'click', async () => {
-          close();
-          await feedback.run(() =>
-            exportHtml({ content, fileName, format, refreshExtras, scope: 'filtered' })(),
-          );
-        });
-        menu.append(filteredHtml);
-      }
-      const html = el(
-        'button',
-        '',
-        content.exportData.hasFilter() ? 'Download complete HTML page' : 'Download HTML page',
-      );
-      html.type = 'button';
-      Plainview.onAsync(html, 'click', async () => {
-        close();
-        await feedback.run(() => exportHtml({ content, fileName, format, refreshExtras })());
-      });
-      menu.append(complete, html);
+      menu.append(grid);
       menu.hidden = false;
       topbar.exportButton.setAttribute('aria-expanded', 'true');
       menu.querySelector('button')?.focus();
