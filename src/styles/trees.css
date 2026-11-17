@@ -42,9 +42,8 @@ html[data-pv] .pv-json-leaf {
 .pv-json-value {
   flex: 1 1 auto;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .pv-json-value > .pv-json-punct {
@@ -99,9 +98,7 @@ html[data-pv] .pv-xml-children {
 
 html[data-pv] .pv-xml-leaf {
   padding-left: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: pre-wrap;
 }
 
 html[data-pv] .pv-xml-close {

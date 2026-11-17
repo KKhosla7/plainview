@@ -172,6 +172,12 @@
       node.append(renderKey(row.key), span('pv-json-punct', ': '));
     }
     node.append(...rowValue(row), pathButton(row.pathText));
+    if (!row.container) {
+      const value = Plainview.jsonToolsShared.primitiveText(row.value);
+      if (value.length > 60) {
+        node.title = value;
+      }
+    }
     state.indexRef.current.set(row.pathText, {
       isContainer: row.container,
       isRoot: row.isRoot,
@@ -183,7 +189,6 @@
     });
     return node;
   }
-
   function renderRows(state) {
     const rect = state.tree.getBoundingClientRect();
     const top = Math.max(0, -rect.top);
@@ -290,6 +295,5 @@
       revealPath: (path) => revealPath(state, path),
     };
   }
-
   root.Plainview = Object.assign(root.Plainview || {}, { createVirtualJsonTree });
 })(globalThis);

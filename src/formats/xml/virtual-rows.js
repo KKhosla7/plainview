@@ -98,6 +98,13 @@
     ) {
       row.append(pathButton(descriptor.source, state.rootElement));
     }
+
+    if (!descriptor.container) {
+      const text = row.textContent;
+      if (text.length > 60) {
+        row.title = text;
+      }
+    }
     descriptor.row = row;
     return row;
   }
