@@ -91,7 +91,7 @@
       Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
       Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
       Plainview.loadSetting(Plainview.TABLE_LAYOUT_KEY, 'wrap'),
-      Promise.resolve('virtual'),
+      Plainview.loadSetting(Plainview.JSON_TREE_MODE_KEY, 'virtual'),
     ]);
     return {
       viewKey,
@@ -104,6 +104,7 @@
       savedTableBorders: settings[5],
       savedTableResize: settings[6],
       savedTableLayout: settings[7],
+      savedJsonTreeMode: settings[8],
     };
   }
 
@@ -143,6 +144,12 @@
     Plainview.watchSetting(Plainview.TABLE_LAYOUT_KEY, (value) => {
       Plainview.tableResize.applyLayout(Plainview.validTableLayout(value));
     });
+    Plainview.watchSetting(Plainview.JSON_TREE_MODE_KEY, (value) => {
+      const mode = value === 'classic' ? 'classic' : 'virtual';
+      if (document.documentElement.dataset.pvJsonTreeMode !== mode) {
+        location.reload();
+      }
+    });
   }
 
   async function mountViewer({ source, url, format, fileName: requestedName }) {
@@ -159,12 +166,14 @@
       savedTableBorders,
       savedTableResize,
       savedTableLayout,
+      savedJsonTreeMode,
     } = await loadViewerSettings(url);
 
     Plainview.tableBorders.apply(savedTableBorders);
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
     document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);
-    document.documentElement.dataset.pvJsonTreeMode = 'virtual';
+    document.documentElement.dataset.pvJsonTreeMode =
+      savedJsonTreeMode === 'classic' ? 'classic' : 'virtual';
 
     if (format.id === 'markdown') {
       Plainview.installFonts();
