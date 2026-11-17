@@ -179,6 +179,6 @@
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {
-    dataExport: { dataFileName, exportNative, serializeScopes },
+    dataExport: { exportNative, serializeScopes },
   });
 })(globalThis);

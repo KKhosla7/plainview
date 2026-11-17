@@ -218,7 +218,6 @@
     });
     reopen?.addEventListener('focus', show);
     reopen?.addEventListener('click', show);
-    return { close };
   }
 
   function renderResults({ hitClass, list, matches, indexRef, onReveal }) {
