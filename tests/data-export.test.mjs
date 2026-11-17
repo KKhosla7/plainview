@@ -255,3 +255,27 @@ it('applies the active search in a filtered HTML export', async () => {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+it('uses format-specific export glyphs', async () => {
+  const cases = [
+    ['sample.json', '{}'],
+    ['sample.yaml', '-:'],
+    ['sample.toml', '[=]'],
+    ['sample.xml', '<>'],
+    ['sample.csv', ','],
+  ];
+  for (const [fixture, glyph] of cases) {
+    const { page } = await openPage(context, `${base}/${fixture}`);
+    try {
+      await page.waitForSelector('.pv-app');
+      await page.getByRole('button', { name: 'Export', exact: true }).click();
+      await page.waitForSelector('.pv-export-menu:not([hidden])');
+      assert.ok(
+        (await page.locator('.pv-format-glyph').allTextContents()).includes(glyph),
+        `${fixture} should use ${glyph}`,
+      );
+    } finally {
+      await page.close();
+    }
+  }
+});

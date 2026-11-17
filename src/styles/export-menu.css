@@ -137,6 +137,16 @@ html[data-pv] .pv-export-menu .pv-export-cell {
   text-align: center;
 }
 
+html[data-pv] .pv-format-glyph {
+  width: 18px;
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
 html[data-pv] .pv-export-menu .pv-export-cell:hover,
 html[data-pv] .pv-export-menu .pv-export-cell:focus-visible {
   background: var(--pv-accent-soft);

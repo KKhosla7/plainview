@@ -60,6 +60,18 @@
     };
   }
 
+  function formatGlyph(formatLabel) {
+    const glyphs = {
+      CSV: ',',
+      JSON: '{}',
+      TOML: '[=]',
+      TSV: '⇥',
+      XML: '<>',
+      YAML: '-:',
+    };
+    return glyphs[formatLabel] || '{}';
+  }
+
   function exportNative(content, fileName, scope) {
     return async () => {
       await Plainview.dataExport.exportNative({
@@ -174,7 +186,9 @@
       button.setAttribute('aria-label', ariaLabel);
       button.title = `Download ${label}`;
       button.append(
-        kind === 'html' ? Plainview.icons.html() : Plainview.icons.data(),
+        kind === 'html'
+          ? Plainview.icons.html()
+          : el('span', 'pv-format-glyph', formatGlyph(label)),
         document.createTextNode(label),
       );
       Plainview.onAsync(button, 'click', async () => {
