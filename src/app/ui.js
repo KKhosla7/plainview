@@ -91,7 +91,7 @@
       Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
       Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
       Plainview.loadSetting(Plainview.TABLE_LAYOUT_KEY, 'wrap'),
-      Plainview.loadSetting(Plainview.JSON_TREE_MODE_KEY, 'classic'),
+      Plainview.loadSetting(Plainview.JSON_TREE_MODE_KEY, 'virtual'),
     ]);
     return {
       viewKey,
@@ -145,7 +145,7 @@
       Plainview.tableResize.applyLayout(Plainview.validTableLayout(value));
     });
     Plainview.watchSetting(Plainview.JSON_TREE_MODE_KEY, (value) => {
-      const mode = value === 'virtual' ? 'virtual' : 'classic';
+      const mode = value === 'classic' ? 'classic' : 'virtual';
       if (document.documentElement.dataset.pvJsonTreeMode !== mode) {
         location.reload();
       }
@@ -173,7 +173,7 @@
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
     document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);
     document.documentElement.dataset.pvJsonTreeMode =
-      savedJsonTreeMode === 'virtual' ? 'virtual' : 'classic';
+      savedJsonTreeMode === 'classic' ? 'classic' : 'virtual';
 
     if (format.id === 'markdown') {
       Plainview.installFonts();

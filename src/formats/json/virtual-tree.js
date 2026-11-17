@@ -15,24 +15,8 @@
     span,
     valueClass,
   } = Plainview.jsonTreeShared;
-  const { openDepth } = Plainview.jsonLimits;
-  const AutoRows = 20_000;
-  function createState({ value, options, indexRef, onStats, tree }) {
-    return {
-      activePath: '',
-      autoRows: 0,
-      expanded: new Set(['$']),
-      frame: 0,
-      indexRef,
-      onStats,
-      pageDepth: options.openDepth ?? openDepth(options.source.length),
-      rows: [],
-      rowElements: new Map(),
-      stats: { arrays: 0, depth: 0, nodes: 0, objects: 0, truncated: false, values: 0 },
-      tree,
-      value,
-    };
-  }
+  const { filterRelevant, setFilter } = Plainview.jsonVirtualFilter;
+  const { AutoRows, createState } = Plainview.jsonVirtualState;
 
   function primePath(state, path, nodeValue, depth) {
     if (!isContainer(nodeValue)) {
@@ -61,6 +45,9 @@
 
   function flattenNode({ state, path, key, nodeValue, depth, isRoot }) {
     const pathText = pathTextFor(path);
+    if (!filterRelevant(state, pathText)) {
+      return;
+    }
     const container = isContainer(nodeValue);
     const total = container ? entryCount(nodeValue) : 0;
     const open = container && state.expanded.has(pathText);
@@ -155,6 +142,11 @@
     node.style.paddingLeft = `${8 + row.depth * 18}px`;
     node.dataset.jsonPath = row.pathText;
     node.classList.toggle('pv-vrow-active', row.pathText === state.activePath);
+
+    if (state.filterPaths?.includes(row.pathText)) {
+      node.classList.add(state.filterHitClass || 'pv-json-hit');
+    }
+
     if (row.container) {
       const toggle = actionButton('pv-vrow-toggle', row.expanded ? '▾' : '▸');
       toggle.setAttribute('aria-expanded', String(row.expanded));
@@ -282,6 +274,9 @@
       state.expanded.clear();
       state.activePath = '';
       rebuild(state);
+    });
+    tree.addEventListener('pv-json-filter', (event) => {
+      setFilter(state, event.detail.paths, rebuild, event.detail.hitClass);
     });
     const observer = new globalThis.ResizeObserver(() => scheduleRender(state));
     observer.observe(tree);

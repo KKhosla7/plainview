@@ -9,9 +9,11 @@ import {
   closeExtension,
   launchExtension,
   openPage,
+  setSetting,
   startServer,
 } from './helpers.mjs';
 
+const TreeModeKey = 'plainview.jsonTreeMode';
 const MaxSourcePreviewChars = 210_000;
 const MinimumFullSourceChars = 500_000;
 
@@ -23,6 +25,7 @@ let profile;
 before(async () => {
   ({ server, base } = await startServer());
   ({ context, profile } = await launchExtension());
+  await setSetting(context, TreeModeKey, 'classic');
 });
 
 after(async () => {
@@ -51,6 +54,13 @@ it('progressively renders a large JSON tree', async () => {
     assert.match(await page.locator('.pv-doc-meta').innerText(), /\+ nodes/u);
     assert.equal(await page.locator('.pv-tree-more').count(), 1);
 
+    const nodesBefore = await page.locator('.pv-json-node').count();
+    await page.locator('.pv-tree-more').first().click();
+    await page.waitForFunction(
+      (previousCount) => document.querySelectorAll('.pv-json-node').length > previousCount,
+      nodesBefore,
+    );
+
     const search = page.getByLabel('Search JSON keys and values');
     await search.fill('item-1199');
     await page.waitForSelector('.pv-json-search-results:not([hidden])');
@@ -58,12 +68,6 @@ it('progressively renders a large JSON tree', async () => {
     assert.match(await results.innerText(), /\$\[1199\]\.name/u);
     assert.match(await results.innerText(), /item-1199/u);
 
-    const nodesBefore = await page.locator('.pv-json-node').count();
-    await page.locator('.pv-tree-more').first().click();
-    await page.waitForFunction(
-      (previousCount) => document.querySelectorAll('.pv-json-node').length > previousCount,
-      nodesBefore,
-    );
     await search.click();
     await results.locator('.pv-json-search-result').first().click();
     await page.waitForSelector('.pv-json-path[data-json-path="$[1199].name"]');

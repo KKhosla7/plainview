@@ -22,6 +22,7 @@
       exportState,
       status,
       searchResults,
+      tree,
       onClear() {
         exportState.clear('query');
         queryResults.hidden = true;
@@ -36,6 +37,7 @@
       exportState,
       status,
       queryResults,
+      tree,
       onStart() {
         exportState.clear('search');
         searchResults.hidden = true;

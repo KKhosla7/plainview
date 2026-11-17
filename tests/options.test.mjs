@@ -87,15 +87,15 @@ it('settings page remembers the JSON tree renderer', async () => {
   await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
   await page.waitForSelector('#jsonTreeMode');
   await page.waitForSelector('html[data-pv-options-ready="true"]');
-  assert.equal(await page.locator('#jsonTreeMode').inputValue(), 'classic');
+  assert.equal(await page.locator('#jsonTreeMode').inputValue(), 'virtual');
 
-  await page.locator('#jsonTreeMode').selectOption('virtual');
+  await page.locator('#jsonTreeMode').selectOption('classic');
   await page.waitForTimeout(150);
   await page.reload();
   await page.waitForSelector('#jsonTreeMode');
   await page.waitForSelector('html[data-pv-options-ready="true"]');
-  assert.equal(await page.locator('#jsonTreeMode').inputValue(), 'virtual');
-  await page.locator('#jsonTreeMode').selectOption('classic');
+  assert.equal(await page.locator('#jsonTreeMode').inputValue(), 'classic');
+  await page.locator('#jsonTreeMode').selectOption('virtual');
   await page.waitForTimeout(150);
   assertNoErrors(errors);
   await page.close();

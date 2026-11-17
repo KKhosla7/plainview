@@ -31,7 +31,7 @@
       [Keys.TableBorders]: false,
       [Keys.TableResize]: true,
       [Keys.TableLayout]: 'wrap',
-      [Keys.JsonTreeMode]: 'classic',
+      [Keys.JsonTreeMode]: 'virtual',
       [Keys.Shortcuts]: 'alt-s',
       [Keys.ExportDataMenu]: false,
       [Keys.ExportUncompressed]: false,
@@ -40,7 +40,7 @@
     tableBorders.checked = Boolean(data[Keys.TableBorders]);
     tableResize.checked = Boolean(data[Keys.TableResize]);
     tableLayout.value = data[Keys.TableLayout] === 'scroll' ? 'scroll' : 'wrap';
-    jsonTreeMode.value = data[Keys.JsonTreeMode] === 'virtual' ? 'virtual' : 'classic';
+    jsonTreeMode.value = data[Keys.JsonTreeMode] === 'classic' ? 'classic' : 'virtual';
     const shortcuts = Plainview.shortcutConfig.normalizeShortcuts(data[Keys.Shortcuts]);
     for (const select of shortcutSelects) {
       select.value = shortcuts[select.dataset.shortcut];

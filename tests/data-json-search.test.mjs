@@ -5,8 +5,11 @@ import {
   closeExtension,
   launchExtension,
   openPage,
+  setSetting,
   startServer,
 } from './helpers.mjs';
+
+const TreeModeKey = 'plainview.jsonTreeMode';
 
 let server;
 let base;
@@ -16,6 +19,7 @@ let profile;
 before(async () => {
   ({ server, base } = await startServer());
   ({ context, profile } = await launchExtension());
+  await setSetting(context, TreeModeKey, 'classic');
 });
 
 after(async () => {
@@ -51,6 +55,23 @@ it('searches JSON values and clears the search field', async () => {
   await search.fill('"version": 1');
   await page.waitForFunction(() => document.querySelectorAll('.pv-json-hit').length === 1);
   assert.match(await page.locator('.pv-json-count').first().innerText(), /1 match/u);
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('filters the JSON tree to matching entries and restores on clear', async () => {
+  const { page, errors } = await openJson();
+  const search = page.getByLabel('Search JSON keys and values');
+  await search.fill('label');
+  await page.waitForSelector('.pv-json-leaf.pv-json-hit');
+  await page.waitForFunction(() => document.querySelectorAll('.pv-json-leaf[hidden]').length > 0);
+  const visible = await page.locator('.pv-json-leaf:not([hidden])').count();
+  assert.equal(visible, 2);
+  assert.match(await page.locator('.pv-json-leaf:not([hidden])').first().innerText(), /label/u);
+
+  await page.getByRole('button', { name: 'Clear search' }).click();
+  await page.waitForFunction(() => document.querySelectorAll('.pv-json-leaf[hidden]').length === 0);
+  assert.ok((await page.locator('.pv-json-leaf:not([hidden])').count()) > visible);
   assertNoErrors(errors);
   await page.close();
 });

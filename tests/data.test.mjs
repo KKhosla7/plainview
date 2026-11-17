@@ -5,8 +5,11 @@ import {
   closeExtension,
   launchExtension,
   openPage,
+  setSetting,
   startServer,
 } from './helpers.mjs';
+
+const TreeModeKey = 'plainview.jsonTreeMode';
 
 let server;
 let base;
@@ -237,6 +240,7 @@ it('does not show a source-change prompt for unchanged XML', async () => {
 });
 
 it('opens nested containers in small trees', async () => {
+  await setSetting(context, TreeModeKey, 'classic');
   const { page, errors } = await openPage(context, `${base}/nested.json`);
   await page.waitForSelector('.pv-json');
   assert.equal(await page.locator('.pv-json-node').count(), 5);

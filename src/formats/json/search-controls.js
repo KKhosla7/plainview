@@ -107,6 +107,7 @@
       search,
       searchResults,
       status,
+      tree,
     } = options;
     state.token += 1;
     const { token } = state;
@@ -133,6 +134,11 @@
       return;
     }
     updateSearchExport(exportState, result, rootValue, query);
+    tree.dispatchEvent(
+      new CustomEvent('pv-json-filter', {
+        detail: { hitClass: 'pv-json-hit', paths: result.matches.map((match) => match.path) },
+      }),
+    );
     state.hits = result.hits;
     if (state.hits.length > 0) {
       state.index = selectHit(state.hits, 0, 'pv-json-hit-active');
@@ -156,6 +162,9 @@
       searchResults.hidden = true;
       searchResults.replaceChildren();
       exportState?.clear('search');
+      options.tree?.dispatchEvent(
+        new CustomEvent('pv-json-filter', { detail: { hitClass: 'pv-json-hit', paths: [] } }),
+      );
       onClear();
     }
 

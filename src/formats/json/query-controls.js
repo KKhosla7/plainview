@@ -111,6 +111,9 @@
     ctx.queryCount.textContent = '';
     ctx.queryResults.hidden = true;
     ctx.queryResults.replaceChildren();
+    ctx.tree?.dispatchEvent(
+      new CustomEvent('pv-json-filter', { detail: { hitClass: 'pv-json-query-hit', paths: [] } }),
+    );
     ctx.status.textContent = '';
     ctx.status.className = 'pv-json-status';
     ctx.pathInput.removeAttribute('aria-invalid');
@@ -133,6 +136,14 @@
       onReveal: ctx.revealPath,
     });
     ctx.onStart();
+    ctx.tree?.dispatchEvent(
+      new CustomEvent('pv-json-filter', {
+        detail: {
+          hitClass: 'pv-json-query-hit',
+          paths: items.flatMap((item) => (item.path ? [item.path] : [])),
+        },
+      }),
+    );
     if (items.length > 0) {
       ctx.exportState?.set(
         'query',
@@ -237,6 +248,7 @@
     status,
     queryResults,
     onStart,
+    tree,
   }) {
     const { pathWrap, queryRow, language, pathInput, queryButton, queryCount } =
       createQueryElements();
@@ -248,6 +260,7 @@
       status,
       queryResults,
       onStart,
+      tree,
       queryHits: [],
       queryCount,
       pathInput,
