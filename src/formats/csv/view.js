@@ -29,8 +29,8 @@
     const searchWrap = el('div', 'pv-json-search');
     const filter = el('input', 'pv-json-input');
     filter.type = 'search';
-    filter.placeholder = 'Filter rows…';
-    filter.setAttribute('aria-label', 'Filter CSV rows');
+    filter.placeholder = 'Search all columns…';
+    filter.setAttribute('aria-label', 'Search CSV rows in any column');
     filter.spellcheck = false;
     const count = el('span', 'pv-json-count', '');
     const status = el('div', 'pv-json-status');

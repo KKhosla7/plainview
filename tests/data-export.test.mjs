@@ -68,7 +68,7 @@ it('exports filtered CSV rows', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.csv`);
   try {
     await page.waitForSelector('.pv-csv-table');
-    await page.getByLabel('Filter CSV rows').fill('beta');
+    await page.getByLabel('Search CSV rows in any column').fill('beta');
     await page.waitForFunction(
       () => document.querySelectorAll('.pv-csv-table tbody tr').length === 1,
     );

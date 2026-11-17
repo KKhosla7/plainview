@@ -53,12 +53,12 @@
 
   function createFilterInput(title, column, columnFilters, onFilter) {
     const filterCell = el('th', 'pv-csv-filter-cell');
-    filterCell.hidden = true;
     const filterInput = el('input', 'pv-csv-column-filter');
     filterInput.type = 'search';
     filterInput.placeholder = 'Filter';
     filterInput.setAttribute('aria-label', `Filter by ${title}`);
     filterInput.spellcheck = false;
+    filterInput.hidden = true;
     filterInput.addEventListener('input', () => {
       columnFilters[column] = filterInput.value.trim().toLocaleLowerCase();
       onFilter();
@@ -70,7 +70,6 @@
   function createFilterToggle({
     title,
     column,
-    filterCell,
     filterInput,
     filterRow,
     filterCells,
@@ -84,9 +83,9 @@
     filterToggle.title = `Filter by ${title}`;
     filterToggle.append(filterIcon());
     filterToggle.addEventListener('click', () => {
-      const show = filterCell.hidden;
-      filterCell.hidden = !show;
-      filterRow.hidden = !filterCells.some((cell) => !cell.hidden);
+      const show = filterInput.hidden;
+      filterInput.hidden = !show;
+      filterRow.hidden = !filterCells.some((cell) => !cell.querySelector('input')?.hidden);
       filterToggle.setAttribute('aria-expanded', String(show));
       filterToggle.classList.toggle('is-active', show);
       if (show) {
@@ -121,7 +120,6 @@
     const filterToggle = createFilterToggle({
       title,
       column,
-      filterCell,
       filterInput,
       filterRow,
       filterCells,
@@ -176,18 +174,29 @@
     }
   }
 
-  function filterRows(rows, needle) {
-    if (!needle) {
-      return rows;
-    }
+  function filterRows(rows, needle, columnFilters) {
+    return rows.filter((row) => {
+      if (
+        needle &&
+        !row.cells.some((cell) =>
+          String(cell ?? '')
+            .toLocaleLowerCase()
+            .includes(needle),
+        )
+      ) {
+        return false;
+      }
 
-    return rows.filter((row) =>
-      row.cells.some((cell) =>
-        String(cell ?? '')
+      return columnFilters.every((columnNeedle, column) => {
+        if (!columnNeedle) {
+          return true;
+        }
+
+        return String(row.cells[column] ?? '')
           .toLocaleLowerCase()
-          .includes(needle),
-      ),
-    );
+          .includes(columnNeedle);
+      });
+    });
   }
 
   function sortRows(rows, sortState) {
@@ -250,7 +259,7 @@
 
     function render() {
       const needle = filter.value.trim().toLocaleLowerCase();
-      const visible = sortRows(filterRows(dataRows, needle), sortState);
+      const visible = sortRows(filterRows(dataRows, needle, headerParts.columnFilters), sortState);
       visibleRows = visible;
       renderRows(tbody, visible, columns);
       updateHeaders(headerParts.headCells, sortState);
@@ -269,7 +278,7 @@
     return {
       element: wrap,
       getVisibleRows: () => visibleRows.map((row) => row.cells.slice(0, columns)),
-      isFiltered: () => filter.value.trim() !== '',
+      isFiltered: () => filter.value.trim() !== '' || headerParts.columnFilters.some(Boolean),
       render,
       scheduleRender,
     };

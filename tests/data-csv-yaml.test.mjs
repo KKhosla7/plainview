@@ -90,18 +90,41 @@ it('renders CSV as a bounded table with quoted fields', async () => {
   assert.match(await page.locator('.pv-csv-table').innerText(), /two\s+lines/u);
   assert.ok((await page.locator('.pv-csv-doc').evaluate((node) => node.clientWidth)) > 900);
 
-  const filter = page.getByLabel('Filter CSV rows');
-  await filter.fill('beta');
+  const filter = page.getByLabel('Search CSV rows in any column');
+  await filter.fill('quoted');
   await page.waitForFunction(
     () => document.querySelectorAll('.pv-csv-table tbody tr').length === 1,
   );
   assert.match(await page.locator('.pv-csv-tools .pv-json-count').innerText(), /1 of 3 rows/u);
-  assert.match(await page.locator('.pv-csv-table tbody tr').innerText(), /beta/u);
+  assert.match(await page.locator('.pv-csv-table tbody tr').innerText(), /alpha/u);
 
   await filter.fill('');
   await page.waitForFunction(
     () => document.querySelectorAll('.pv-csv-table tbody tr').length === 3,
   );
+
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('filters one CSV column with its own inline input', async () => {
+  const { page, errors } = await openCsvFixture();
+  await page.getByRole('button', { name: 'Filter by Name', exact: true }).click();
+  const nameFilter = page.getByRole('searchbox', { name: 'Filter by Name' });
+  await nameFilter.fill('alpha');
+  await page.waitForFunction(
+    () => document.querySelectorAll('.pv-csv-table tbody tr').length === 1,
+  );
+  assert.match(await page.locator('.pv-csv-table tbody tr').innerText(), /alpha/u);
+
+  const headers = page.locator('.pv-csv-header');
+  const nameIndex = await headers.evaluateAll((nodes) =>
+    nodes.findIndex((node) => node.textContent.includes('Name')),
+  );
+  const headerBox = await headers.nth(nameIndex).boundingBox();
+  const filterBox = await nameFilter.boundingBox();
+  assert.ok(filterBox.x >= headerBox.x);
+  assert.ok(filterBox.x + filterBox.width <= headerBox.x + headerBox.width + 1);
   assertNoErrors(errors);
   await page.close();
 });
