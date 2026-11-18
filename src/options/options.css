@@ -242,8 +242,10 @@ select:focus-visible {
 }
 
 .coffee {
+  appearance: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   margin-top: 4px;
   padding: 9px 16px;
@@ -251,8 +253,11 @@ select:focus-visible {
   border-radius: 999px;
   background: var(--accent);
   color: var(--paper);
+  font: inherit;
   font-weight: 600;
+  line-height: 1.2;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .coffee:hover {
