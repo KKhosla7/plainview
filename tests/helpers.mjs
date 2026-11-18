@@ -22,6 +22,8 @@ const MIME = {
   '.md': 'text/markdown; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.jsonc': 'text/plain; charset=utf-8',
+  '.jsonl': 'text/plain; charset=utf-8',
+  '.ndjson': 'text/plain; charset=utf-8',
   // Browsers download text/csv and application/yaml instead of rendering them.
   // The extension therefore detects these fixtures by file extension.
   '.yaml': 'text/plain; charset=utf-8',

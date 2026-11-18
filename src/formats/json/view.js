@@ -101,6 +101,25 @@
     };
   }
 
+  function buildJsonl(source) {
+    const parsed = Plainview.parseJsonl(source);
+    if (parsed.error) {
+      const article = el('article', 'pv-doc pv-data-doc');
+      article.append(
+        el('div', 'pv-doc-title', 'Invalid JSONL'),
+        Plainview.errorPanel(parsed.error.message, parsed.error.line, parsed.error.column),
+      );
+      return { article, stats: null, error: true };
+    }
+
+    return buildJsonValue(parsed.values, {
+      source,
+      copyLabel: 'Copy JSONL',
+      exportFormatId: 'jsonl',
+      suffix: 'JSONL',
+    });
+  }
+
   function buildJson(source) {
     const parsed = Plainview.parseJson(source);
     if (parsed.error) {
@@ -120,5 +139,9 @@
     });
   }
 
-  root.Plainview = Object.assign(root.Plainview || {}, { buildJson, buildJsonValue });
+  root.Plainview = Object.assign(root.Plainview || {}, {
+    buildJson,
+    buildJsonValue,
+    buildJsonl,
+  });
 })(globalThis);

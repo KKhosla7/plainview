@@ -36,6 +36,7 @@ import './formats/source/toml.js';
 import './formats/source/csv.js';
 import './formats/source/xml.js';
 import './formats/json/parse.js';
+import './formats/json/parse-jsonl.js';
 import './formats/json/jsonpath.js';
 import './formats/json/jsonpath-filter.js';
 import './formats/json/jsonpath-eval.js';

@@ -4,6 +4,7 @@
     CSV: ',',
     HTML: '</>',
     JSON: '{}',
+    JSONL: '≡',
     MD: '#',
     TOML: '[=]',
     TSV: '⇥',

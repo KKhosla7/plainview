@@ -25,6 +25,19 @@
         'application/geo+json',
       ],
     },
+    jsonl: {
+      id: 'jsonl',
+      label: 'JSONL',
+      name: 'JSON Lines',
+      extensions: ['jsonl', 'ndjson'],
+      types: [
+        'application/jsonl',
+        'application/x-ndjson',
+        'application/jsonlines',
+        'text/jsonl',
+        'text/x-jsonl',
+      ],
+    },
     yaml: {
       id: 'yaml',
       label: 'YAML',

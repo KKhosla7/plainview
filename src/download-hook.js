@@ -9,6 +9,8 @@
     'mdx',
     'json',
     'jsonc',
+    'jsonl',
+    'ndjson',
     'geojson',
     'jsonld',
     'har',

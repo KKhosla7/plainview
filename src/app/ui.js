@@ -19,6 +19,10 @@
       return Plainview.buildJson(source);
     }
 
+    if (format.id === 'jsonl') {
+      return Plainview.buildJsonl(source);
+    }
+
     if (format.id === 'yaml') {
       return Plainview.buildYaml(source);
     }
