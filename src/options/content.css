@@ -17,3 +17,49 @@ input[type="number"]:focus-visible {
 .coffee svg {
   flex: 0 0 auto;
 }
+
+.coffee-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--paper);
+  font-size: 21px;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 18%);
+  animation: coffee-float 4s ease-in-out infinite;
+}
+
+.coffee-fab:hover {
+  transform: scale(1.08);
+  filter: brightness(1.08);
+}
+
+.coffee-fab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@keyframes coffee-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coffee-fab {
+    animation: none;
+  }
+}
