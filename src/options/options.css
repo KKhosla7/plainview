@@ -151,14 +151,13 @@ p {
   color: var(--muted);
 }
 .status {
-  min-height: 1.2em;
+  display: none;
   color: var(--accent);
   font-family: var(--mono);
   font-size: 0.72rem;
-  opacity: 0;
 }
 .status.visible {
-  opacity: 1;
+  display: block;
 }
 .types {
   display: flex;
