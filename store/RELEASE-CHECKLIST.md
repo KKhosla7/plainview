@@ -2,7 +2,7 @@
 
 ## Current status
 
-- Chrome extension: 20/20 Playwright tests pass against `dist/chrome`.
+- Chrome extension: full Playwright suite passes against `dist/chrome`.
 - Biome: zero diagnostics with the strict non-nursery preset.
 - Firefox: smoke-tested Markdown, Mermaid, source view, theme, XML and the
   error path. Firefox JSON is handled by Firefox's native JSON viewer.
@@ -10,7 +10,7 @@
   vendored Mermaid `innerHTML`; no eval, no remote code).
 - Gitleaks scans the working tree and full git history in CI; local scan is clean.
 - Code style and review rules are documented in `STYLE.md`.
-- Package version: 1.1.0.
+- Package version: 1.2.0.
 
 ## Build and package
 
