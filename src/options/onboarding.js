@@ -7,8 +7,9 @@
   const intro = document.querySelector('#intro');
   const steps = document.querySelector('#steps');
   const firefoxNote = document.querySelector('#firefoxNote');
-  const status = document.querySelector('#status');
-  const complete = document.querySelector('#complete');
+  const accessStatus = document.querySelector('#accessStatus');
+  const accessHint = document.querySelector('#accessHint');
+  const recheck = document.querySelector('#recheck');
 
   function addStep(title, body) {
     const item = document.createElement('li');
@@ -20,7 +21,7 @@
 
   if (firefox) {
     intro.textContent =
-      'Plainview is installed from Firefox Add-ons. Firefox needs file access enabled, and its built-in JSON viewer may take precedence for JSON responses.';
+      'Plainview is running in Firefox. Firefox needs file access enabled, and its built-in JSON viewer may take precedence for JSON responses.';
     addStep(
       'Allow file access:',
       'Open about:addons → Plainview → Permissions and allow access to file URLs.',
@@ -35,7 +36,7 @@
       'Firefox limitation: Firefox may render JSON with its own viewer before Plainview can take over. Markdown and other supported formats should still open in Plainview.';
   } else if (edge) {
     intro.textContent =
-      'Plainview is installed from Microsoft Edge Add-ons. Edge needs file access enabled before it can render local files.';
+      'Plainview is running in Microsoft Edge. Edge needs file access enabled before it can render local files.';
     addStep('Open extensions:', 'Go to edge://extensions.');
     addStep('Allow file URLs:', 'Open Plainview → Details and enable “Allow access to file URLs”.');
     addStep(
@@ -47,7 +48,7 @@
       'If Plainview was installed manually, reload it once from edge://extensions after changing permissions.';
   } else {
     intro.textContent =
-      'Plainview is installed from the Chrome Web Store. Chrome needs file access enabled before it can render local files.';
+      'Plainview is running in Chrome. Chrome needs file access enabled before it can render local files.';
     addStep('Open extensions:', 'Go to chrome://extensions.');
     addStep('Allow file URLs:', 'Open Plainview → Details and enable “Allow access to file URLs”.');
     addStep(
@@ -64,16 +65,32 @@
     api.tabs.create({ url: api.runtime.getURL('src/options/options.html') });
   });
 
-  complete.addEventListener('click', () => {
-    api.storage.local
-      .set({ 'plainview-onboarding-complete': true })
-      .then(() => {
-        status.textContent =
-          'Setup marked complete. Plainview will not show this guide automatically again.';
-        status.classList.add('visible');
-      })
-      .catch(() => {
-        status.textContent = 'Could not save setup status. Please try again.';
-      });
-  });
+  function checkAccess() {
+    accessStatus.textContent = 'Checking file access…';
+    accessHint.textContent = '';
+    const checker = api.extension?.isAllowedFileSchemeAccess;
+    if (typeof checker !== 'function') {
+      accessStatus.textContent =
+        'This browser does not expose file-access status. Confirm access in the extension’s Details page.';
+      accessHint.textContent =
+        'If local files still open as raw text, enable file URL access and reload the extension.';
+      return;
+    }
+
+    checker((allowed) => {
+      if (allowed) {
+        accessStatus.textContent = 'File access is enabled. Plainview is ready for local files.';
+        accessHint.textContent = 'You can close this tab and start opening supported files.';
+        api.storage.local.set({ 'plainview-onboarding-complete': true });
+        return;
+      }
+
+      accessStatus.textContent = 'File access is currently disabled.';
+      accessHint.textContent =
+        'Enable “Allow access to file URLs” in the extension Details page, then check again.';
+    });
+  }
+
+  recheck.addEventListener('click', checkAccess);
+  checkAccess();
 })();
