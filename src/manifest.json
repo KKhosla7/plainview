@@ -3,7 +3,7 @@
   "name": "Plainview",
   "version": "1.2.0",
   "description": "Read Markdown, JSON, XML, YAML, TOML, CSV and logs locally with search, trees, tables and clean exports.",
-  "permissions": ["storage", "clipboardWrite", "downloads"],
+  "permissions": ["storage", "clipboardWrite"],
   "icons": {
     "16": "assets/icon-16.png",
     "32": "assets/icon-32.png",
@@ -16,12 +16,6 @@
       "js": ["boot.js"],
       "css": ["styles.css"],
       "run_at": "document_end",
-      "all_frames": false
-    },
-    {
-      "matches": ["http://*/*", "https://*/*", "file:///*"],
-      "js": ["download-hook.js"],
-      "run_at": "document_start",
       "all_frames": false
     }
   ],

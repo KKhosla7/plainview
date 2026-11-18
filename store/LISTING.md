@@ -40,7 +40,6 @@ Render supported local and web documents that the browser would otherwise show a
 ## Permission justification
 
 - `storage` — remembers theme, zoom, view, reading position and display preferences.
-- `downloads` — detects supported browser downloads so they can open in Plainview instead of remaining raw files. The extension does not read or transmit download history.
 - `clipboardWrite` — Copy source and Copy code buttons.
 - Web page access — content scripts run on HTTP/HTTPS/file pages to detect supported documents by MIME type or extension, then replace only that document's view. No page data is collected or transmitted.
 - File URL access — optional; the user enables it so local files can be rendered.

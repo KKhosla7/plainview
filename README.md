@@ -41,14 +41,11 @@ Mermaid is loaded only on documents that contain a Mermaid block.
   `Ctrl/Cmd` + `+`, `-`, `0` and `Ctrl/Cmd` + wheel also work in the HTML view.
 - **Source view.** Markdown, JSON and XML source are syntax-highlighted, use the full width, and
   have a **Copy source** button.
-- **Download.** The top bar downloads the original file as-is.
-- **Optional download auto-open.** In Settings, choose whether a finished supported download should
-  open in a new Plainview tab. Off by default.
+- **Local exports.** Save clean native data or a self-contained HTML reader.
 - **No remote resources.** marked, Mermaid and the fonts are packaged; nothing is fetched to render.
 - **Contents panel.** The current section is highlighted while reading; clicking an item lands the
   heading below the sticky bar.
-- **Settings page.** Click the toolbar icon for the download auto-open option and OS file-association
-  instructions.
+- **Settings page.** Click the toolbar icon for reader, rendering and export settings.
 - **Update notice.** After an extension update, Plainview shows a one-time browser notification
   linking to the release notes and marks the toolbar icon until Settings is opened.
 
@@ -74,11 +71,10 @@ remain lazy. Browsing ordinary sites does not parse marked, the JSON/XML rendere
 A browser extension cannot change the operating system's default app. Clicking an already-downloaded
 `.md` file in your file manager still uses whatever text editor the OS has configured. To make the
 browser handle those clicks, set the OS association for `.md`, `.json` and `.xml` to Chrome or
-Firefox. The Settings page includes Linux, Windows and macOS instructions.
+Firefox. Use Ctrl/Cmd+O or drag a supported file into the browser.
 
-The optional **Open supported downloads in Plainview** setting only handles *new* downloads: when a
-supported file finishes downloading, Plainview opens it in a new tab. It does not affect files you
-click later.
+Downloaded files are saved normally by the browser. Open a downloaded file in Plainview when you
+want to read it.
 
 Local `file://` documents also need file access: Chrome’s **Allow access to file URLs**, or Firefox’s
 permanent install plus **Access your data for file:// URLs** in `about:addons`.
