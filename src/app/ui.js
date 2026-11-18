@@ -156,8 +156,49 @@
     Plainview.watchSetting(Plainview.CONTENT_FONT_SIZE_KEY, applyTreeFont);
   }
 
+  function focusSnapshot() {
+    const element = document.activeElement;
+    if (!element || element === document.body) {
+      return null;
+    }
+
+    return {
+      end: element.selectionEnd,
+      label: element.getAttribute('aria-label'),
+      scroll: globalThis.scrollY,
+      start: element.selectionStart,
+      tag: element.tagName,
+    };
+  }
+
+  function restoreFocus(snapshot) {
+    if (!snapshot) {
+      return;
+    }
+
+    globalThis.requestAnimationFrame(() => {
+      globalThis.scrollTo(0, snapshot.scroll);
+      if (!snapshot.label) {
+        return;
+      }
+      const target = [...document.querySelectorAll(snapshot.tag.toLowerCase())].find(
+        (element) => element.getAttribute('aria-label') === snapshot.label,
+      );
+      if (!target) {
+        return;
+      }
+      target.focus();
+      if (snapshot.start !== null && snapshot.end !== null) {
+        target.setSelectionRange(snapshot.start, snapshot.end);
+      }
+    });
+  }
+
   function refreshViewer(source, url, format) {
-    Plainview.mountViewer({ source, url, format }).catch(() => location.reload());
+    const snapshot = focusSnapshot();
+    Plainview.mountViewer({ source, url, format })
+      .then(() => restoreFocus(snapshot))
+      .catch(() => location.reload());
   }
 
   async function mountViewer({ source, url, format, fileName: requestedName }) {
