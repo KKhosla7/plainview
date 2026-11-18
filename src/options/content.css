@@ -20,6 +20,7 @@ input[type="number"]:focus-visible {
 
 .wrap {
   position: relative;
+  max-width: 920px;
 }
 
 .coffee-fab {
@@ -225,9 +226,6 @@ input[type="number"]:focus-visible {
   vertical-align: super;
 }
 
-.wrap {
-  max-width: 920px;
-}
 
 .card {
   padding: 22px;
