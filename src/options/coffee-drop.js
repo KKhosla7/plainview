@@ -50,6 +50,7 @@
     if (!moved && Math.hypot(offsetX, offsetY) <= 4) {
       return;
     }
+
     if (!moved) {
       moved = true;
       button.classList.add('is-dragging');
