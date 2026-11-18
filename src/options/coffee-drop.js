@@ -10,6 +10,7 @@
   let anchorX = 0;
   let offsetX = 0;
   let offsetY = 0;
+  let upDistance = 0;
   let rope = null;
   let dragging = false;
   let suppressClick = false;
@@ -61,10 +62,10 @@
     button.classList.add('is-releasing');
     const fromX = offsetX;
     const fromY = offsetY;
-    const releaseMs = 1100;
-    const releaseStart = performance.now();
-    const startRect = button.getBoundingClientRect();
-    const travel = startRect.top + startRect.height + 320;
+    const retractMs = 380;
+    const ascendMs = 900;
+    const retractStart = performance.now();
+    let ascendStart = 0;
 
     function finish() {
       rope?.svg.remove();
@@ -74,12 +75,12 @@
       button.style.removeProperty('--coffee-string-extra');
     }
 
-    function release(now) {
-      const progress = Math.min(1, (now - releaseStart) / releaseMs);
+    function ascend(now) {
+      const progress = Math.min(1, (now - ascendStart) / ascendMs);
       const eased = progress ** 2 * (3 - 2 * progress);
-      offsetX = fromX * (1 - eased);
-      offsetY = fromY + (-travel - fromY) * eased;
-      button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      const distance = upDistance * eased;
+      offsetY = -distance;
+      button.style.transform = `translate(0, ${offsetY}px)`;
       if (button.getBoundingClientRect().bottom > 0) {
         drawRope();
       } else if (rope) {
@@ -87,13 +88,32 @@
       }
 
       if (progress < 1) {
-        globalThis.requestAnimationFrame(release);
+        globalThis.requestAnimationFrame(ascend);
         return;
       }
       finish();
     }
 
-    globalThis.requestAnimationFrame(release);
+    function retract(now) {
+      const progress = Math.min(1, (now - retractStart) / retractMs);
+      const eased = 1 - (1 - progress) ** 3;
+      offsetX = fromX * (1 - eased);
+      offsetY = fromY * (1 - eased);
+      button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      drawRope();
+      if (progress < 1) {
+        globalThis.requestAnimationFrame(retract);
+        return;
+      }
+      const startRect = button.getBoundingClientRect();
+      upDistance = startRect.top + startRect.height + 320;
+      ascendStart = performance.now();
+      globalThis.requestAnimationFrame(ascend);
+    }
+
+    const startRect = button.getBoundingClientRect();
+    upDistance = startRect.top + startRect.height + 320;
+    globalThis.requestAnimationFrame(retract);
   }
 
   button.addEventListener('dragstart', (event) => event.preventDefault());
