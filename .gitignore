@@ -3,3 +3,6 @@ dist/
 test-results/
 playwright-report/
 *.log
+
+# Local implementation notes
+docs/local/
