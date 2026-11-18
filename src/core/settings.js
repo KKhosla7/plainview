@@ -8,6 +8,7 @@
     ContentFontSize: ContentFontSizeKey,
     ExportDataMenu: ExportDataMenuKey,
     ExportUncompressed: ExportUncompressedKey,
+    FormatValues: FormatValuesKey,
   } = Keys;
   const TableBordersKey = Keys.TableBorders;
   const TableResizeKey = Keys.TableResize;
@@ -177,6 +178,7 @@
     THEME_KEY: ThemeKey,
     ZOOM_KEY: ZoomKey,
     SHORTCUT_KEY: ShortcutKey,
+    FORMAT_VALUES_KEY: FormatValuesKey,
     EXPORT_DATA_MENU_KEY: ExportDataMenuKey,
     EXPORT_UNCOMPRESSED_KEY: ExportUncompressedKey,
     TABLE_BORDERS_KEY: TableBordersKey,

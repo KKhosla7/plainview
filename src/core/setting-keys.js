@@ -7,6 +7,7 @@
   const AutoReloadKey = 'plainview.autoReloadSource';
   const ContentFontSizeKey = 'plainview.contentFontSize';
   const ExportDataMenuKey = 'plainview.exportDataMenu';
+  const FormatValuesKey = 'plainview.formatValues';
   const ExportUncompressedKey = 'plainview.exportUncompressed';
   const ShortcutsKey = 'plainview.shortcuts';
   const TableBordersKey = 'plainview.tableBorders';
@@ -23,6 +24,7 @@
       AutoReload: AutoReloadKey,
       ContentFontSize: ContentFontSizeKey,
       ExportDataMenu: ExportDataMenuKey,
+      FormatValues: FormatValuesKey,
       ExportUncompressed: ExportUncompressedKey,
       Shortcuts: ShortcutsKey,
       TableBorders: TableBordersKey,

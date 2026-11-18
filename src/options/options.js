@@ -3,10 +3,11 @@
   const StatusResetMs = 1400;
   const Keys = Plainview.SETTING_KEYS;
   const api = globalThis.browser ?? globalThis.chrome;
-  const [autoReload, contentFontSize, contentFontStatus] = [
+  const [autoReload, contentFontSize, contentFontStatus, formatValues] = [
     '#autoReloadSources',
     '#contentFontSize',
     '#contentFontStatus',
+    '#formatValues',
   ].map((selector) => document.querySelector(selector));
   const tableBorders = document.querySelector('#tableBorders');
   const tableResize = document.querySelector('#tableResize');
@@ -33,6 +34,7 @@
     const data = await api.storage.local.get({
       [Keys.AutoReload]: false,
       [Keys.ContentFontSize]: 12,
+      [Keys.FormatValues]: true,
       [Keys.TableBorders]: false,
       [Keys.TableResize]: true,
       [Keys.TableLayout]: 'wrap',
@@ -42,6 +44,7 @@
     });
     autoReload.checked = Boolean(data[Keys.AutoReload]);
     contentFontSize.value = String(Number(data[Keys.ContentFontSize]) || 12);
+    formatValues.checked = Boolean(data[Keys.FormatValues]);
     tableBorders.checked = Boolean(data[Keys.TableBorders]);
     tableResize.checked = Boolean(data[Keys.TableResize]);
     tableLayout.value = data[Keys.TableLayout] === 'scroll' ? 'scroll' : 'wrap';
@@ -57,6 +60,10 @@
     }
     document.documentElement.dataset.pvOptionsReady = 'true';
   }
+
+  Plainview.onAsync(formatValues, 'change', async () => {
+    await api.storage.local.set({ [Keys.FormatValues]: formatValues.checked });
+  });
 
   Plainview.onAsync(contentFontSize, 'change', async () => {
     const value = Math.max(10, Math.min(20, Number(contentFontSize.value) || 12));

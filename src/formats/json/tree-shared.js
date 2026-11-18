@@ -75,6 +75,10 @@
         return value;
       }
 
+      if (document.documentElement.dataset.pvFormatValues !== 'off') {
+        return JSON.stringify(value).replaceAll('\\n', '\n').replaceAll('\\t', '\t');
+      }
+
       if (syntax === 'jsonl') {
         return formattedJsonlValue(value);
       }

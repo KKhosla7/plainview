@@ -239,6 +239,7 @@ import DocumentTemplate from './export/document.html';
     const title = fileName || document.title || 'Plainview document';
     const formatId = escapeHtml(format?.id || 'markdown');
     const exportId = crypto.randomUUID();
+    const formatValues = await Plainview.loadSetting(Plainview.FORMAT_VALUES_KEY, true);
     const themeName = theme === 'dark' ? 'dark' : 'light';
     const version = document.documentElement.getAttribute('data-pv-version') || '';
     const hasToc = Boolean(clone.querySelector('.pv-toc-link'));
@@ -255,6 +256,7 @@ import DocumentTemplate from './export/document.html';
     const html = fillTemplate(DocumentTemplate, {
       EXPORT_ID: exportId,
       FORMAT: formatId,
+      FORMAT_VALUES: formatValues ? 'on' : 'off',
       THEME: themeName,
       TABLE_BORDERS: document.documentElement.dataset.pvTableBorders || 'off',
       TABLE_RESIZE: document.documentElement.dataset.pvTableResize || 'on',

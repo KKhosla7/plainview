@@ -100,6 +100,7 @@
       Plainview.loadSetting(Plainview.SHORTCUT_KEY, 'alt-s'),
       Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
       Plainview.loadSetting(Plainview.CONTENT_FONT_SIZE_KEY, 12),
+      Plainview.loadSetting(Plainview.FORMAT_VALUES_KEY, true),
       Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
       Plainview.loadSetting(Plainview.TABLE_LAYOUT_KEY, 'wrap'),
     ]);
@@ -112,10 +113,11 @@
       savedZoom: settings[3],
       savedShortcuts: settings[4],
       savedContentFontSize: settings[6],
+      savedFormatValues: settings[7],
       savedTableBorders: settings[5],
-      savedTableResize: settings[7],
-      savedTableLayout: settings[8],
-      savedJsonTreeMode: settings[9],
+      savedTableResize: settings[8],
+      savedTableLayout: settings[9],
+      savedJsonTreeMode: settings[10],
     };
   }
 
@@ -150,6 +152,9 @@
   }
 
   function watchTableSettings() {
+    Plainview.watchSetting(Plainview.FORMAT_VALUES_KEY, (value) => {
+      document.documentElement.dataset.pvFormatValues = value ? 'on' : 'off';
+    });
     Plainview.watchSetting(Plainview.TABLE_BORDERS_KEY, (value) => {
       Plainview.tableBorders.apply(value);
     });
@@ -222,13 +227,14 @@
       savedTableResize,
       savedTableLayout,
       savedContentFontSize,
+      savedFormatValues,
     } = await loadViewerSettings(url);
 
     applyTreeFont(savedContentFontSize);
+    document.documentElement.dataset.pvFormatValues = savedFormatValues ? 'on' : 'off';
     Plainview.tableBorders.apply(savedTableBorders);
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
     document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);
-    document.documentElement.dataset.pvJsonTreeMode = 'virtual';
 
     if (format.id === 'markdown') {
       Plainview.installFonts();
