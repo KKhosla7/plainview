@@ -18,12 +18,11 @@
     }
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.classList.add('coffee-rope');
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', String(anchorX));
-    line.setAttribute('y1', '0');
-    svg.append(line);
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('fill', 'none');
+    svg.append(path);
     document.body.append(svg);
-    rope = { line, svg };
+    rope = { path, svg };
     return rope;
   }
 
@@ -37,9 +36,11 @@
     const rect = button.getBoundingClientRect();
     const cupX = rect.left + rect.width / 2;
     const cupY = rect.top + rect.height / 2;
-    const { line } = ensureRope();
-    line.setAttribute('x2', String(cupX));
-    line.setAttribute('y2', String(cupY));
+    const { path } = ensureRope();
+    const midX = (anchorX + cupX) / 2;
+    const sag = Math.min(90, Math.abs(cupX - anchorX) * 0.45);
+    const midY = cupY / 2 + sag;
+    path.setAttribute('d', `M ${anchorX} 0 Q ${midX} ${midY} ${cupX} ${cupY}`);
   }
 
   function end() {

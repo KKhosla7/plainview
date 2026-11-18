@@ -81,11 +81,12 @@ input[type="number"]:focus-visible {
   pointer-events: none;
 }
 
-.coffee-rope line {
+.coffee-rope path {
   stroke: var(--accent);
   stroke-width: 3;
   stroke-linecap: round;
   stroke-dasharray: 3 3;
+  fill: none;
 }
 
 .coffee-fab.is-hiding {
