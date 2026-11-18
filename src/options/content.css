@@ -253,3 +253,17 @@ input[type="number"]:focus-visible {
 .card p {
   max-width: none;
 }
+
+.toggle-row {
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.toggle-row input[type="checkbox"] {
+  margin-top: 1px;
+}
+
+.toggle-row span {
+  flex: 1 1 auto;
+}
