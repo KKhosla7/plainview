@@ -47,6 +47,8 @@
     let changed = false;
     for (const { node, pathText } of entries) {
       const height = Math.max(RowHeight, Math.ceil(node.getBoundingClientRect().height));
+      const value = node.querySelector(':scope > .pv-json-string');
+      value?.classList.toggle('pv-hanging', height > RowHeight + 2);
       if ((state.heights.get(pathText) ?? RowHeight) !== height) {
         state.heights.set(pathText, height);
         changed = true;
