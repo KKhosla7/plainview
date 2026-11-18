@@ -13,6 +13,7 @@
   let upDistance = 0;
   let rope = null;
   let dragging = false;
+  let moved = false;
   let suppressClick = false;
 
   function ensureRope() {
@@ -57,6 +58,9 @@
     dragging = false;
     globalThis.removeEventListener('mousemove', move);
     globalThis.removeEventListener('mouseup', end);
+    if (!moved) {
+      return;
+    }
     suppressClick = true;
     button.classList.remove('is-dragging');
     button.classList.add('is-releasing');
@@ -127,8 +131,8 @@
     anchorX = rect.left + rect.width / 2;
     offsetX = 0;
     offsetY = 0;
+    moved = false;
     dragging = true;
-    button.classList.add('is-dragging');
     globalThis.addEventListener('mousemove', move);
     globalThis.addEventListener('mouseup', end);
   });
