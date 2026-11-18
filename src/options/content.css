@@ -67,7 +67,8 @@ input[type="number"]:focus-visible {
   transition: none;
 }
 
-.coffee-fab.is-dragging::before {
+.coffee-fab.is-dragging::before,
+.coffee-fab.is-releasing::before {
   display: none;
 }
 
