@@ -171,7 +171,7 @@ it('searches XML and evaluates XPath queries', async () => {
     1,
   );
 
-  const query = page.getByLabel('XPath query');
+  const query = page.getByLabel('XPath query', { exact: true });
   await query.fill('//book/title');
   await page.getByRole('button', { name: 'Query', exact: true }).click();
   await page.waitForFunction(() => document.querySelectorAll('.pv-xml-query-hit').length === 2);
@@ -195,7 +195,7 @@ it('searches XML and evaluates XPath queries', async () => {
 
 it('reports XPath errors, aligns tags and copies an XPath', async () => {
   const { page, errors } = await openXml();
-  const query = page.getByLabel('XPath query');
+  const query = page.getByLabel('XPath query', { exact: true });
   await query.fill('//[');
   await page.getByRole('button', { name: 'Query', exact: true }).click();
   await page.waitForFunction(() =>

@@ -86,7 +86,7 @@
     queryRow.append(query, queryButton);
     countRow.append(queryCount);
     queryWrap.append(queryRow, countRow);
-    return { queryWrap, query, queryCount };
+    return { queryWrap, queryRow, query, queryButton, queryCount };
   }
 
   function clearQueryHits({ hits, queryCount, status, query }) {
@@ -176,8 +176,15 @@
   }
 
   function createXmlQuery({ doc, byNode, exportState, status }) {
-    const { queryWrap, query, queryCount } = createQueryElements();
+    const { queryWrap, queryRow, query, queryButton, queryCount } = createQueryElements();
     const state = { exportState, hits: [] };
+    const clear = Plainview.jsonToolsShared.inputClear(query, 'Clear XPath query', () => {
+      query.value = '';
+      state.hits = clearQueryHits({ hits: state.hits, queryCount, status, query });
+      state.exportState?.clear('query');
+      query.focus();
+    });
+    queryRow.insertBefore(clear, queryButton);
     queryWrap.addEventListener('submit', (event) => {
       event.preventDefault();
       runXPathQuery({

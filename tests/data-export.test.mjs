@@ -244,6 +244,9 @@ it('applies the active search in a filtered HTML export', async () => {
     try {
       await exported.goto(pathToFileURL(file).href);
       await exported.waitForSelector('.pv-json');
+      await exported.waitForFunction(() =>
+        document.querySelector('.pv-json')?.textContent.includes('one'),
+      );
       assert.match(await exported.locator('.pv-json').innerText(), /one/u);
       assert.match(await exported.locator('.pv-json').innerText(), /two/u);
       assert.doesNotMatch(await exported.locator('.pv-json').innerText(), /keywords/u);

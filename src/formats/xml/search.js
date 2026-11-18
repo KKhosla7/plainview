@@ -38,11 +38,11 @@
     searchRow.append(search, prev, next);
     countRow.append(count);
     searchWrap.append(searchRow, countRow);
-    return { count, next, prev, search, searchWrap };
+    return { count, next, prev, search, searchRow, searchWrap };
   }
 
   function createXmlSearch({ byNode, exportState, status }) {
-    const { count, next, prev, search, searchWrap } = createSearchElements();
+    const { count, next, prev, search, searchRow, searchWrap } = createSearchElements();
     let searchHits = [];
     let searchIndex = -1;
     let searchTimer = 0;
@@ -111,6 +111,13 @@
       searchTimer = globalThis.setTimeout(runSearch, SearchDebounceMs);
     }
 
+    const clear = Plainview.jsonToolsShared.inputClear(search, 'Clear XML search', () => {
+      search.value = '';
+      clearSearch();
+      clearStatus();
+      search.focus();
+    });
+    searchRow.insertBefore(clear, prev);
     bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch });
     return searchWrap;
   }

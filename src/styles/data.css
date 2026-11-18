@@ -159,13 +159,45 @@ html[data-pv] .pv-json-input {
   min-width: 0;
   flex: 1 1 auto;
   height: 28px;
-  padding: 0 9px;
+  padding: 0 30px 0 9px;
   border: 1px solid var(--pv-border);
   border-radius: 5px;
   background: var(--pv-bg);
   color: var(--pv-fg);
   font: inherit;
   font-size: 12px;
+}
+
+html[data-pv] .pv-json-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+html[data-pv] .pv-input-clear {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin-left: -30px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--pv-fg-faint);
+  font: 16px / 1 var(--pv-sans);
+  cursor: pointer;
+}
+
+html[data-pv] .pv-input-clear:hover {
+  background: var(--pv-bg-inset);
+  color: var(--pv-fg);
+}
+
+html[data-pv] .pv-input-clear:focus-visible {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 1px;
+}
+
+html[data-pv] .pv-input-clear[hidden] {
+  display: none;
 }
 
 html[data-pv] .pv-json-input::placeholder {

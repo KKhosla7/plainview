@@ -35,7 +35,12 @@
     const count = el('span', 'pv-json-count', '');
     const status = el('div', 'pv-json-status');
     status.setAttribute('role', 'status');
-    searchWrap.append(filter, count);
+    const clear = Plainview.jsonToolsShared.inputClear(filter, 'Clear CSV search', () => {
+      filter.value = '';
+      filter.dispatchEvent(new Event('input', { bubbles: true }));
+      filter.focus();
+    });
+    searchWrap.append(filter, clear, count);
     tools.append(searchWrap, status);
     return { tools, filter, count, status };
   }
