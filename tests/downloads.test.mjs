@@ -49,7 +49,10 @@ it('opens a downloaded CSV attachment in the viewer tab', async () => {
   await page.goto(`${base}/page.html`);
 
   const [viewer] = await Promise.all([
-    context.waitForEvent('page', { timeout: 15_000 }),
+    context.waitForEvent('page', {
+      predicate: (candidate) => candidate.url().includes('/src/viewer.html'),
+      timeout: 15_000,
+    }),
     page.click('#download-csv'),
   ]);
   await viewer.waitForSelector('.pv-csv-table', { timeout: 15_000 });
@@ -118,7 +121,10 @@ it('opens a page-generated Blob CSV download', async () => {
   const page = await context.newPage();
   await page.goto(`${base}/blob-download.html`);
   const [viewer] = await Promise.all([
-    context.waitForEvent('page', { timeout: 15_000 }),
+    context.waitForEvent('page', {
+      predicate: (candidate) => candidate.url().includes('/src/viewer.html'),
+      timeout: 15_000,
+    }),
     page.click('#download-csv'),
   ]);
   await viewer.waitForSelector('.pv-csv-table', { timeout: 15_000 });
