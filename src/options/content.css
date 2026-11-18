@@ -49,9 +49,15 @@ input[type="number"]:focus-visible {
   position: absolute;
   bottom: 100%;
   left: 50%;
-  width: 1px;
+  width: 3px;
   height: calc(80px + var(--coffee-string-extra, 0px));
-  background: color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--accent) 0 2px,
+    color-mix(in srgb, var(--accent) 35%, white) 2px 4px
+  );
+  box-shadow: 1px 0 0 rgb(255 255 255 / 18%);
   transition: height 480ms cubic-bezier(0.3, 1.4, 0.5, 1);
 }
 

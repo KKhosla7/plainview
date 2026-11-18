@@ -6,42 +6,49 @@
   }
 
   let startY = 0;
-  let dragged = false;
+  let dragging = false;
   let suppressClick = false;
 
-  button.addEventListener('dragstart', (event) => event.preventDefault());
-
-  button.addEventListener('pointerdown', (event) => {
-    event.preventDefault();
-    startY = event.clientY;
-    dragged = false;
-    button.setPointerCapture(event.pointerId);
-  });
-
-  button.addEventListener('pointermove', (event) => {
-    if (!button.hasPointerCapture(event.pointerId)) {
+  function move(event) {
+    if (!dragging) {
       return;
     }
     const delta = Math.max(0, event.clientY - startY);
     if (delta > 4) {
-      dragged = true;
+      event.preventDefault();
       button.classList.add('is-dragging');
-      button.style.setProperty('--coffee-string-extra', `${Math.min(delta, 180)}px`);
-      button.style.transform = `translateY(${Math.min(delta, 180)}px)`;
+      button.style.setProperty('--coffee-string-extra', `${delta}px`);
+      button.style.transform = `translateY(${delta}px)`;
     }
-  });
+  }
 
-  button.addEventListener('pointerup', (event) => {
-    if (!dragged) {
+  function end() {
+    if (!dragging) {
       return;
     }
-    event.preventDefault();
+    dragging = false;
+    globalThis.removeEventListener('mousemove', move);
+    globalThis.removeEventListener('mouseup', end);
+    if (!button.classList.contains('is-dragging')) {
+      return;
+    }
     suppressClick = true;
-    button.releasePointerCapture(event.pointerId);
     button.classList.remove('is-dragging');
     button.classList.add('is-hiding');
     button.style.removeProperty('--coffee-string-extra');
     button.style.transform = '';
+  }
+
+  button.addEventListener('dragstart', (event) => event.preventDefault());
+  button.addEventListener('mousedown', (event) => {
+    if (event.button !== 0) {
+      return;
+    }
+    event.preventDefault();
+    startY = event.clientY;
+    dragging = true;
+    globalThis.addEventListener('mousemove', move);
+    globalThis.addEventListener('mouseup', end);
   });
 
   button.addEventListener(
