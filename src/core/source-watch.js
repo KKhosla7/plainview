@@ -142,13 +142,17 @@
     };
   }
 
-  function notifyChange({ autoReload, banner, onReload, isStopped }) {
+  function notifyChange({ autoReload, banner, onReload, onUpdate, source, isStopped }) {
     if (autoReload.enabled) {
-      banner.setAuto('Reloading automatically…');
+      banner.setAuto('Refreshing automatically…');
       banner.show();
       globalThis.setTimeout(() => {
         if (!isStopped()) {
-          reloadDocument(onReload);
+          if (onUpdate) {
+            onUpdate(source);
+          } else {
+            reloadDocument(onReload);
+          }
         }
       }, AutoReloadDelayMs);
       return;
@@ -156,7 +160,7 @@
     banner.show();
   }
 
-  function watchSource({ source, url, app, onReload, format }) {
+  function watchSource({ source, url, app, onReload, onUpdate, format }) {
     if (!(source && url)) {
       return { checkNow: () => undefined, stop: () => undefined };
     }
@@ -199,6 +203,8 @@
           autoReload,
           banner,
           onReload,
+          onUpdate,
+          source: normalized,
           isStopped: () => stopped,
         });
       } finally {

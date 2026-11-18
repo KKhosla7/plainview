@@ -156,6 +156,10 @@
     Plainview.watchSetting(Plainview.CONTENT_FONT_SIZE_KEY, applyTreeFont);
   }
 
+  function refreshViewer(source, url, format) {
+    Plainview.mountViewer({ source, url, format }).catch(() => location.reload());
+  }
+
   async function mountViewer({ source, url, format, fileName: requestedName }) {
     await Plainview.migrateLegacySettings();
     const fileName = requestedName || fileNameFromUrl(url);
@@ -225,6 +229,7 @@
       app,
       format,
       onReload: () => location.reload(),
+      onUpdate: (nextSource) => refreshViewer(nextSource, location.href, format),
     });
     globalThis.addEventListener('pagehide', () => sourceWatch.stop(), { once: true });
 
