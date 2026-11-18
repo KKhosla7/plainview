@@ -29,9 +29,12 @@
     control.disabled = true;
   }
 
-  Plainview.installFonts?.();
+  Plainview.onAsync(document.querySelector('#showOnboarding'), 'click', async () => {
+    await api.tabs.create({ url: api.runtime.getURL('src/options/onboarding.html') });
+  });
 
   async function load() {
+    Plainview.installFonts?.();
     const data = await api.storage.local.get({
       [Keys.AutoReload]: false,
       [Keys.ContentFontSize]: 12,

@@ -133,6 +133,14 @@
     return true;
   }
 
+  api.runtime.onInstalled.addListener((details) => {
+    if (details.reason !== 'install') {
+      return;
+    }
+    api.storage.local.set({ 'plainview-onboarding-seen': true });
+    api.tabs.create({ url: api.runtime.getURL('src/options/onboarding.html') });
+  });
+
   if (api.action?.onClicked) {
     api.action.onClicked.addListener(() => {
       api.action.setBadgeText({ text: '' });

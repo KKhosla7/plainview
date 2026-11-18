@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plainview setup</title>
+  <link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="content.css">
+  <link rel="stylesheet" href="onboarding.css">
+</head>
+<body>
+  <main class="wrap onboarding">
+    <header class="head">
+      <img src="../../assets/icon-48.png" alt="" width="48" height="48">
+      <div><p class="eyebrow">Plainview</p><h1>Setup guide</h1></div>
+    </header>
+    <section class="card">
+      <h2>Let Plainview open your files</h2>
+      <p id="intro"></p>
+      <ol id="steps"></ol>
+      <p class="note" id="firefoxNote" hidden></p>
+    </section>
+    <section class="card">
+      <h2>Recommended settings</h2>
+      <p>Open Settings to tune the reader after setup.</p>
+      <p><a class="coffee" id="settingsLink" href="options.html">Open Plainview settings</a></p>
+    </section>
+    <section class="card">
+      <h2>Finish setup</h2>
+      <p>When the steps above are complete, mark setup as done. You can reopen this guide from Settings.</p>
+      <button class="coffee" id="complete" type="button">I completed setup</button>
+      <p class="status" id="status" role="status"></p>
+    </section>
+  </main>
+  <script src="onboarding.js" defer></script>
+</body>
+</html>
