@@ -224,3 +224,31 @@ input[type="number"]:focus-visible {
   font-size: 0.58em;
   vertical-align: super;
 }
+
+.wrap {
+  max-width: 920px;
+}
+
+.card {
+  padding: 22px;
+}
+
+.card-note {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.types {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 6px;
+}
+
+.types code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 4px 6px;
+}
