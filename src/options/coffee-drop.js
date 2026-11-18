@@ -65,6 +65,7 @@
     const retractMs = 380;
     const ascendMs = 900;
     const retractStart = performance.now();
+    let ascendStart = 0;
 
     function finish() {
       rope?.svg.remove();
@@ -76,7 +77,7 @@
     }
 
     function ascend(now) {
-      const progress = Math.min(1, (now - retractStart) / ascendMs);
+      const progress = Math.min(1, (now - ascendStart) / ascendMs);
       const eased = progress ** 2 * (3 - 2 * progress);
       const distance = upDistance * eased;
       offsetY = -distance;
@@ -107,6 +108,7 @@
       }
       const startRect = button.getBoundingClientRect();
       upDistance = startRect.top + startRect.height + 320;
+      ascendStart = performance.now();
       globalThis.requestAnimationFrame(ascend);
     }
 
