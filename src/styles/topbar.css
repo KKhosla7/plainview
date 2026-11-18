@@ -6,7 +6,7 @@ html[data-pv] .pv-topbar {
   z-index: 30;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   height: var(--pv-topbar);
   padding: 0 20px;
   border-bottom: 1px solid var(--pv-border);
@@ -68,7 +68,7 @@ html[data-pv] .pv-badge {
 html[data-pv] .pv-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   flex: 0 0 auto;
 }
 
@@ -155,15 +155,16 @@ html[data-pv] .pv-theme-label {
 html[data-pv] .pv-views {
   display: flex;
   align-items: center;
-  padding: 2px;
+  gap: 2px;
+  padding: 3px;
   border: 1px solid var(--pv-border);
-  border-radius: 7px;
+  border-radius: 9px;
   background: var(--pv-bg-soft);
 }
 
 html[data-pv] .pv-view-tab {
   appearance: none;
-  padding: 3px 10px;
+  padding: 5px 12px;
   border: 1px solid transparent;
   border-radius: 5px;
   background: transparent;
@@ -195,8 +196,8 @@ html[data-pv] .pv-icon-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   padding: 0;
   border-color: transparent;
 }
@@ -219,8 +220,8 @@ html[data-pv] .pv-icon-tab {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 30px;
-  padding: 3px 7px;
+  min-width: 34px;
+  padding: 5px 8px;
 }
 
 html[data-pv] .pv-icon {
