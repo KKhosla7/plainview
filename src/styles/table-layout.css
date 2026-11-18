@@ -25,7 +25,7 @@ html[data-pv][data-pv-format="markdown"][data-pv-table-layout="wrap"] .pv-table-
 }
 
 html[data-pv][data-pv-format="jsonl"] .pv-shell {
-  width: min(1488px, 100%);
+  width: min(1612px, 100%);
 }
 
 html[data-pv][data-pv-format="csv"] .pv-shell {
