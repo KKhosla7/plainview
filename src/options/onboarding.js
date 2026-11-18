@@ -7,9 +7,10 @@
   const intro = document.querySelector('#intro');
   const steps = document.querySelector('#steps');
   const firefoxNote = document.querySelector('#firefoxNote');
+  const accessState = document.querySelector('#accessState');
+  const accessIcon = document.querySelector('#accessIcon');
   const accessStatus = document.querySelector('#accessStatus');
   const accessHint = document.querySelector('#accessHint');
-  const recheck = document.querySelector('#recheck');
 
   function addStep(title, body) {
     const item = document.createElement('li');
@@ -65,32 +66,53 @@
     api.tabs.create({ url: api.runtime.getURL('src/options/options.html') });
   });
 
+  let lastState = '';
+  function setStatus(state, icon, title, hint) {
+    accessState.dataset.state = state;
+    accessIcon.textContent = icon;
+    accessStatus.textContent = title;
+    accessHint.textContent = hint;
+  }
+
   function checkAccess() {
-    accessStatus.textContent = 'Checking file access…';
-    accessHint.textContent = '';
     const checker = api.extension?.isAllowedFileSchemeAccess;
     if (typeof checker !== 'function') {
-      accessStatus.textContent =
-        'This browser does not expose file-access status. Confirm access in the extension’s Details page.';
-      accessHint.textContent =
-        'If local files still open as raw text, enable file URL access and reload the extension.';
+      setStatus(
+        'waiting',
+        '!',
+        'File access status is not exposed by this browser.',
+        'Confirm access in the extension Details page.',
+      );
       return;
     }
 
     checker((allowed) => {
       if (allowed) {
-        accessStatus.textContent = 'File access is enabled. Plainview is ready for local files.';
-        accessHint.textContent = 'You can close this tab and start opening supported files.';
-        api.storage.local.set({ 'plainview-onboarding-complete': true });
+        if (lastState !== 'ready') {
+          api.storage.local.set({ 'plainview-onboarding-complete': true });
+        }
+        lastState = 'ready';
+        setStatus(
+          'ready',
+          '✓',
+          'File access is enabled. You are all set.',
+          'No further action is needed — close this tab and open a supported file.',
+        );
         return;
       }
 
-      accessStatus.textContent = 'File access is currently disabled.';
-      accessHint.textContent =
-        'Enable “Allow access to file URLs” in the extension Details page, then check again.';
+      lastState = 'waiting';
+      setStatus(
+        'waiting',
+        '…',
+        'Waiting for file access…',
+        'Enable “Allow access to file URLs” in the extension Details page. This page will update automatically.',
+      );
     });
   }
 
-  recheck.addEventListener('click', checkAccess);
+  const CheckIntervalMs = 4000;
   checkAccess();
+  const timer = globalThis.setInterval(checkAccess, CheckIntervalMs);
+  globalThis.addEventListener('pagehide', () => globalThis.clearInterval(timer), { once: true });
 })();

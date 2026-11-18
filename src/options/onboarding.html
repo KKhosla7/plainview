@@ -51,9 +51,13 @@
     </section>
     <section class="card">
       <h2>Setup status</h2>
-      <p id="accessStatus">Checking file access…</p>
-      <p class="note" id="accessHint"></p>
-      <button class="coffee" id="recheck" type="button">Check again</button>
+      <div class="setup-state" id="accessState" data-state="checking">
+        <span class="setup-state-icon" id="accessIcon" aria-hidden="true">…</span>
+        <div>
+          <strong id="accessStatus">Checking file access…</strong>
+          <p class="note" id="accessHint"></p>
+        </div>
+      </div>
     </section>
   </main>
   <script src="onboarding.js" defer></script>
