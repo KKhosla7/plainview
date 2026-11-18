@@ -8,15 +8,12 @@
   display: block;
 }
 .onboarding .coffee {
-  border: 0;
-  cursor: pointer;
-  font: inherit;
-}
-
-.onboarding .coffee {
   display: flex;
   width: max-content;
   margin: 4px auto 0;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
 }
 
 .onboarding code {
