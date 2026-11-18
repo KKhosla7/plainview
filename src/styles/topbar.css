@@ -166,7 +166,7 @@ html[data-pv] .pv-view-tab {
   appearance: none;
   padding: 3px 16px;
   border: 1px solid transparent;
-  border-radius: 5px;
+  border-radius: 7px;
   background: transparent;
   color: var(--pv-fg-muted);
   font: inherit;
