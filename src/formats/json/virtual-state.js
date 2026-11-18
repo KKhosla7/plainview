@@ -3,6 +3,7 @@
 ((root) => {
   const AutoRows = 20_000;
   const { openDepth } = Plainview.jsonLimits;
+  const { treeSyntax } = Plainview.jsonTreeShared;
 
   function createState({ value, options, indexRef, onStats, tree }) {
     return {
@@ -18,7 +19,7 @@
       rows: [],
       rowElements: new Map(),
       stats: { arrays: 0, depth: 0, nodes: 0, objects: 0, truncated: false, values: 0 },
-      syntax: options.exportFormatId === 'yaml' ? 'yaml' : '',
+      syntax: treeSyntax(options.exportFormatId),
       tree,
       value,
     };

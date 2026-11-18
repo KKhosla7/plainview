@@ -96,7 +96,6 @@
       Plainview.loadSetting(Plainview.CONTENT_FONT_SIZE_KEY, 12),
       Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
       Plainview.loadSetting(Plainview.TABLE_LAYOUT_KEY, 'wrap'),
-      Plainview.loadSetting(Plainview.JSON_TREE_MODE_KEY, 'virtual'),
     ]);
     return {
       viewKey,
@@ -155,12 +154,6 @@
       Plainview.tableResize.applyLayout(Plainview.validTableLayout(value));
     });
     Plainview.watchSetting(Plainview.CONTENT_FONT_SIZE_KEY, applyTreeFont);
-    Plainview.watchSetting(Plainview.JSON_TREE_MODE_KEY, (value) => {
-      const mode = value === 'classic' ? 'classic' : 'virtual';
-      if (document.documentElement.dataset.pvJsonTreeMode !== mode) {
-        location.reload();
-      }
-    });
   }
 
   async function mountViewer({ source, url, format, fileName: requestedName }) {
@@ -177,7 +170,6 @@
       savedTableBorders,
       savedTableResize,
       savedTableLayout,
-      savedJsonTreeMode,
       savedContentFontSize,
     } = await loadViewerSettings(url);
 
@@ -185,8 +177,7 @@
     Plainview.tableBorders.apply(savedTableBorders);
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
     document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);
-    document.documentElement.dataset.pvJsonTreeMode =
-      savedJsonTreeMode === 'classic' ? 'classic' : 'virtual';
+    document.documentElement.dataset.pvJsonTreeMode = 'virtual';
 
     if (format.id === 'markdown') {
       Plainview.installFonts();

@@ -8,7 +8,7 @@
   const { autoOpenChildLimit, openDepth, pageSize } = Plainview.jsonLimits;
   const { el } = Plainview;
 
-  const { actionButton, pathButton, renderKey, renderValue, span, valueClass } =
+  const { actionButton, pathButton, renderKey, renderValue, span, treeSyntax, valueClass } =
     Plainview.jsonTreeShared;
 
   function registerNode(ctx, { path, node, value, isContainer, summary }) {
@@ -221,7 +221,7 @@
   function createJsonTree({ value, source, options, indexRef, onStats }) {
     const tree = el('div', 'pv-json');
     const ctx = {
-      syntax: options.exportFormatId === 'yaml' ? 'yaml' : '',
+      syntax: treeSyntax(options.exportFormatId),
       autoOpenChildLimit: options.autoOpenChildLimit ?? autoOpenChildLimit,
       indexRef,
       openDepth: options.openDepth ?? openDepth(source.length),

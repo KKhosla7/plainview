@@ -35,9 +35,21 @@
     return 'pv-json-boolean';
   }
 
+  function treeSyntax(formatId) {
+    if (formatId === 'yaml') {
+      return 'yaml';
+    }
+
+    return formatId === 'jsonl' ? 'jsonl' : '';
+  }
+
   function renderValue(value, syntax) {
     if (Plainview.valueKind(value) === 'string') {
-      return syntax === 'yaml' ? value : JSON.stringify(value);
+      if (syntax === 'yaml') {
+        return value;
+      }
+      const text = JSON.stringify(value);
+      return syntax === 'jsonl' ? text.replaceAll('\\n', '\n').replaceAll('\\t', '\t') : text;
     }
 
     if (value === null) {
@@ -105,6 +117,7 @@
       renderKey,
       renderValue,
       span,
+      treeSyntax,
       valueClass,
     },
   });
