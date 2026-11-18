@@ -8,10 +8,6 @@ import { search } from 'jmespath';
   Plainview.loadJmespath = async () => ({ search });
 
   function buildDocument(documentData) {
-    if (documentData.formatId === 'jsonl') {
-      return Plainview.buildJsonl(documentData.source);
-    }
-
     if (documentData.formatId === 'xml') {
       return Plainview.buildXml(documentData.source);
     }

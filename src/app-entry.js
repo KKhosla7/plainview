@@ -59,7 +59,6 @@ import './formats/json/virtual-filter.js';
 import './formats/json/virtual-layout.js';
 import './formats/json/virtual-tree.js';
 import './formats/json/view.js';
-import './formats/jsonl/view.js';
 import './formats/yaml/loader.js';
 import './formats/yaml/view.js';
 import './formats/toml/loader.js';

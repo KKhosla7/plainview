@@ -105,7 +105,6 @@
       source,
       copyLabel: 'Copy JSONL',
       exportFormatId: 'jsonl',
-      openDepth: 1,
       suffix: 'JSONL',
     });
   }

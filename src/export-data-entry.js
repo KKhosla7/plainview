@@ -35,7 +35,6 @@ import './formats/json/tools.js';
 import './formats/source/core.js';
 import './formats/source/json.js';
 import './formats/json/view.js';
-import './formats/jsonl/view.js';
 import './formats/csv/parse.js';
 import './formats/csv/table.js';
 import './formats/csv/view.js';
