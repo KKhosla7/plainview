@@ -172,3 +172,46 @@ input[type="number"]:focus-visible {
     transform: none;
   }
 }
+
+.page-theme-toggle {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--accent);
+  font: 18px / 1 var(--sans);
+  cursor: pointer;
+}
+.page-theme-toggle:hover {
+  border-color: var(--accent);
+}
+.page-theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+:root[data-pv-page-theme="light"] {
+  color-scheme: light;
+  --bg: #edf1f5;
+  --paper: #f9fbfd;
+  --ink: #13233b;
+  --muted: #56667d;
+  --rule: #c5d0dd;
+  --accent: #1f4fa0;
+  --accent-soft: #e1e9f6;
+  --red: #b03a2e;
+}
+:root[data-pv-page-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0c2040;
+  --paper: #10284a;
+  --ink: #e3ebf6;
+  --muted: #9eb1cb;
+  --rule: #2a4972;
+  --accent: #8db8ff;
+  --accent-soft: #17345f;
+  --red: #ff8e7e;
+}
