@@ -50,7 +50,7 @@ input[type="number"]:focus-visible {
   bottom: 100%;
   left: 50%;
   width: 3px;
-  height: calc(80px + var(--coffee-string-extra, 0px));
+  height: calc(300px + var(--coffee-string-extra, 0px));
   border-radius: 999px;
   background: repeating-linear-gradient(
     135deg,
