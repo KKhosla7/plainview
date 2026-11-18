@@ -43,6 +43,32 @@
     return formatId === 'jsonl' ? 'jsonl' : '';
   }
 
+  const JsonlFormatCache = new Map();
+  const MaxJsonlFormatCache = 250;
+
+  function formattedJsonlValue(value) {
+    if (JsonlFormatCache.has(value)) {
+      return JsonlFormatCache.get(value);
+    }
+
+    const trimmed = value.trim();
+    let formatted = JSON.stringify(value).replaceAll('\\n', '\n').replaceAll('\\t', '\t');
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+      try {
+        formatted = JSON.stringify(JSON.parse(trimmed), null, 2);
+      } catch {
+        formatted = value;
+      }
+    }
+
+    if (JsonlFormatCache.size >= MaxJsonlFormatCache) {
+      JsonlFormatCache.delete(JsonlFormatCache.keys().next().value);
+    }
+
+    JsonlFormatCache.set(value, formatted);
+    return formatted;
+  }
+
   function renderValue(value, syntax) {
     if (Plainview.valueKind(value) === 'string') {
       if (syntax === 'yaml') {
@@ -50,16 +76,7 @@
       }
 
       if (syntax === 'jsonl') {
-        const trimmed = value.trim();
-        if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-          try {
-            return JSON.stringify(JSON.parse(trimmed), null, 2);
-          } catch {
-            return value;
-          }
-        }
-
-        return JSON.stringify(value).replaceAll('\\n', '\n').replaceAll('\\t', '\t');
+        return formattedJsonlValue(value);
       }
 
       return JSON.stringify(value);

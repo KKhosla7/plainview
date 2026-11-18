@@ -155,8 +155,8 @@ html[data-pv] .pv-theme-label {
 html[data-pv] .pv-views {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 2px 4px;
+  gap: 3px;
+  padding: 2px 8px;
   border: 1px solid var(--pv-border);
   border-radius: 9px;
   background: var(--pv-bg-soft);
@@ -221,7 +221,7 @@ html[data-pv] .pv-icon-tab {
   align-items: center;
   justify-content: center;
   min-width: 34px;
-  padding: 3px 10px;
+  padding: 3px 13px;
 }
 
 html[data-pv] .pv-icon {
