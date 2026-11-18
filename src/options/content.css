@@ -221,10 +221,15 @@ input[type="number"]:focus-visible {
 .page-theme-toggle svg {
   display: block;
 }
-.eyebrow sup {
-  margin-left: 2px;
-  font-size: 0.58em;
-  vertical-align: super;
+.title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.title-row .version {
+  margin-left: 0;
+  font-size: 0.72rem;
+  color: var(--muted);
 }
 
 .card {
