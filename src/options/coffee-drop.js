@@ -10,6 +10,7 @@
   let anchorX = 0;
   let offsetX = 0;
   let offsetY = 0;
+  let upDistance = 0;
   let rope = null;
   let dragging = false;
   let suppressClick = false;
@@ -61,11 +62,40 @@
     button.classList.add('is-releasing');
     const fromX = offsetX;
     const fromY = offsetY;
-    const started = performance.now();
-    const duration = 460;
+    const retractMs = 380;
+    const ascendMs = 320;
+    const retractStart = performance.now();
+
+    function finish() {
+      rope?.svg.remove();
+      rope = null;
+      button.classList.remove('is-releasing');
+      button.classList.add('is-retracted');
+      button.style.transform = '';
+      button.style.removeProperty('--coffee-string-extra');
+    }
+
+    function ascend(now) {
+      const progress = Math.min(1, (now - retractStart) / ascendMs);
+      const eased = 1 - (1 - progress) ** 3;
+      const distance = upDistance * eased;
+      offsetY = -distance;
+      button.style.transform = `translate(0, ${offsetY}px)`;
+      if (button.getBoundingClientRect().bottom > 0) {
+        drawRope();
+      } else if (rope) {
+        rope.svg.style.display = 'none';
+      }
+
+      if (progress < 1) {
+        globalThis.requestAnimationFrame(ascend);
+        return;
+      }
+      finish();
+    }
 
     function retract(now) {
-      const progress = Math.min(1, (now - started) / duration);
+      const progress = Math.min(1, (now - retractStart) / retractMs);
       const eased = 1 - (1 - progress) ** 3;
       offsetX = fromX * (1 - eased);
       offsetY = fromY * (1 - eased);
@@ -75,14 +105,13 @@
         globalThis.requestAnimationFrame(retract);
         return;
       }
-      rope?.svg.remove();
-      rope = null;
-      button.classList.remove('is-releasing');
-      button.classList.add('is-retracted');
-      button.style.transform = '';
-      button.style.removeProperty('--coffee-string-extra');
+      const startRect = button.getBoundingClientRect();
+      upDistance = startRect.top + startRect.height + 24;
+      globalThis.requestAnimationFrame(ascend);
     }
 
+    const startRect = button.getBoundingClientRect();
+    upDistance = startRect.top + startRect.height + 24;
     globalThis.requestAnimationFrame(retract);
   }
 
