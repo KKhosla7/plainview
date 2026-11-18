@@ -16,8 +16,6 @@
   const [tableStatus, sourceStatus] = ['#tableStatus', '#sourceStatus'].map((selector) =>
     document.querySelector(selector),
   );
-  const shortcutSelects = [...document.querySelectorAll('[data-shortcut]')];
-  const shortcutStatus = document.querySelector('#shortcutStatus');
   const [exportDataMenu, exportStatus, exportUncompressed] = [
     '#exportDataMenu',
     '#exportStatus',
@@ -58,10 +56,6 @@
     tableBorders.checked = Boolean(data[Keys.TableBorders]);
     tableResize.checked = Boolean(data[Keys.TableResize]);
     tableLayout.value = data[Keys.TableLayout] === 'scroll' ? 'scroll' : 'wrap';
-    const shortcuts = Plainview.shortcutConfig.normalizeShortcuts(data[Keys.Shortcuts]);
-    for (const select of shortcutSelects) {
-      select.value = shortcuts[select.dataset.shortcut];
-    }
     exportDataMenu.checked = Boolean(data[Keys.ExportDataMenu]);
     exportUncompressed.checked = Boolean(data[Keys.ExportUncompressed]);
     document.querySelector('#version').textContent = api.runtime.getManifest().version;
@@ -110,18 +104,6 @@
     exportStatus.classList.add('visible');
     globalThis.setTimeout(() => exportStatus.classList.remove('visible'), StatusResetMs);
   });
-
-  for (const select of shortcutSelects) {
-    Plainview.onAsync(select, 'change', async () => {
-      const shortcuts = Object.fromEntries(
-        shortcutSelects.map((item) => [item.dataset.shortcut, item.value]),
-      );
-      await api.storage.local.set({ [Keys.Shortcuts]: shortcuts });
-      shortcutStatus.textContent = 'Shortcut saved';
-      shortcutStatus.classList.add('visible');
-      globalThis.setTimeout(() => shortcutStatus.classList.remove('visible'), StatusResetMs);
-    });
-  }
 
   Plainview.onAsync(tableBorders, 'change', async () => {
     await api.storage.local.set({ [Keys.TableBorders]: tableBorders.checked });
