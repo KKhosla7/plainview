@@ -1,8 +1,5 @@
 /* global chrome, browser */
-/*
- * Read the source document for the viewer. Download interception and the
- * optional downloads permission were removed for the initial store release.
- */
+/* Read the source document for the viewer. */
 (() => {
   const api = globalThis.browser ?? globalThis.chrome;
 
