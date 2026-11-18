@@ -16,10 +16,14 @@
     if (rope) {
       return rope;
     }
-    rope = document.createElement('span');
-    rope.className = 'coffee-rope';
-    rope.setAttribute('aria-hidden', 'true');
-    document.body.append(rope);
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.classList.add('coffee-rope');
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', String(anchorX));
+    line.setAttribute('y1', '0');
+    svg.append(line);
+    document.body.append(svg);
+    rope = { line, svg };
     return rope;
   }
 
@@ -33,12 +37,9 @@
     const rect = button.getBoundingClientRect();
     const cupX = rect.left + rect.width / 2;
     const cupY = rect.top + rect.height / 2;
-    const length = Math.hypot(cupX - anchorX, cupY);
-    const angle = (Math.atan2(cupX - anchorX, cupY) * 180) / Math.PI;
-    const line = ensureRope();
-    line.style.left = `${anchorX}px`;
-    line.style.height = `${length}px`;
-    line.style.transform = `rotate(${angle}deg)`;
+    const { line } = ensureRope();
+    line.setAttribute('x2', String(cupX));
+    line.setAttribute('y2', String(cupY));
   }
 
   function end() {
@@ -52,7 +53,7 @@
     button.classList.remove('is-dragging');
     button.classList.add('is-hiding');
     button.style.transform = '';
-    rope?.remove();
+    rope?.svg.remove();
     rope = null;
   }
 

@@ -73,18 +73,19 @@ input[type="number"]:focus-visible {
 
 .coffee-rope {
   position: fixed;
-  top: 0;
+  inset: 0;
   z-index: 19;
-  width: 3px;
-  border-radius: 999px;
-  background: repeating-linear-gradient(
-    135deg,
-    var(--accent) 0 2px,
-    color-mix(in srgb, var(--accent) 35%, white) 2px 4px
-  );
-  box-shadow: 1px 0 0 rgb(255 255 255 / 18%);
-  transform-origin: 0 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: visible;
   pointer-events: none;
+}
+
+.coffee-rope line {
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 3 3;
 }
 
 .coffee-fab.is-hiding {
