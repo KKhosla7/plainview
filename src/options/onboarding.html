@@ -22,17 +22,26 @@
     </section>
     <section class="card">
       <h2>File access</h2>
-      <p>
-        <strong>Chrome / Edge:</strong> open <code>chrome://extensions</code> or
-        <code>edge://extensions</code> → Plainview → Details → enable
-        <strong>Allow access to file URLs</strong>.
-      </p>
-      <p>
-        <strong>Firefox:</strong> install the signed add-on permanently, then open
-        <code>about:addons</code> → Plainview → Permissions → enable
-        <strong>Access your data for file:// URLs</strong>. Temporary add-ons loaded through
-        <code>about:debugging</code> do not receive file access.
-      </p>
+      <p class="note">Local files only render after your browser grants Plainview access to file URLs.</p>
+      <div class="platform-grid">
+        <article class="platform-card">
+          <h3>Chrome / Edge</h3>
+          <ol>
+            <li>Open <code>chrome://extensions</code> or <code>edge://extensions</code>.</li>
+            <li>Select <strong>Plainview → Details</strong>.</li>
+            <li>Enable <strong>Allow access to file URLs</strong>.</li>
+          </ol>
+        </article>
+        <article class="platform-card">
+          <h3>Firefox</h3>
+          <ol>
+            <li>Install the signed add-on permanently.</li>
+            <li>Open <code>about:addons → Plainview → Permissions</code>.</li>
+            <li>Enable <strong>Access your data for file:// URLs</strong>.</li>
+          </ol>
+          <p class="note">Temporary add-ons loaded through <code>about:debugging</code> do not receive file access.</p>
+        </article>
+      </div>
     </section>
 
     <section class="card">

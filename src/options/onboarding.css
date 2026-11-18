@@ -12,3 +12,27 @@
   cursor: pointer;
   font: inherit;
 }
+
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.platform-card {
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.platform-card h3 {
+  margin: 0 0 6px;
+  font-family: var(--display);
+  font-size: 1.1rem;
+}
+.platform-card ol {
+  margin: 0;
+  gap: 6px;
+}
+.platform-card .note {
+  margin-top: 8px;
+}
