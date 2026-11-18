@@ -17,6 +17,16 @@
     </header>
   <a class="coffee-fab" href="https://buymeacoffee.com/karan.khosla" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee" title="Buy me a coffee"><span class="coffee-icon" aria-hidden="true">☕</span><span class="coffee-label">Buy me a coffee</span></a>
     <section class="card">
+      <h2>Setup status</h2>
+      <div class="setup-state" id="accessState" data-state="checking">
+        <span class="setup-state-icon" id="accessIcon" aria-hidden="true">…</span>
+        <div>
+          <strong id="accessStatus">Checking file access…</strong>
+          <p class="note" id="accessHint"></p>
+        </div>
+      </div>
+    </section>
+    <section class="card">
       <h2>Allow file access</h2>
       <p id="intro"></p>
       <ol id="steps"></ol>
@@ -26,16 +36,6 @@
       <h2>Recommended settings</h2>
       <p>Open Settings to tune the reader after setup.</p>
       <p><a class="coffee" id="settingsLink" href="options.html">Open Plainview settings</a></p>
-    </section>
-    <section class="card">
-      <h2>Setup status</h2>
-      <div class="setup-state" id="accessState" data-state="checking">
-        <span class="setup-state-icon" id="accessIcon" aria-hidden="true">…</span>
-        <div>
-          <strong id="accessStatus">Checking file access…</strong>
-          <p class="note" id="accessHint"></p>
-        </div>
-      </div>
     </section>
   </main>
   <script src="onboarding.js" defer></script>
