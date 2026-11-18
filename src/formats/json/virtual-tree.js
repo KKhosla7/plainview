@@ -102,7 +102,6 @@
     state.indexRef.current.clear();
     state.onStats({ ...state.stats });
   }
-
   function rowValue(state, row) {
     if (!row.container) {
       return [span(valueClass(row.value), renderValue(row.value, state.syntax))];
@@ -134,6 +133,7 @@
     const node = Plainview.el('div', 'pv-vrow');
     node.style.top = `${rowTop(state, index)}px`;
     node.style.paddingLeft = `${8 + row.depth * 18}px`;
+    node.style.setProperty('--pv-row-guide', `var(--pv-guide-${(row.depth % 5) + 1})`);
     node.dataset.jsonPath = row.pathText;
     node.classList.toggle('pv-vrow-active', row.pathText === state.activePath);
 

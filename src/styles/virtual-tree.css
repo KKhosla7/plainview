@@ -66,6 +66,8 @@ html[data-pv] .pv-vrow > .pv-json-null {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-left: 1px dotted var(--pv-row-guide, var(--pv-guide-1));
+  padding-left: 5px;
 }
 
 html[data-pv] .pv-vrow .pv-json-path {
@@ -112,4 +114,11 @@ html[data-pv][data-pv-indent-guides="off"] .pv-guide {
 html[data-pv] .pv-json-virtual .pv-vrow > .pv-json-string {
   padding-left: 1ch;
   text-indent: -1ch;
+}
+
+html[data-pv][data-pv-indent-guides="off"]
+  .pv-vrow
+  > :is(.pv-json-string, .pv-json-number, .pv-json-boolean, .pv-json-null) {
+  border-left: 0;
+  padding-left: 0;
 }
