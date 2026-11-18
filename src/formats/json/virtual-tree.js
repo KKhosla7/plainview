@@ -255,7 +255,7 @@
     rebuild(state);
     const offset = Plainview.jsonToolsShared.stickyOffset();
     const top =
-      globalThis.scrollY + state.tree.getBoundingClientRect().top + index * RowHeight - offset;
+      globalThis.scrollY + state.tree.getBoundingClientRect().top + rowTop(state, index) - offset;
     globalThis.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
     renderRows(state);
     scheduleRender(state);

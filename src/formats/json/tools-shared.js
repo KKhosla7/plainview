@@ -127,7 +127,7 @@
       return;
     }
 
-    const top = globalThis.scrollY + rect.top - offset;
+    const top = globalThis.scrollY + rect.top + rect.height / 2 - globalThis.innerHeight / 2;
     globalThis.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   }
 
