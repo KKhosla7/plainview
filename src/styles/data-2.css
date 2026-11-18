@@ -1,0 +1,135 @@
+html[data-pv] .pv-csv-sort-icon {
+  margin-left: 6px;
+  color: var(--pv-fg-faint);
+}
+
+html[data-pv] .pv-csv-header[aria-sort="ascending"] .pv-csv-sort-icon,
+html[data-pv] .pv-csv-header[aria-sort="descending"] .pv-csv-sort-icon {
+  color: var(--pv-accent);
+}
+
+html[data-pv] .pv-csv-wrap {
+  margin-top: 6px;
+  border: 1px solid var(--pv-border);
+  border-radius: 8px;
+  background: var(--pv-bg);
+  overflow: auto;
+  max-height: calc(100vh - var(--pv-topbar) - 140px);
+}
+
+html[data-pv] .pv-csv-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--pv-mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+html[data-pv] .pv-csv-table th,
+html[data-pv] .pv-csv-table td {
+  max-width: 48ch;
+  padding: 6px 10px;
+  border-right: 1px solid var(--pv-border-soft);
+  border-bottom: 1px solid var(--pv-border-soft);
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  vertical-align: top;
+  white-space: pre;
+}
+
+html[data-pv] .pv-csv-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--pv-bg-inset);
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+html[data-pv] .pv-csv-table thead .pv-csv-filter-cell {
+  top: 34px;
+  z-index: 3;
+  padding: 4px 6px;
+  background: var(--pv-bg-soft);
+  text-transform: none;
+}
+
+html[data-pv] .pv-csv-column-filter {
+  width: 100%;
+  min-width: 0;
+  height: 24px;
+  padding: 0 7px;
+  border: 1px solid var(--pv-border);
+  border-radius: 4px;
+  background: var(--pv-bg);
+  color: var(--pv-fg);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[data-pv] .pv-csv-column-filter::placeholder {
+  color: var(--pv-fg-faint);
+}
+
+html[data-pv] .pv-csv-column-filter:focus {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 1px;
+}
+
+html[data-pv] .pv-csv-table tbody tr:hover td,
+html[data-pv] .pv-csv-table tbody tr:hover th {
+  background: var(--pv-bg-soft);
+}
+
+html[data-pv] .pv-csv-table .pv-csv-row-number,
+html[data-pv] .pv-csv-table .pv-csv-corner {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 3.5em;
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg-faint);
+  font-size: 11px;
+  text-align: right;
+  user-select: none;
+}
+
+html[data-pv] .pv-csv-table .pv-csv-corner {
+  z-index: 3;
+  top: 0;
+}
+
+html[data-pv] .pv-csv-table .pv-csv-number {
+  color: var(--pv-syn-number);
+  text-align: right;
+}
+
+html[data-pv] .pv-canvas-width {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(730px, 100%);
+  margin: -6px auto 12px;
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-sans);
+  font-size: 11px;
+}
+
+html[data-pv] .pv-canvas-width-input {
+  flex: 1 1 auto;
+  accent-color: var(--pv-accent);
+}
+
+html[data-pv] .pv-json-count-row .pv-json-count {
+  font-size: 10px;
+  line-height: 1.3;
+}

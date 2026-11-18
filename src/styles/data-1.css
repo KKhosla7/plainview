@@ -1,0 +1,248 @@
+html[data-pv] .pv-json-status {
+  flex: 1 0 100%;
+  min-height: 0;
+  color: var(--pv-fg-muted);
+  font-size: 11px;
+}
+
+html[data-pv] .pv-json-status:empty {
+  display: none;
+}
+
+html[data-pv] .pv-json-status:not(:empty) {
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: var(--pv-bg);
+}
+
+html[data-pv] .pv-json-status.is-empty {
+  border-left: 2px solid var(--pv-accent);
+  color: var(--pv-fg);
+}
+
+html[data-pv] .pv-json-status.is-error {
+  border-left: 2px solid var(--pv-danger);
+  color: var(--pv-danger);
+}
+
+html[data-pv] .pv-json-search-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  z-index: 30;
+  max-height: 240px;
+  padding: 4px;
+  overflow: auto;
+  border: 1px solid var(--pv-border);
+  border-radius: 8px;
+  background: var(--pv-bg-soft);
+  box-shadow: 0 10px 28px rgb(0 0 0 / 18%);
+}
+
+html[data-pv] .pv-json-search-result {
+  appearance: none;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--pv-fg);
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+}
+
+html[data-pv] .pv-json-search-result:hover,
+html[data-pv] .pv-json-search-result:focus-visible {
+  background: var(--pv-bg-inset);
+  outline: none;
+}
+
+html[data-pv] .pv-json-search-path {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--pv-syn-key);
+  font-family: var(--pv-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-pv] .pv-json-search-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-pv] .pv-json-search-more {
+  padding: 6px 8px;
+  color: var(--pv-fg-faint);
+  font-size: 11px;
+}
+
+html[data-pv] .pv-json-input[aria-invalid="true"] {
+  border-color: var(--pv-danger);
+}
+
+html[data-pv] .pv-json-path {
+  appearance: none;
+  margin-left: 0.5em;
+  padding: 0 4px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--pv-fg-faint);
+  font-family: var(--pv-mono);
+  font-size: 0.78em;
+  line-height: 1.5;
+  cursor: pointer;
+  opacity: 0;
+  vertical-align: baseline;
+}
+
+html[data-pv] .pv-json-leaf:hover .pv-json-path,
+html[data-pv] .pv-json-summary:hover .pv-json-path,
+html[data-pv] .pv-xml-leaf:hover .pv-json-path,
+html[data-pv] .pv-xml-summary:hover .pv-json-path,
+html[data-pv] .pv-json-path:focus-visible {
+  opacity: 1;
+}
+
+html[data-pv] .pv-json-path:hover {
+  border-color: var(--pv-border);
+  background: var(--pv-bg-soft);
+  color: var(--pv-fg);
+}
+
+html[data-pv] .pv-json-path:focus-visible {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 1px;
+}
+
+html[data-pv] .pv-json-leaf.pv-json-hit,
+html[data-pv] .pv-json-summary.pv-json-hit {
+  background: color-mix(in srgb, var(--pv-accent) 12%, transparent);
+}
+
+html[data-pv] .pv-json-leaf.pv-json-query-hit,
+html[data-pv] .pv-json-summary.pv-json-query-hit {
+  background: color-mix(in srgb, var(--pv-syn-number) 14%, transparent);
+}
+
+html[data-pv] .pv-json-leaf.pv-json-hit-active,
+html[data-pv] .pv-json-leaf.pv-json-query-active,
+html[data-pv] .pv-json-summary.pv-json-hit-active,
+html[data-pv] .pv-json-summary.pv-json-query-active {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 1px;
+}
+
+html[data-pv] .pv-xml-hit {
+  background: color-mix(in srgb, var(--pv-accent) 12%, transparent);
+}
+
+html[data-pv] .pv-xml-query-hit {
+  background: color-mix(in srgb, var(--pv-syn-number) 14%, transparent);
+}
+
+html[data-pv] .pv-xml-hit-active,
+html[data-pv] .pv-xml-query-active {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 1px;
+}
+
+@media (max-width: 720px) {
+  html[data-pv] .pv-json-tools {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  html[data-pv] .pv-json-search,
+  html[data-pv] .pv-json-query {
+    max-width: none;
+  }
+}
+
+/* ----------------------------------------------------------------- CSV */
+
+html[data-pv] .pv-csv-tools .pv-json-search {
+  flex: 1 0 100%;
+  max-width: none;
+}
+
+html[data-pv] .pv-csv-head-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+html[data-pv] .pv-csv-sort {
+  appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+html[data-pv] .pv-csv-filter-toggle {
+  appearance: none;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--pv-fg-faint);
+  cursor: pointer;
+}
+
+html[data-pv] .pv-csv-filter-toggle svg {
+  display: block;
+}
+
+html[data-pv] .pv-csv-filter-toggle:hover,
+html[data-pv] .pv-csv-filter-toggle.is-active {
+  border-color: var(--pv-border);
+  background: var(--pv-bg);
+  color: var(--pv-accent);
+}
+
+html[data-pv] .pv-csv-filter-toggle:focus-visible {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 1px;
+}
+
+html[data-pv] .pv-csv-filter-row[hidden],
+html[data-pv] .pv-csv-filter-cell[hidden] {
+  display: none;
+}
+
+html[data-pv] .pv-csv-sort:hover {
+  color: var(--pv-accent);
+}
+
+html[data-pv] .pv-csv-sort:focus-visible {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: 2px;
+}

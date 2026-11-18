@@ -6,14 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
-const checker = path.join(
-  project,
-  'node_modules',
-  '@kkhosla7',
-  'dwarpal-core',
-  'bin',
-  'dwarpal.js',
-);
+const checker = path.join('node_modules', '@kkhosla7', 'dwarpal-core', 'bin', 'dwarapal.js');
 const config = path.join(project, 'ast-slop.config.mjs');
 const ratchetPath = path.join(project, 'ast-ratchet.json');
 const ratchet = JSON.parse(fs.readFileSync(ratchetPath, 'utf8'));
@@ -23,7 +16,7 @@ if (ratchet.maxDiagnostics === 0) {
 }
 const result = spawnSync(
   process.execPath,
-  [checker, '--config', config, '--root', project, '--json'],
+  [checker, 'check', '--config', config, '--root', project, '--json'],
   {
     cwd: project,
     encoding: 'utf8',
