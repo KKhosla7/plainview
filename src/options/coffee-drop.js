@@ -47,6 +47,13 @@
     }
     offsetX = event.clientX - startX;
     offsetY = event.clientY - startY;
+    if (!moved && Math.hypot(offsetX, offsetY) <= 4) {
+      return;
+    }
+    if (!moved) {
+      moved = true;
+      button.classList.add('is-dragging');
+    }
     button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
     drawRope();
   }
