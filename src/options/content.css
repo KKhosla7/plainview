@@ -1,6 +1,6 @@
 input[type="number"] {
   width: 90px;
-  height: 40px;
+  height: 34px;
   padding: 0 10px;
   border: 1px solid var(--rule);
   border-radius: 8px;
@@ -8,7 +8,7 @@ input[type="number"] {
   color: var(--ink);
   font: 0.82rem var(--mono);
   text-align: right;
-  align-self: baseline;
+  align-self: center;
 }
 input[type="number"]:focus-visible {
   outline: 2px solid var(--accent);
@@ -270,9 +270,9 @@ input[type="number"]:focus-visible {
 }
 
 .shortcut-row {
-  min-height: 40px;
-  align-items: baseline;
+  min-height: 36px;
+  align-items: center;
 }
 .shortcut-row > span {
-  align-self: baseline;
+  align-self: center;
 }
