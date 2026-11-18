@@ -267,3 +267,13 @@ input[type="number"]:focus-visible {
 .toggle-row span {
   flex: 1 1 auto;
 }
+
+.shortcut-row {
+  min-height: 40px;
+}
+.shortcut-row > span {
+  align-self: center;
+}
+input[type="number"] {
+  align-self: center;
+}
