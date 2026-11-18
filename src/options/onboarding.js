@@ -1,7 +1,9 @@
 /* global chrome, browser */
 (() => {
   const api = globalThis.browser ?? globalThis.chrome;
-  const firefox = /Firefox/iu.test(navigator.userAgent);
+  const { userAgent } = navigator;
+  const firefox = /Firefox/iu.test(userAgent);
+  const edge = /Edg\//u.test(userAgent);
   const intro = document.querySelector('#intro');
   const steps = document.querySelector('#steps');
   const firefoxNote = document.querySelector('#firefoxNote');
@@ -18,10 +20,10 @@
 
   if (firefox) {
     intro.textContent =
-      'Plainview can read supported files in Firefox. Its built-in JSON viewer may take precedence for JSON responses.';
+      'Plainview is installed from Firefox Add-ons. Firefox needs file access enabled, and its built-in JSON viewer may take precedence for JSON responses.';
     addStep(
       'Allow file access:',
-      'Open about:addons, select Plainview, open Permissions, and allow access to file URLs.',
+      'Open about:addons → Plainview → Permissions and allow access to file URLs.',
     );
     addStep(
       'Open a local file:',
@@ -31,21 +33,30 @@
     firefoxNote.hidden = false;
     firefoxNote.textContent =
       'Firefox limitation: Firefox may render JSON with its own viewer before Plainview can take over. Markdown and other supported formats should still open in Plainview.';
-  } else {
-    intro.textContent = 'Chrome needs file access enabled before Plainview can render local files.';
-    addStep(
-      'Open extensions:',
-      'Go to chrome://extensions and enable Developer mode if Plainview is loaded unpacked.',
-    );
+  } else if (edge) {
+    intro.textContent =
+      'Plainview is installed from Microsoft Edge Add-ons. Edge needs file access enabled before it can render local files.';
+    addStep('Open extensions:', 'Go to edge://extensions.');
     addStep('Allow file URLs:', 'Open Plainview → Details and enable “Allow access to file URLs”.');
-    addStep(
-      'Reload the extension:',
-      'Click the reload button on the Plainview card after changing permissions.',
-    );
     addStep(
       'Test it:',
       'Open a local Markdown, JSON, YAML, TOML, CSV, XML or log file. Plainview should replace the raw text view.',
     );
+    firefoxNote.hidden = false;
+    firefoxNote.textContent =
+      'If Plainview was installed manually, reload it once from edge://extensions after changing permissions.';
+  } else {
+    intro.textContent =
+      'Plainview is installed from the Chrome Web Store. Chrome needs file access enabled before it can render local files.';
+    addStep('Open extensions:', 'Go to chrome://extensions.');
+    addStep('Allow file URLs:', 'Open Plainview → Details and enable “Allow access to file URLs”.');
+    addStep(
+      'Test it:',
+      'Open a local Markdown, JSON, YAML, TOML, CSV, XML or log file. Plainview should replace the raw text view.',
+    );
+    firefoxNote.hidden = false;
+    firefoxNote.textContent =
+      'If Plainview was installed manually, reload it once from chrome://extensions after changing permissions.';
   }
 
   document.querySelector('#settingsLink').addEventListener('click', (event) => {
