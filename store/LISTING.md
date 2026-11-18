@@ -2,34 +2,32 @@
 
 ## Name
 
-Plainview — Markdown, JSON & XML reader
+Plainview — local file reader
 
 ## Short description (Chrome, 132 characters max)
 
-Open Markdown, JSON and XML files as readable documents with Mermaid, tree views, source highlighting and download.
+Read local Markdown, JSON, XML, YAML, TOML, CSV and log files with search, tree views and clean exports.
 
 ## Detailed description
 
 Plainview turns the browser's raw text view into a reader.
 
-Open a local or web `.md`, `.json` or `.xml` file and Plainview renders it as a
-document:
+Open a local or web `.md`, `.json`, `.jsonc`, `.yaml`, `.toml`, `.csv`, `.tsv`, `.xml`, `.log` or Swagger/OpenAPI file and Plainview renders it as a document:
 
-- Markdown (GFM/CommonMark) with a Contents panel, code copy and Mermaid diagrams.
-- JSON and JSONC as a collapsible tree, with expand/collapse, copy and source view.
-- XML as a collapsible element tree with attributes, text, CDATA and comments.
-- HTML and Source views, with the selected view remembered per file.
-- Reading position remembered per file.
-- Light and Dark themes, remembered across sessions.
-- Content zoom without changing browser zoom.
-- Syntax-highlighted source, Copy source and Download.
+- Markdown with Contents, code copy, math and Mermaid diagrams.
+- JSON and JSONC as a searchable, virtualized tree with JSONPath/JMESPath queries.
+- YAML and TOML trees, CSV/TSV tables with search, filters, sorting and column controls.
+- XML trees with attributes, text, CDATA, comments and XPath.
+- Swagger/OpenAPI specs as structured data.
+- Log files as wide, readable monospace views.
+- Light and Dark themes, content zoom and persisted reading position.
+- Configurable tree font size, escaped-string formatting and colored indent guides.
+- Clean native data exports and self-contained standalone HTML exports.
 - No analytics, no telemetry, no remote code and no remote fonts.
 
-Everything is rendered locally. Markdown raw HTML is escaped and links are
-sanitized.
+Everything is rendered locally. Markdown raw HTML is escaped and links are sanitized.
 
-Firefox note: Firefox already has its own JSON viewer; Plainview leaves that
-native viewer in place and adds the Markdown and XML readers.
+Firefox note: Firefox may show JSON with its native viewer before Plainview can take over. Other formats use the Plainview reader.
 
 ## Category
 
@@ -37,20 +35,15 @@ Productivity, Developer Tools.
 
 ## Single purpose
 
-Render Markdown, JSON and XML documents that the browser would otherwise show
-as raw text.
+Render supported local and web documents that the browser would otherwise show as raw text.
 
 ## Permission justification
 
-- `storage` — remembers theme, zoom, view and reading position.
-- `downloads` — optional setting: open a supported download in a new tab. The setting is off by default; the extension does not read the user's download history.
+- `storage` — remembers theme, zoom, view, reading position and display preferences.
+- `downloads` — detects supported browser downloads so they can open in Plainview instead of remaining raw files. The extension does not read or transmit download history.
 - `clipboardWrite` — Copy source and Copy code buttons.
-- `notifications` — a one-time browser notification after an update, linking to the release notes. No data is collected.
-- Web page access — content scripts run on http/https pages to detect a
-  Markdown/JSON/XML document by MIME type and extension, then replace only that
-  document's view. No page data is collected or transmitted.
-- File URL access — optional, so local downloaded documents can be rendered.
-  The user enables it in the extension settings.
+- Web page access — content scripts run on HTTP/HTTPS/file pages to detect supported documents by MIME type or extension, then replace only that document's view. No page data is collected or transmitted.
+- File URL access — optional; the user enables it so local files can be rendered.
 
 ## Remote code
 
@@ -74,8 +67,8 @@ None. See `PRIVACY.md`.
 - Firefox JSON opens in Firefox's native JSON viewer; Plainview's JSON tree is
   used in Chromium.
 - Raw HTML in Markdown is shown as text, not executed. MDX/JSX is not evaluated.
-- YAML and TOML are not rendered.
 - JSON/XML trees stop at 40,000 nodes; source highlighting stops at 1.5 MB.
+- JSONL is not supported.
 - A server that forces a download with `Content-Disposition: attachment` must be
   downloaded and opened locally.
 - In Firefox, local `file://` documents require the permanently installed add-on
