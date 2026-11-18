@@ -48,7 +48,34 @@
     article.append(wrap);
   }
 
-  function createDataToolbar({ article, source, summary, copyLabel, treeMode, canvasWidth }) {
+  const JsonlOrderKey = 'plainview-jsonl-newest';
+
+  function createLatestToggle(article, actions) {
+    const label = el('label', 'pv-jsonl-latest');
+    const input = el('input');
+    input.type = 'checkbox';
+    input.checked = localStorage.getItem(JsonlOrderKey) === 'true';
+    input.addEventListener('change', () => {
+      localStorage.setItem(JsonlOrderKey, String(input.checked));
+      article
+        .querySelector('.pv-virtual-tree')
+        ?.dispatchEvent(
+          new CustomEvent('pv-jsonl-order', { detail: { newestFirst: input.checked } }),
+        );
+    });
+    label.append(input, document.createTextNode('Newest first'));
+    actions.append(label);
+  }
+
+  function createDataToolbar({
+    article,
+    source,
+    summary,
+    copyLabel,
+    treeMode,
+    canvasWidth,
+    latestToggle,
+  }) {
     const meta = el('div', 'pv-doc-meta');
     const text = el('span', 'pv-meta-text', summary);
     const actions = el('span', 'pv-meta-actions');
@@ -89,6 +116,11 @@
     });
 
     actions.append(expand, collapse);
+
+    if (latestToggle) {
+      createLatestToggle(article, actions);
+    }
+
     if (treeMode) {
       const mode = metaButton(treeMode === 'virtual' ? 'Classic tree' : 'Virtual tree');
       mode.title = treeMode === 'virtual' ? 'Use the paged tree' : 'Use the virtualized tree';

@@ -5,6 +5,12 @@
 ((root) => {
   const { childEntries, entryCount, isContainer, pathTextFor } = Plainview.jsonTreeShared;
 
+  function applyInitialOrder(state) {
+    if (localStorage.getItem('plainview-jsonl-newest') === 'true' && Array.isArray(state.value)) {
+      state.value = [...state.value].reverse();
+    }
+  }
+
   function expandAll(state, rebuild) {
     const seen = new WeakSet();
     function walk(nodeValue, path) {
@@ -25,6 +31,6 @@
   }
 
   root.Plainview = Object.assign(root.Plainview || {}, {
-    virtualTreeActions: { expandAll },
+    virtualTreeActions: { applyInitialOrder, expandAll },
   });
 })(globalThis);

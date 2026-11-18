@@ -1,5 +1,4 @@
 /* global Plainview */
-/* Windowed JSON tree: expansion state lives by path, rows mount near the viewport. */
 ((root) => {
   const Overscan = 8;
   const {
@@ -26,7 +25,6 @@
     if (depth > 0 && depth >= state.pageDepth) {
       return;
     }
-
     const cost = total + 1;
     if (depth === 0) {
       state.autoRows = cost;
@@ -42,7 +40,6 @@
       primePath(state, [...path, key], child, depth + 1);
     }
   }
-
   function flattenNode({ state, path, key, nodeValue, depth, isRoot }) {
     const pathText = pathTextFor(path);
     if (!filterRelevant(state, pathText, path)) {
@@ -215,7 +212,6 @@
       measureRows(state, measured);
     }
   }
-
   function scheduleRender(state) {
     if (state.frame) {
       return;
@@ -260,7 +256,6 @@
     scheduleRender(state);
     return { handled: true };
   }
-
   function createVirtualJsonTree({ value, source, options, indexRef, onStats }) {
     const tree = Plainview.el('div', 'pv-json pv-virtual-tree pv-json-virtual');
     const state = createState({
@@ -273,6 +268,11 @@
     primePath(state, [], value, 0);
     flatten(state);
     renderRows(state);
+    tree.addEventListener('pv-jsonl-order', () => {
+      state.value = [...state.value].reverse();
+      state.expanded.clear();
+      rebuild(state);
+    });
     tree.addEventListener('pv-expand-all', () =>
       Plainview.virtualTreeActions.expandAll(state, rebuild),
     );
