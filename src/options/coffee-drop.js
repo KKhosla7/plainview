@@ -9,7 +9,10 @@
   let dragged = false;
   let suppressClick = false;
 
+  button.addEventListener('dragstart', (event) => event.preventDefault());
+
   button.addEventListener('pointerdown', (event) => {
+    event.preventDefault();
     startY = event.clientY;
     dragged = false;
     button.setPointerCapture(event.pointerId);
