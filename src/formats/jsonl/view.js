@@ -1,8 +1,8 @@
 /* global Plainview */
 /* JSONL latest-message reader: parses only the tail first, newest records first. */
 ((root) => {
-  const TailBytes = 2_000_000;
-  const LatestLimit = 200;
+  const TailBytes = 1_000_000;
+  const LatestLimit = 100;
 
   function el(tag, className, text) {
     const node = Plainview.createElement(tag);

@@ -32,6 +32,8 @@ import './formats/json/virtual-filter.js';
 import './formats/json/virtual-layout.js';
 import './formats/json/virtual-tree.js';
 import './formats/json/tools.js';
+import './formats/source/core.js';
+import './formats/source/json.js';
 import './formats/json/view.js';
 import './formats/jsonl/view.js';
 import './formats/csv/parse.js';

@@ -651,7 +651,13 @@ html[data-pv] .pv-jsonl-record {
   color: var(--pv-fg);
   font-family: var(--pv-mono);
   font-size: var(--pv-tree-font-size, 12px);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   line-height: 1.55;
+  padding-left: calc(14px + 4ch);
+  text-indent: -2ch;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  word-break: break-word;
 }
