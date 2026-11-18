@@ -168,7 +168,7 @@
     node.append(...rowValue(state, row), pathButton(row.pathText));
     for (let depth = 0; depth < row.depth; depth += 1) {
       const guide = Plainview.el('span', 'pv-guide');
-      guide.style.left = `${8 + depth * 18}px`;
+      guide.style.left = `${16 + depth * 18}px`;
       guide.style.color = `var(--pv-guide-${(depth % 5) + 1})`;
       node.append(guide);
     }
