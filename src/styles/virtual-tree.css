@@ -109,7 +109,7 @@ html[data-pv][data-pv-indent-guides="off"] .pv-guide {
   display: none;
 }
 
-html[data-pv] .pv-vrow > .pv-json-string {
+html[data-pv] .pv-json-virtual .pv-vrow > .pv-json-string {
   padding-left: 1ch;
   text-indent: -1ch;
 }
