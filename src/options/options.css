@@ -305,6 +305,6 @@ input[type="number"]:focus-visible {
   min-width: 160px;
 }
 
-#showOnboarding {
+.card > .coffee {
   justify-self: center;
 }
