@@ -19,22 +19,21 @@ input[type="number"]:focus-visible {
 }
 
 .coffee-fab {
-  position: fixed;
-  top: 24px;
-  right: 24px;
+  position: static;
+  flex: 0 0 auto;
   z-index: 20;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border: 1px solid var(--accent);
   border-radius: 50%;
   background: var(--accent);
   color: var(--paper);
-  font-size: 21px;
+  font-size: 18px;
   text-decoration: none;
-  box-shadow: 0 8px 22px rgb(0 0 0 / 18%);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
   animation: coffee-float 4s ease-in-out infinite;
 }
 
