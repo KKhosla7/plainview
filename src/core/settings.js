@@ -9,6 +9,7 @@
     ExportDataMenu: ExportDataMenuKey,
     ExportUncompressed: ExportUncompressedKey,
     FormatValues: FormatValuesKey,
+    IndentGuides: IndentGuidesKey,
   } = Keys;
   const TableBordersKey = Keys.TableBorders;
   const TableResizeKey = Keys.TableResize;
@@ -179,6 +180,7 @@
     ZOOM_KEY: ZoomKey,
     SHORTCUT_KEY: ShortcutKey,
     FORMAT_VALUES_KEY: FormatValuesKey,
+    INDENT_GUIDES_KEY: IndentGuidesKey,
     EXPORT_DATA_MENU_KEY: ExportDataMenuKey,
     EXPORT_UNCOMPRESSED_KEY: ExportUncompressedKey,
     TABLE_BORDERS_KEY: TableBordersKey,

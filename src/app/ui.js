@@ -101,6 +101,7 @@
       Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
       Plainview.loadSetting(Plainview.CONTENT_FONT_SIZE_KEY, 12),
       Plainview.loadSetting(Plainview.FORMAT_VALUES_KEY, true),
+      Plainview.loadSetting(Plainview.INDENT_GUIDES_KEY, true),
       Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
       Plainview.loadSetting(Plainview.TABLE_LAYOUT_KEY, 'wrap'),
     ]);
@@ -114,13 +115,12 @@
       savedShortcuts: settings[4],
       savedContentFontSize: settings[6],
       savedFormatValues: settings[7],
+      savedIndentGuides: settings[8],
       savedTableBorders: settings[5],
-      savedTableResize: settings[8],
-      savedTableLayout: settings[9],
-      savedJsonTreeMode: settings[10],
+      savedTableResize: settings[9],
+      savedTableLayout: settings[10],
     };
   }
-
   function restoreScrollState({
     scrollKey,
     savedScroll,
@@ -147,13 +147,18 @@
     });
   }
 
-  function applyTreeFont(value) {
+  function applyTreeFont(value, formatValues, indentGuides) {
     document.documentElement.style.setProperty('--pv-tree-font-size', `${Number(value) || 12}px`);
+    document.documentElement.dataset.pvFormatValues = formatValues ? 'on' : 'off';
+    document.documentElement.dataset.pvIndentGuides = indentGuides ? 'on' : 'off';
   }
 
   function watchTableSettings() {
     Plainview.watchSetting(Plainview.FORMAT_VALUES_KEY, (value) => {
       document.documentElement.dataset.pvFormatValues = value ? 'on' : 'off';
+    });
+    Plainview.watchSetting(Plainview.INDENT_GUIDES_KEY, (value) => {
+      document.documentElement.dataset.pvIndentGuides = value ? 'on' : 'off';
     });
     Plainview.watchSetting(Plainview.TABLE_BORDERS_KEY, (value) => {
       Plainview.tableBorders.apply(value);
@@ -166,7 +171,6 @@
     });
     Plainview.watchSetting(Plainview.CONTENT_FONT_SIZE_KEY, applyTreeFont);
   }
-
   function focusSnapshot() {
     const element = document.activeElement;
     if (!element || element === document.body) {
@@ -228,10 +232,10 @@
       savedTableLayout,
       savedContentFontSize,
       savedFormatValues,
+      savedIndentGuides,
     } = await loadViewerSettings(url);
 
-    applyTreeFont(savedContentFontSize);
-    document.documentElement.dataset.pvFormatValues = savedFormatValues ? 'on' : 'off';
+    applyTreeFont(savedContentFontSize, savedFormatValues, savedIndentGuides);
     Plainview.tableBorders.apply(savedTableBorders);
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
     document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);

@@ -31,6 +31,11 @@ html[data-pv] {
   --pv-syn-tag: #116329;
   --pv-syn-attr: #0550ae;
   --pv-syn-comment: #6e7781;
+  --pv-guide-1: #1f4fa0;
+  --pv-guide-2: #b03a2e;
+  --pv-guide-3: #116329;
+  --pv-guide-4: #8250df;
+  --pv-guide-5: #953800;
   --pv-topbar: 56px;
   color-scheme: light;
   background: var(--pv-bg);
@@ -63,6 +68,11 @@ html[data-pv][data-pv-theme="dark"] {
   --pv-syn-tag: #7ee787;
   --pv-syn-attr: #79c0ff;
   --pv-syn-comment: #8b949e;
+  --pv-guide-1: #8db8ff;
+  --pv-guide-2: #ff8e7e;
+  --pv-guide-3: #7ee787;
+  --pv-guide-4: #d2a8ff;
+  --pv-guide-5: #ffa657;
   color-scheme: dark;
 }
 

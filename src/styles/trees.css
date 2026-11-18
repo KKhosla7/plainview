@@ -58,6 +58,8 @@ html[data-pv] .pv-json-leaf {
 .pv-json-value {
   flex: 1 1 auto;
   min-width: 0;
+  padding-left: 1ch;
+  text-indent: -1ch;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }

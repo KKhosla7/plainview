@@ -8,6 +8,7 @@
   const ContentFontSizeKey = 'plainview.contentFontSize';
   const ExportDataMenuKey = 'plainview.exportDataMenu';
   const FormatValuesKey = 'plainview.formatValues';
+  const IndentGuidesKey = 'plainview.indentGuides';
   const ExportUncompressedKey = 'plainview.exportUncompressed';
   const ShortcutsKey = 'plainview.shortcuts';
   const TableBordersKey = 'plainview.tableBorders';
@@ -25,6 +26,7 @@
       ContentFontSize: ContentFontSizeKey,
       ExportDataMenu: ExportDataMenuKey,
       FormatValues: FormatValuesKey,
+      IndentGuides: IndentGuidesKey,
       ExportUncompressed: ExportUncompressedKey,
       Shortcuts: ShortcutsKey,
       TableBorders: TableBordersKey,

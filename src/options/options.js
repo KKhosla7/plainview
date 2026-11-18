@@ -3,11 +3,12 @@
   const StatusResetMs = 1400;
   const Keys = Plainview.SETTING_KEYS;
   const api = globalThis.browser ?? globalThis.chrome;
-  const [autoReload, contentFontSize, contentFontStatus, formatValues] = [
+  const [autoReload, contentFontSize, contentFontStatus, formatValues, indentGuides] = [
     '#autoReloadSources',
     '#contentFontSize',
     '#contentFontStatus',
     '#formatValues',
+    '#indentGuides',
   ].map((selector) => document.querySelector(selector));
   const tableBorders = document.querySelector('#tableBorders');
   const tableResize = document.querySelector('#tableResize');
@@ -35,6 +36,7 @@
       [Keys.AutoReload]: false,
       [Keys.ContentFontSize]: 12,
       [Keys.FormatValues]: true,
+      [Keys.IndentGuides]: true,
       [Keys.TableBorders]: false,
       [Keys.TableResize]: true,
       [Keys.TableLayout]: 'wrap',
@@ -42,9 +44,14 @@
       [Keys.ExportDataMenu]: false,
       [Keys.ExportUncompressed]: false,
     });
-    autoReload.checked = Boolean(data[Keys.AutoReload]);
     contentFontSize.value = String(Number(data[Keys.ContentFontSize]) || 12);
-    formatValues.checked = Boolean(data[Keys.FormatValues]);
+    for (const [control, key] of [
+      [autoReload, Keys.AutoReload],
+      [formatValues, Keys.FormatValues],
+      [indentGuides, Keys.IndentGuides],
+    ]) {
+      control.checked = Boolean(data[key]);
+    }
     tableBorders.checked = Boolean(data[Keys.TableBorders]);
     tableResize.checked = Boolean(data[Keys.TableResize]);
     tableLayout.value = data[Keys.TableLayout] === 'scroll' ? 'scroll' : 'wrap';
@@ -61,9 +68,14 @@
     document.documentElement.dataset.pvOptionsReady = 'true';
   }
 
-  Plainview.onAsync(formatValues, 'change', async () => {
-    await api.storage.local.set({ [Keys.FormatValues]: formatValues.checked });
-  });
+  for (const [control, key] of [
+    [formatValues, Keys.FormatValues],
+    [indentGuides, Keys.IndentGuides],
+  ]) {
+    Plainview.onAsync(control, 'change', async () => {
+      await api.storage.local.set({ [key]: control.checked });
+    });
+  }
 
   Plainview.onAsync(contentFontSize, 'change', async () => {
     const value = Math.max(10, Math.min(20, Number(contentFontSize.value) || 12));

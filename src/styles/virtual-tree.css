@@ -95,3 +95,16 @@ html[data-pv] .pv-json-virtual .pv-vrow > .pv-json-null {
   text-overflow: clip;
   white-space: pre-wrap;
 }
+
+html[data-pv] .pv-guide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px dotted currentColor;
+  opacity: 0.55;
+  pointer-events: none;
+}
+html[data-pv][data-pv-indent-guides="off"] .pv-guide {
+  display: none;
+}
