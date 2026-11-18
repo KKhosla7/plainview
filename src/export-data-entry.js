@@ -33,6 +33,7 @@ import './formats/json/virtual-layout.js';
 import './formats/json/virtual-tree.js';
 import './formats/json/tools.js';
 import './formats/json/view.js';
+import './formats/jsonl/view.js';
 import './formats/csv/parse.js';
 import './formats/csv/table.js';
 import './formats/csv/view.js';

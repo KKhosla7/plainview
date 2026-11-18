@@ -127,6 +127,10 @@
       return jsonlText(exported.data);
     }
 
+    if (exported.kind === 'jsonl-source') {
+      return String(exported.data ?? '');
+    }
+
     if (exported.kind === 'yaml') {
       return yamlText(exported.data);
     }

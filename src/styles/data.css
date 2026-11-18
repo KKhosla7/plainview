@@ -627,3 +627,31 @@ html[data-pv] .pv-canvas-width-input {
   flex: 1 1 auto;
   accent-color: var(--pv-accent);
 }
+
+html[data-pv] .pv-jsonl-latest {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pv-fg-muted);
+  font-size: 11px;
+}
+
+html[data-pv] .pv-jsonl-list {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+html[data-pv] .pv-jsonl-record {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--pv-border);
+  border-radius: 6px;
+  background: var(--pv-bg);
+  color: var(--pv-fg);
+  font-family: var(--pv-mono);
+  font-size: var(--pv-tree-font-size, 12px);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
