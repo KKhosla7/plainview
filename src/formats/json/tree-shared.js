@@ -48,8 +48,21 @@
       if (syntax === 'yaml') {
         return value;
       }
-      const text = JSON.stringify(value);
-      return syntax === 'jsonl' ? text.replaceAll('\\n', '\n').replaceAll('\\t', '\t') : text;
+
+      if (syntax === 'jsonl') {
+        const trimmed = value.trim();
+        if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+          try {
+            return JSON.stringify(JSON.parse(trimmed), null, 2);
+          } catch {
+            return value;
+          }
+        }
+
+        return JSON.stringify(value).replaceAll('\\n', '\n').replaceAll('\\t', '\t');
+      }
+
+      return JSON.stringify(value);
     }
 
     if (value === null) {
