@@ -49,39 +49,15 @@
     </section>
 
     <section class="card">
-      <h2>Make your browser the default for file clicks</h2>
+      <h2>Open local files</h2>
       <p>
-        A browser extension cannot change OS file associations. Set the default
-        app for these file types in your OS:
+        Use <strong>Ctrl+O</strong> / <strong>Cmd+O</strong>, or drag a file into the browser.
+        OS file associations are managed by your operating system, not the extension.
       </p>
-      <div class="types">
-        <code>.md</code><code>.markdown</code><code>.json</code><code>.jsonc</code><code>.swagger</code><code>.openapi</code><code>.log</code><code>.yaml</code><code>.toml</code><code>.csv</code><code>.tsv</code><code>.xml</code><code>.rss</code><code>.atom</code>
-      </div>
-      <details>
-        <summary>Linux</summary>
-        <p>Find the MIME type, then point it at your browser's desktop file.</p>
-<pre><code>xdg-mime query filetype README.md
-ls /usr/share/applications | grep -E 'chrome|chromium|firefox'
-xdg-mime default google-chrome.desktop text/markdown
-xdg-mime default google-chrome.desktop application/json
-xdg-mime default google-chrome.desktop application/xml</code></pre>
-        <p>Use <code>chromium-browser.desktop</code>, <code>chromium.desktop</code> or
-          <code>firefox.desktop</code> as appropriate. Do not point
-          <code>text/plain</code> at the browser unless you want every text file
-          to open there.</p>
-      </details>
-      <details>
-        <summary>Windows</summary>
-        <p>Settings → Apps → Default apps → Choose defaults by file type, then set
-          <code>.md</code>, <code>.json</code> and <code>.xml</code> to Chrome or
-          Firefox. If the browser is not listed, use “Open with” → “Choose another
-          app” → “Look for another app” and select the browser executable.</p>
-      </details>
-      <details>
-        <summary>macOS</summary>
-        <p>Select a file in Finder → Get Info → Open with → choose Chrome or
-          Firefox → Change All.</p>
-      </details>
+      <p class="note">
+        Supported: .md, .json, .jsonc, .swagger, .openapi, .yaml, .toml, .csv, .tsv, .xml,
+        .log, .rss and .atom.
+      </p>
     </section>
 
     <section class="card">
