@@ -179,9 +179,9 @@ input[type="number"]:focus-visible {
   height: 36px;
   margin-left: auto;
   padding: 0;
-  border: 1px solid var(--rule);
-  border-radius: 50%;
-  background: var(--bg);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--accent);
   font: 18px / 1 var(--sans);
   cursor: pointer;

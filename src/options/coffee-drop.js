@@ -63,7 +63,7 @@
     const fromX = offsetX;
     const fromY = offsetY;
     const retractMs = 380;
-    const ascendMs = 620;
+    const ascendMs = 900;
     const retractStart = performance.now();
 
     function finish() {
@@ -77,7 +77,7 @@
 
     function ascend(now) {
       const progress = Math.min(1, (now - retractStart) / ascendMs);
-      const eased = 1 - (1 - progress) ** 3;
+      const eased = progress ** 2 * (3 - 2 * progress);
       const distance = upDistance * eased;
       offsetY = -distance;
       button.style.transform = `translate(0, ${offsetY}px)`;
@@ -106,12 +106,12 @@
         return;
       }
       const startRect = button.getBoundingClientRect();
-      upDistance = startRect.top + startRect.height + 24;
+      upDistance = startRect.top + startRect.height + 320;
       globalThis.requestAnimationFrame(ascend);
     }
 
     const startRect = button.getBoundingClientRect();
-    upDistance = startRect.top + startRect.height + 24;
+    upDistance = startRect.top + startRect.height + 320;
     globalThis.requestAnimationFrame(retract);
   }
 
