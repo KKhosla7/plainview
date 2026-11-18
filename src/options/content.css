@@ -187,7 +187,7 @@ input[type="number"]:focus-visible {
   cursor: pointer;
 }
 .page-theme-toggle:hover {
-  border-color: var(--accent);
+  color: var(--ink);
 }
 .page-theme-toggle:focus-visible {
   outline: 2px solid var(--accent);
@@ -219,7 +219,7 @@ input[type="number"]:focus-visible {
 .page-theme-toggle svg {
   display: block;
 }
-.version sup {
+.eyebrow sup {
   margin-left: 2px;
   font-size: 0.58em;
   vertical-align: super;

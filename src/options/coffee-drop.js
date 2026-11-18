@@ -63,7 +63,7 @@
     const fromX = offsetX;
     const fromY = offsetY;
     const retractMs = 380;
-    const ascendMs = 320;
+    const ascendMs = 620;
     const retractStart = performance.now();
 
     function finish() {
