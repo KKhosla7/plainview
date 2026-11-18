@@ -627,3 +627,8 @@ html[data-pv] .pv-canvas-width-input {
   flex: 1 1 auto;
   accent-color: var(--pv-accent);
 }
+
+html[data-pv] .pv-json-count-row .pv-json-count {
+  font-size: 10px;
+  line-height: 1.3;
+}
