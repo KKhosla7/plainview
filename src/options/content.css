@@ -249,3 +249,7 @@ input[type="number"]:focus-visible {
   min-height: 28px;
   padding: 4px 6px;
 }
+
+.card p {
+  max-width: none;
+}
