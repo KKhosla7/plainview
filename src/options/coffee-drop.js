@@ -8,6 +8,8 @@
   let startX = 0;
   let startY = 0;
   let anchorX = 0;
+  let offsetX = 0;
+  let offsetY = 0;
   let rope = null;
   let dragging = false;
   let suppressClick = false;
@@ -26,13 +28,7 @@
     return rope;
   }
 
-  function move(event) {
-    if (!dragging) {
-      return;
-    }
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-    button.style.transform = `translate(${dx}px, ${dy}px)`;
+  function drawRope() {
     const rect = button.getBoundingClientRect();
     const cupX = rect.left + rect.width / 2;
     const cupY = rect.top + rect.height / 2;
@@ -41,6 +37,16 @@
     const sag = Math.min(90, Math.abs(cupX - anchorX) * 0.45);
     const midY = cupY / 2 + sag;
     path.setAttribute('d', `M ${anchorX} 0 Q ${midX} ${midY} ${cupX} ${cupY}`);
+  }
+
+  function move(event) {
+    if (!dragging) {
+      return;
+    }
+    offsetX = event.clientX - startX;
+    offsetY = event.clientY - startY;
+    button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    drawRope();
   }
 
   function end() {
@@ -52,10 +58,32 @@
     globalThis.removeEventListener('mouseup', end);
     suppressClick = true;
     button.classList.remove('is-dragging');
-    button.classList.add('is-hiding');
-    button.style.transform = '';
-    rope?.svg.remove();
-    rope = null;
+    button.classList.add('is-releasing');
+    const fromX = offsetX;
+    const fromY = offsetY;
+    const started = performance.now();
+    const duration = 460;
+
+    function retract(now) {
+      const progress = Math.min(1, (now - started) / duration);
+      const eased = 1 - (1 - progress) ** 3;
+      offsetX = fromX * (1 - eased);
+      offsetY = fromY * (1 - eased);
+      button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      drawRope();
+      if (progress < 1) {
+        globalThis.requestAnimationFrame(retract);
+        return;
+      }
+      rope?.svg.remove();
+      rope = null;
+      button.classList.remove('is-releasing');
+      button.classList.add('is-retracted');
+      button.style.transform = '';
+      button.style.removeProperty('--coffee-string-extra');
+    }
+
+    globalThis.requestAnimationFrame(retract);
   }
 
   button.addEventListener('dragstart', (event) => event.preventDefault());
@@ -68,6 +96,8 @@
     startY = event.clientY;
     const rect = button.getBoundingClientRect();
     anchorX = rect.left + rect.width / 2;
+    offsetX = 0;
+    offsetY = 0;
     dragging = true;
     button.classList.add('is-dragging');
     globalThis.addEventListener('mousemove', move);

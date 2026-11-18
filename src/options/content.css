@@ -89,6 +89,17 @@ input[type="number"]:focus-visible {
   fill: none;
 }
 
+.coffee-fab.is-releasing {
+  animation: none;
+}
+
+.coffee-fab.is-retracted {
+  animation: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
 .coffee-fab.is-hiding {
   animation: none;
   opacity: 0;
