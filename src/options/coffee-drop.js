@@ -72,7 +72,6 @@
       rope = null;
       button.classList.remove('is-releasing');
       button.classList.add('is-retracted');
-      button.style.transform = '';
       button.style.removeProperty('--coffee-string-extra');
     }
 
