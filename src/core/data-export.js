@@ -7,7 +7,6 @@
   const Mime = {
     csv: 'text/csv;charset=utf-8',
     json: 'application/json;charset=utf-8',
-    jsonl: 'application/jsonl;charset=utf-8',
     markdown: 'text/markdown;charset=utf-8',
     toml: 'application/toml;charset=utf-8',
     tsv: 'text/tab-separated-values;charset=utf-8',
@@ -30,11 +29,6 @@
   function dataFileName(fileName, formatId) {
     const base = String(fileName || 'document').replace(/\.[^.]+$/u, '') || 'document';
     return `${base}.${extensionFor(formatId)}`;
-  }
-
-  function jsonlText(value) {
-    const values = Array.isArray(value) ? value : [value];
-    return `${values.map((item) => JSON.stringify(item)).join('\n')}\n`;
   }
 
   function jsonText(value) {
@@ -121,14 +115,6 @@
   function nativeText(exported) {
     if (exported.kind === 'json') {
       return jsonText(exported.data);
-    }
-
-    if (exported.kind === 'jsonl') {
-      return jsonlText(exported.data);
-    }
-
-    if (exported.kind === 'jsonl-source') {
-      return String(exported.data ?? '');
     }
 
     if (exported.kind === 'yaml') {

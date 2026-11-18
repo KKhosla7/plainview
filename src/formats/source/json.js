@@ -39,5 +39,4 @@
   }
 
   register('json', highlight);
-  register('jsonl', highlight);
 })();

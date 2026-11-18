@@ -19,8 +19,14 @@
       return Plainview.buildJson(source);
     }
 
-    if (format.id === 'jsonl') {
-      return Plainview.buildJsonl(source);
+    if (format.id === 'swagger') {
+      return source.trimStart().startsWith('{')
+        ? Plainview.buildJson(source)
+        : Plainview.buildYaml(source);
+    }
+
+    if (format.id === 'logs') {
+      return Plainview.buildLogs(source);
     }
 
     if (format.id === 'yaml') {

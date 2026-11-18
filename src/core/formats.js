@@ -25,18 +25,19 @@
         'application/geo+json',
       ],
     },
-    jsonl: {
-      id: 'jsonl',
-      label: 'JSONL',
-      name: 'JSON Lines',
-      extensions: ['jsonl', 'ndjson'],
-      types: [
-        'application/jsonl',
-        'application/x-ndjson',
-        'application/jsonlines',
-        'text/jsonl',
-        'text/x-jsonl',
-      ],
+    swagger: {
+      id: 'swagger',
+      label: 'SWAGGER',
+      name: 'Swagger / OpenAPI',
+      extensions: ['swagger', 'openapi'],
+      types: ['application/vnd.oai.openapi', 'application/vnd.oai.openapi+json'],
+    },
+    logs: {
+      id: 'logs',
+      label: 'LOGS',
+      name: 'Logs',
+      extensions: ['log', 'logs', 'out', 'err'],
+      types: ['text/x-log'],
     },
     yaml: {
       id: 'yaml',
@@ -143,6 +144,10 @@
       .split(';')[0]
       .trim();
     const extension = extensionOf(pathname);
+    const fileName = pathname.split('/').pop() || '';
+    if (/^(?:swagger|openapi)\.(?:json|ya?ml)$/iu.test(fileName)) {
+      return Formats.swagger;
+    }
 
     if (shouldSkip(type, extension)) {
       return null;

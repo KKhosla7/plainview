@@ -90,55 +90,6 @@
     };
   }
 
-  function normalizeJsonlValue(value) {
-    if (Plainview.valueKind(value) === 'string') {
-      const trimmed = value.trim();
-      if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-        try {
-          return normalizeJsonlValue(JSON.parse(trimmed));
-        } catch {
-          return value;
-        }
-      }
-
-      return value;
-    }
-
-    if (Array.isArray(value)) {
-      return value.map((item) => normalizeJsonlValue(item));
-    }
-
-    if (value !== null && Plainview.valueKind(value) === 'object') {
-      return Object.fromEntries(
-        Object.entries(value).map(([key, item]) => [key, normalizeJsonlValue(item)]),
-      );
-    }
-
-    return value;
-  }
-
-  function buildJsonl(source) {
-    const parsed = Plainview.parseJsonl(source);
-    if (parsed.error) {
-      const article = el('article', 'pv-doc pv-data-doc');
-      article.append(
-        el('div', 'pv-doc-title', 'Invalid JSONL'),
-        Plainview.errorPanel(parsed.error.message, parsed.error.line, parsed.error.column),
-      );
-      return { article, stats: null, error: true };
-    }
-
-    return buildJsonValue(
-      parsed.values.map((value) => normalizeJsonlValue(value)),
-      {
-        source,
-        copyLabel: 'Copy JSONL',
-        exportFormatId: 'jsonl',
-        suffix: 'JSONL',
-      },
-    );
-  }
-
   function buildJson(source) {
     const parsed = Plainview.parseJson(source);
     if (parsed.error) {
@@ -161,6 +112,5 @@
   root.Plainview = Object.assign(root.Plainview || {}, {
     buildJson,
     buildJsonValue,
-    buildJsonl,
   });
 })(globalThis);

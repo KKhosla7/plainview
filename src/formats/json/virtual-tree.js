@@ -268,11 +268,6 @@
     primePath(state, [], value, 0);
     flatten(state);
     renderRows(state);
-    tree.addEventListener('pv-jsonl-order', () => {
-      state.value = [...state.value].reverse();
-      state.expanded.clear();
-      rebuild(state);
-    });
     tree.addEventListener('pv-expand-all', () =>
       Plainview.virtualTreeActions.expandAll(state, rebuild),
     );

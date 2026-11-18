@@ -1,7 +1,7 @@
 # Plainview
 
 **A reader for the plain-text files your browser normally shows raw.**
-Markdown, JSON/JSONL, YAML, TOML, CSV/TSV and XML.
+Markdown, JSON, YAML, TOML, CSV/TSV and XML.
 
 [![CI](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml/badge.svg)](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-1f4fa0.svg)](LICENSE)
@@ -19,7 +19,6 @@ The full gallery below uses 2560×1600 lossless PNGs; the animated preview is co
 |---|---|---|
 | Markdown | `.md`, `.markdown`, `.mdown`, `.mkd`, `.mkdn`, `.mdwn`, `.mdx`; `text/markdown` | GFM/CommonMark HTML, contents panel, code copy, Mermaid diagrams |
 | JSON | `.json`, `.jsonc`, `.geojson`, `.jsonld`, `.har`, `.webmanifest`; `application/json` and `+json` types | Collapsible tree, JSONC comments/trailing commas, expand/collapse, copy |
-| JSONL | `.jsonl`, `.ndjson`; `application/jsonl`, `application/x-ndjson` | One record per line, tree/search, JSONL and standalone HTML export |
 | XML | `.xml`, `.rss`, `.atom`, `.rdf`, `.opml`, `.wsdl`, `.plist`, `.xsl`, `.xslt`; `application/xml`, `text/xml` and `+xml` types | Collapsible element tree with attributes, text, CDATA, comments |
 
 The Markdown view also supports Mermaid fenced blocks:
