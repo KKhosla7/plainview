@@ -156,7 +156,7 @@ html[data-pv] .pv-views {
   display: flex;
   align-items: center;
   gap: 2px;
-  padding: 3px;
+  padding: 2px 4px;
   border: 1px solid var(--pv-border);
   border-radius: 9px;
   background: var(--pv-bg-soft);
@@ -164,7 +164,7 @@ html[data-pv] .pv-views {
 
 html[data-pv] .pv-view-tab {
   appearance: none;
-  padding: 5px 12px;
+  padding: 3px 16px;
   border: 1px solid transparent;
   border-radius: 5px;
   background: transparent;
@@ -221,7 +221,7 @@ html[data-pv] .pv-icon-tab {
   align-items: center;
   justify-content: center;
   min-width: 34px;
-  padding: 5px 8px;
+  padding: 3px 10px;
 }
 
 html[data-pv] .pv-icon {
