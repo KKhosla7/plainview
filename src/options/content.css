@@ -215,3 +215,12 @@ input[type="number"]:focus-visible {
   --accent-soft: #17345f;
   --red: #ff8e7e;
 }
+
+.page-theme-toggle svg {
+  display: block;
+}
+.version sup {
+  margin-left: 2px;
+  font-size: 0.58em;
+  vertical-align: super;
+}

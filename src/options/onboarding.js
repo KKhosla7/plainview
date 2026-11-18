@@ -2,6 +2,8 @@
 (() => {
   const api = globalThis.browser ?? globalThis.chrome;
   const { userAgent } = navigator;
+  const { version } = api.runtime.getManifest();
+  document.querySelector('#version').textContent = version;
   const firefox = /Firefox/iu.test(userAgent);
   const edge = /Edg\//u.test(userAgent);
   const intro = document.querySelector('#intro');

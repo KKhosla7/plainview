@@ -13,7 +13,6 @@
   function apply() {
     root.dataset.pvPageTheme = theme;
     const dark = theme === 'dark';
-    button.textContent = dark ? '☀' : '☾';
     button.title = dark ? 'Dark theme · Switch to light' : 'Light theme · Switch to dark';
     button.setAttribute('aria-label', button.title);
     button.setAttribute('aria-pressed', String(dark));
