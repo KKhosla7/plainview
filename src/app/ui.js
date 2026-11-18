@@ -89,6 +89,7 @@
       Plainview.loadSetting(Plainview.ZOOM_KEY, 100),
       Plainview.loadSetting(Plainview.SHORTCUT_KEY, 'alt-s'),
       Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
+      Plainview.loadSetting(Plainview.CONTENT_FONT_SIZE_KEY, 12),
       Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
       Plainview.loadSetting(Plainview.TABLE_LAYOUT_KEY, 'wrap'),
       Plainview.loadSetting(Plainview.JSON_TREE_MODE_KEY, 'virtual'),
@@ -101,10 +102,11 @@
       savedTheme: settings[2],
       savedZoom: settings[3],
       savedShortcuts: settings[4],
+      savedContentFontSize: settings[6],
       savedTableBorders: settings[5],
-      savedTableResize: settings[6],
-      savedTableLayout: settings[7],
-      savedJsonTreeMode: settings[8],
+      savedTableResize: settings[7],
+      savedTableLayout: settings[8],
+      savedJsonTreeMode: settings[9],
     };
   }
 
@@ -134,6 +136,10 @@
     });
   }
 
+  function applyTreeFont(value) {
+    document.documentElement.style.setProperty('--pv-tree-font-size', `${Number(value) || 12}px`);
+  }
+
   function watchTableSettings() {
     Plainview.watchSetting(Plainview.TABLE_BORDERS_KEY, (value) => {
       Plainview.tableBorders.apply(value);
@@ -144,6 +150,7 @@
     Plainview.watchSetting(Plainview.TABLE_LAYOUT_KEY, (value) => {
       Plainview.tableResize.applyLayout(Plainview.validTableLayout(value));
     });
+    Plainview.watchSetting(Plainview.CONTENT_FONT_SIZE_KEY, applyTreeFont);
     Plainview.watchSetting(Plainview.JSON_TREE_MODE_KEY, (value) => {
       const mode = value === 'classic' ? 'classic' : 'virtual';
       if (document.documentElement.dataset.pvJsonTreeMode !== mode) {
@@ -167,8 +174,10 @@
       savedTableResize,
       savedTableLayout,
       savedJsonTreeMode,
+      savedContentFontSize,
     } = await loadViewerSettings(url);
 
+    applyTreeFont(savedContentFontSize);
     Plainview.tableBorders.apply(savedTableBorders);
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
     document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);

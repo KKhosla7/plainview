@@ -3,7 +3,7 @@ html[data-pv] .pv-virtual-tree {
   margin: 1em 0;
   min-height: 12em;
   font-family: var(--pv-mono);
-  font-size: 12px;
+  font-size: var(--pv-tree-font-size, 12px);
 }
 
 html[data-pv] .pv-vrow {

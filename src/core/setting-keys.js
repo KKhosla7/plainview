@@ -5,6 +5,7 @@
  */
 ((root) => {
   const AutoReloadKey = 'plainview.autoReloadSource';
+  const ContentFontSizeKey = 'plainview.contentFontSize';
   const ExportDataMenuKey = 'plainview.exportDataMenu';
   const ExportUncompressedKey = 'plainview.exportUncompressed';
   const ShortcutsKey = 'plainview.shortcuts';
@@ -20,6 +21,7 @@
   root.Plainview = Object.assign(root.Plainview || {}, {
     SETTING_KEYS: Object.freeze({
       AutoReload: AutoReloadKey,
+      ContentFontSize: ContentFontSizeKey,
       ExportDataMenu: ExportDataMenuKey,
       ExportUncompressed: ExportUncompressedKey,
       Shortcuts: ShortcutsKey,

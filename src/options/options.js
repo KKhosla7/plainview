@@ -3,12 +3,17 @@
   const StatusResetMs = 1400;
   const Keys = Plainview.SETTING_KEYS;
   const api = globalThis.browser ?? globalThis.chrome;
-  const autoReload = document.querySelector('#autoReloadSources');
+  const [autoReload, contentFontSize, contentFontStatus] = [
+    '#autoReloadSources',
+    '#contentFontSize',
+    '#contentFontStatus',
+  ].map((selector) => document.querySelector(selector));
   const tableBorders = document.querySelector('#tableBorders');
   const tableResize = document.querySelector('#tableResize');
   const tableLayout = document.querySelector('#tableLayout');
-  const tableStatus = document.querySelector('#tableStatus');
-  const sourceStatus = document.querySelector('#sourceStatus');
+  const [tableStatus, sourceStatus] = ['#tableStatus', '#sourceStatus'].map((selector) =>
+    document.querySelector(selector),
+  );
   const shortcutSelects = [...document.querySelectorAll('[data-shortcut]')];
   const shortcutStatus = document.querySelector('#shortcutStatus');
   const [exportDataMenu, exportStatus, exportUncompressed] = [
@@ -28,6 +33,7 @@
     const jsonTreeMode = document.querySelector('#jsonTreeMode');
     const data = await api.storage.local.get({
       [Keys.AutoReload]: false,
+      [Keys.ContentFontSize]: 12,
       [Keys.TableBorders]: false,
       [Keys.TableResize]: true,
       [Keys.TableLayout]: 'wrap',
@@ -37,6 +43,7 @@
       [Keys.ExportUncompressed]: false,
     });
     autoReload.checked = Boolean(data[Keys.AutoReload]);
+    contentFontSize.value = String(Number(data[Keys.ContentFontSize]) || 12);
     tableBorders.checked = Boolean(data[Keys.TableBorders]);
     tableResize.checked = Boolean(data[Keys.TableResize]);
     tableLayout.value = data[Keys.TableLayout] === 'scroll' ? 'scroll' : 'wrap';
@@ -53,6 +60,15 @@
     }
     document.documentElement.dataset.pvOptionsReady = 'true';
   }
+
+  Plainview.onAsync(contentFontSize, 'change', async () => {
+    const value = Math.max(10, Math.min(20, Number(contentFontSize.value) || 12));
+    contentFontSize.value = String(value);
+    await api.storage.local.set({ [Keys.ContentFontSize]: value });
+    contentFontStatus.textContent = `Tree font size set to ${value}px`;
+    contentFontStatus.classList.add('visible');
+    globalThis.setTimeout(() => contentFontStatus.classList.remove('visible'), StatusResetMs);
+  });
 
   Plainview.onAsync(exportDataMenu, 'change', async () => {
     await api.storage.local.set({

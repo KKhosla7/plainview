@@ -4,7 +4,11 @@
   const ThemeKey = Keys.Theme;
   const ZoomKey = Keys.Zoom;
   const ShortcutKey = Keys.Shortcuts;
-  const { ExportDataMenu: ExportDataMenuKey, ExportUncompressed: ExportUncompressedKey } = Keys;
+  const {
+    ContentFontSize: ContentFontSizeKey,
+    ExportDataMenu: ExportDataMenuKey,
+    ExportUncompressed: ExportUncompressedKey,
+  } = Keys;
   const TableBordersKey = Keys.TableBorders;
   const TableResizeKey = Keys.TableResize;
   const ZoomMin = 50;
@@ -169,6 +173,7 @@
 
   root.Plainview = Object.assign(root.Plainview || {}, {
     migrateLegacySettings,
+    CONTENT_FONT_SIZE_KEY: ContentFontSizeKey,
     THEME_KEY: ThemeKey,
     ZOOM_KEY: ZoomKey,
     SHORTCUT_KEY: ShortcutKey,
