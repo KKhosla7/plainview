@@ -50,13 +50,19 @@ input[type="number"]:focus-visible {
   bottom: 100%;
   left: 50%;
   width: 1px;
-  height: 80px;
+  height: calc(80px + var(--coffee-string-extra, 0px));
   background: color-mix(in srgb, var(--accent) 55%, transparent);
+  transition: height 480ms cubic-bezier(0.3, 1.4, 0.5, 1);
 }
 
 .coffee-fab.is-dragging {
   animation: none;
   cursor: grabbing;
+  transition: none;
+}
+
+.coffee-fab.is-dragging::before {
+  transition: none;
 }
 
 .coffee-fab.is-hiding {

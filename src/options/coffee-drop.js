@@ -23,6 +23,7 @@
     if (delta > 4) {
       dragged = true;
       button.classList.add('is-dragging');
+      button.style.setProperty('--coffee-string-extra', `${Math.min(delta, 180)}px`);
       button.style.transform = `translateY(${Math.min(delta, 180)}px)`;
     }
   });
@@ -36,6 +37,7 @@
     button.releasePointerCapture(event.pointerId);
     button.classList.remove('is-dragging');
     button.classList.add('is-hiding');
+    button.style.removeProperty('--coffee-string-extra');
     button.style.transform = '';
   });
 
