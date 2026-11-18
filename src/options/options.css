@@ -259,6 +259,10 @@ select:focus-visible {
   cursor: pointer;
 }
 
+.coffee svg {
+  flex: 0 0 auto;
+}
+
 .coffee:hover {
   filter: brightness(1.08);
 }
