@@ -121,7 +121,6 @@
     if (event.button !== 0) {
       return;
     }
-    event.preventDefault();
     startX = event.clientX;
     startY = event.clientY;
     const rect = button.getBoundingClientRect();
