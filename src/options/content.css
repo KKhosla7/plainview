@@ -20,8 +20,8 @@ input[type="number"]:focus-visible {
 
 .coffee-fab {
   position: fixed;
+  top: 24px;
   right: 24px;
-  bottom: 24px;
   z-index: 20;
   display: inline-flex;
   align-items: center;
