@@ -21,7 +21,34 @@
     return button;
   }
 
-  function createDataToolbar({ article, source, summary, copyLabel, treeMode }) {
+  const CanvasWidthKey = 'plainview-canvas-width';
+
+  function createCanvasWidth(article) {
+    const stored = Number(localStorage.getItem(CanvasWidthKey));
+    const percent =
+      Number.isFinite(stored) && stored > 0 ? Math.max(100, Math.min(200, stored)) : 130;
+    const wrap = el('label', 'pv-canvas-width');
+    wrap.append(el('span', '', 'Canvas'));
+    const input = el('input', 'pv-canvas-width-input');
+    input.type = 'range';
+    input.min = '100';
+    input.max = '200';
+    input.step = '10';
+    input.value = String(percent);
+    const apply = () => {
+      document.documentElement.style.setProperty(
+        '--pv-canvas-scale',
+        String(Number(input.value) / 100),
+      );
+      localStorage.setItem(CanvasWidthKey, input.value);
+    };
+    input.addEventListener('input', apply);
+    wrap.append(input);
+    apply();
+    article.append(wrap);
+  }
+
+  function createDataToolbar({ article, source, summary, copyLabel, treeMode, canvasWidth }) {
     const meta = el('div', 'pv-doc-meta');
     const text = el('span', 'pv-meta-text', summary);
     const actions = el('span', 'pv-meta-actions');
@@ -76,6 +103,11 @@
     }
     actions.append(copy);
     meta.append(text, actions);
+
+    if (canvasWidth) {
+      createCanvasWidth(article);
+    }
+
     return meta;
   }
 

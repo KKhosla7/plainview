@@ -611,3 +611,19 @@ html[data-pv] .pv-csv-table .pv-csv-number {
   color: var(--pv-syn-number);
   text-align: right;
 }
+
+html[data-pv] .pv-canvas-width {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(730px, 100%);
+  margin: -6px auto 12px;
+  color: var(--pv-fg-muted);
+  font-family: var(--pv-sans);
+  font-size: 11px;
+}
+
+html[data-pv] .pv-canvas-width-input {
+  flex: 1 1 auto;
+  accent-color: var(--pv-accent);
+}
