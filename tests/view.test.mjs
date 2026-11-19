@@ -82,6 +82,30 @@ it('downloads the original file', async () => {
   await page.close();
 });
 
+async function restoredSourceState(page) {
+  await page.waitForSelector('.pv-app');
+  await page.waitForFunction(
+    () =>
+      document.documentElement.dataset.pvTheme === 'dark' &&
+      document.querySelector('.pv-app')?.classList.contains('pv-show-source'),
+  );
+  return {
+    display: await page.locator('.pv-raw-pane').evaluate((el) => getComputedStyle(el).display),
+    pressed: await page.getByRole('button', { name: 'Toggle theme' }).getAttribute('aria-pressed'),
+  };
+}
+
+async function scrollToTable(page) {
+  const y = await page.evaluate(
+    (offset) =>
+      document.querySelector('#table').getBoundingClientRect().top + globalThis.scrollY - offset,
+    TestConstants.SCROLL_OFFSET,
+  );
+  await page.evaluate((top) => globalThis.scrollTo(0, top), y);
+  await page.waitForTimeout(TestConstants.SCROLL_SETTLE_MS);
+  return page.evaluate(() => globalThis.scrollY);
+}
+
 it('Source view, theme and reading position survive a reload', async () => {
   const { page, errors } = await openSample();
   await page.waitForSelector('.pv-mermaid-ready svg', {
@@ -97,31 +121,12 @@ it('Source view, theme and reading position survive a reload', async () => {
   );
 
   await page.reload();
-  await page.waitForSelector('.pv-app');
-  await page.waitForFunction(
-    () =>
-      document.documentElement.dataset.pvTheme === 'dark' &&
-      document.querySelector('.pv-app')?.classList.contains('pv-show-source'),
-  );
-  assert.equal(
-    await page.locator('.pv-raw-pane').evaluate((el) => getComputedStyle(el).display),
-    'block',
-  );
-  assert.equal(
-    await page.getByRole('button', { name: 'Toggle theme' }).getAttribute('aria-pressed'),
-    'true',
-  );
-
+  const restoredState = await restoredSourceState(page);
+  assert.equal(restoredState.display, 'block');
+  assert.equal(restoredState.pressed, 'true');
   await page.getByRole('tab', { name: 'HTML' }).click();
   await page.waitForSelector('.pv-markdown', { state: 'visible' });
-  const y = await page.evaluate(
-    (offset) =>
-      document.querySelector('#table').getBoundingClientRect().top + globalThis.scrollY - offset,
-    TestConstants.SCROLL_OFFSET,
-  );
-  await page.evaluate((top) => globalThis.scrollTo(0, top), y);
-  await page.waitForTimeout(TestConstants.SCROLL_SETTLE_MS);
-  const saved = await page.evaluate(() => globalThis.scrollY);
+  const saved = await scrollToTable(page);
   assert.ok(saved > TestConstants.MIN_SAVED_SCROLL);
 
   await page.reload();
