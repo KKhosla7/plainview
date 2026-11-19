@@ -1,5 +1,6 @@
 import { valueKind } from '../../core/value.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+import { jmespathPath } from './jmespath-path.js';
 
 ((root) => {
   const { el, button, bindResultDismiss, inputClear, mark, unmark, selectHit, renderResults } =
@@ -220,7 +221,7 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
       return;
     }
     const values = resultValues(result);
-    const paths = Plainview.jmespathPath.pathsFor(ctx.rootValue, expression);
+    const paths = jmespathPath.pathsFor(ctx.rootValue, expression);
     const mappedPaths = paths?.length === values.length ? paths : null;
     const items = resultItems(values, ctx.indexRef, ctx.queryHits, mappedPaths);
     const scalar = scalarValue(result);
