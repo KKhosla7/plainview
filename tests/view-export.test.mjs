@@ -137,7 +137,7 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
     await exportTop.waitFor({ state: 'visible' });
     await exportTop.click();
     await exported.waitForFunction(
-      () => (limit) => globalThis.scrollY < limit,
+      (limit) => globalThis.scrollY < limit,
       TestConstants.SCROLL_RETURN_LIMIT,
     );
 
