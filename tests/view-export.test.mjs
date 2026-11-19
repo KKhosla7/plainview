@@ -12,9 +12,10 @@ import {
   setSetting,
   startServer,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
-const MaxSampleExportBytes = 40_000;
-const MaxRichExportBytes = 800_000;
+const MAX_SAMPLE_EXPORT_BYTES = 40_000;
+const MAX_RICH_EXPORT_BYTES = 800_000;
 const LiveTableBordersKey = 'plainview.tableBorders';
 const ExportUncompressedKey = 'plainview.exportUncompressed';
 
@@ -92,7 +93,7 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
   assert.doesNotMatch(html, /pv-toc-link/u);
   assert.doesNotMatch(html, /Created with/u);
   assert.doesNotMatch(html, /<script[^>]+src=/iu);
-  assert.ok(html.length < MaxSampleExportBytes, `compressed export is ${html.length} bytes`);
+  assert.ok(html.length < MAX_SAMPLE_EXPORT_BYTES, `compressed export is ${html.length} bytes`);
 
   const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-export-'));
   const exportFile = path.join(exportDir, 'sample.html');
@@ -135,7 +136,10 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
     const exportTop = exported.getByRole('button', { name: 'Back to top' });
     await exportTop.waitFor({ state: 'visible' });
     await exportTop.click();
-    await exported.waitForFunction(() => globalThis.scrollY < 20);
+    await exported.waitForFunction(
+      () => (limit) => globalThis.scrollY < limit,
+      TestConstants.SCROLL_RETURN_LIMIT,
+    );
 
     const hasMathFonts = await exported.evaluate(() =>
       [...document.querySelectorAll('style')].some((style) =>
@@ -154,14 +158,14 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
 
 it('embeds KaTeX styles and fonts when exporting math', async () => {
   const { page, errors } = await openPage(context, `${base}/rich.md`);
-  await page.waitForSelector('.katex', { timeout: 10_000 });
+  await page.waitForSelector('.katex', { timeout: TestConstants.KATEX_TIMEOUT_MS });
   const [download] = await Promise.all([page.waitForEvent('download'), downloadHtml(page)]);
 
   const file = await download.path();
   const html = fs.readFileSync(file, 'utf8');
   assert.equal(download.suggestedFilename(), 'rich.html');
   assert.match(html, /data-pv-export="compressed"/u);
-  assert.ok(html.length < MaxRichExportBytes, `compressed math export is ${html.length} bytes`);
+  assert.ok(html.length < MAX_RICH_EXPORT_BYTES, `compressed math export is ${html.length} bytes`);
 
   const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-export-'));
   const exportFile = path.join(exportDir, 'rich.html');
@@ -169,7 +173,7 @@ it('embeds KaTeX styles and fonts when exporting math', async () => {
   const exported = await context.newPage();
   try {
     await exported.goto(pathToFileURL(exportFile).href);
-    await exported.waitForSelector('.katex', { timeout: 10_000 });
+    await exported.waitForSelector('.katex', { timeout: TestConstants.KATEX_TIMEOUT_MS });
     const hasMathFonts = await exported.evaluate(() =>
       [...document.querySelectorAll('style')].some((style) =>
         style.textContent.includes('data:font/woff2'),
@@ -207,16 +211,18 @@ it('allows column resizing in exported HTML', async () => {
     const startWidth = (await header.boundingBox()).width;
     const handle = await handleLocator.boundingBox();
     const y = handle.y + handle.height / 2;
-    await exported.mouse.move(handle.x + 3, y);
+    await exported.mouse.move(handle.x + TestConstants.RESIZE_START, y);
     await exported.mouse.down();
-    await exported.mouse.move(handle.x + 43, y, { steps: 5 });
+    await exported.mouse.move(handle.x + TestConstants.RESIZE_DELTA, y, {
+      steps: TestConstants.RESIZE_STEPS,
+    });
     await exported.mouse.up();
     const resized = (await header.boundingBox()).width;
     assert.ok(resized > startWidth);
     await exported.reload();
     await exported.waitForSelector('.pv-table-resize');
     const reloaded = (await header.boundingBox()).width;
-    assert.ok(Math.abs(reloaded - resized) < 3);
+    assert.ok(Math.abs(reloaded - resized) < TestConstants.RESIZE_TOLERANCE);
   } finally {
     await exported.close();
     fs.rmSync(exportDir, { recursive: true, force: true });
@@ -233,13 +239,15 @@ it('preserves resized column widths in exported HTML', async () => {
   const sourceWidth = (await sourceHeader.boundingBox()).width;
   const box = await sourceHandle.boundingBox();
   const y = box.y + box.height / 2;
-  await page.mouse.move(box.x + 3, y);
+  await page.mouse.move(box.x + TestConstants.RESIZE_START, y);
   await page.mouse.down();
-  await page.mouse.move(box.x + 63, y, { steps: 5 });
+  await page.mouse.move(box.x + TestConstants.EXPORT_RESIZE_DELTA, y, {
+    steps: TestConstants.RESIZE_STEPS,
+  });
   await page.mouse.up();
   const resizedWidth = (await sourceHeader.boundingBox()).width;
   assert.ok(resizedWidth > sourceWidth);
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(TestConstants.RELOAD_WAIT_MS);
 
   const [download] = await Promise.all([page.waitForEvent('download'), downloadHtml(page)]);
   const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-export-'));
@@ -251,7 +259,7 @@ it('preserves resized column widths in exported HTML', async () => {
     await exported.waitForSelector('.pv-markdown table');
     const exportedWidth = (await exported.locator('.pv-markdown table th').first().boundingBox())
       .width;
-    assert.ok(Math.abs(exportedWidth - resizedWidth) < 3);
+    assert.ok(Math.abs(exportedWidth - resizedWidth) < TestConstants.RESIZE_TOLERANCE);
   } finally {
     await exported.close();
     fs.rmSync(exportDir, { recursive: true, force: true });
