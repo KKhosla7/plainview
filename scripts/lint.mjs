@@ -5,9 +5,18 @@ import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
+const MAX_DIAGNOSTICS = 100;
+const MAX_DIAGNOSTICS_REPORT = 10_000;
 const result = spawnSync(
   'npx',
-  ['--no-install', 'biome', 'check', '.', '--reporter=json', '--max-diagnostics=10000'],
+  [
+    '--no-install',
+    'biome',
+    'check',
+    '.',
+    '--reporter=json',
+    `--max-diagnostics=${MAX_DIAGNOSTICS_REPORT}`,
+  ],
   { cwd: project, encoding: 'utf8' },
 );
 
@@ -38,7 +47,7 @@ for (const [rule, count] of Object.entries(byRule).sort((a, b) => b[1] - a[1])) 
   console.error(`  ${count} ${rule}`);
 }
 
-for (const diagnostic of diagnostics.slice(0, 100)) {
+for (const diagnostic of diagnostics.slice(0, MAX_DIAGNOSTICS)) {
   const { location } = diagnostic;
   console.error(
     `${diagnostic.severity.toUpperCase()} ${diagnostic.category} ${location.path}:${location.start.line}:${location.start.column} ${diagnostic.message}`,

@@ -273,10 +273,11 @@ for (const browser of ['chrome', 'firefox']) {
 
 fs.rmSync(bundleDir, { recursive: true, force: true });
 
-const size = (file) => `${(fs.statSync(file).size / 1024).toFixed(1)} KB`;
+const BYTES_PER_KILOBYTE = 1024;
+const size = (file) => `${(fs.statSync(file).size / BYTES_PER_KILOBYTE).toFixed(1)} KB`;
 console.log(
   `built dist/chrome and dist/firefox (v${pkg.version}) · boot ${size(path.join(dist, 'chrome', 'boot.js'))} · app ${size(path.join(dist, 'chrome', 'app.js'))} · css ${size(path.join(dist, 'chrome', 'styles.css'))} · ${chunkFiles.length} mermaid chunks`,
 );
 console.log(
-  `lazy vendors · yaml ${size(path.join(dist, 'chrome', 'vendor', 'yaml', 'js-yaml.min.mjs'))} · highlight ${size(path.join(dist, 'chrome', 'vendor', 'highlight', 'highlight.min.mjs'))} · katex ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex.min.mjs'))} js + ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex.min.css'))} css + ${(katexFontFiles.reduce((total, name) => total + fs.statSync(path.join(katexFonts, name)).size, 0) / 1024).toFixed(1)} KB fonts · export css ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex-export.css'))}`,
+  `lazy vendors · yaml ${size(path.join(dist, 'chrome', 'vendor', 'yaml', 'js-yaml.min.mjs'))} · highlight ${size(path.join(dist, 'chrome', 'vendor', 'highlight', 'highlight.min.mjs'))} · katex ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex.min.mjs'))} js + ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex.min.css'))} css + ${(katexFontFiles.reduce((total, name) => total + fs.statSync(path.join(katexFonts, name)).size, 0) / BYTES_PER_KILOBYTE).toFixed(1)} KB fonts · export css ${size(path.join(dist, 'chrome', 'vendor', 'katex', 'katex-export.css'))}`,
 );

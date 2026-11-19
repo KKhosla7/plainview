@@ -14,6 +14,17 @@ const fixtures = path.join(project, 'store', 'fixtures');
 const dist = path.join(project, 'dist', 'chrome');
 const docsDir = path.join(project, 'docs', 'screenshots');
 const storeDir = path.join(project, 'store', 'screenshots');
+const NOT_FOUND = 404;
+const OK = 200;
+const VIEWPORT_WIDTH = 1280;
+const VIEWPORT_HEIGHT = 800;
+const CAPTURE_SETTLE_MS = 700;
+const CAPTURE_FINAL_MS = 450;
+const SCROLL_SETTLE_MS = 250;
+const WEBP_QUALITY = 86;
+const MERMAID_TIMEOUT_MS = 20_000;
+const SCREENSHOT_RESIZE = `${VIEWPORT_WIDTH}x${VIEWPORT_HEIGHT}`;
+const STATUS_OK = 0;
 const MIME = {
   '.md': 'text/markdown; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
@@ -32,11 +43,11 @@ const { chromium } = await import('@playwright/test');
 const server = http.createServer((request, response) => {
   const file = path.join(fixtures, new URL(request.url, LocalOrigin).pathname.replace(/^\//u, ''));
   if (!(file.startsWith(fixtures) && fs.existsSync(file))) {
-    response.writeHead(404);
+    response.writeHead(NOT_FOUND);
     response.end('not found');
     return;
   }
-  response.writeHead(200, {
+  response.writeHead(OK, {
     'content-type': MIME[path.extname(file)] || 'application/octet-stream',
   });
   response.end(fs.readFileSync(file));
@@ -54,7 +65,7 @@ const context = await chromium.launchPersistentContext(profile, {
     '--disable-extensions-file-access-check',
     '--allow-file-access-from-files',
   ],
-  viewport: { width: 1280, height: 800 },
+  viewport: { width: VIEWPORT_WIDTH, height: VIEWPORT_HEIGHT },
   deviceScaleFactor: 2,
 });
 
@@ -62,8 +73,10 @@ fs.mkdirSync(docsDir, { recursive: true });
 fs.mkdirSync(storeDir, { recursive: true });
 
 function resize(source, target) {
-  const result = spawnSync('magick', [source, '-resize', '1280x800', target], { stdio: 'inherit' });
-  if (result.status !== 0) {
+  const result = spawnSync('magick', [source, '-resize', SCREENSHOT_RESIZE, target], {
+    stdio: 'inherit',
+  });
+  if (result.status !== STATUS_OK) {
     throw new Error(`could not resize ${source}`);
   }
 }
@@ -72,11 +85,11 @@ async function capture(name, route, setup) {
   const page = await context.newPage();
   await page.goto(`${base}/${route}`);
   await page.waitForSelector('.pv-app');
-  await page.waitForTimeout(700);
+  await page.waitForTimeout(CAPTURE_SETTLE_MS);
   if (setup) {
     await setup(page);
   }
-  await page.waitForTimeout(450);
+  await page.waitForTimeout(CAPTURE_FINAL_MS);
   const docsPath = path.join(docsDir, `${name}.png`);
   await page.screenshot({ path: docsPath });
   await page.close();
@@ -95,7 +108,7 @@ async function instantScrollTo(page, selector) {
     }
     root.style.scrollBehavior = previous;
   }, selector);
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(SCROLL_SETTLE_MS);
 }
 
 function writeScreenshotAssets() {
@@ -118,14 +131,14 @@ function writeScreenshotAssets() {
       path.join(docsDir, 'json.png'),
       path.join(docsDir, 'xml.png'),
       '-resize',
-      '1280x800',
+      SCREENSHOT_RESIZE,
       '-quality',
-      '86',
+      String(WEBP_QUALITY),
       path.join(project, 'docs', 'demo.webp'),
     ],
     { stdio: 'inherit' },
   );
-  if (webp.status !== 0) {
+  if (webp.status !== STATUS_OK) {
     throw new Error('could not create demo.webp');
   }
   console.log('wrote docs/demo.webp');
@@ -141,7 +154,7 @@ try {
   });
   docs.markdownMermaid = await capture('markdown-mermaid', 'showcase.md', async (page) => {
     await page.getByRole('button', { name: 'Dark theme' }).click();
-    await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20_000 });
+    await page.waitForSelector('.pv-mermaid-ready svg', { timeout: MERMAID_TIMEOUT_MS });
     await instantScrollTo(page, '#the-dusk-sequence');
   });
   docs.markdownSource = await capture('markdown-source', 'showcase.md', async (page) => {
