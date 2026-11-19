@@ -6,6 +6,7 @@ import {
   CONTENT_FONT_SIZE_KEY,
   FORMAT_VALUES_KEY,
   INDENT_GUIDES_KEY,
+  JSON_TREE_MODE_KEY,
   loadSetting,
   migrateLegacySettings,
   SHORTCUT_KEY,
@@ -136,6 +137,7 @@ async function loadViewerSettings(url) {
     loadSetting(INDENT_GUIDES_KEY, true),
     loadSetting(TABLE_RESIZE_KEY, true),
     loadSetting(TABLE_LAYOUT_KEY, 'wrap'),
+    loadSetting(JSON_TREE_MODE_KEY, 'virtual'),
   ]);
   return {
     viewKey,
@@ -151,6 +153,7 @@ async function loadViewerSettings(url) {
     savedTableBorders: settings[5],
     savedTableResize: settings[9],
     savedTableLayout: settings[10],
+    savedJsonTreeMode: settings[11],
   };
 }
 
@@ -222,6 +225,7 @@ async function mountViewer({ source, url, format, fileName: requestedName }) {
     savedContentFontSize,
     savedFormatValues,
     savedIndentGuides,
+    savedJsonTreeMode,
   } = await loadViewerSettings(url);
 
   applyTreeFont(savedContentFontSize, savedFormatValues, savedIndentGuides);
@@ -232,6 +236,8 @@ async function mountViewer({ source, url, format, fileName: requestedName }) {
   if (format.id === 'markdown') {
     installFonts();
   }
+  document.documentElement.dataset.pvJsonTreeMode =
+    savedJsonTreeMode === 'classic' ? 'classic' : 'virtual';
   const content = await buildContent(source, format);
   const { app, topbar, sourcePane, shell, zoom, toc, viewSwitcher, theme } = createViewerShell({
     content,

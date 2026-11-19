@@ -3,6 +3,7 @@ import { formatBytes, parseJson } from '../.././formats/json/parse.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
 import { createJsonTools } from './tools.js';
+import { createJsonTree } from './tree.js';
 import { createVirtualJsonTree } from './virtual-tree.js';
 
 /*
@@ -17,6 +18,7 @@ function summaryFor(source, options, stats) {
 }
 
 function buildJsonValue(value, options = {}) {
+  const treeMode = options.treeMode || document.documentElement.dataset.pvJsonTreeMode || 'virtual';
   const source = String(options.source ?? '');
   const article = el('article', 'pv-doc pv-data-doc');
   const indexRef = { current: new Map() };
@@ -42,9 +44,11 @@ function buildJsonValue(value, options = {}) {
     source,
     summary: '',
     copyLabel: options.copyLabel || 'Copy JSON',
+    treeMode,
   });
   const metaText = toolbar.querySelector('.pv-meta-text');
-  const { tree, context, revealPath } = createVirtualJsonTree({
+  const createTree = treeMode === 'classic' ? createJsonTree : createVirtualJsonTree;
+  const { tree, context, revealPath } = createTree({
     value,
     source,
     options,

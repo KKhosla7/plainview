@@ -3,6 +3,7 @@ import { formatBytes } from '../.././formats/json/parse.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
 import { parseXml } from './parse.js';
+import { renderXmlTree } from './render.js';
 import { createXmlTools } from './tools.js';
 import { createXmlVirtualTree } from './virtual-tree.js';
 
@@ -32,7 +33,11 @@ function buildXml(source) {
     return { article, stats: null, error: true };
   }
 
-  const tree = createXmlVirtualTree(parsed.doc.documentElement);
+  const treeMode = document.documentElement.dataset.pvJsonTreeMode || 'virtual';
+  const tree =
+    treeMode === 'classic'
+      ? renderXmlTree(parsed.doc.documentElement)
+      : createXmlVirtualTree(parsed.doc.documentElement);
   const { stats } = tree;
   const exportState = {
     filter: null,
@@ -64,6 +69,7 @@ function buildXml(source) {
         `${stats.attributes.toLocaleString()} attributes · ` +
         formatBytes(source.length),
       copyLabel: 'Copy XML',
+      treeMode,
     }),
     createXmlTools({
       tree: tree.element,
