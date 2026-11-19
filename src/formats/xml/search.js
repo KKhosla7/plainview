@@ -43,23 +43,60 @@ function createSearchElements() {
   return { count, next, prev, search, searchRow, searchWrap };
 }
 
+function clearXmlSearch(state, controls, exportState) {
+  for (const hit of state.hits) {
+    unmark(hit, 'pv-xml-hit');
+    unmark(hit, 'pv-xml-hit-active');
+  }
+  state.hits = [];
+  state.index = -1;
+  exportState?.clear('search');
+  controls.count.textContent = '';
+  controls.prev.disabled = true;
+  controls.next.disabled = true;
+}
+
+function runXmlSearch({ state, controls, byNode, exportState, status }) {
+  clearXmlSearch(state, controls, exportState);
+  status.textContent = '';
+  status.className = 'pv-json-status';
+  const value = controls.search.value.trim();
+  if (!value) {
+    return;
+  }
+  const needle = value.toLocaleLowerCase();
+  ensureSearchIndex(byNode);
+  for (const [node, entry] of byNode) {
+    if (!searchText(node).toLocaleLowerCase().includes(needle)) {
+      continue;
+    }
+    state.hits.push(entry);
+    mark(entry, 'pv-xml-hit');
+  }
+  controls.count.textContent = `${state.hits.length} ${state.hits.length === 1 ? 'match' : 'matches'}`;
+  controls.prev.disabled = state.hits.length === 0;
+  controls.next.disabled = state.hits.length === 0;
+  if (state.hits.length > 0) {
+    exportState?.set(
+      'search',
+      state.hits.flatMap((entry) => {
+        const node = exportNode(entry.source);
+        return node ? [node] : [];
+      }),
+      { kind: 'search', text: value },
+    );
+    state.index = selectHit(state.hits, 0, 'pv-xml-hit-active');
+  } else {
+    status.textContent = `No elements or text matched ${value}.`;
+    status.classList.add('is-empty');
+  }
+}
+
 function createXmlSearch({ byNode, exportState, status }) {
   const { count, next, prev, search, searchRow, searchWrap } = createSearchElements();
-  let searchHits = [];
-  let searchIndex = -1;
+  const state = { hits: [], index: -1 };
   let searchTimer = 0;
-  function clearSearch() {
-    for (const hit of searchHits) {
-      unmark(hit, 'pv-xml-hit');
-      unmark(hit, 'pv-xml-hit-active');
-    }
-    searchHits = [];
-    searchIndex = -1;
-    exportState?.clear('search');
-    count.textContent = '';
-    prev.disabled = true;
-    next.disabled = true;
-  }
+  const controls = { count, next, prev, search };
 
   function clearStatus() {
     status.textContent = '';
@@ -67,45 +104,14 @@ function createXmlSearch({ byNode, exportState, status }) {
   }
 
   function runSearch() {
-    clearSearch();
-    clearStatus();
-    const value = search.value.trim();
-    if (!value) {
-      return;
-    }
-    const needle = value.toLocaleLowerCase();
-    ensureSearchIndex(byNode);
-    for (const [node, entry] of byNode) {
-      if (!searchText(node).toLocaleLowerCase().includes(needle)) {
-        continue;
-      }
-      searchHits.push(entry);
-      mark(entry, 'pv-xml-hit');
-    }
-    count.textContent = `${searchHits.length} ${searchHits.length === 1 ? 'match' : 'matches'}`;
-    prev.disabled = searchHits.length === 0;
-    next.disabled = searchHits.length === 0;
-    if (searchHits.length > 0) {
-      exportState?.set(
-        'search',
-        searchHits.flatMap((entry) => {
-          const node = exportNode(entry.source);
-          return node ? [node] : [];
-        }),
-        { kind: 'search', text: value },
-      );
-      searchIndex = selectHit(searchHits, 0, 'pv-xml-hit-active');
-    } else {
-      status.textContent = `No elements or text matched ${value}.`;
-      status.classList.add('is-empty');
-    }
+    runXmlSearch({ state, controls, byNode, exportState, status });
   }
 
   function stepSearch(delta) {
-    if (searchHits.length === 0) {
+    if (state.hits.length === 0) {
       return;
     }
-    searchIndex = selectHit(searchHits, searchIndex + delta, 'pv-xml-hit-active');
+    state.index = selectHit(state.hits, state.index + delta, 'pv-xml-hit-active');
   }
 
   function scheduleSearch() {
@@ -115,7 +121,7 @@ function createXmlSearch({ byNode, exportState, status }) {
 
   const clear = jsonToolsShared.inputClear(search, 'Clear XML search', () => {
     search.value = '';
-    clearSearch();
+    clearXmlSearch(state, controls, exportState);
     clearStatus();
     search.focus();
   });
