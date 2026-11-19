@@ -1,6 +1,7 @@
 import { dataExport } from '../core/data-export.js';
 import { createElement } from '../core/dom.js';
 import { onAsync } from '../core/events.js';
+import { exportHtml as exportStandaloneHtml } from '../core/export.js';
 import { EXPORT_UNCOMPRESSED_KEY, loadSetting } from '.././core/settings.js';
 
 /* global Plainview */
@@ -53,7 +54,7 @@ import { EXPORT_UNCOMPRESSED_KEY, loadSetting } from '.././core/settings.js';
     return async () => {
       await refreshExtras();
       const uncompressed = await loadSetting(EXPORT_UNCOMPRESSED_KEY, false);
-      await Plainview.exportHtml({
+      await exportStandaloneHtml({
         article: content.article,
         exportData: content.exportData,
         fileName,
