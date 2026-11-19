@@ -10,6 +10,8 @@ import {
 } from './helpers.mjs';
 
 const TreeModeKey = 'plainview.jsonTreeMode';
+const EXPECTED_KEYS = 5;
+const MIN_VIRTUAL_ROWS = 3;
 
 let server;
 let base;
@@ -36,7 +38,7 @@ it('classic JSON tree supports collapse, expand and keys', async () => {
   try {
     await page.waitForSelector('.pv-json .pv-json-node');
     assert.equal(await page.locator('.pv-virtual-tree').count(), 0);
-    assert.ok((await page.locator('.pv-json-key').count()) >= 5);
+    assert.ok((await page.locator('.pv-json-key').count()) >= EXPECTED_KEYS);
     await page.getByRole('button', { name: 'Collapse all' }).click();
     assert.equal(
       await page.locator('.pv-json-node').evaluateAll((nodes) => nodes.every((node) => !node.open)),
@@ -58,7 +60,7 @@ it('virtual JSON tree supports collapse, expand and keys', async () => {
   try {
     await page.waitForSelector('.pv-virtual-tree');
     assert.equal(await page.locator('.pv-json-node').count(), 0);
-    assert.ok((await page.locator('.pv-vrow').count()) > 3);
+    assert.ok((await page.locator('.pv-vrow').count()) > MIN_VIRTUAL_ROWS);
     await page.getByRole('button', { name: 'Collapse all' }).click();
     await page.waitForFunction(() => document.querySelectorAll('.pv-vrow').length < 4);
     await page.getByRole('button', { name: 'Expand all' }).click();
@@ -76,7 +78,7 @@ it('classic XML tree renders without virtual rows', async () => {
   try {
     await page.waitForSelector('.pv-xml');
     assert.equal(await page.locator('.pv-virtual-tree').count(), 0);
-    assert.ok((await page.locator('.pv-xml-tag').count()) >= 5);
+    assert.ok((await page.locator('.pv-xml-tag').count()) >= EXPECTED_KEYS);
     assertNoErrors(errors);
   } finally {
     await page.close();
@@ -89,7 +91,7 @@ it('virtual XML tree renders windowed rows', async () => {
   try {
     await page.waitForSelector('.pv-virtual-tree.pv-xml-virtual');
     assert.ok((await page.locator('.pv-vrow').count()) > 0);
-    assert.ok((await page.locator('.pv-xml-tag').count()) >= 5);
+    assert.ok((await page.locator('.pv-xml-tag').count()) >= EXPECTED_KEYS);
     assertNoErrors(errors);
   } finally {
     await page.close();

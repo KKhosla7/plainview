@@ -12,8 +12,11 @@ import {
   startServer,
 } from './helpers.mjs';
 
-const MaxSourcePreviewChars = 210_000;
-const MinimumFullSourceChars = 500_000;
+const MAX_SOURCE_PREVIEW_CHARS = 210_000;
+const MIN_FULL_SOURCE_CHARS = 500_000;
+const LARGE_JSON_ROWS = 1200;
+const ROW_BIO_LENGTH = 500;
+const FULL_SOURCE_TIMEOUT_MS = 15_000;
 
 let server;
 let context;
@@ -32,10 +35,10 @@ after(async () => {
 function createLargeJson() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-large-'));
   const file = path.join(dir, 'large.json');
-  const rows = Array.from({ length: 1200 }, (_, index) => ({
+  const rows = Array.from({ length: LARGE_JSON_ROWS }, (_, index) => ({
     id: index,
     name: `item-${index}`,
-    bio: 'x'.repeat(500),
+    bio: 'x'.repeat(ROW_BIO_LENGTH),
     enabled: index % 2 === 0,
   }));
   fs.writeFileSync(file, JSON.stringify(rows));
@@ -52,18 +55,18 @@ it('previews a large source file and returns to the top', async () => {
     const previewLength = await page
       .locator('.pv-raw-code')
       .evaluate((node) => node.textContent.length);
-    assert.ok(previewLength < MaxSourcePreviewChars, `preview is ${previewLength} characters`);
+    assert.ok(previewLength < MAX_SOURCE_PREVIEW_CHARS, `preview is ${previewLength} characters`);
 
     await page.locator('.pv-raw-full').click();
     await page.waitForFunction(
       () => document.querySelector('.pv-raw-status')?.textContent.includes('Full source'),
       null,
-      { timeout: 15_000 },
+      { timeout: FULL_SOURCE_TIMEOUT_MS },
     );
     const fullLength = await page
       .locator('.pv-raw-code')
       .evaluate((node) => node.textContent.length);
-    assert.ok(fullLength > MinimumFullSourceChars, `full source is ${fullLength} characters`);
+    assert.ok(fullLength > MIN_FULL_SOURCE_CHARS, `full source is ${fullLength} characters`);
 
     await page.getByRole('tab', { name: 'HTML' }).click();
     await page.waitForSelector('.pv-json', { state: 'visible' });
