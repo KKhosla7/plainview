@@ -176,7 +176,7 @@ await bundle('boot-entry.js', 'boot.js', 'iife');
 await bundle('app-entry.js', 'app.js', 'esm', pageBuild);
 await bundle('export-chrome-entry.js', 'export-chrome.js', 'iife');
 await bundle('export-data-entry.js', 'export-data.js', 'iife', pageBuild);
-await bundle('formats/xml/parse-worker.js', 'xml-worker.js', 'iife');
+await bundle('background-entry.js', 'background.js', 'iife');
 
 await Promise.all(
   vendorBundles.map((vendor) =>
@@ -211,7 +211,6 @@ function manifestFor(browser) {
         'app.js',
         'export-chrome.js',
         'export-data.js',
-        'xml-worker.js',
         'vendor/mermaid/mermaid.esm.min.mjs',
         'vendor/yaml/js-yaml.min.mjs',
         'vendor/toml/toml.min.mjs',

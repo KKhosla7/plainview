@@ -20,11 +20,6 @@ function ensureDirectories(target) {
 }
 
 function copyRuntimeFiles({ project }, target) {
-  fs.copyFileSync(
-    path.join(project, 'src', 'background.js'),
-    path.join(target, 'src', 'background.js'),
-  );
-
   for (const runtimeFile of [
     'fonts.js',
     'events.js',
@@ -63,10 +58,12 @@ function copyPackageFiles({ project, bundleDir }, target) {
     'app.js',
     'export-chrome.js',
     'export-data.js',
-    'xml-worker.js',
+    'background.js',
     'styles.css',
   ]) {
-    fs.copyFileSync(path.join(bundleDir, file), path.join(target, file));
+    const destination =
+      file === 'background.js' ? path.join(target, 'src', file) : path.join(target, file);
+    fs.copyFileSync(path.join(bundleDir, file), destination);
   }
 }
 

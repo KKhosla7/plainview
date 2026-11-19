@@ -4,7 +4,7 @@ import { createDescriptorDocument } from './descriptor.js';
 
 const { evaluateXPath, evaluateXPathToNodes } = fontoxpath;
 
-function parse(source) {
+function parseXmlSource(source) {
   try {
     const doc = new DOMParser().parseFromString(source.replace(/^\uFEFF/u, ''), 'application/xml');
     const result = createDescriptorDocument(doc);
@@ -26,7 +26,7 @@ function parse(source) {
   }
 }
 
-function xpath(source, expression) {
+function evaluateXmlXPath(source, expression) {
   try {
     const doc = new DOMParser().parseFromString(source.replace(/^\uFEFF/u, ''), 'application/xml');
     const result = createDescriptorDocument(doc);
@@ -51,8 +51,4 @@ function xpath(source, expression) {
   }
 }
 
-self.addEventListener('message', (event) => {
-  const { expression, id, kind, source } = event.data;
-  const result = kind === 'xpath' ? xpath(source, expression) : parse(source);
-  self.postMessage({ id, result });
-});
+export { evaluateXmlXPath, parseXmlSource };

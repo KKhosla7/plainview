@@ -50,7 +50,7 @@ function buildNode(context, node, parent, depth) {
     nodeName: node.nodeName || '',
     nodeType: descriptorNodeType(node),
     nodeValue: node.nodeValue,
-    parentNode: parent,
+    parentId: parent?.id ?? null,
     prefix: node.prefix || '',
     textContent: '',
   };
@@ -98,4 +98,24 @@ function createDescriptorDocument(doc) {
   return { ...context, documentElement };
 }
 
-export { createDescriptorDocument };
+function hydrateDescriptorDocument(document) {
+  const byId = new Map();
+  function hydrate(descriptor, parent) {
+    descriptor.parentNode = parent;
+    byId.set(descriptor.id, descriptor);
+    for (const attribute of descriptor.attributes) {
+      attribute.ownerElement = descriptor;
+    }
+
+    for (const child of descriptor.childNodes) {
+      hydrate(child, descriptor);
+    }
+  }
+  if (document.documentElement) {
+    hydrate(document.documentElement, null);
+  }
+  document.byId = byId;
+  return document;
+}
+
+export { createDescriptorDocument, hydrateDescriptorDocument };
