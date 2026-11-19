@@ -2,6 +2,9 @@ import { createTheme } from '.././app/theme.js';
 import { createTopbar } from '../app/topbar.js';
 import { el } from '../core/dom.js';
 import { createSourcePane } from './source-pane.js';
+import { createTocDrawer } from './toc.js';
+import { createViewSwitcher } from './view-switcher.js';
+import { createZoom } from './zoom.js';
 
 /* global Plainview */
 /*
@@ -38,8 +41,8 @@ import { createSourcePane } from './source-pane.js';
     zoomSurface.append(content.article);
     main.append(zoomSurface);
 
-    const zoom = Plainview.createZoom({ initialZoom: savedZoom });
-    const toc = Plainview.createTocDrawer({
+    const zoom = createZoom({ initialZoom: savedZoom });
+    const toc = createTocDrawer({
       headings: content.headings,
       button: topbar.tocButton,
       app,
@@ -51,7 +54,7 @@ import { createSourcePane } from './source-pane.js';
     }
     shell.append(main);
 
-    const viewSwitcher = Plainview.createViewSwitcher({
+    const viewSwitcher = createViewSwitcher({
       app,
       htmlTab: topbar.htmlTab,
       sourceTab: topbar.sourceTab,
@@ -63,7 +66,7 @@ import { createSourcePane } from './source-pane.js';
         sourcePane.populate();
       },
       onViewChange: () => {
-        if (toc.update) {
+        if (toc.element) {
           toc.update();
         }
       },
