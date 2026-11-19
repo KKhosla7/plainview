@@ -89,6 +89,44 @@ function ignoreSearchError() {
   return false;
 }
 
+function applySearchResult({ state, result, indexRef, exportState, rootValue, query, tree }) {
+  updateSearchExport(exportState, result, rootValue, query);
+  tree.dispatchEvent(
+    new CustomEvent('pv-json-filter', {
+      detail: {
+        hitClass: 'pv-json-hit',
+        paths: recordPathsForMatches(rootValue, result.matches),
+      },
+    }),
+  );
+  state.hits = result.hits.flatMap((hit) => {
+    const entry = indexRef.current.get(hit.pathText);
+    return entry ? [entry] : [];
+  });
+  if (state.hits.length > 0) {
+    state.index = selectHit(state.hits, 0, 'pv-json-hit-active');
+  }
+}
+
+function clearSearchState(state, options, onClear) {
+  for (const hit of state.hits) {
+    jsonToolsShared.unmark(hit.entry, 'pv-json-hit');
+    jsonToolsShared.unmark(hit.entry, 'pv-json-hit-active');
+  }
+  state.hits = [];
+  state.index = -1;
+  options.count.textContent = '';
+  options.prev.disabled = true;
+  options.next.disabled = true;
+  options.searchResults.hidden = true;
+  options.searchResults.replaceChildren();
+  options.exportState?.clear('search');
+  options.tree?.dispatchEvent(
+    new CustomEvent('pv-json-filter', { detail: { hitClass: 'pv-json-hit', paths: [] } }),
+  );
+  onClear();
+}
+
 async function executeSearch(options, state, clear) {
   const {
     count,
@@ -127,51 +165,18 @@ async function executeSearch(options, state, clear) {
   if (!result || token !== state.token) {
     return;
   }
-  updateSearchExport(exportState, result, rootValue, query);
-  tree.dispatchEvent(
-    new CustomEvent('pv-json-filter', {
-      detail: {
-        hitClass: 'pv-json-hit',
-        paths: recordPathsForMatches(rootValue, result.matches),
-      },
-    }),
-  );
-  if (result.matches[0]) {
+  applySearchResult({ state, result, indexRef, exportState, rootValue, query, tree });
+  if (result.matches[0] && token === state.token) {
     await revealPath(result.matches[0].path);
-    if (token !== state.token) {
-      return;
-    }
-  }
-  state.hits = result.hits.flatMap((hit) => {
-    const entry = indexRef.current.get(hit.pathText);
-    return entry ? [entry] : [];
-  });
-  if (state.hits.length > 0) {
-    state.index = selectHit(state.hits, 0, 'pv-json-hit-active');
   }
 }
 
 function createSearchController(options) {
-  const { count, exportState, next, onClear, prev, searchResults, status } = options;
+  const { onClear, status } = options;
   const state = { hits: [], index: -1, timer: 0, token: 0 };
 
   function clear() {
-    for (const hit of state.hits) {
-      jsonToolsShared.unmark(hit.entry, 'pv-json-hit');
-      jsonToolsShared.unmark(hit.entry, 'pv-json-hit-active');
-    }
-    state.hits = [];
-    state.index = -1;
-    count.textContent = '';
-    prev.disabled = true;
-    next.disabled = true;
-    searchResults.hidden = true;
-    searchResults.replaceChildren();
-    exportState?.clear('search');
-    options.tree?.dispatchEvent(
-      new CustomEvent('pv-json-filter', { detail: { hitClass: 'pv-json-hit', paths: [] } }),
-    );
-    onClear();
+    clearSearchState(state, options, onClear);
   }
 
   function failed(error) {
