@@ -1,5 +1,3 @@
-import { downloadText } from '../core/download.js';
-import { installFonts } from '../core/fonts.js';
 import { createScrollMemory } from '.././core/scroll-memory.js';
 import { scrollElementIntoViewInstant } from '.././core/scroll-utils.js';
 import {
@@ -14,7 +12,6 @@ import {
   watchSetting,
 } from '../core/settings.js';
 
-import { watchSource } from '../core/source-watch.js';
 import { tableResize } from '.././core/table-resize.js';
 import { buildCsv } from '../formats/csv/view.js';
 import { buildJson } from '../formats/json/view.js';
@@ -24,12 +21,11 @@ import { buildToml } from '../formats/toml/view.js';
 import { buildXml } from '../formats/xml/view.js';
 import { buildYaml } from '../formats/yaml/view.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
-import { createScrollTop } from './scroll-top.js';
-import { wireShortcuts } from './shortcuts.js';
 import { tableBorders } from './table-border-toggle.js';
-import { createViewerEnhancements, wireViewerExport } from './viewer-extras.js';
-import { loadViewerSettings } from './viewer-settings.js';
+import { loadAndApplySettings } from './viewer-settings-loader.js';
 import { createViewerShell } from './viewer-shell.js';
+import { wireViewerShell } from './viewer-shell-wiring.js';
+import { startSourceWatch } from './viewer-watch.js';
 
 const DEFAULT_CONTENT_FONT_SIZE = 12;
 
@@ -173,82 +169,51 @@ function refreshViewer(source, url, format) {
 async function mountViewer({ source, url, format, fileName: requestedName }) {
   await migrateLegacySettings();
   const fileName = requestedName || fileNameFromUrl(url);
-  const {
-    viewKey,
-    scrollKey,
-    savedView,
-    savedScroll,
-    savedTheme,
-    savedZoom,
-    savedShortcuts,
-    savedTableBorders,
-    savedTableResize,
-    savedTableLayout,
-    savedContentFontSize,
-    savedFormatValues,
-    savedIndentGuides,
-    savedJsonTreeMode,
-  } = await loadViewerSettings(url);
-
-  applyTreeFont(savedContentFontSize, savedFormatValues, savedIndentGuides);
-  tableBorders.apply(savedTableBorders);
-  document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
-  document.documentElement.dataset.pvTableLayout = validTableLayout(savedTableLayout);
-
-  if (format.id === 'markdown') {
-    installFonts();
-  }
-  document.documentElement.dataset.pvJsonTreeMode =
-    savedJsonTreeMode === 'classic' ? 'classic' : 'virtual';
+  const settings = await loadAndApplySettings({ url, format, fileName });
   const content = await buildContent(source, format);
   const { app, topbar, sourcePane, shell, zoom, toc, viewSwitcher, theme } = createViewerShell({
     content,
     format,
     fileName,
     url,
-    viewKey,
+    viewKey: settings.viewKey,
     source,
-    savedView,
-    savedTheme,
-    savedZoom,
+    savedView: settings.savedView,
+    savedTheme: settings.savedTheme,
+    savedZoom: settings.savedZoom,
   });
-
-  const { refreshMermaid, refreshExtras } = createViewerEnhancements(content, theme);
-  theme.setOnChange(refreshMermaid);
-  topbar.downloadButton.addEventListener('click', () => {
-    downloadText(source, fileName, format);
-  });
-  wireViewerExport({ topbar, refreshExtras, content, fileName, format });
-  const shortcutBindings = {
-    viewSwitcher,
+  const refreshExtras = wireViewerShell({
+    app,
+    topbar,
+    sourcePane,
+    shell,
     zoom,
     toc,
+    viewSwitcher,
     theme,
-    topbar,
-    app,
-    shortcuts: savedShortcuts,
-  };
-  wireShortcuts(shortcutBindings);
-
-  if (viewSwitcher.getView() === 'source') {
-    sourcePane.populate();
-  }
-  app.append(topbar.element, shell, sourcePane.element, zoom.element);
-
-  createScrollTop({ app });
-  const sourceWatch = watchSource({
+    content,
+    source,
+    fileName,
+    format,
+    shortcuts: settings.savedShortcuts,
+  });
+  startSourceWatch({
     source,
     url,
     app,
     format,
-    onReload: () => location.reload(),
     onUpdate: (nextSource) => refreshViewer(nextSource, location.href, format),
   });
-  globalThis.addEventListener('pagehide', () => sourceWatch.stop(), { once: true });
-
   applyDocumentChrome({ app, format, fileName });
   watchTableSettings();
-  restoreScrollState({ scrollKey, savedScroll, viewSwitcher, toc, format, refreshExtras });
+  restoreScrollState({
+    scrollKey: settings.scrollKey,
+    savedScroll: settings.savedScroll,
+    viewSwitcher,
+    toc,
+    format,
+    refreshExtras,
+  });
 }
 
 export { mountViewer };
