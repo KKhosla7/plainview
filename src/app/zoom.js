@@ -27,7 +27,7 @@ function zoomButton(className, label, ariaLabel) {
   return button;
 }
 
-function createZoom({ initialZoom } = {}) {
+function createZoomControls() {
   const element = el('div', 'pv-zoom');
   element.setAttribute('role', 'group');
   element.setAttribute('aria-label', 'Content zoom');
@@ -37,7 +37,11 @@ function createZoom({ initialZoom } = {}) {
   value.title = 'Reset zoom to 100%';
   const inButton = zoomButton('pv-zoom-button', '+', 'Zoom in');
   element.append(out, value, inButton);
+  return { element, inButton, out, value };
+}
 
+function createZoom({ initialZoom } = {}) {
+  const { element, inButton, out, value } = createZoomControls();
   const stored = Number(initialZoom);
   let zoom = Number.isFinite(stored)
     ? Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, Math.round(stored)))
