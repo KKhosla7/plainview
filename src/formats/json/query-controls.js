@@ -3,6 +3,7 @@ import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { loadJmespath } from '../jmespath/loader.js';
 import { jmespathPath } from './jmespath-path.js';
+import { setQueryExport } from './query-export.js';
 
 const { el, button, bindResultDismiss, inputClear, mark, unmark, selectHit, renderResults } =
   jsonToolsShared;
@@ -151,19 +152,7 @@ function finishQuery(ctx, expression, total, scalar, items) {
     const entry = item.pathText ? ctx.indexRef.current.get(item.pathText) : null;
     return entry ? [{ entry, pathText: item.pathText }] : [];
   });
-  if (items.length > 0) {
-    ctx.exportState?.set(
-      'query',
-      items.map((item) => item.value),
-      {
-        kind: 'query',
-        language: ctx.language.value,
-        text: expression,
-      },
-    );
-  } else {
-    ctx.exportState?.clear('query');
-  }
+  setQueryExport(ctx, expression, items);
 
   if (total === 0) {
     ctx.status.textContent = `No matches for ${expression}. Try a shorter path or a wildcard.`;
