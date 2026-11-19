@@ -1,35 +1,35 @@
-const SmallSourceBytes = 100_000;
-const MediumSourceBytes = 500_000;
-const SmallPageSize = 200;
-const MediumPageSize = 200;
-const LargePageSize = 200;
-const SmallOpenDepth = 8;
-const MediumOpenDepth = 4;
-const LargeOpenDepth = 2;
-const AutoOpenChildLimit = 40;
+const SMALL_SOURCE_BYTES = 100_000;
+const MEDIUM_SOURCE_BYTES = 500_000;
+const SMALL_PAGE_SIZE = 200;
+const MEDIUM_PAGE_SIZE = 200;
+const LARGE_PAGE_SIZE = 200;
+const SMALL_OPEN_DEPTH = 8;
+const MEDIUM_OPEN_DEPTH = 4;
+const LARGE_OPEN_DEPTH = 2;
+const AUTO_OPEN_CHILD_LIMIT = 40;
 
 function pageSize(sourceLength) {
-  if (sourceLength > MediumSourceBytes) {
-    return LargePageSize;
+  if (sourceLength > MEDIUM_SOURCE_BYTES) {
+    return LARGE_PAGE_SIZE;
   }
 
-  if (sourceLength > SmallSourceBytes) {
-    return MediumPageSize;
+  if (sourceLength > SMALL_SOURCE_BYTES) {
+    return MEDIUM_PAGE_SIZE;
   }
 
-  return SmallPageSize;
+  return SMALL_PAGE_SIZE;
 }
 
 function openDepth(sourceLength) {
-  if (sourceLength > MediumSourceBytes) {
-    return LargeOpenDepth;
+  if (sourceLength > MEDIUM_SOURCE_BYTES) {
+    return LARGE_OPEN_DEPTH;
   }
 
-  if (sourceLength > SmallSourceBytes) {
-    return MediumOpenDepth;
+  if (sourceLength > SMALL_SOURCE_BYTES) {
+    return MEDIUM_OPEN_DEPTH;
   }
 
-  return SmallOpenDepth;
+  return SMALL_OPEN_DEPTH;
 }
 
-export const jsonLimits = { autoOpenChildLimit: AutoOpenChildLimit, openDepth, pageSize };
+export const jsonLimits = { autoOpenChildLimit: AUTO_OPEN_CHILD_LIMIT, openDepth, pageSize };

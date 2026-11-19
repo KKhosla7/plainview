@@ -15,7 +15,11 @@ import { primePath } from './virtual-prime.js';
 import { jsonVirtualState } from './virtual-state.js';
 import { virtualTreeActions } from './virtual-tree-actions.js';
 
-const Overscan = 8;
+const OVERSCAN = 8;
+const INDENT_BASE = 8;
+const INDENT_STEP = 18;
+const GUIDE_STEP = 5;
+const GUIDE_BASE = 16;
 const { filterRelevant, setFilter } = jsonVirtualFilter;
 const { AutoRows, createState } = jsonVirtualState;
 const { RowHeight, applyRowTitle, measureRows, rebuildOffsets, rowTop, visibleRange } =
@@ -117,8 +121,8 @@ function toggleRow(state, row) {
 function createRow(state, row, index) {
   const node = el('div', 'pv-vrow');
   node.style.top = `${rowTop(state, index)}px`;
-  node.style.paddingLeft = `${8 + row.depth * 18}px`;
-  node.style.setProperty('--pv-row-guide', `var(--pv-guide-${(row.depth % 5) + 1})`);
+  node.style.paddingLeft = `${INDENT_BASE + row.depth * INDENT_STEP}px`;
+  node.style.setProperty('--pv-row-guide', `var(--pv-guide-${(row.depth % GUIDE_STEP) + 1})`);
   node.dataset.jsonPath = row.pathText;
   node.classList.toggle('pv-vrow-active', row.pathText === state.activePath);
 
@@ -153,8 +157,8 @@ function createRow(state, row, index) {
   node.append(...rowValue(state, row), pathButton(row.pathText));
   for (let depth = 0; depth < row.depth; depth += 1) {
     const guide = el('span', 'pv-guide');
-    guide.style.left = `${16 + depth * 18}px`;
-    guide.style.color = `var(--pv-guide-${(depth % 5) + 1})`;
+    guide.style.left = `${GUIDE_BASE + depth * INDENT_STEP}px`;
+    guide.style.color = `var(--pv-guide-${(depth % GUIDE_STEP) + 1})`;
     node.append(guide);
   }
 
@@ -175,8 +179,8 @@ function createRow(state, row, index) {
 
 function renderRows(state) {
   const rect = state.tree.getBoundingClientRect();
-  const top = Math.max(0, -rect.top - Overscan * RowHeight);
-  const bottom = Math.min(rect.height, globalThis.innerHeight - rect.top + Overscan * RowHeight);
+  const top = Math.max(0, -rect.top - OVERSCAN * RowHeight);
+  const bottom = Math.min(rect.height, globalThis.innerHeight - rect.top + OVERSCAN * RowHeight);
   const range = visibleRange(state, top, bottom);
   const { start, end } = range;
   for (const [index, node] of state.rowElements) {

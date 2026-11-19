@@ -4,8 +4,11 @@ import { onAsync } from '../../core/events.js';
 import { valueKind } from '../../core/value.js';
 import { openAncestors } from '../shared/tree-tools.js';
 
-const CopyResetMs = 1200;
-const SearchDebounceMs = 120;
+const STICKY_OFFSET_GAP = 16;
+const RESULT_PREVIEW_CHARS = 50;
+const TITLE_PREVIEW_CHARS = 160;
+const COPY_RESET_MS = 1200;
+const SEARCH_DEBOUNCE_MS = 120;
 
 function button(className, label) {
   const node = el('button', className, label);
@@ -61,7 +64,7 @@ function previewValue(value) {
     return `{${Object.keys(value).length} keys}`;
   }
 
-  return String(value).slice(0, 160);
+  return String(value).slice(0, TITLE_PREVIEW_CHARS);
 }
 
 function valueAtPath(rootValue, path) {
@@ -103,7 +106,7 @@ function unmark(entry, className) {
 function stickyOffset() {
   const topbar = document.querySelector('.pv-topbar');
   const tools = document.querySelector('.pv-json-tools');
-  return (topbar?.offsetHeight || 0) + (tools?.offsetHeight || 0) + 16;
+  return (topbar?.offsetHeight || 0) + (tools?.offsetHeight || 0) + STICKY_OFFSET_GAP;
 }
 
 function scrollResultIntoView(node) {
@@ -191,7 +194,7 @@ function resultRow({ hitClass, item, list, indexRef, onReveal }) {
     value.textContent = ok ? 'Copied path' : 'Copy failed';
     globalThis.setTimeout(() => {
       value.textContent = previous;
-    }, CopyResetMs);
+    }, COPY_RESET_MS);
   });
   return row;
 }
@@ -235,7 +238,7 @@ function renderResults({ hitClass, list, matches, indexRef, onReveal }) {
     return;
   }
   const fragment = document.createDocumentFragment();
-  for (const item of matches.slice(0, 50)) {
+  for (const item of matches.slice(0, RESULT_PREVIEW_CHARS)) {
     fragment.append(resultRow({ hitClass, item, list, indexRef, onReveal }));
   }
 
@@ -247,8 +250,8 @@ function renderResults({ hitClass, list, matches, indexRef, onReveal }) {
 }
 
 export const jsonToolsShared = {
-  CopyResetMs,
-  SearchDebounceMs,
+  COPY_RESET_MS,
+  SEARCH_DEBOUNCE_MS,
   bindResultDismiss,
   button,
   clearStatus,
