@@ -14,6 +14,7 @@ import DecompressTemplate from './export/decompress.txt';
 import DocumentTemplate from './export/document.html';
 import { exportFileName } from './export-name.js';
 import { TocScript } from './export-scripts.js';
+import { cloneSelection } from './export-selection.js';
 
 function runtime() {
   return globalThis.browser?.runtime ?? globalThis.chrome?.runtime;
@@ -36,8 +37,8 @@ function fillTemplate(template, values) {
   return template.replace(/\{\{([A-Z_]+)\}\}/gu, (_match, key) => String(values[key] ?? ''));
 }
 
-function cloneForExport(sourceRoot) {
-  const clone = sourceRoot.cloneNode(true);
+function cloneForExport(sourceRoot, selection) {
+  const clone = cloneSelection(sourceRoot, selection) || sourceRoot.cloneNode(true);
   for (const selector of [
     '.pv-doc-meta',
     '.pv-json-tools',
@@ -238,9 +239,10 @@ async function buildExportHtml({
   showDataMenu = null,
   theme,
   uncompressed = false,
+  selection = null,
 }) {
   const shell = article.closest('.pv-shell');
-  const clone = cloneForExport(shell || article);
+  const clone = cloneForExport(shell || article, selection);
   const katex = await katexExportCss(clone);
   const title = fileName || document.title || 'Plainview document';
   const formatId = escapeHtml(format?.id || 'markdown');
@@ -251,7 +253,9 @@ async function buildExportHtml({
   const version = document.documentElement.getAttribute('data-pv-version') || '';
   const hasToc = Boolean(clone.querySelector('.pv-toc-link'));
   const includeDataMenu = showDataMenu ?? Boolean(await loadSetting(EXPORT_DATA_MENU_KEY, false));
-  const dataPayload = await buildDataPayload(exportData, title, scope, includeDataMenu);
+  const dataPayload = selection
+    ? null
+    : await buildDataPayload(exportData, title, scope, includeDataMenu);
   const dataViewer = dataPayload ? await buildDataViewer(exportData) : null;
   const chromeScript = await buildChromeScript();
   const content = exportContent({ clone, dataViewer, shell });

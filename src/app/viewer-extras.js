@@ -52,7 +52,14 @@ function createViewerEnhancements(content, theme) {
   return { refreshMermaid, refreshExtras };
 }
 
-function exportHtml({ content, fileName, format, refreshExtras, scope = 'complete' }) {
+function exportHtml({
+  content,
+  fileName,
+  format,
+  refreshExtras,
+  scope = 'complete',
+  selection = null,
+}) {
   return async () => {
     await refreshExtras();
     const uncompressed = await loadSetting(EXPORT_UNCOMPRESSED_KEY, false);
@@ -64,6 +71,7 @@ function exportHtml({ content, fileName, format, refreshExtras, scope = 'complet
       scope,
       theme: document.documentElement.dataset.pvTheme || 'light',
       uncompressed: Boolean(uncompressed),
+      selection,
     });
   };
 }
@@ -119,8 +127,29 @@ function createExportFeedback(topbar) {
   };
 }
 
-function exportGrid({ action, content, fileName, format, formatLabel, hasFilter, refreshExtras }) {
+function exportGrid({
+  action,
+  content,
+  fileName,
+  format,
+  formatLabel,
+  hasFilter,
+  refreshExtras,
+  selection,
+}) {
   const grid = el('div', 'pv-export-grid');
+  if (selection && !selection.isCollapsed) {
+    grid.append(
+      el('span', 'pv-export-grid-label', 'Selected Content'),
+      action(
+        'HTML',
+        'Download selected HTML',
+        () => exportHtml({ content, fileName, format, refreshExtras, selection })(),
+        'html',
+      ),
+    );
+  }
+
   if (hasFilter) {
     grid.append(
       el('span', 'pv-export-grid-label', 'Filtered Results'),
@@ -185,6 +214,10 @@ function createExportMenu({ feedback, topbar, content, fileName, format, refresh
       formatLabel: String(format?.label || formatId || 'data').toUpperCase(),
       hasFilter: content.exportData.hasFilter(),
       refreshExtras,
+      selection:
+        globalThis.getSelection() && globalThis.getSelection().rangeCount > 0
+          ? globalThis.getSelection().getRangeAt(0).cloneRange()
+          : null,
     });
     menu.append(grid);
   }

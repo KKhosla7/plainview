@@ -9,12 +9,14 @@ import {
   closeExtension,
   launchExtension,
   openPage,
+  setSetting,
   startServer,
 } from './helpers.mjs';
 
 const MaxSampleExportBytes = 40_000;
 const MaxRichExportBytes = 800_000;
 const LiveTableBordersKey = 'plainview.tableBorders';
+const ExportUncompressedKey = 'plainview.exportUncompressed';
 
 let server;
 let base;
@@ -256,4 +258,31 @@ it('preserves resized column widths in exported HTML', async () => {
   }
   assertNoErrors(errors);
   await page.close();
+});
+
+it('exports only the selected rendered content', async () => {
+  await setSetting(context, ExportUncompressedKey, true);
+  const { page, errors } = await openSample();
+  try {
+    await page.evaluate(() => {
+      const target = document.querySelector('.pv-markdown p');
+      const range = document.createRange();
+      range.selectNodeContents(target);
+      const selection = getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    });
+    await page.getByRole('button', { name: 'Export', exact: true }).click();
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Download selected HTML' }).click();
+    const download = await downloadPromise;
+    const file = await download.path();
+    const html = fs.readFileSync(file, 'utf8');
+    assert.match(html, /A quick/u);
+    assert.match(html, /Markdown/u);
+    assert.doesNotMatch(html, /## Lists|nested/u);
+    assertNoErrors(errors);
+  } finally {
+    await page.close();
+  }
 });
