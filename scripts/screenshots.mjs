@@ -1,10 +1,11 @@
-import { spawnSync } from 'node:child_process';
 import fs, { mkdtempSync, rmSync } from 'node:fs';
 import http from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import gifenc from 'gifenc';
+import sharp from 'sharp';
 import urls from '../src/core/urls.json' with { type: 'json' };
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -22,9 +23,9 @@ const CAPTURE_SETTLE_MS = 700;
 const CAPTURE_FINAL_MS = 450;
 const SCROLL_SETTLE_MS = 250;
 const WEBP_QUALITY = 86;
+const WEBP_ANIMATION_DELAY_MS = 220;
+const PALETTE_SIZE = 256;
 const MERMAID_TIMEOUT_MS = 20_000;
-const SCREENSHOT_RESIZE = `${VIEWPORT_WIDTH}x${VIEWPORT_HEIGHT}`;
-const STATUS_OK = 0;
 const MIME = {
   '.md': 'text/markdown; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
@@ -72,12 +73,15 @@ const context = await chromium.launchPersistentContext(profile, {
 fs.mkdirSync(docsDir, { recursive: true });
 fs.mkdirSync(storeDir, { recursive: true });
 
-function resize(source, target) {
-  const result = spawnSync('magick', [source, '-resize', SCREENSHOT_RESIZE, target], {
-    stdio: 'inherit',
-  });
-  if (result.status !== STATUS_OK) {
-    throw new Error(`could not resize ${source}`);
+async function resize(source, target) {
+  await sharp(source).resize(VIEWPORT_WIDTH, VIEWPORT_HEIGHT).toFile(target);
+}
+
+async function setTheme(page, theme) {
+  const button = page.getByRole('button', { name: 'Toggle theme' });
+  const dark = (await button.getAttribute('aria-pressed')) === 'true';
+  if (dark !== (theme === 'dark')) {
+    await button.click();
   }
 }
 
@@ -111,64 +115,67 @@ async function instantScrollTo(page, selector) {
   await page.waitForTimeout(SCROLL_SETTLE_MS);
 }
 
-function writeScreenshotAssets() {
+async function writeScreenshotAssets() {
+  await Promise.all(
+    ['markdown-light', 'markdown-mermaid', 'markdown-source', 'json', 'xml'].map((name) =>
+      resize(path.join(docsDir, `${name}.png`), path.join(storeDir, `${name}.png`)),
+    ),
+  );
   for (const name of ['markdown-light', 'markdown-mermaid', 'markdown-source', 'json', 'xml']) {
-    resize(path.join(docsDir, `${name}.png`), path.join(storeDir, `${name}.png`));
     console.log('wrote', path.relative(project, path.join(storeDir, `${name}.png`)));
   }
 
-  const webp = spawnSync(
-    'magick',
-    [
-      '-delay',
-      '220',
-      '-loop',
-      '0',
-      path.join(docsDir, 'markdown-light.png'),
-      path.join(docsDir, 'markdown-mermaid.png'),
-      path.join(docsDir, 'markdown-dark.png'),
-      path.join(docsDir, 'markdown-source.png'),
-      path.join(docsDir, 'json.png'),
-      path.join(docsDir, 'xml.png'),
-      '-resize',
-      SCREENSHOT_RESIZE,
-      '-quality',
-      String(WEBP_QUALITY),
-      path.join(project, 'docs', 'demo.webp'),
-    ],
-    { stdio: 'inherit' },
+  const { applyPalette, GIFEncoder, quantize } = gifenc;
+  const encoder = GIFEncoder();
+  const frames = await Promise.all(
+    ['markdown-light', 'markdown-mermaid', 'markdown-dark', 'markdown-source', 'json', 'xml'].map(
+      (name) =>
+        sharp(path.join(docsDir, `${name}.png`))
+          .resize(VIEWPORT_WIDTH, VIEWPORT_HEIGHT)
+          .ensureAlpha()
+          .raw()
+          .toBuffer({ resolveWithObject: true }),
+    ),
   );
-  if (webp.status !== STATUS_OK) {
-    throw new Error('could not create demo.webp');
+  for (const { data, info } of frames) {
+    const palette = quantize(data, PALETTE_SIZE);
+    encoder.writeFrame(applyPalette(data, palette), info.width, info.height, {
+      delay: WEBP_ANIMATION_DELAY_MS,
+      palette,
+    });
   }
+  encoder.finish();
+  await sharp(Buffer.from(encoder.bytes()), { animated: true })
+    .webp({ loop: 0, quality: WEBP_QUALITY })
+    .toFile(path.join(project, 'docs', 'demo.webp'));
   console.log('wrote docs/demo.webp');
 }
 
 const docs = {};
 try {
   docs.markdownLight = await capture('markdown-light', 'showcase.md', async (page) => {
-    await page.getByRole('button', { name: 'Light theme' }).click();
+    await setTheme(page, 'light');
   });
   docs.markdownDark = await capture('markdown-dark', 'showcase.md', async (page) => {
-    await page.getByRole('button', { name: 'Dark theme' }).click();
+    await setTheme(page, 'dark');
   });
   docs.markdownMermaid = await capture('markdown-mermaid', 'showcase.md', async (page) => {
-    await page.getByRole('button', { name: 'Dark theme' }).click();
+    await setTheme(page, 'dark');
     await page.waitForSelector('.pv-mermaid-ready svg', { timeout: MERMAID_TIMEOUT_MS });
     await instantScrollTo(page, '#the-dusk-sequence');
   });
   docs.markdownSource = await capture('markdown-source', 'showcase.md', async (page) => {
-    await page.getByRole('button', { name: 'Light theme' }).click();
+    await setTheme(page, 'light');
     await page.getByRole('tab', { name: 'Source' }).click();
   });
   docs.json = await capture('json', 'showcase.json', async (page) => {
-    await page.getByRole('button', { name: 'Light theme' }).click();
+    await setTheme(page, 'light');
   });
   docs.xml = await capture('xml', 'showcase.xml', async (page) => {
-    await page.getByRole('button', { name: 'Light theme' }).click();
+    await setTheme(page, 'light');
   });
 
-  writeScreenshotAssets();
+  await writeScreenshotAssets();
 } finally {
   await context.close();
   rmSync(profile, { recursive: true, force: true });
