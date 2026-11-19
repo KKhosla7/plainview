@@ -19,6 +19,7 @@ import {
 } from '../core/settings.js';
 import { watchSource } from '../core/source-watch.js';
 import { tableResize } from '.././core/table-resize.js';
+import { buildLogs } from '../formats/logs-view.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
 
 /* global Plainview */
@@ -49,7 +50,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     }
 
     if (format.id === 'logs') {
-      return Plainview.buildLogs(source);
+      return buildLogs(source);
     }
 
     if (format.id === 'yaml') {
