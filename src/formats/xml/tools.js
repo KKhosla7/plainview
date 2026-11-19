@@ -4,7 +4,7 @@ import { createXmlQuery } from './query.js';
 import { createXmlSearch } from './search.js';
 import { xmlToolsShared } from './tools-shared.js';
 
-const { el, CopyResetMs } = xmlToolsShared;
+const { el, COPY_RESET_MS } = xmlToolsShared;
 
 function createXmlTools({ tree, doc, byNode, exportState }) {
   const tools = el('div', 'pv-json-tools pv-xml-tools');
@@ -26,7 +26,7 @@ function createXmlTools({ tree, doc, byNode, exportState }) {
     target.textContent = ok ? 'Copied' : 'Failed';
     globalThis.setTimeout(() => {
       target.textContent = previous;
-    }, CopyResetMs);
+    }, COPY_RESET_MS);
   });
 
   tools.append(search, query, status);

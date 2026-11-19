@@ -1,11 +1,11 @@
 import { el } from '../../core/dom.js';
 import { openAncestors } from '../shared/tree-tools.js';
 
-const CopyResetMs = 1200;
-const SearchDebounceMs = 120;
-const Element = 1;
-const Attribute = 2;
-const Document = 9;
+const COPY_RESET_MS = 1200;
+const SEARCH_DEBOUNCE_MS = 120;
+const ELEMENT_NODE = 1;
+const ATTRIBUTE_NODE = 2;
+const DOCUMENT_NODE = 9;
 const Text = 3;
 const Cdata = 4;
 
@@ -16,12 +16,12 @@ function button(className, label) {
 }
 
 function searchText(node) {
-  if (node.nodeType === Element) {
+  if (node.nodeType === ELEMENT_NODE) {
     const attrs = [...node.attributes].map((attr) => `${attr.name}=${attr.value}`).join(' ');
     return `${node.nodeName} ${attrs}`;
   }
 
-  if (node.nodeType === Attribute) {
+  if (node.nodeType === ATTRIBUTE_NODE) {
     return `${node.name}=${node.value}`;
   }
 
@@ -29,15 +29,15 @@ function searchText(node) {
 }
 
 function exportNode(node) {
-  if (node.nodeType === Attribute) {
-    return node.ownerElement;
+  if (node.nodeType === ATTRIBUTE_NODE) {
+    return node.ownerELEMENT_NODE;
   }
 
   if (node.nodeType === Text || node.nodeType === Cdata) {
-    return node.parentElement;
+    return node.parentELEMENT_NODE;
   }
 
-  return node.nodeType === Document ? node.documentElement : node;
+  return node.nodeType === DOCUMENT_NODE ? node.documentELEMENT_NODE : node;
 }
 
 function mark(entry, className) {
@@ -89,10 +89,10 @@ function selectHit(hits, nextIndex, activeClass) {
 }
 
 export const xmlToolsShared = {
-  CopyResetMs,
-  SearchDebounceMs,
-  Attribute,
-  Document,
+  COPY_RESET_MS,
+  SEARCH_DEBOUNCE_MS,
+  ATTRIBUTE_NODE,
+  DOCUMENT_NODE,
   button,
   exportNode,
   el,

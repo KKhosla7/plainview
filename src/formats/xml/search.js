@@ -1,7 +1,7 @@
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
 
-const { el, button, exportNode, searchText, mark, unmark, selectHit, SearchDebounceMs } =
+const { el, button, exportNode, searchText, mark, unmark, selectHit, SEARCH_DEBOUNCE_MS } =
   xmlToolsShared;
 
 function bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch }) {
@@ -110,7 +110,7 @@ function createXmlSearch({ byNode, exportState, status }) {
 
   function scheduleSearch() {
     globalThis.clearTimeout(searchTimer);
-    searchTimer = globalThis.setTimeout(runSearch, SearchDebounceMs);
+    searchTimer = globalThis.setTimeout(runSearch, SEARCH_DEBOUNCE_MS);
   }
 
   const clear = jsonToolsShared.inputClear(search, 'Clear XML search', () => {

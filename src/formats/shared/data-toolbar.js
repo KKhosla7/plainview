@@ -3,7 +3,11 @@ import { createElement } from '../../core/dom.js';
 import { onAsync } from '../../core/events.js';
 import { JSON_TREE_MODE_KEY, saveSetting } from '../.././core/settings.js';
 
-const CopyResetMs = 1200;
+const COPY_RESET_MS = 1200;
+const CANVAS_MIN = 100;
+const CANVAS_MAX = 200;
+const CANVAS_DEFAULT = 130;
+const CANVAS_SCALE = 100;
 
 function el(tag, className, text) {
   const node = createElement(tag);
@@ -29,7 +33,9 @@ const CanvasWidthKey = 'plainview-canvas-width';
 function createCanvasWidth(article) {
   const stored = Number(localStorage.getItem(CanvasWidthKey));
   const percent =
-    Number.isFinite(stored) && stored > 0 ? Math.max(100, Math.min(200, stored)) : 130;
+    Number.isFinite(stored) && stored > 0
+      ? Math.max(CANVAS_MIN, Math.min(CANVAS_MAX, stored))
+      : CANVAS_DEFAULT;
   const wrap = el('label', 'pv-canvas-width');
   wrap.append(el('span', '', 'Canvas'));
   const input = el('input', 'pv-canvas-width-input');
@@ -41,7 +47,7 @@ function createCanvasWidth(article) {
   const apply = () => {
     document.documentElement.style.setProperty(
       '--pv-canvas-scale',
-      String(Number(input.value) / 100),
+      String(Number(input.value) / CANVAS_SCALE),
     );
     localStorage.setItem(CanvasWidthKey, input.value);
   };
@@ -88,7 +94,7 @@ function createDataToolbar({ article, source, summary, copyLabel, treeMode, canv
     copy.textContent = ok ? 'Copied' : 'Copy failed';
     globalThis.setTimeout(() => {
       copy.textContent = copyLabel;
-    }, CopyResetMs);
+    }, COPY_RESET_MS);
   });
 
   actions.append(expand, collapse);

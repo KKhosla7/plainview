@@ -1,5 +1,11 @@
 import { el } from '../../core/dom.js';
-import { Cdata, closeTag, openTag, pathButton } from './tree-shared.js';
+
+import { CDATA, closeTag, openTag, pathButton } from './tree-shared.js';
+
+const ROW_HEIGHT = 24;
+const INDENT_BASE = 8;
+const INDENT_STEP = 18;
+const TITLE_PREVIEW_CHARS = 60;
 
 function nodeParts(fragment) {
   return [...fragment.childNodes];
@@ -21,7 +27,7 @@ function rowParts(descriptor) {
     const parts = nodeParts(openTag(descriptor.source));
     for (const child of descriptor.textChildren) {
       parts.push(
-        child.nodeType === Cdata
+        child.nodeType === CDATA
           ? el('span', 'pv-xml-cdata', `<![CDATA[${child.nodeValue}]]>`)
           : el('span', 'pv-xml-text', child.nodeValue.trim()),
       );
@@ -58,8 +64,8 @@ function rowParts(descriptor) {
 
 function createRow(state, descriptor, index) {
   const row = el('div', 'pv-vrow');
-  row.style.top = `${index * 24}px`;
-  row.style.paddingLeft = `${8 + descriptor.depth * 18}px`;
+  row.style.top = `${index * ROW_HEIGHT}px`;
+  row.style.paddingLeft = `${INDENT_BASE + descriptor.depth * INDENT_STEP}px`;
   for (const className of descriptor.classes) {
     row.classList.add(className);
   }
@@ -100,7 +106,7 @@ function createRow(state, descriptor, index) {
 
   if (!descriptor.container) {
     const text = row.textContent;
-    if (text.length > 60) {
+    if (text.length > TITLE_PREVIEW_CHARS) {
       row.title = text;
     }
   }

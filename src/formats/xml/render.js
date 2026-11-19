@@ -1,33 +1,33 @@
 import {
-  Cdata,
-  Comment,
+  CDATA,
+  COMMENT,
   closeTag,
-  Element,
+  ELEMENT,
   el,
-  MaxNodes,
+  MAX_NODES,
   meaningfulChildren,
   openTag,
-  ProcessingInstruction,
+  PROCESSING_INSTRUCTION,
   pathButton,
-  Text,
+  TEXT,
 } from './tree-shared.js';
 
 function register(ctx, sourceNode, rendered, summary = null) {
   ctx.byNode.set(sourceNode, { node: rendered, source: sourceNode, summary });
 }
 
-function renderEmptyElement(element, ctx) {
+function renderEmptyELEMENT(element, ctx) {
   const row = el('div', 'pv-xml-leaf');
   row.append(openTag(element, true), pathButton(element, ctx.rootElement));
   register(ctx, element, row);
   return row;
 }
 
-function renderTextOnlyElement(element, children, ctx) {
+function renderTEXTOnlyELEMENT(element, children, ctx) {
   const row = el('div', 'pv-xml-leaf');
   row.append(openTag(element));
   for (const child of children) {
-    if (child.nodeType === Cdata) {
+    if (child.nodeType === CDATA) {
       row.append(el('span', 'pv-xml-cdata', `<![CDATA[${child.nodeValue}]]>`));
     } else {
       row.append(el('span', 'pv-xml-text', child.nodeValue.trim()));
@@ -42,15 +42,15 @@ function renderTextOnlyElement(element, children, ctx) {
 function renderElementChildren(children, depth, ctx) {
   const body = el('div', 'pv-xml-children');
   for (const child of children) {
-    if (ctx.nodes > MaxNodes) {
+    if (ctx.nodes > MAX_NODES) {
       ctx.truncated = true;
       body.append(el('div', 'pv-tree-note', '…'));
       break;
     }
     body.append(
-      child.nodeType === Element
+      child.nodeType === ELEMENT
         ? renderElement(child, depth + 1, ctx, false)
-        : renderNonElement(child, ctx),
+        : renderNonELEMENT(child, ctx),
     );
   }
 
@@ -82,53 +82,53 @@ function renderElement(element, depth, ctx, isRoot) {
   ctx.elements += 1;
   ctx.attributes += element.attributes.length;
 
-  if (ctx.nodes > MaxNodes) {
+  if (ctx.nodes > MAX_NODES) {
     ctx.truncated = true;
     return el('div', 'pv-tree-note', '…');
   }
 
   const children = meaningfulChildren(element);
   if (children.length === 0) {
-    return renderEmptyElement(element, ctx);
+    return renderEmptyELEMENT(element, ctx);
   }
 
-  const textOnly = children.every((node) => node.nodeType === Text || node.nodeType === Cdata);
+  const textOnly = children.every((node) => node.nodeType === TEXT || node.nodeType === CDATA);
   if (textOnly) {
-    return renderTextOnlyElement(element, children, ctx);
+    return renderTEXTOnlyELEMENT(element, children, ctx);
   }
 
   return renderElementContainer(element, children, depth, ctx, isRoot);
 }
 
-function renderNonElement(node, ctx) {
+function renderNonELEMENT(node, ctx) {
   ctx.nodes += 1;
-  if (ctx.nodes > MaxNodes) {
+  if (ctx.nodes > MAX_NODES) {
     ctx.truncated = true;
     return el('div', 'pv-tree-note', '…');
   }
 
-  if (node.nodeType === Text) {
+  if (node.nodeType === TEXT) {
     ctx.text += 1;
     const row = el('div', 'pv-xml-text-block', node.nodeValue.trim());
     register(ctx, node, row);
     return row;
   }
 
-  if (node.nodeType === Cdata) {
+  if (node.nodeType === CDATA) {
     ctx.text += 1;
     const row = el('div', 'pv-xml-cdata-block', `<![CDATA[${node.nodeValue}]]>`);
     register(ctx, node, row);
     return row;
   }
 
-  if (node.nodeType === Comment) {
+  if (node.nodeType === COMMENT) {
     ctx.comments += 1;
     const row = el('div', 'pv-xml-comment', `\x3C!--${node.nodeValue}-->`);
     register(ctx, node, row);
     return row;
   }
 
-  if (node.nodeType === ProcessingInstruction) {
+  if (node.nodeType === PROCESSING_INSTRUCTION) {
     const row = el(
       'div',
       'pv-xml-pi',
@@ -162,7 +162,7 @@ function renderXmlTree(rootElement) {
   tree.append(renderElement(rootElement, 0, ctx, true));
 
   if (treeWasTruncated(ctx)) {
-    const note = `Tree truncated at ${MaxNodes.toLocaleString()} nodes. Use “Source” for the full file.`;
+    const note = `Tree truncated at ${MAX_NODES.toLocaleString()} nodes. Use “Source” for the full file.`;
     tree.append(el('div', 'pv-tree-note', note));
   }
 
@@ -170,12 +170,12 @@ function renderXmlTree(rootElement) {
 }
 
 export const xmlTreeShared = {
-  Cdata,
-  Comment,
-  Element,
-  MaxNodes,
-  ProcessingInstruction,
-  Text,
+  CDATA,
+  COMMENT,
+  ELEMENT,
+  MAX_NODES,
+  PROCESSING_INSTRUCTION,
+  TEXT,
   closeTag,
   meaningfulChildren,
   openTag,

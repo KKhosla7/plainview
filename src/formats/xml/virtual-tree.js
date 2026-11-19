@@ -1,13 +1,13 @@
 import { el } from '../../core/dom.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import {
-  Cdata,
-  Comment,
-  Element,
-  MaxNodes,
+  CDATA,
+  COMMENT,
+  ELEMENT,
+  MAX_NODES,
   meaningfulChildren,
-  ProcessingInstruction,
-  Text,
+  PROCESSING_INSTRUCTION,
+  TEXT,
 } from './tree-shared.js';
 import { createRow } from './virtual-rows.js';
 
@@ -40,7 +40,7 @@ function ensureChildren(state, descriptor) {
   }
 }
 
-function describeElement(state, descriptor, source, depth) {
+function describeELEMENT(state, descriptor, source, depth) {
   state.stats.elements += 1;
   state.stats.attributes += source.attributes.length;
   const children = meaningfulChildren(source);
@@ -48,7 +48,7 @@ function describeElement(state, descriptor, source, depth) {
   if (children.length === 0) {
     descriptor.kind = 'empty';
     descriptor.childrenLoaded = true;
-  } else if (children.every((child) => child.nodeType === Text || child.nodeType === Cdata)) {
+  } else if (children.every((child) => child.nodeType === TEXT || child.nodeType === CDATA)) {
     descriptor.kind = 'text';
     descriptor.childrenLoaded = true;
     descriptor.textChildren = children;
@@ -64,22 +64,22 @@ function describeElement(state, descriptor, source, depth) {
 }
 
 function describeOther(state, descriptor, source) {
-  if (source.nodeType === Text) {
+  if (source.nodeType === TEXT) {
     descriptor.kind = 'textNode';
     state.stats.text += 1;
-  } else if (source.nodeType === Cdata) {
+  } else if (source.nodeType === CDATA) {
     descriptor.kind = 'cdata';
     state.stats.text += 1;
-  } else if (source.nodeType === Comment) {
+  } else if (source.nodeType === COMMENT) {
     descriptor.kind = 'comment';
     state.stats.comments += 1;
-  } else if (source.nodeType === ProcessingInstruction) {
+  } else if (source.nodeType === PROCESSING_INSTRUCTION) {
     descriptor.kind = 'pi';
   }
 }
 
 function describeNode(state, source, depth, parent) {
-  if (state.stats.nodes >= MaxNodes) {
+  if (state.stats.nodes >= MAX_NODES) {
     state.stats.truncated = true;
     return null;
   }
@@ -98,8 +98,8 @@ function describeNode(state, source, depth, parent) {
   };
   state.stats.nodes += 1;
   state.stats.depth = Math.max(state.stats.depth, depth);
-  if (source.nodeType === Element) {
-    describeElement(state, descriptor, source, depth);
+  if (source.nodeType === ELEMENT) {
+    describeELEMENT(state, descriptor, source, depth);
   } else {
     describeOther(state, descriptor, source);
   }
@@ -153,7 +153,7 @@ function collect(state) {
 
 function rebuild(state) {
   collect(state);
-  state.rowElements = new Map();
+  state.rowELEMENTs = new Map();
   state.tree.replaceChildren();
   renderRows(state);
 }
@@ -164,21 +164,21 @@ function renderRows(state) {
   const bottom = Math.min(rect.height, globalThis.innerHeight - rect.top);
   const start = Math.max(0, Math.floor(top / RowHeight) - Overscan);
   const end = Math.min(state.rows.length, Math.ceil(bottom / RowHeight) + Overscan);
-  for (const [index, row] of state.rowElements) {
+  for (const [index, row] of state.rowELEMENTs) {
     if (index < start || index >= end) {
       state.rows[index].row = null;
       row.remove();
-      state.rowElements.delete(index);
+      state.rowELEMENTs.delete(index);
     }
   }
 
   const fragment = document.createDocumentFragment();
   for (let index = start; index < end; index += 1) {
-    if (state.rowElements.has(index)) {
+    if (state.rowELEMENTs.has(index)) {
       continue;
     }
     const row = createRow(state, state.rows[index], index);
-    state.rowElements.set(index, row);
+    state.rowELEMENTs.set(index, row);
     fragment.append(row);
   }
 
@@ -247,7 +247,7 @@ function createXmlVirtualTree(rootElement) {
     frame: 0,
     rootElement,
     rows: [],
-    rowElements: new Map(),
+    rowELEMENTs: new Map(),
     stats: createStats(),
     tree,
   };

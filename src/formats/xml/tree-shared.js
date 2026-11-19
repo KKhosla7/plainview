@@ -1,11 +1,11 @@
 import { createElement } from '../../core/dom.js';
 
-const MaxNodes = 40_000;
-const Element = 1;
-const Text = 3;
-const Cdata = 4;
-const ProcessingInstruction = 7;
-const Comment = 8;
+const MAX_NODES = 40_000;
+const ELEMENT = 1;
+const TEXT = 3;
+const CDATA = 4;
+const PROCESSING_INSTRUCTION = 7;
+const COMMENT = 8;
 
 function el(tag, className, text) {
   const node = createElement(tag);
@@ -27,7 +27,7 @@ function xpathLiteral(value) {
 function ancestors(element) {
   const list = [];
   let node = element.parentNode;
-  while (node && node.nodeType === Element) {
+  while (node && node.nodeType === ELEMENT) {
     list.push(node);
     node = node.parentNode;
   }
@@ -52,7 +52,7 @@ function xpathFor(element, rootElement) {
   );
   const segments = [];
   let node = element;
-  while (node && node.nodeType === Element) {
+  while (node && node.nodeType === ELEMENT) {
     const siblings = sameElementSiblings(node);
     const index = siblings.indexOf(node) + 1;
     const name = useLocalName ? `*[local-name()=${xpathLiteral(node.localName)}]` : node.nodeName;
@@ -78,15 +78,15 @@ function pathButton(element, rootElement) {
 
 function meaningfulChildren(element) {
   return [...element.childNodes].filter((node) => {
-    if (node.nodeType === Element) {
+    if (node.nodeType === ELEMENT) {
       return true;
     }
 
-    if (node.nodeType === Text) {
+    if (node.nodeType === TEXT) {
       return Boolean(node.nodeValue?.trim());
     }
 
-    return [Cdata, Comment, ProcessingInstruction].includes(node.nodeType);
+    return [CDATA, COMMENT, PROCESSING_INSTRUCTION].includes(node.nodeType);
   });
 }
 
@@ -122,15 +122,15 @@ function closeTag(element) {
 }
 
 export {
-  Cdata,
-  Comment,
+  CDATA,
+  COMMENT,
   closeTag,
-  Element,
+  ELEMENT,
   el,
-  MaxNodes,
+  MAX_NODES,
   meaningfulChildren,
   openTag,
-  ProcessingInstruction,
+  PROCESSING_INSTRUCTION,
   pathButton,
-  Text,
+  TEXT,
 };
