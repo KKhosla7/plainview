@@ -11,7 +11,7 @@ cd ../dwarpal-foundation
 npm pack --workspace @kkhosla7/dwarpal-core --pack-destination ../plainview/tools
 npm pack --workspace @kkhosla7/dwarpal-js --pack-destination ../plainview/tools
 
-cd ../plainview
+cd /home/user/Projects/plainview
 npm install --save-dev ./tools/kkhosla7-dwarpal-core-<version>.tgz \
   ./tools/kkhosla7-dwarpal-js-<version>.tgz
 npm test

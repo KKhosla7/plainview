@@ -21,10 +21,11 @@ const STYLE_FILES = [
   'src/styles/topbar.css',
   'src/styles/export-menu.css',
   'src/styles/layout.css',
-  'src/styles/layout-1.css',
+  'src/styles/layout-overlays.css',
   'src/styles/data.css',
-  'src/styles/data-1.css',
-  'src/styles/data-2.css',
+  'src/styles/data-tools.css',
+  'src/styles/data-search.css',
+  'src/styles/data-csv.css',
   'src/styles/trees.css',
   'src/styles/mermaid.css',
   'src/styles/source.css',
@@ -84,10 +85,8 @@ function fail(message) {
 for (const required of [
   path.join(project, 'src', 'app-entry.js'),
   path.join(project, 'src', 'boot-entry.js'),
-  path.join(project, 'src', 'viewer-entry.js'),
   path.join(project, 'src', 'export-chrome-entry.js'),
   path.join(project, 'src', 'export-data-entry.js'),
-  path.join(project, 'src', 'viewer.html'),
   path.join(katexDist, 'katex.min.css'),
   katexFonts,
   mermaidMain,
@@ -176,7 +175,6 @@ await bundle('boot-entry.js', 'boot.js', 'iife');
 await bundle('app-entry.js', 'app.js', 'esm', pageBuild);
 await bundle('export-chrome-entry.js', 'export-chrome.js', 'iife');
 await bundle('export-data-entry.js', 'export-data.js', 'iife', pageBuild);
-await bundle('viewer-entry.js', 'viewer.js', 'esm', pageBuild);
 
 // Parsers and renderers that are only shipped for their own document type.
 // They are separate ESM files so opening JSON or Markdown never pays for them.

@@ -95,12 +95,10 @@ app”.
 
 Select a file in Finder → Get Info → Open with → choose Chrome or Firefox → Change All.
 
-## Optional: open new downloads in Plainview
+## Downloads
 
-Click the Plainview toolbar icon → Settings → **Open supported downloads in Plainview**.
-
-When a supported download finishes, Plainview opens it in a new tab. This is off by default. It does
-not affect files you click later in your file manager.
+Plainview does not intercept browser downloads or request the `downloads` permission. Files that a
+server forces as downloads must be opened from your file manager.
 
 ## Troubleshooting
 
@@ -111,4 +109,4 @@ not affect files you click later in your file manager.
 - **Firefox JSON looks different:** Firefox uses its native JSON viewer. Plainview does not inject
   into that privileged viewer.
 - **A web server downloads the file instead of opening it:** open the downloaded file locally, or
-  enable the optional new-download auto-open setting.
+  configure the server to serve a viewable content type.

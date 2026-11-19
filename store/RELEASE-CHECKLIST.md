@@ -47,7 +47,7 @@ documents.
    - open a local `.md`, `.json` and `.xml`,
    - check Source, Copy source, Download, Light/Dark, zoom, Contents and reload
      persistence,
-   - open the toolbar Settings page and confirm the download auto-open toggle persists,
+   - open the toolbar Settings page and confirm the remaining toggles persist,
    - bump the extension version and confirm the update notification and NEW badge appear.
 8. Submit for review. Broad host access and file access will be reviewed.
 

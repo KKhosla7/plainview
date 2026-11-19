@@ -53,8 +53,6 @@ Then open `http://localhost:8000/tool-output.json` and the other supported files
   rendering all run in the extension from packaged files.
 - There are no CDN, Google Fonts, telemetry or release-note requests.
 - Clipboard writes and downloads are user-triggered.
-- Supported downloads are cancelled, removed and opened in a local extension viewer tab first. The
-  viewer's Download button saves the original file when you want it.
 - Source-change polling reads back the same document URL; it never uploads it.
 - `npm run package` produces `dist/plainview-<version>-source.zip` without using
   a git revision.

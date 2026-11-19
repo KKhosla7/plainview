@@ -29,7 +29,7 @@ A local agent with write access can edit the checker, delete the gate or change
 The enforceable outer boundary must be:
 
 - no in-repo ignore mechanism
-- no rule-disable configuration
+- no undocumented rule-disable configuration; see `docs/LINT-POLICY.md`
 - no suppression comments
 - no named-constant remote-URL exemption
 - packed checker and rule-pack tarballs
