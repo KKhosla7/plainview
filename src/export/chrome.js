@@ -1,3 +1,4 @@
+import { createExportCell, createMenuController, createMenuShell } from '../app/export-menu.js';
 import { createIconButton, icons } from '.././app/icons.js';
 import { createTheme } from '.././app/theme.js';
 import { tableResize } from '.././core/table-resize.js';
@@ -18,7 +19,7 @@ import { tableResize } from '.././core/table-resize.js';
       total === 1
         ? `Download ${format}`
         : `${entry.scope === 'filtered' ? 'Download filtered' : 'Download complete'} ${format}`;
-    const item = Plainview.createExportCell({
+    const item = createExportCell({
       ariaLabel: text,
       glyphLabel: format,
       label: text,
@@ -65,9 +66,9 @@ import { tableResize } from '.././core/table-resize.js';
       'Export data',
       icons.export(),
     );
-    const { menu, title } = Plainview.createMenuShell('Clean data');
+    const { menu, title } = createMenuShell('Clean data');
     let controller;
-    controller = Plainview.createMenuController({
+    controller = createMenuController({
       button,
       menu,
       onOpen() {

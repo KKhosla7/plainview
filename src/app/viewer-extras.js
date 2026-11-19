@@ -1,3 +1,4 @@
+import { createExportCell, createMenuController, createMenuShell } from '../app/export-menu.js';
 import { dataExport } from '../core/data-export.js';
 import { createElement } from '../core/dom.js';
 import { onAsync } from '../core/events.js';
@@ -163,11 +164,11 @@ import { EXPORT_UNCOMPRESSED_KEY, loadSetting } from '.././core/settings.js';
   }
 
   function createExportMenu({ feedback, topbar, content, fileName, format, refreshExtras }) {
-    const { menu, title } = Plainview.createMenuShell('Export');
+    const { menu, title } = createMenuShell('Export');
     const { formatId } = content.exportData;
 
     function action(label, ariaLabel, task, kind) {
-      const button = Plainview.createExportCell({
+      const button = createExportCell({
         ariaLabel,
         glyphLabel: label,
         kind,
@@ -196,7 +197,7 @@ import { EXPORT_UNCOMPRESSED_KEY, loadSetting } from '.././core/settings.js';
     }
 
     topbar.exportButton.title = 'Export data or standalone HTML';
-    const controller = Plainview.createMenuController({
+    const controller = createMenuController({
       button: topbar.exportButton,
       menu,
       onOpen: open,
