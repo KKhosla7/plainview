@@ -171,6 +171,20 @@ code {
   padding: 1px 5px;
   border-radius: 3px;
 }
+pre {
+  margin: 8px 0 0;
+  padding: 12px;
+  overflow: auto;
+  background: var(--accent-soft);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
 .types code {
   font-size: 0.78rem;
 }
@@ -273,21 +287,6 @@ select:focus-visible {
   font-size: 0.8rem;
 }
 
-pre {
-  margin: 8px 0 0;
-  padding: 12px;
-  overflow: auto;
-  background: var(--accent-soft);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-}
-/* biome-ignore lint/style/noDescendingSpecificity: unrelated component rules */
-pre code {
-  background: transparent;
-  padding: 0;
-  font-size: 0.78rem;
-  line-height: 1.6;
-}
 .shortcut-list {
   display: grid;
   gap: 10px;
