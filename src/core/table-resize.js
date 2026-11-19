@@ -60,23 +60,28 @@ async function restoreWidths(table, cols, tableId) {
   table.classList.add('pv-table-resizable');
 }
 
+function ensureResizable({ table, cols, offset, headers }) {
+  if (table.classList.contains('pv-table-resizable')) {
+    return;
+  }
+  const headCells = table.tHead.rows[0].cells;
+  const widths = [
+    ...(offset > 0 ? [headCells[0].getBoundingClientRect().width] : []),
+    ...headers.map((header) => header.getBoundingClientRect().width),
+  ];
+  for (let index = 0; index < widths.length; index += 1) {
+    if (widths[index] > 0) {
+      cols[index].style.width = `${widths[index]}px`;
+    }
+  }
+  table.classList.add('pv-table-resizable');
+}
+
 function resizeColumn({ event, column, table, tableId, cols, offset, headers }) {
   event.preventDefault();
   event.stopPropagation();
   const wrap = document.documentElement.dataset.pvTableLayout !== 'scroll';
-  if (!table.classList.contains('pv-table-resizable')) {
-    const headCells = table.tHead.rows[0].cells;
-    const widths = [
-      ...(offset > 0 ? [headCells[0].getBoundingClientRect().width] : []),
-      ...headers.map((header) => header.getBoundingClientRect().width),
-    ];
-    for (let index = 0; index < widths.length; index += 1) {
-      if (widths[index] > 0) {
-        cols[index].style.width = `${widths[index]}px`;
-      }
-    }
-    table.classList.add('pv-table-resizable');
-  }
+  ensureResizable({ table, cols, offset, headers });
   const handle = event.currentTarget;
   const startX = event.clientX;
   const startWidths = cols.map((col) => col.getBoundingClientRect().width);
