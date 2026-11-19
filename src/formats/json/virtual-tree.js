@@ -1,7 +1,11 @@
 import { el } from '../../core/dom.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+import { jsonVirtualFilter } from './virtual-filter.js';
+import { jsonVirtualLayout } from './virtual-layout.js';
 import { primePath } from './virtual-prime.js';
+import { jsonVirtualState } from './virtual-state.js';
+import { virtualTreeActions } from './virtual-tree-actions.js';
 
 const Overscan = 8;
 const {
@@ -16,10 +20,10 @@ const {
   span,
   valueClass,
 } = jsonTreeShared;
-const { filterRelevant, setFilter } = Plainview.jsonVirtualFilter;
-const { AutoRows, createState } = Plainview.jsonVirtualState;
+const { filterRelevant, setFilter } = jsonVirtualFilter;
+const { AutoRows, createState } = jsonVirtualState;
 const { RowHeight, applyRowTitle, measureRows, rebuildOffsets, rowTop, visibleRange } =
-  Plainview.jsonVirtualLayout;
+  jsonVirtualLayout;
 
 function flattenNode({ state, path, key, nodeValue, depth, isRoot }) {
   const pathText = pathTextFor(path);
@@ -271,9 +275,7 @@ function createVirtualJsonTree({ value, source, options, indexRef, onStats }) {
   });
   flatten(state);
   renderRows(state);
-  tree.addEventListener('pv-expand-all', () =>
-    Plainview.virtualTreeActions.expandAll(state, rebuild),
-  );
+  tree.addEventListener('pv-expand-all', () => virtualTreeActions.expandAll(state, rebuild));
   tree.addEventListener('pv-collapse-all', () => {
     state.expanded.clear();
     state.activePath = '';

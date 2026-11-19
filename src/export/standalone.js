@@ -1,5 +1,6 @@
 import { search } from 'jmespath';
 import { buildCsv } from '../formats/csv/view.js';
+import { setJmespathLoader } from '../formats/jmespath/loader.js';
 import { buildJsonValue } from '../formats/json/view.js';
 import { buildXml } from '../formats/xml/view.js';
 
@@ -8,7 +9,7 @@ import { buildXml } from '../formats/xml/view.js';
  * embedded payload contains the parsed value/source, not a DOM snapshot.
  */
 (() => {
-  Plainview.loadJmespath = async () => ({ search });
+  setJmespathLoader(async () => ({ search }));
 
   function buildDocument(documentData) {
     if (documentData.formatId === 'xml') {

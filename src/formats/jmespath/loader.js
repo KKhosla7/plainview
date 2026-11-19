@@ -1,12 +1,16 @@
-/* global Plainview */
 const AssetPath = 'vendor/jmespath/jmespath.min.mjs';
 let loader = null;
+let override = null;
 
 function runtime() {
   return globalThis.browser?.runtime ?? globalThis.chrome?.runtime;
 }
 
 function loadJmespath() {
+  if (override) {
+    return override();
+  }
+
   if (!loader) {
     const api = runtime();
     if (!api) {
@@ -24,4 +28,8 @@ function loadJmespath() {
   return loader;
 }
 
-export { loadJmespath };
+function setJmespathLoader(fn) {
+  override = fn;
+}
+
+export { loadJmespath, setJmespathLoader };

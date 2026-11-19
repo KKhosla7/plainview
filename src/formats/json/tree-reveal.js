@@ -7,90 +7,86 @@ import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
  * Opens ancestors and small child pages until a search or query path is
  * available, without re-rendering the rest of the tree.
  */
-((root) => {
-  const { keyIndex } = jsonTreeShared;
+const { keyIndex } = jsonTreeShared;
 
-  function openContainer(state, ctx) {
-    state.details.open = true;
-    if (!state.loaded) {
-      ctx.materializePage(state);
-    }
-  }
-
-  async function renderToIndex(state, index, ctx) {
-    if (index < state.rendered || state.rendered >= state.total) {
-      return;
-    }
-
+function openContainer(state, ctx) {
+  state.details.open = true;
+  if (!state.loaded) {
     ctx.materializePage(state);
-    if (index >= state.rendered) {
-      await yieldToMain();
-      await renderToIndex(state, index, ctx);
-    }
+  }
+}
+
+async function renderToIndex(state, index, ctx) {
+  if (index < state.rendered || state.rendered >= state.total) {
+    return;
   }
 
-  async function prepareChild(state, segment, ctx) {
-    const entryIndex = keyIndex(state, segment);
-    if (entryIndex < 0 || entryIndex >= state.total) {
-      return -1;
-    }
+  ctx.materializePage(state);
+  if (index >= state.rendered) {
+    await yieldToMain();
+    await renderToIndex(state, index, ctx);
+  }
+}
 
-    if (entryIndex >= state.rendered) {
-      await renderToIndex(state, entryIndex, ctx);
-    }
-
-    return entryIndex;
+async function prepareChild(state, segment, ctx) {
+  const entryIndex = keyIndex(state, segment);
+  if (entryIndex < 0 || entryIndex >= state.total) {
+    return -1;
   }
 
-  async function revealSegments({ ctx, currentPath, index, path, state }) {
-    if (index >= path.length) {
-      return null;
-    }
-
-    const segment = path[index];
-    if ((await prepareChild(state, segment, ctx)) < 0) {
-      return null;
-    }
-
-    currentPath.push(segment);
-    const pathText = jsonPath.pathToJsonPath(currentPath);
-    const entry = ctx.indexRef.current.get(pathText);
-    if (!entry) {
-      return null;
-    }
-
-    if (index === path.length - 1) {
-      if (entry.isContainer) {
-        entry.node.open = true;
-      }
-
-      return entry;
-    }
-
-    if (!entry.isContainer) {
-      return null;
-    }
-    const nextState = ctx.states.get(pathText);
-    if (!nextState) {
-      return null;
-    }
-    openContainer(nextState, ctx);
-    return revealSegments({ ctx, currentPath, index: index + 1, path, state: nextState });
+  if (entryIndex >= state.rendered) {
+    await renderToIndex(state, entryIndex, ctx);
   }
 
-  function createReveal(ctx) {
-    return (path) => {
-      const state = ctx.states.get('$');
-      if (!state) {
-        return null;
-      }
+  return entryIndex;
+}
 
-      openContainer(state, ctx);
-      return revealSegments({ ctx, currentPath: [], index: 0, path, state });
-    };
+async function revealSegments({ ctx, currentPath, index, path, state }) {
+  if (index >= path.length) {
+    return null;
   }
 
-  root.Plainview = Object.assign(root.Plainview || {}, {
-    jsonTreeReveal: { createReveal },
-  });
-})(globalThis);
+  const segment = path[index];
+  if ((await prepareChild(state, segment, ctx)) < 0) {
+    return null;
+  }
+
+  currentPath.push(segment);
+  const pathText = jsonPath.pathToJsonPath(currentPath);
+  const entry = ctx.indexRef.current.get(pathText);
+  if (!entry) {
+    return null;
+  }
+
+  if (index === path.length - 1) {
+    if (entry.isContainer) {
+      entry.node.open = true;
+    }
+
+    return entry;
+  }
+
+  if (!entry.isContainer) {
+    return null;
+  }
+  const nextState = ctx.states.get(pathText);
+  if (!nextState) {
+    return null;
+  }
+  openContainer(nextState, ctx);
+  return revealSegments({ ctx, currentPath, index: index + 1, path, state: nextState });
+}
+
+function createReveal(ctx) {
+  return (path) => {
+    const state = ctx.states.get('$');
+    if (!state) {
+      return null;
+    }
+
+    openContainer(state, ctx);
+    return revealSegments({ ctx, currentPath: [], index: 0, path, state });
+  };
+}
+
+export const jsonTreeReveal = { createReveal };

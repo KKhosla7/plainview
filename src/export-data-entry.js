@@ -13,6 +13,7 @@ import './core/table-resize.js';
 import './formats/shared/error-panel.js';
 import './formats/shared/data-toolbar.js';
 import './formats/json/parse.js';
+import './formats/jmespath/loader.js';
 import './formats/json/jsonpath.js';
 import './formats/json/jsonpath-filter.js';
 import './formats/json/jsonpath-eval.js';

@@ -3,32 +3,28 @@ import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 
 /* global Plainview */
 /* Shared state creation for the virtualized JSON tree. */
-((root) => {
-  const AutoRows = 20_000;
-  const { openDepth } = jsonLimits;
-  const { treeSyntax } = jsonTreeShared;
+const AutoRows = 20_000;
+const { openDepth } = jsonLimits;
+const { treeSyntax } = jsonTreeShared;
 
-  function createState({ value, options, indexRef, onStats, tree }) {
-    return {
-      activePath: '',
-      autoRows: 0,
-      expanded: new Set(['$']),
-      frame: 0,
-      heights: new Map(),
-      offsets: [0],
-      indexRef,
-      onStats,
-      pageDepth: options.openDepth ?? openDepth(options.source.length),
-      rows: [],
-      rowElements: new Map(),
-      stats: { arrays: 0, depth: 0, nodes: 0, objects: 0, truncated: false, values: 0 },
-      syntax: treeSyntax(options.exportFormatId),
-      tree,
-      value,
-    };
-  }
+function createState({ value, options, indexRef, onStats, tree }) {
+  return {
+    activePath: '',
+    autoRows: 0,
+    expanded: new Set(['$']),
+    frame: 0,
+    heights: new Map(),
+    offsets: [0],
+    indexRef,
+    onStats,
+    pageDepth: options.openDepth ?? openDepth(options.source.length),
+    rows: [],
+    rowElements: new Map(),
+    stats: { arrays: 0, depth: 0, nodes: 0, objects: 0, truncated: false, values: 0 },
+    syntax: treeSyntax(options.exportFormatId),
+    tree,
+    value,
+  };
+}
 
-  root.Plainview = Object.assign(root.Plainview || {}, {
-    jsonVirtualState: { AutoRows, createState },
-  });
-})(globalThis);
+export const jsonVirtualState = { AutoRows, createState };

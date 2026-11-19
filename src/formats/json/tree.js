@@ -3,6 +3,7 @@ import { valueKind } from '../../core/value.js';
 import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonLimits } from '../.././formats/json/limits.js';
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+import { jsonTreeReveal } from './tree-reveal.js';
 
 /* global Plainview */
 /*
@@ -254,7 +255,7 @@ function createJsonTree({ value, source, options, indexRef, onStats }) {
   );
   tree.append(rootNode);
   ctx.report();
-  const revealPath = Plainview.jsonTreeReveal.createReveal(ctx);
+  const revealPath = jsonTreeReveal.createReveal(ctx);
   tree.addEventListener('pv-json-filter', (event) => {
     if ((event.detail.paths || []).length === 0) {
       for (const node of tree.querySelectorAll('.pv-json-leaf[hidden], .pv-json-node[hidden]')) {
