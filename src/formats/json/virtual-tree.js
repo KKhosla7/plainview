@@ -10,8 +10,9 @@ import {
 } from './tree-model.js';
 import { jsonVirtualFilter } from './virtual-filter.js';
 import { jsonVirtualLayout } from './virtual-layout.js';
-import { actionButton, pathButton, renderKey, span } from './virtual-parts.js';
+import { pathButton, renderKey, span } from './virtual-parts.js';
 import { primePath } from './virtual-prime.js';
+import { appendGuides, appendToggle } from './virtual-row-parts.js';
 import { jsonVirtualState } from './virtual-state.js';
 import { virtualTreeActions } from './virtual-tree-actions.js';
 
@@ -131,20 +132,7 @@ function createRow(state, row, index) {
   }
 
   if (row.container) {
-    const toggle = actionButton('pv-vrow-toggle', row.expanded ? '▾' : '▸');
-    toggle.setAttribute('aria-expanded', String(row.expanded));
-    toggle.setAttribute('aria-label', row.expanded ? 'Collapse' : 'Expand');
-    toggle.addEventListener('click', (event) => {
-      event.stopPropagation();
-      toggleRow(state, row);
-    });
-    node.append(toggle);
-    node.addEventListener('click', (event) => {
-      if (event.target.closest('.pv-json-path')) {
-        return;
-      }
-      toggleRow(state, row);
-    });
+    appendToggle(node, state, row, toggleRow);
   } else {
     node.append(span('pv-vrow-spacer', ''));
   }
@@ -155,12 +143,7 @@ function createRow(state, row, index) {
     node.append(renderKey(row.key, state.syntax), span('pv-json-punct', ': '));
   }
   node.append(...rowValue(state, row), pathButton(row.pathText));
-  for (let depth = 0; depth < row.depth; depth += 1) {
-    const guide = el('span', 'pv-guide');
-    guide.style.left = `${GUIDE_BASE + depth * INDENT_STEP}px`;
-    guide.style.color = `var(--pv-guide-${(depth % GUIDE_STEP) + 1})`;
-    node.append(guide);
-  }
+  appendGuides(node, row, GUIDE_BASE, INDENT_STEP, GUIDE_STEP);
 
   if (!row.container) {
     applyRowTitle(node, row.value);
