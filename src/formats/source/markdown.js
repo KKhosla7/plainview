@@ -1,8 +1,8 @@
+import { escapeHtml } from '../markdown/core.js';
+import { register } from './core.js';
+
 /* global Plainview */
 (() => {
-  const { escapeHtml } = Plainview;
-  const { register } = Plainview.sourceHighlight;
-
   const Inline =
     /(`[^`\n]*`)|(!?\[[^\]\n]*\]\([^)\n]*\))|(\*\*[^*\n]+\*\*)|(__[^_\n]+__)|(\*[^*\n]+\*)|(_[^_\n]+_)|(~~[^~\n]+~~)|(<[^>\n]+>)/gu;
 

@@ -1,8 +1,8 @@
+import { escapeHtml } from '../markdown/core.js';
+import { register } from './core.js';
+
 /* global Plainview */
 (() => {
-  const { escapeHtml } = Plainview;
-  const { register } = Plainview.sourceHighlight;
-
   const Token =
     /(<!--[\s\S]*?-->)|(<!\[CDATA\[[\s\S]*?\]\]>)|(<\?[\s\S]*?\?>)|(<\/?)([A-Za-z_][\w:.-]*)((?:\s+[\w:.-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)(\s*\/?>)/gu;
   const Attr = /([\w:.-]+)(\s*=\s*)("[^"]*"|'[^']*')/gu;

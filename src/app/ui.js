@@ -20,6 +20,7 @@ import {
 import { watchSource } from '../core/source-watch.js';
 import { tableResize } from '.././core/table-resize.js';
 import { buildLogs } from '../formats/logs-view.js';
+import { buildMarkdown } from '../formats/markdown/enhance.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
 
 /* global Plainview */
@@ -69,7 +70,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
       return Plainview.buildXml(source);
     }
 
-    return Plainview.buildMarkdown(source);
+    return buildMarkdown(source);
   }
 
   function scrollToHash(format) {

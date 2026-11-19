@@ -1,6 +1,7 @@
 import { copyText } from '../core/clipboard.js';
 import { el, replaceWithGeneratedHtml } from '../core/dom.js';
 import { onAsync } from '../core/events.js';
+import { highlight } from '../formats/source/core.js';
 
 /* global Plainview */
 /*
@@ -31,7 +32,7 @@ import { onAsync } from '../core/events.js';
       code.textContent = text;
       return;
     }
-    replaceWithGeneratedHtml(code, Plainview.sourceHighlight.highlight(text, format.id));
+    replaceWithGeneratedHtml(code, highlight(text, format.id));
   }
 
   function updateSourceStatus({ status, fullButton, preview, total, text, full }) {

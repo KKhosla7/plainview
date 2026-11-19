@@ -1,8 +1,8 @@
+import { escapeHtml } from '../markdown/core.js';
+import { register } from './core.js';
+
 /* global Plainview */
 (() => {
-  const { escapeHtml } = Plainview;
-  const { register } = Plainview.sourceHighlight;
-
   function consumeQuotedField(source, start) {
     let value = '"';
     let index = start + 1;
