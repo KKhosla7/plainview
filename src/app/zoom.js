@@ -1,4 +1,5 @@
 import { createElement } from '../core/dom.js';
+import { saveSetting, ZOOM_KEY, ZOOM_MAX, ZOOM_MIN, ZOOM_STEP } from '../core/settings.js';
 
 /* global Plainview */
 ((root) => {
@@ -26,8 +27,6 @@ import { createElement } from '../core/dom.js';
   }
 
   function createZoom({ initialZoom } = {}) {
-    const { ZOOM_MIN, ZOOM_MAX, ZOOM_STEP, ZOOM_KEY } = Plainview;
-
     const element = el('div', 'pv-zoom');
     element.setAttribute('role', 'group');
     element.setAttribute('aria-label', 'Content zoom');
@@ -58,7 +57,7 @@ import { createElement } from '../core/dom.js';
       zoom = clamped;
       apply();
       if (options.persist !== false) {
-        Plainview.saveSetting(ZOOM_KEY, zoom);
+        saveSetting(ZOOM_KEY, zoom);
       }
     }
 

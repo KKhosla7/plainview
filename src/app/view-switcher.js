@@ -1,3 +1,5 @@
+import { saveSetting } from '.././core/settings.js';
+
 /* global Plainview */
 ((root) => {
   function createViewSwitcher({
@@ -44,7 +46,7 @@
       }
 
       if (persist && persistKey) {
-        Plainview.saveSetting(persistKey, view);
+        saveSetting(persistKey, view);
       }
     }
 

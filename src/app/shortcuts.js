@@ -1,3 +1,5 @@
+import { ZOOM_STEP } from '../core/settings.js';
+
 /* global Plainview */
 /*
  * Keyboard and wheel shortcuts. Shortcuts never capture keys while the user is
@@ -79,7 +81,6 @@
   }
 
   function wireShortcuts({ viewSwitcher, zoom, toc, theme, topbar, app, shortcuts }) {
-    const { ZOOM_STEP } = Plainview;
     const resolved = Plainview.shortcutConfig.normalizeShortcuts(shortcuts);
 
     document.addEventListener(

@@ -1,4 +1,5 @@
 import { el } from '../core/dom.js';
+import { loadSetting, saveSetting } from '.././core/settings.js';
 import { valueKind } from '../core/value.js';
 
 /* global Plainview */
@@ -39,7 +40,7 @@ import { valueKind } from '../core/value.js';
       return;
     }
 
-    Plainview.saveSetting(
+    saveSetting(
       widthKey(tableId),
       cols.map((col) => Math.round(col.getBoundingClientRect().width)),
     );
@@ -50,7 +51,7 @@ import { valueKind } from '../core/value.js';
       return;
     }
 
-    const widths = await Plainview.loadSetting(widthKey(tableId), null).catch(ignoreWidthStorage);
+    const widths = await loadSetting(widthKey(tableId), null).catch(ignoreWidthStorage);
     if (!Array.isArray(widths) || widths.length !== cols.length) {
       return;
     }

@@ -1,3 +1,5 @@
+import { saveSetting, THEME_KEY, validTheme } from '../core/settings.js';
+
 /* global Plainview */
 ((root) => {
   function createThemeButton() {
@@ -9,7 +11,6 @@
   }
 
   function createTheme({ button, initialTheme }) {
-    const { THEME_KEY, saveSetting, validTheme } = Plainview;
     const stored = validTheme(initialTheme);
     let theme =
       stored || (globalThis.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');

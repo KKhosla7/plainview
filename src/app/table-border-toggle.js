@@ -1,3 +1,5 @@
+import { loadSetting, saveSetting, TABLE_BORDERS_KEY } from '.././core/settings.js';
+
 /* global Plainview */
 ((root) => {
   function ignoreSettingError() {
@@ -20,7 +22,7 @@
 
   function createTableBordersToggle({ button, settingKey }) {
     const documentRoot = root.document.documentElement;
-    const SettingKey = settingKey || Plainview.TABLE_BORDERS_KEY;
+    const SettingKey = settingKey || TABLE_BORDERS_KEY;
     let dirty = false;
 
     function render(on) {
@@ -34,12 +36,12 @@
       dirty = true;
       const on = documentRoot.dataset.pvTableBorders !== 'on';
       render(on);
-      Plainview.saveSetting(SettingKey, on);
+      saveSetting(SettingKey, on);
     }
 
     button.addEventListener('click', toggle);
     render(documentRoot.dataset.pvTableBorders === 'on');
-    Plainview.loadSetting(SettingKey, documentRoot.dataset.pvTableBorders === 'on')
+    loadSetting(SettingKey, documentRoot.dataset.pvTableBorders === 'on')
       .then((saved) => {
         if (!dirty) {
           render(Boolean(saved));

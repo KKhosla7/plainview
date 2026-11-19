@@ -1,5 +1,7 @@
 import { createElement } from '../core/dom.js';
 import { requestText, requestTextExtension, requestTextXhr } from '.././core/network.js';
+import { SETTING_KEYS } from '.././core/setting-keys.js';
+import { loadSetting } from '.././core/settings.js';
 
 /* global Plainview */
 /*
@@ -10,7 +12,7 @@ import { requestText, requestTextExtension, requestTextXhr } from '.././core/net
 ((root) => {
   const PollInterval = 10_000;
   const FirstCheckDelay = 2500;
-  const AutoReloadKey = Plainview.SETTING_KEYS.AutoReload;
+  const AutoReloadKey = SETTING_KEYS.AutoReload;
   const AutoReloadDelayMs = 900;
 
   function el(tag, className, text) {
@@ -79,7 +81,7 @@ import { requestText, requestTextExtension, requestTextXhr } from '.././core/net
 
   function createAutoReloadState() {
     let enabled = false;
-    Plainview.loadSetting(AutoReloadKey, false).then(
+    loadSetting(AutoReloadKey, false).then(
       (value) => {
         enabled = Boolean(value);
       },

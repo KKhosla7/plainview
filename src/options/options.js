@@ -1,9 +1,10 @@
 import { onAsync } from '../core/events.js';
+import { SETTING_KEYS } from '.././core/setting-keys.js';
 
 /* global chrome, browser, Plainview */
 (() => {
   const StatusResetMs = 1400;
-  const Keys = Plainview.SETTING_KEYS;
+  const Keys = SETTING_KEYS;
   const api = globalThis.browser ?? globalThis.chrome;
   const [autoReload, contentFontSize, contentFontStatus, formatValues, indentGuides] = [
     '#autoReloadSources',

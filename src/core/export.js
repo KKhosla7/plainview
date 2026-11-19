@@ -1,5 +1,12 @@
 import { createElement } from '../core/dom.js';
 import { requestText } from '.././core/network.js';
+import {
+  EXPORT_DATA_MENU_KEY,
+  FORMAT_VALUES_KEY,
+  INDENT_GUIDES_KEY,
+  loadSetting,
+  validTableLayout,
+} from '.././core/settings.js';
 /* global Plainview */
 import CompressedTemplate from './export/compressed.html';
 import DecompressTemplate from './export/decompress.txt';
@@ -241,13 +248,12 @@ import DocumentTemplate from './export/document.html';
     const title = fileName || document.title || 'Plainview document';
     const formatId = escapeHtml(format?.id || 'markdown');
     const exportId = crypto.randomUUID();
-    const formatValues = await Plainview.loadSetting(Plainview.FORMAT_VALUES_KEY, true);
-    const indentGuides = await Plainview.loadSetting(Plainview.INDENT_GUIDES_KEY, true);
+    const formatValues = await loadSetting(FORMAT_VALUES_KEY, true);
+    const indentGuides = await loadSetting(INDENT_GUIDES_KEY, true);
     const themeName = theme === 'dark' ? 'dark' : 'light';
     const version = document.documentElement.getAttribute('data-pv-version') || '';
     const hasToc = Boolean(clone.querySelector('.pv-toc-link'));
-    const includeDataMenu =
-      showDataMenu ?? Boolean(await Plainview.loadSetting(Plainview.EXPORT_DATA_MENU_KEY, false));
+    const includeDataMenu = showDataMenu ?? Boolean(await loadSetting(EXPORT_DATA_MENU_KEY, false));
     const dataPayload = await buildDataPayload(exportData, title, scope, includeDataMenu);
     const dataViewer = dataPayload ? await buildDataViewer(exportData) : null;
     const chromeScript = await buildChromeScript();
@@ -264,7 +270,7 @@ import DocumentTemplate from './export/document.html';
       THEME: themeName,
       TABLE_BORDERS: document.documentElement.dataset.pvTableBorders || 'off',
       TABLE_RESIZE: document.documentElement.dataset.pvTableResize || 'on',
-      TABLE_LAYOUT: Plainview.validTableLayout(document.documentElement.dataset.pvTableLayout),
+      TABLE_LAYOUT: validTableLayout(document.documentElement.dataset.pvTableLayout),
       DATA_EXPORTS: dataPayload,
       DATA_VIEWER_SCRIPT: dataViewer?.script || '',
       GENERATOR: generator,

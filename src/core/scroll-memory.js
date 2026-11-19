@@ -1,3 +1,5 @@
+import { saveSetting } from '.././core/settings.js';
+
 /* global Plainview */
 /*
  * Remembers the reading position per document. The stored value is restored
@@ -52,7 +54,7 @@
       if (!armed) {
         return;
       }
-      Plainview.saveSetting(key, globalThis.scrollY);
+      saveSetting(key, globalThis.scrollY);
     }
 
     function onScroll() {

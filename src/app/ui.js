@@ -1,3 +1,20 @@
+import {
+  CONTENT_FONT_SIZE_KEY,
+  FORMAT_VALUES_KEY,
+  INDENT_GUIDES_KEY,
+  loadSetting,
+  migrateLegacySettings,
+  SHORTCUT_KEY,
+  TABLE_BORDERS_KEY,
+  TABLE_LAYOUT_KEY,
+  TABLE_RESIZE_KEY,
+  THEME_KEY,
+  validTableLayout,
+  watchSetting,
+  ZOOM_KEY,
+} from '../core/settings.js';
+import { focusSnapshot, restoreFocus } from './focus.js';
+
 /* global Plainview */
 /*
  * Mounts the reader shell and wires the small UI controllers together.
@@ -93,17 +110,17 @@
     const viewKey = `plainview.view:${url}`;
     const scrollKey = `plainview.scroll:${url}`;
     const settings = await Promise.all([
-      Plainview.loadSetting(viewKey, 'html'),
-      Plainview.loadSetting(scrollKey, null),
-      Plainview.loadSetting(Plainview.THEME_KEY, null),
-      Plainview.loadSetting(Plainview.ZOOM_KEY, 100),
-      Plainview.loadSetting(Plainview.SHORTCUT_KEY, 'alt-s'),
-      Plainview.loadSetting(Plainview.TABLE_BORDERS_KEY, false),
-      Plainview.loadSetting(Plainview.CONTENT_FONT_SIZE_KEY, 12),
-      Plainview.loadSetting(Plainview.FORMAT_VALUES_KEY, true),
-      Plainview.loadSetting(Plainview.INDENT_GUIDES_KEY, true),
-      Plainview.loadSetting(Plainview.TABLE_RESIZE_KEY, true),
-      Plainview.loadSetting(Plainview.TABLE_LAYOUT_KEY, 'wrap'),
+      loadSetting(viewKey, 'html'),
+      loadSetting(scrollKey, null),
+      loadSetting(THEME_KEY, null),
+      loadSetting(ZOOM_KEY, 100),
+      loadSetting(SHORTCUT_KEY, 'alt-s'),
+      loadSetting(TABLE_BORDERS_KEY, false),
+      loadSetting(CONTENT_FONT_SIZE_KEY, 12),
+      loadSetting(FORMAT_VALUES_KEY, true),
+      loadSetting(INDENT_GUIDES_KEY, true),
+      loadSetting(TABLE_RESIZE_KEY, true),
+      loadSetting(TABLE_LAYOUT_KEY, 'wrap'),
     ]);
     return {
       viewKey,
@@ -154,61 +171,23 @@
   }
 
   function watchTableSettings() {
-    Plainview.watchSetting(Plainview.FORMAT_VALUES_KEY, (value) => {
+    watchSetting(FORMAT_VALUES_KEY, (value) => {
       document.documentElement.dataset.pvFormatValues = value ? 'on' : 'off';
     });
-    Plainview.watchSetting(Plainview.INDENT_GUIDES_KEY, (value) => {
+    watchSetting(INDENT_GUIDES_KEY, (value) => {
       document.documentElement.dataset.pvIndentGuides = value ? 'on' : 'off';
     });
-    Plainview.watchSetting(Plainview.TABLE_BORDERS_KEY, (value) => {
+    watchSetting(TABLE_BORDERS_KEY, (value) => {
       Plainview.tableBorders.apply(value);
     });
-    Plainview.watchSetting(Plainview.TABLE_RESIZE_KEY, (value) => {
+    watchSetting(TABLE_RESIZE_KEY, (value) => {
       Plainview.tableResize.apply(Boolean(value));
     });
-    Plainview.watchSetting(Plainview.TABLE_LAYOUT_KEY, (value) => {
-      Plainview.tableResize.applyLayout(Plainview.validTableLayout(value));
+    watchSetting(TABLE_LAYOUT_KEY, (value) => {
+      Plainview.tableResize.applyLayout(validTableLayout(value));
     });
-    Plainview.watchSetting(Plainview.CONTENT_FONT_SIZE_KEY, applyTreeFont);
+    watchSetting(CONTENT_FONT_SIZE_KEY, applyTreeFont);
   }
-  function focusSnapshot() {
-    const element = document.activeElement;
-    if (!element || element === document.body) {
-      return null;
-    }
-
-    return {
-      end: element.selectionEnd,
-      label: element.getAttribute('aria-label'),
-      scroll: globalThis.scrollY,
-      start: element.selectionStart,
-      tag: element.tagName,
-    };
-  }
-
-  function restoreFocus(snapshot) {
-    if (!snapshot) {
-      return;
-    }
-
-    globalThis.requestAnimationFrame(() => {
-      globalThis.scrollTo(0, snapshot.scroll);
-      if (!snapshot.label) {
-        return;
-      }
-      const target = [...document.querySelectorAll(snapshot.tag.toLowerCase())].find(
-        (element) => element.getAttribute('aria-label') === snapshot.label,
-      );
-      if (!target) {
-        return;
-      }
-      target.focus();
-      if (snapshot.start !== null && snapshot.end !== null) {
-        target.setSelectionRange(snapshot.start, snapshot.end);
-      }
-    });
-  }
-
   function refreshViewer(source, url, format) {
     const snapshot = focusSnapshot();
     Plainview.mountViewer({ source, url, format })
@@ -217,7 +196,7 @@
   }
 
   async function mountViewer({ source, url, format, fileName: requestedName }) {
-    await Plainview.migrateLegacySettings();
+    await migrateLegacySettings();
     const fileName = requestedName || fileNameFromUrl(url);
     const {
       viewKey,
@@ -238,7 +217,7 @@
     applyTreeFont(savedContentFontSize, savedFormatValues, savedIndentGuides);
     Plainview.tableBorders.apply(savedTableBorders);
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
-    document.documentElement.dataset.pvTableLayout = Plainview.validTableLayout(savedTableLayout);
+    document.documentElement.dataset.pvTableLayout = validTableLayout(savedTableLayout);
 
     if (format.id === 'markdown') {
       Plainview.installFonts();

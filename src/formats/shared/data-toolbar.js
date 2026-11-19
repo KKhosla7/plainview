@@ -1,6 +1,7 @@
 import { copyText } from '../../core/clipboard.js';
 import { createElement } from '../../core/dom.js';
 import { onAsync } from '../../core/events.js';
+import { JSON_TREE_MODE_KEY, saveSetting } from '../.././core/settings.js';
 
 /* global Plainview */
 ((root) => {
@@ -98,10 +99,7 @@ import { onAsync } from '../../core/events.js';
       const mode = metaButton(treeMode === 'virtual' ? 'Classic tree' : 'Virtual tree');
       mode.title = treeMode === 'virtual' ? 'Use the paged tree' : 'Use the virtualized tree';
       mode.addEventListener('click', () => {
-        Plainview.saveSetting(
-          Plainview.JSON_TREE_MODE_KEY,
-          treeMode === 'virtual' ? 'classic' : 'virtual',
-        );
+        saveSetting(JSON_TREE_MODE_KEY, treeMode === 'virtual' ? 'classic' : 'virtual');
         location.reload();
       });
       actions.append(mode);
