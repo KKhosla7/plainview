@@ -74,9 +74,8 @@ function activeHeading(points, items) {
   return active;
 }
 
-function createScrollSpy({ nav, headings }) {
+function buildLinkMap(nav) {
   const links = new Map();
-
   for (const link of nav.querySelectorAll('a[href]')) {
     if (!link.hash) {
       continue;
@@ -93,19 +92,24 @@ function createScrollSpy({ nav, headings }) {
     }
   }
 
-  let timer = 0;
+  return links;
+}
 
-  function activate(id) {
-    for (const [key, link] of links) {
-      const active = key === id;
-      link.classList.toggle('is-active', active);
-      if (active) {
-        link.setAttribute('aria-current', 'location');
-      } else {
-        link.removeAttribute('aria-current');
-      }
+function activateLink(links, id) {
+  for (const [key, link] of links) {
+    const active = key === id;
+    link.classList.toggle('is-active', active);
+    if (active) {
+      link.setAttribute('aria-current', 'location');
+    } else {
+      link.removeAttribute('aria-current');
     }
   }
+}
+
+function createScrollSpy({ nav, headings }) {
+  const links = buildLinkMap(nav);
+  let timer = 0;
 
   function update() {
     timer = 0;
@@ -126,7 +130,7 @@ function createScrollSpy({ nav, headings }) {
       globalThis.innerHeight,
       line,
     );
-    activate(activeHeading(points, items));
+    activateLink(links, activeHeading(points, items));
   }
 
   function schedule() {
