@@ -1,4 +1,4 @@
-import { createElement } from '.././core/dom.js';
+import { createElement } from '../core/dom.js';
 /* global Plainview */
 import CompressedTemplate from './export/compressed.html';
 import DecompressTemplate from './export/decompress.txt';

@@ -1,4 +1,5 @@
-import { valueKind } from '../.././core/value.js';
+import { yieldToMain } from '../../core/scheduler.js';
+import { valueKind } from '../../core/value.js';
 
 /* global Plainview */
 /*
@@ -112,7 +113,7 @@ import { valueKind } from '../.././core/value.js';
     }
 
     renderBatch(ctx, ctx.done);
-    await Plainview.yieldToMain();
+    await yieldToMain();
     return processBatch(ctx);
   }
 

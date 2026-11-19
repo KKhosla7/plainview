@@ -1,4 +1,6 @@
-import { createElement } from '../.././core/dom.js';
+import { copyText } from '../../core/clipboard.js';
+import { createElement } from '../../core/dom.js';
+import { onAsync } from '../../core/events.js';
 
 /* global Plainview */
 /*
@@ -19,8 +21,8 @@ import { createElement } from '../.././core/dom.js';
     button.className = 'pv-copy';
     button.textContent = 'Copy';
     button.title = 'Copy code';
-    Plainview.onAsync(button, 'click', async () => {
-      const ok = await Plainview.copyText(code.textContent.replace(/\n$/u, ''));
+    onAsync(button, 'click', async () => {
+      const ok = await copyText(code.textContent.replace(/\n$/u, ''));
       button.textContent = ok ? 'Copied' : 'Copy failed';
       globalThis.setTimeout(() => {
         button.textContent = 'Copy';

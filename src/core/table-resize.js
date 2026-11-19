@@ -1,5 +1,5 @@
-import { el } from '.././core/dom.js';
-import { valueKind } from '.././core/value.js';
+import { el } from '../core/dom.js';
+import { valueKind } from '../core/value.js';
 
 /* global Plainview */
 /*

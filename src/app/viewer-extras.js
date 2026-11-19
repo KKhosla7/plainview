@@ -1,4 +1,5 @@
-import { createElement } from '.././core/dom.js';
+import { createElement } from '../core/dom.js';
+import { onAsync } from '../core/events.js';
 
 /* global Plainview */
 /*
@@ -170,7 +171,7 @@ import { createElement } from '.././core/dom.js';
         label,
         title: `Download ${label}`,
       });
-      Plainview.onAsync(button, 'click', async () => {
+      onAsync(button, 'click', async () => {
         controller.close();
         await feedback.run(task);
       });
@@ -205,7 +206,7 @@ import { createElement } from '.././core/dom.js';
     const feedback = createExportFeedback(topbar);
     if (!content.exportData) {
       topbar.exportButton.title = 'Export a standalone HTML copy';
-      Plainview.onAsync(topbar.exportButton, 'click', async () => {
+      onAsync(topbar.exportButton, 'click', async () => {
         await feedback.run(() => exportHtml({ content, fileName, format, refreshExtras })());
       });
       return;

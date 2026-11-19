@@ -1,4 +1,6 @@
-import { createElement } from '../.././core/dom.js';
+import { copyText } from '../../core/clipboard.js';
+import { createElement } from '../../core/dom.js';
+import { onAsync } from '../../core/events.js';
 
 /* global Plainview */
 ((root) => {
@@ -82,8 +84,8 @@ import { createElement } from '../.././core/dom.js';
     });
 
     const copy = metaButton(copyLabel);
-    Plainview.onAsync(copy, 'click', async () => {
-      const ok = await Plainview.copyText(source);
+    onAsync(copy, 'click', async () => {
+      const ok = await copyText(source);
       copy.textContent = ok ? 'Copied' : 'Copy failed';
       globalThis.setTimeout(() => {
         copy.textContent = copyLabel;

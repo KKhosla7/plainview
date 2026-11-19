@@ -1,4 +1,6 @@
+import { copyText } from '../core/clipboard.js';
 import { el, replaceWithGeneratedHtml } from '../core/dom.js';
+import { onAsync } from '../core/events.js';
 
 /* global Plainview */
 /*
@@ -60,8 +62,8 @@ import { el, replaceWithGeneratedHtml } from '../core/dom.js';
     const copy = el('button', 'pv-meta-button pv-raw-copy', 'Copy source');
     copy.type = 'button';
     copy.title = 'Copy the original file text';
-    Plainview.onAsync(copy, 'click', async () => {
-      const ok = await Plainview.copyText(source);
+    onAsync(copy, 'click', async () => {
+      const ok = await copyText(source);
       copy.textContent = ok ? 'Copied' : 'Copy failed';
       globalThis.setTimeout(() => {
         copy.textContent = 'Copy source';

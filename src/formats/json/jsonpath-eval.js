@@ -1,4 +1,4 @@
-import { valueKind } from '../.././core/value.js';
+import { valueKind } from '../../core/value.js';
 
 /* global Plainview */
 /*

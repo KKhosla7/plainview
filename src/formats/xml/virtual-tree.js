@@ -1,4 +1,4 @@
-import { el } from '../.././core/dom.js';
+import { el } from '../../core/dom.js';
 
 /* global Plainview */
 /* Windowed XML tree. Rows are flattened from expanded descriptors and mounted lazily. */

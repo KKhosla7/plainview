@@ -1,4 +1,4 @@
-import { createElement, el } from '.././core/dom.js';
+import { createElement, el } from '../core/dom.js';
 
 /* global Plainview */
 /*

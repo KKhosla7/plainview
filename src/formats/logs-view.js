@@ -1,4 +1,4 @@
-import { el } from '.././core/dom.js';
+import { el } from '../core/dom.js';
 
 /* global Plainview */
 ((root) => {

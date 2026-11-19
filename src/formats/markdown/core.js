@@ -1,5 +1,5 @@
-import { createElement } from '../.././core/dom.js';
-import { valueKind } from '../.././core/value.js';
+import { createElement } from '../../core/dom.js';
+import { valueKind } from '../../core/value.js';
 
 /* global marked, Plainview */
 /*

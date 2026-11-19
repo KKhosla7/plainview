@@ -1,5 +1,7 @@
-import { el } from '../.././core/dom.js';
-import { valueKind } from '../.././core/value.js';
+import { copyText } from '../../core/clipboard.js';
+import { el } from '../../core/dom.js';
+import { onAsync } from '../../core/events.js';
+import { valueKind } from '../../core/value.js';
 
 /* global Plainview */
 /*
@@ -198,11 +200,11 @@ import { valueKind } from '../.././core/value.js';
     const path = el('span', 'pv-json-search-path', item.pathText);
     const value = el('span', 'pv-json-search-value', previewValue(item.value));
     row.append(path, value);
-    Plainview.onAsync(row, 'click', async () => {
+    onAsync(row, 'click', async () => {
       if (await openResult({ hitClass, indexRef, item, list, onReveal })) {
         return;
       }
-      const ok = await Plainview.copyText(item.pathText);
+      const ok = await copyText(item.pathText);
       const previous = value.textContent;
       value.textContent = ok ? 'Copied path' : 'Copy failed';
       globalThis.setTimeout(() => {

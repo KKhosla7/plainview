@@ -1,3 +1,6 @@
+import { copyText } from '../../core/clipboard.js';
+import { onAsync } from '../../core/events.js';
+
 /* global Plainview */
 /*
  * Search and query toolbar for the JSON/YAML tree. Controls live in focused
@@ -44,7 +47,7 @@
       },
     });
 
-    Plainview.onAsync(tree, 'click', async (event) => {
+    onAsync(tree, 'click', async (event) => {
       const target = event.target?.closest?.('.pv-json-path') ?? null;
       if (!target) {
         return;
@@ -52,7 +55,7 @@
       event.preventDefault();
       event.stopPropagation();
       const path = target.getAttribute('data-json-path') || '';
-      const ok = await Plainview.copyText(path);
+      const ok = await copyText(path);
       const previous = target.textContent;
       target.textContent = ok ? 'Copied' : 'Failed';
       globalThis.setTimeout(() => {

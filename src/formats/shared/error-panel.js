@@ -1,4 +1,4 @@
-import { createElement } from '../.././core/dom.js';
+import { createElement } from '../../core/dom.js';
 
 /* global Plainview */
 ((root) => {

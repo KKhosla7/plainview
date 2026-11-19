@@ -1,3 +1,5 @@
+import { onAsync } from '../core/events.js';
+
 /* global chrome, browser, Plainview */
 (() => {
   const StatusResetMs = 1400;
@@ -27,7 +29,7 @@
     control.disabled = true;
   }
 
-  Plainview.onAsync(document.querySelector('#showOnboarding'), 'click', async () => {
+  onAsync(document.querySelector('#showOnboarding'), 'click', async () => {
     await api.tabs.create({ url: api.runtime.getURL('src/options/onboarding.html') });
   });
 
@@ -69,12 +71,12 @@
     [formatValues, Keys.FormatValues],
     [indentGuides, Keys.IndentGuides],
   ]) {
-    Plainview.onAsync(control, 'change', async () => {
+    onAsync(control, 'change', async () => {
       await api.storage.local.set({ [key]: control.checked });
     });
   }
 
-  Plainview.onAsync(contentFontSize, 'change', async () => {
+  onAsync(contentFontSize, 'change', async () => {
     const value = Math.max(10, Math.min(20, Number(contentFontSize.value) || 12));
     contentFontSize.value = String(value);
     await api.storage.local.set({ [Keys.ContentFontSize]: value });
@@ -83,7 +85,7 @@
     globalThis.setTimeout(() => contentFontStatus.classList.remove('visible'), StatusResetMs);
   });
 
-  Plainview.onAsync(exportDataMenu, 'change', async () => {
+  onAsync(exportDataMenu, 'change', async () => {
     await api.storage.local.set({
       [Keys.ExportDataMenu]: exportDataMenu.checked,
     });
@@ -94,7 +96,7 @@
     globalThis.setTimeout(() => exportStatus.classList.remove('visible'), StatusResetMs);
   });
 
-  Plainview.onAsync(exportUncompressed, 'change', async () => {
+  onAsync(exportUncompressed, 'change', async () => {
     await api.storage.local.set({
       [Keys.ExportUncompressed]: exportUncompressed.checked,
     });
@@ -105,7 +107,7 @@
     globalThis.setTimeout(() => exportStatus.classList.remove('visible'), StatusResetMs);
   });
 
-  Plainview.onAsync(tableBorders, 'change', async () => {
+  onAsync(tableBorders, 'change', async () => {
     await api.storage.local.set({ [Keys.TableBorders]: tableBorders.checked });
     tableStatus.textContent = tableBorders.checked
       ? 'Column borders enabled'
@@ -114,7 +116,7 @@
     globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
   });
 
-  Plainview.onAsync(tableResize, 'change', async () => {
+  onAsync(tableResize, 'change', async () => {
     await api.storage.local.set({ [Keys.TableResize]: tableResize.checked });
     tableStatus.textContent = tableResize.checked
       ? 'Column resizing enabled'
@@ -123,7 +125,7 @@
     globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
   });
 
-  Plainview.onAsync(tableLayout, 'change', async () => {
+  onAsync(tableLayout, 'change', async () => {
     await api.storage.local.set({ [Keys.TableLayout]: tableLayout.value });
     tableStatus.textContent =
       tableLayout.value === 'wrap' ? 'Wide tables wrap text' : 'Wide tables scroll sideways';
@@ -131,7 +133,7 @@
     globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
   });
 
-  Plainview.onAsync(autoReload, 'change', async () => {
+  onAsync(autoReload, 'change', async () => {
     await api.storage.local.set({ [Keys.AutoReload]: autoReload.checked });
     sourceStatus.textContent = autoReload.checked ? 'Auto-reload enabled' : 'Ask before reloading';
     sourceStatus.classList.add('visible');

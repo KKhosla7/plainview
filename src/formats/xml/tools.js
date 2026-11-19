@@ -1,3 +1,6 @@
+import { copyText } from '../../core/clipboard.js';
+import { onAsync } from '../../core/events.js';
+
 /* global Plainview */
 /*
  * XML search and XPath controls. Search and query state live in their own
@@ -13,7 +16,7 @@
     const search = Plainview.createXmlSearch({ byNode, exportState, status });
     const query = Plainview.createXmlQuery({ doc, byNode, exportState, status });
 
-    Plainview.onAsync(tree, 'click', async (event) => {
+    onAsync(tree, 'click', async (event) => {
       const target = event.target?.closest?.('.pv-xml-path') ?? null;
       if (!target) {
         return;
@@ -21,7 +24,7 @@
       event.preventDefault();
       event.stopPropagation();
       const path = target.getAttribute('data-xpath') || '';
-      const ok = await Plainview.copyText(path);
+      const ok = await copyText(path);
       const previous = target.textContent;
       target.textContent = ok ? 'Copied' : 'Failed';
       globalThis.setTimeout(() => {

@@ -1,3 +1,5 @@
+import { yieldToMain } from '../../core/scheduler.js';
+
 /* global Plainview */
 /*
  * Opens ancestors and small child pages until a search or query path is
@@ -20,7 +22,7 @@
 
     ctx.materializePage(state);
     if (index >= state.rendered) {
-      await Plainview.yieldToMain();
+      await yieldToMain();
       await renderToIndex(state, index, ctx);
     }
   }
