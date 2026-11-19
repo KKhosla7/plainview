@@ -1,4 +1,5 @@
 import { el } from '../../core/dom.js';
+import { formatBytes, parseJson } from '../.././formats/json/parse.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
 
@@ -10,7 +11,7 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
   function summaryFor(source, options, stats) {
     return (
       `${stats.nodes.toLocaleString()}${stats.truncated ? '+' : ''} nodes · ` +
-      `${Plainview.formatBytes(source.length)}` +
+      `${formatBytes(source.length)}` +
       (options.suffix ? ` · ${options.suffix}` : '')
     );
   }
@@ -93,7 +94,7 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
   }
 
   function buildJson(source) {
-    const parsed = Plainview.parseJson(source);
+    const parsed = parseJson(source);
     if (parsed.error) {
       const article = el('article', 'pv-doc pv-data-doc');
       article.append(
@@ -107,7 +108,7 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
       source,
       copyLabel: 'Copy JSON',
       exportFormatId: 'json',
-      suffix: parsed.jsonc ? 'JSONC' : '',
+      suffix: parsed.jsonc === true ? 'JSONC' : '',
     });
   }
 

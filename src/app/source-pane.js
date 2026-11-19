@@ -1,6 +1,7 @@
 import { copyText } from '../core/clipboard.js';
 import { el, replaceWithGeneratedHtml } from '../core/dom.js';
 import { onAsync } from '../core/events.js';
+import { formatBytes } from '.././formats/json/parse.js';
 import { highlight } from '../formats/source/core.js';
 
 /* global Plainview */
@@ -37,14 +38,12 @@ import { highlight } from '../formats/source/core.js';
 
   function updateSourceStatus({ status, fullButton, preview, total, text, full }) {
     if (preview) {
-      status.textContent =
-        `Preview · first ${Plainview.formatBytes(text.length)} of ` +
-        `${Plainview.formatBytes(total)}`;
+      status.textContent = `Preview · first ${formatBytes(text.length)} of ${formatBytes(total)}`;
       fullButton.hidden = false;
     } else if (text.length > HighlightChars) {
-      status.textContent = `Full source · ${Plainview.formatBytes(total)} · highlighting off`;
+      status.textContent = `Full source · ${formatBytes(total)} · highlighting off`;
     } else if (total > PreviewChars) {
-      status.textContent = `Full source · ${Plainview.formatBytes(total)}`;
+      status.textContent = `Full source · ${formatBytes(total)}`;
     } else {
       status.textContent = '';
     }

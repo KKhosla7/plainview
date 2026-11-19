@@ -1,4 +1,5 @@
 import { el } from '../../core/dom.js';
+import { formatBytes } from '../.././formats/json/parse.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
@@ -116,7 +117,7 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
         source,
         summary:
           `${Math.max(0, rows.length - 1).toLocaleString()} data rows · ` +
-          `${columns.toLocaleString()} columns · ${Plainview.formatBytes(String(source).length)}`,
+          `${columns.toLocaleString()} columns · ${formatBytes(String(source).length)}`,
         copyLabel: `Copy ${label}`,
       }),
     );

@@ -1,4 +1,5 @@
 import { createElement } from '../../core/dom.js';
+import { formatBytes } from '../.././formats/json/parse.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
 import { createXmlVirtualTree } from './virtual-tree.js';
@@ -60,7 +61,7 @@ import { createXmlVirtualTree } from './virtual-tree.js';
         summary:
           `${stats.elements.toLocaleString()} elements · ` +
           `${stats.attributes.toLocaleString()} attributes · ` +
-          Plainview.formatBytes(source.length),
+          formatBytes(source.length),
         copyLabel: 'Copy XML',
       }),
       Plainview.createXmlTools({
