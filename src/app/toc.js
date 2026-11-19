@@ -1,5 +1,5 @@
 import { createElement } from '../core/dom.js';
-import { scrollElementIntoViewSmooth } from '.././core/scroll-utils.js';
+import { scrollElementIntoViewSmooth } from '../core/scroll-utils.js';
 import { createScrollSpy } from './scroll-spy.js';
 
 function el(tag, className, text) {
@@ -42,15 +42,45 @@ function buildToc(headings) {
   return nav;
 }
 
-function createTocDrawer({ headings, button, app, scrim }) {
-  const allHeadings = headings || [];
-  const usable = allHeadings.filter((heading) => heading.level <= MAX_TOC_LEVEL);
-  const nav = buildToc(allHeadings);
-  if (!nav) {
-    button.hidden = true;
-    return { element: null, close: () => false, isOpen: () => false };
+function tocTarget(link) {
+  try {
+    return document.querySelector(`[id=${JSON.stringify(decodeURIComponent(link.hash.slice(1)))}]`);
+  } catch {
+    return null;
+  }
+}
+
+function handleTocClick(event, close) {
+  const link = event.target.closest('a');
+  if (!link || link.hash.length <= 1) {
+    return;
   }
 
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) {
+    return;
+  }
+
+  const target = tocTarget(link);
+  if (!target) {
+    return;
+  }
+
+  event.preventDefault();
+  scrollElementIntoViewSmooth(target);
+  history.pushState(null, '', link.hash);
+  if (globalThis.matchMedia('(max-width: 1079px)').matches) {
+    close();
+  }
+}
+
+function createDrawerState({ app, button, scrim, nav }) {
   let open = false;
 
   function close() {
@@ -73,52 +103,30 @@ function createTocDrawer({ headings, button, app, scrim }) {
     nav.querySelector('a')?.focus();
   }
 
-  button.addEventListener('click', toggle);
-  scrim.addEventListener('click', close);
-  nav.addEventListener('click', (event) => {
-    const link = event.target.closest('a');
-    if (!link || link.hash.length <= 1) {
-      return;
-    }
+  return { close, isOpen: () => open, toggle };
+}
 
-    if (
-      event.defaultPrevented ||
-      event.button !== 0 ||
-      event.metaKey ||
-      event.ctrlKey ||
-      event.shiftKey ||
-      event.altKey
-    ) {
-      return;
-    }
+function createTocDrawer({ headings, button, app, scrim }) {
+  const allHeadings = headings || [];
+  const usable = allHeadings.filter((heading) => heading.level <= MAX_TOC_LEVEL);
+  const nav = buildToc(allHeadings);
+  if (!nav) {
+    button.hidden = true;
+    return { element: null, close: () => false, isOpen: () => false };
+  }
 
-    let target = null;
-    try {
-      target = document.querySelector(
-        `[id=${JSON.stringify(decodeURIComponent(link.hash.slice(1)))}]`,
-      );
-    } catch {
-      target = null;
-    }
+  const drawer = createDrawerState({ app, button, scrim, nav });
 
-    if (!target) {
-      return;
-    }
-
-    event.preventDefault();
-    scrollElementIntoViewSmooth(target);
-    history.pushState(null, '', link.hash);
-    if (globalThis.matchMedia('(max-width: 1079px)').matches) {
-      close();
-    }
-  });
+  button.addEventListener('click', drawer.toggle);
+  scrim.addEventListener('click', drawer.close);
+  nav.addEventListener('click', (event) => handleTocClick(event, drawer.close));
 
   const spy = createScrollSpy({ nav, headings: usable });
   return {
     element: nav,
-    close,
-    isOpen: () => open,
-    toggle,
+    close: drawer.close,
+    isOpen: drawer.isOpen,
+    toggle: drawer.toggle,
     update: spy.update,
   };
 }
