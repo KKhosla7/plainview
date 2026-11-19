@@ -1,6 +1,7 @@
 import { createExportCell, createMenuController, createMenuShell } from '../app/export-menu.js';
 import { createIconButton, icons } from '.././app/icons.js';
 import { createTheme } from '.././app/theme.js';
+import { createTopbarActions } from '../app/topbar.js';
 import { tableResize } from '.././core/table-resize.js';
 
 /* global Plainview */
@@ -89,7 +90,7 @@ import { tableResize } from '.././core/table-resize.js';
 
     const placeholder = topbar.querySelector('.pv-export-actions');
     const exportId = document.documentElement.dataset.pvExportId || location.pathname;
-    const controls = Plainview.createTopbarActions({
+    const controls = createTopbarActions({
       showDownload: false,
       showExport: false,
       showTableBorders: Boolean(document.querySelector('.pv-markdown table')),

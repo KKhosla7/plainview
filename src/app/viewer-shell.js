@@ -1,4 +1,5 @@
 import { createTheme } from '.././app/theme.js';
+import { createTopbar } from '../app/topbar.js';
 import { el } from '../core/dom.js';
 
 /* global Plainview */
@@ -22,7 +23,7 @@ import { el } from '../core/dom.js';
     const scrim = el('div', 'pv-scrim');
     scrim.hidden = true;
 
-    const topbar = Plainview.createTopbar({
+    const topbar = createTopbar({
       fileName,
       url,
       formatLabel: format.label,
