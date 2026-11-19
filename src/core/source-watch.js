@@ -3,10 +3,10 @@ import { requestText, requestTextExtension, requestTextXhr } from '.././core/net
 import { SETTING_KEYS } from '.././core/setting-keys.js';
 import { loadSetting } from '.././core/settings.js';
 
-const PollInterval = 10_000;
-const FirstCheckDelay = 2500;
+const POLL_INTERVAL = 10_000;
+const FIRST_CHECK_DELAY = 2500;
 const AutoReloadKey = SETTING_KEYS.AutoReload;
-const AutoReloadDelayMs = 900;
+const AUTO_RELOAD_DELAY_MS = 900;
 
 function el(tag, className, text) {
   const node = createElement(tag);
@@ -152,7 +152,7 @@ function notifyChange({ autoReload, banner, onReload, onUpdate, source, isStoppe
           reloadDocument(onReload);
         }
       }
-    }, AutoReloadDelayMs);
+    }, AUTO_RELOAD_DELAY_MS);
     return;
   }
   banner.show();
@@ -215,7 +215,7 @@ function watchSource({ source, url, app, onReload, onUpdate, format }) {
     timer = globalThis.setTimeout(async () => {
       await checkNow();
       if (!stopped) {
-        schedule(PollInterval);
+        schedule(POLL_INTERVAL);
       }
     }, delay);
   }
@@ -227,7 +227,7 @@ function watchSource({ source, url, app, onReload, onUpdate, format }) {
   });
   globalThis.addEventListener('focus', checkNow);
 
-  schedule(FirstCheckDelay);
+  schedule(FIRST_CHECK_DELAY);
 
   return {
     checkNow,

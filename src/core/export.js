@@ -110,7 +110,8 @@ async function gzipBase64(html) {
     .pipeThrough(new CompressionStream('gzip'));
   const bytes = new Uint8Array(await new Response(stream).arrayBuffer());
   let binary = '';
-  const chunk = 32_768;
+  const GZIP_CHUNK_BYTES = 32_768;
+  const chunk = GZIP_CHUNK_BYTES;
   for (let index = 0; index < bytes.length; index += chunk) {
     binary += String.fromCharCode(...bytes.subarray(index, index + chunk));
   }

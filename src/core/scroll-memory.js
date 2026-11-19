@@ -1,8 +1,8 @@
 import { scrollToInstant } from './scroll-utils.js';
 import { saveSetting } from './settings.js';
 
-const SaveDelayMs = 250;
-const RestoreDelayMs = 200;
+const SAVE_DELAY_MS = 250;
+const RESTORE_DELAY_MS = 200;
 
 function restoreAfterFonts({ target, isUserMoved, applyAndReport }) {
   if (target === null || !document.fonts?.ready) {
@@ -57,7 +57,7 @@ function createScrollMemory({ key, initialY, onRestored }) {
     }
     userMoved = true;
     clearTimeout(timer);
-    timer = globalThis.setTimeout(saveNow, SaveDelayMs);
+    timer = globalThis.setTimeout(saveNow, SAVE_DELAY_MS);
   }
 
   function markMoved() {
@@ -97,7 +97,7 @@ function createScrollMemory({ key, initialY, onRestored }) {
     requestAnimationFrame(() => {
       globalThis.setTimeout(() => {
         armed = true;
-      }, RestoreDelayMs);
+      }, RESTORE_DELAY_MS);
     });
 
     restoreAfterFonts({ target, isUserMoved: () => userMoved, applyAndReport });

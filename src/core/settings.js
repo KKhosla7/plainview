@@ -11,9 +11,9 @@ const FormatValuesKey = Keys.FormatValues;
 const IndentGuidesKey = Keys.IndentGuides;
 const TableBordersKey = Keys.TableBorders;
 const TableResizeKey = Keys.TableResize;
-const ZoomMin = 50;
-const ZoomMax = 250;
-const ZoomStep = 10;
+const ZOOM_MIN_VALUE = 50;
+const ZOOM_MAX_VALUE = 250;
+const ZOOM_STEP_VALUE = 10;
 const LegacyPrefix = LEGACY_SETTING_PREFIX;
 const Prefix = SETTING_PREFIX;
 const CONTENT_FONT_SIZE_KEY = ContentFontSizeKey;
@@ -28,9 +28,9 @@ const TABLE_BORDERS_KEY = TableBordersKey;
 const TABLE_RESIZE_KEY = TableResizeKey;
 const TABLE_LAYOUT_KEY = Keys.TableLayout;
 const JSON_TREE_MODE_KEY = Keys.JsonTreeMode;
-const ZOOM_MIN = ZoomMin;
-const ZOOM_MAX = ZoomMax;
-const ZOOM_STEP = ZoomStep;
+const ZOOM_MIN = ZOOM_MIN_VALUE;
+const ZOOM_MAX = ZOOM_MAX_VALUE;
+const ZOOM_STEP = ZOOM_STEP_VALUE;
 
 function storageArea() {
   const api = globalThis.browser ?? globalThis.chrome;

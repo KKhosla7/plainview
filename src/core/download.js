@@ -1,6 +1,6 @@
 import { createElement } from '../core/dom.js';
 
-const RevokeDelayMs = 10_000;
+const REVOKE_DELAY_MS = 10_000;
 
 const Mime = {
   markdown: 'text/markdown;charset=utf-8',
@@ -18,7 +18,7 @@ function downloadBlob(blob, fileName) {
   document.body.append(link);
   link.click();
   link.remove();
-  globalThis.setTimeout(() => URL.revokeObjectURL(url), RevokeDelayMs);
+  globalThis.setTimeout(() => URL.revokeObjectURL(url), REVOKE_DELAY_MS);
 }
 
 function downloadText(source, fileName, format) {

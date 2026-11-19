@@ -31,12 +31,14 @@ function normalizeShortcuts(value) {
   };
 }
 
+const ALT_PREFIX_LENGTH = 4;
+
 function matchesKey(event, binding) {
   if (!binding || binding === 'off' || !binding.startsWith('alt-')) {
     return false;
   }
 
-  const key = binding.slice(4);
+  const key = binding.slice(ALT_PREFIX_LENGTH);
   return (
     event.altKey &&
     !event.ctrlKey &&

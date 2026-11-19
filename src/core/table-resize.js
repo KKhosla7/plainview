@@ -2,7 +2,7 @@ import { el } from '../core/dom.js';
 import { loadSetting, saveSetting } from '.././core/settings.js';
 import { valueKind } from '../core/value.js';
 
-const MinColumnWidth = 60;
+const MIN_COLUMN_WIDTH = 60;
 
 function widthKey(tableId) {
   return `plainview.tableWidths:${location.href}:${tableId}`;
@@ -89,15 +89,15 @@ function resizeColumn({ event, column, table, tableId, cols, offset, headers }) 
       const neighbor = canGrow ? column + 1 : column - 1;
       const pairWidth = startWidths[column] + startWidths[neighbor];
       const width = Math.max(
-        MinColumnWidth,
-        Math.min(pairWidth - MinColumnWidth, startWidths[column] + delta),
+        MIN_COLUMN_WIDTH,
+        Math.min(pairWidth - MIN_COLUMN_WIDTH, startWidths[column] + delta),
       );
       cols[column].style.width = `${width}px`;
       cols[neighbor].style.width = `${pairWidth - width}px`;
       return;
     }
 
-    let width = Math.max(MinColumnWidth, startWidths[column] + delta);
+    let width = Math.max(MIN_COLUMN_WIDTH, startWidths[column] + delta);
     if (wrap) {
       const fixed = startWidths.slice(0, offset).reduce((sum, value) => sum + value, 0);
       width = Math.min(width, table.getBoundingClientRect().width - fixed);

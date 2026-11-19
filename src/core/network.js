@@ -1,5 +1,8 @@
 import { valueKind } from './value.js';
 
+const HTTP_OK_MIN = 200;
+const HTTP_OK_LIMIT = 300;
+
 const AllowedProtocols = new Set([
   'chrome-extension:',
   'file:',
@@ -49,7 +52,10 @@ export function requestSourceXhr(url) {
       const request = new XMLHttpRequest();
       request.open('GET', url, true);
       request.onload = () => {
-        if (request.status === 0 || (request.status >= 200 && request.status < 300)) {
+        if (
+          request.status === 0 ||
+          (request.status >= HTTP_OK_MIN && request.status < HTTP_OK_LIMIT)
+        ) {
           resolve(request.responseText);
         } else {
           resolve(null);
