@@ -1,6 +1,7 @@
 import { createElement } from '../../core/dom.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
+import { createXmlVirtualTree } from './virtual-tree.js';
 
 /* global Plainview */
 ((root) => {
@@ -29,7 +30,7 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
       return { article, stats: null, error: true };
     }
 
-    const tree = Plainview.createXmlVirtualTree(parsed.doc.documentElement);
+    const tree = createXmlVirtualTree(parsed.doc.documentElement);
     const { stats } = tree;
     const exportState = {
       filter: null,
