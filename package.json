@@ -15,7 +15,8 @@
     "format": "biome format --write .",
     "report:ast": "npm run ast:check",
     "ast:gate": "node scripts/ast-gate.mjs",
-    "ast:check": "node \"$INIT_CWD/node_modules/@kkhosla7/dwarpal-core/bin/dwarapal.js\" check --config ast-slop.config.mjs --root ."
+    "ast:check": "node \"$INIT_CWD/node_modules/@kkhosla7/dwarpal-core/bin/dwarapal.js\" check --config ast-slop.config.mjs --root .",
+    "audit:ast": "node scripts/ast-audit.mjs"
   },
   "dependencies": {
     "highlight.js": "^11.12.0",
@@ -32,7 +33,9 @@
     "@kkhosla7/dwarpal-js": "file:tools/kkhosla7-dwarpal-js-0.7.0.tgz",
     "@playwright/test": "1.64.1",
     "esbuild": "^0.28.2",
-    "web-ext": "^10.8.0"
+    "web-ext": "^10.8.0",
+    "@kkhosla7/dwarpal-css": "file:tools/kkhosla7-dwarpal-css-0.7.0.tgz",
+    "@kkhosla7/dwarpal-policy": "file:tools/kkhosla7-dwarpal-policy-0.7.0.tgz"
   },
   "repository": {
     "type": "git",
