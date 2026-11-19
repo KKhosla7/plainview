@@ -7,16 +7,13 @@ import {
   loadSetting,
   validTableLayout,
 } from '.././core/settings.js';
+import { downloadHtml } from './download.js';
 import CompressedTemplate from './export/compressed.html';
 import DecompressTemplate from './export/decompress.txt';
 import DocumentTemplate from './export/document.html';
 import { exportFileName } from './export-name.js';
+import { TocScript } from './export-scripts.js';
 
-/*
- * Export the current rendered article as one standalone HTML file. The clone is
- * made from the already-sanitized DOM, and the reader stylesheet is inlined.
- * KaTeX fonts are only embedded when the document actually contains math.
- */
 ((root) => {
   function runtime() {
     return root.browser?.runtime ?? root.chrome?.runtime;
@@ -281,14 +278,14 @@ import { exportFileName } from './export-name.js';
       CONTENT: content,
       CREDIT_VERSION: creditVersion,
       EXPORT_CHROME_SCRIPT: chromeScript,
-      TOC_SCRIPT: hasToc ? Plainview.exportScripts.TocScript : '',
+      TOC_SCRIPT: hasToc ? TocScript : '',
     });
     return packageExport({ dataViewer, html, title, uncompressed, version });
   }
 
   async function exportHtml(options) {
     const html = await buildExportHtml(options);
-    Plainview.downloadHtml(html, exportFileName(options.fileName));
+    downloadHtml(html, exportFileName(options.fileName));
     return html;
   }
 

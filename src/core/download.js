@@ -1,46 +1,37 @@
 import { createElement } from '../core/dom.js';
 
 /* global Plainview */
-((root) => {
-  const RevokeDelayMs = 10_000;
+const RevokeDelayMs = 10_000;
 
-  const Mime = {
-    markdown: 'text/markdown;charset=utf-8',
-    json: 'application/json;charset=utf-8',
-    xml: 'application/xml;charset=utf-8',
-  };
+const Mime = {
+  markdown: 'text/markdown;charset=utf-8',
+  json: 'application/json;charset=utf-8',
+  xml: 'application/xml;charset=utf-8',
+};
 
-  function downloadBlob(blob, fileName) {
-    const url = URL.createObjectURL(blob);
-    const link = createElement('a');
-    link.href = url;
-    link.download = fileName || 'document.txt';
-    link.dataset.pvDownload = 'ignore';
-    link.style.display = 'none';
-    document.body.append(link);
-    link.click();
-    link.remove();
-    globalThis.setTimeout(() => URL.revokeObjectURL(url), RevokeDelayMs);
-  }
+function downloadBlob(blob, fileName) {
+  const url = URL.createObjectURL(blob);
+  const link = createElement('a');
+  link.href = url;
+  link.download = fileName || 'document.txt';
+  link.dataset.pvDownload = 'ignore';
+  link.style.display = 'none';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  globalThis.setTimeout(() => URL.revokeObjectURL(url), RevokeDelayMs);
+}
 
-  function downloadText(source, fileName, format) {
-    const type = Mime[format.id] || 'text/plain;charset=utf-8';
-    downloadBlob(
-      new Blob([source], { type }),
-      fileName || `document.${format.extensions?.[0] || 'txt'}`,
-    );
-  }
+function downloadText(source, fileName, format) {
+  const type = Mime[format.id] || 'text/plain;charset=utf-8';
+  downloadBlob(
+    new Blob([source], { type }),
+    fileName || `document.${format.extensions?.[0] || 'txt'}`,
+  );
+}
 
-  function downloadHtml(html, fileName) {
-    downloadBlob(
-      new Blob([html], { type: 'text/html;charset=utf-8' }),
-      fileName || 'document.html',
-    );
-  }
+function downloadHtml(html, fileName) {
+  downloadBlob(new Blob([html], { type: 'text/html;charset=utf-8' }), fileName || 'document.html');
+}
 
-  root.Plainview = Object.assign(root.Plainview || {}, {
-    downloadBlob,
-    downloadHtml,
-    downloadText,
-  });
-})(globalThis);
+export { downloadBlob, downloadHtml, downloadText };

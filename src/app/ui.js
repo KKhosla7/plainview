@@ -1,3 +1,4 @@
+import { downloadText } from '../core/download.js';
 import { installFonts } from '../core/fonts.js';
 import { createScrollMemory } from '.././core/scroll-memory.js';
 import { scrollElementIntoViewInstant } from '.././core/scroll-utils.js';
@@ -244,7 +245,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     const { refreshMermaid, refreshExtras } = Plainview.createViewerEnhancements(content, theme);
     theme.setOnChange(refreshMermaid);
     topbar.downloadButton.addEventListener('click', () => {
-      Plainview.downloadText(source, fileName, format);
+      downloadText(source, fileName, format);
     });
     Plainview.wireViewerExport({ topbar, refreshExtras, content, fileName, format });
     const shortcutBindings = {

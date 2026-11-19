@@ -1,4 +1,5 @@
-import { valueKind } from '../core/value.js';
+import { downloadBlob } from './download.js';
+import { valueKind } from './value.js';
 
 /* global Plainview */
 /*
@@ -181,7 +182,7 @@ import { valueKind } from '../core/value.js';
     const blob = new Blob([entry.text], {
       type: Mime[entry.formatId] || 'text/plain;charset=utf-8',
     });
-    Plainview.downloadBlob(blob, entry.fileName);
+    downloadBlob(blob, entry.fileName);
     return true;
   }
 
