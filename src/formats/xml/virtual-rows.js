@@ -62,6 +62,28 @@ function rowParts(descriptor) {
   return [];
 }
 
+function bindContainerToggle(row, state, descriptor) {
+  const toggle = el('button', 'pv-vrow-toggle', descriptor.expanded ? '▾' : '▸');
+  toggle.type = 'button';
+  toggle.setAttribute('aria-expanded', String(descriptor.expanded));
+  toggle.setAttribute('aria-label', descriptor.expanded ? 'Collapse' : 'Expand');
+  toggle.addEventListener('click', (event) => {
+    event.stopPropagation();
+    descriptor.expanded = !descriptor.expanded;
+    descriptor.ensureChildren?.();
+    state.rebuild();
+  });
+  row.append(toggle);
+  row.addEventListener('click', (event) => {
+    if (event.target.closest('.pv-xml-path')) {
+      return;
+    }
+    descriptor.expanded = !descriptor.expanded;
+    descriptor.ensureChildren?.();
+    state.rebuild();
+  });
+}
+
 function createRow(state, descriptor, index) {
   const row = el('div', 'pv-vrow');
   row.style.top = `${index * ROW_HEIGHT}px`;
@@ -71,25 +93,7 @@ function createRow(state, descriptor, index) {
   }
 
   if (descriptor.kind === 'container') {
-    const toggle = el('button', 'pv-vrow-toggle', descriptor.expanded ? '▾' : '▸');
-    toggle.type = 'button';
-    toggle.setAttribute('aria-expanded', String(descriptor.expanded));
-    toggle.setAttribute('aria-label', descriptor.expanded ? 'Collapse' : 'Expand');
-    toggle.addEventListener('click', (event) => {
-      event.stopPropagation();
-      descriptor.expanded = !descriptor.expanded;
-      descriptor.ensureChildren?.();
-      state.rebuild();
-    });
-    row.append(toggle);
-    row.addEventListener('click', (event) => {
-      if (event.target.closest('.pv-xml-path')) {
-        return;
-      }
-      descriptor.expanded = !descriptor.expanded;
-      descriptor.ensureChildren?.();
-      state.rebuild();
-    });
+    bindContainerToggle(row, state, descriptor);
   } else {
     row.append(el('span', 'pv-vrow-spacer', ''));
   }
