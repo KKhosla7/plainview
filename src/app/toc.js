@@ -1,4 +1,5 @@
 import { createElement } from '../core/dom.js';
+import { scrollElementIntoViewSmooth } from '.././core/scroll-utils.js';
 
 /* global Plainview */
 ((root) => {
@@ -104,7 +105,7 @@ import { createElement } from '../core/dom.js';
       }
 
       event.preventDefault();
-      Plainview.scrollElementIntoViewSmooth(target);
+      scrollElementIntoViewSmooth(target);
       history.pushState(null, '', link.hash);
       if (globalThis.matchMedia('(max-width: 1079px)').matches) {
         close();

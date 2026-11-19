@@ -1,9 +1,6 @@
 import { el } from '../../core/dom.js';
+import { tableResize } from '../../core/table-resize.js';
 
-/* global Plainview */
-/*
- * CSV table header, filtering, sorting and row rendering.
- */
 ((root) => {
   function numeric(value) {
     return /^-?\d+(?:\.\d+)?$/u.test(String(value ?? '').trim());
@@ -257,7 +254,7 @@ import { el } from '../../core/dom.js';
     const tbody = el('tbody');
     table.append(headerParts.thead, tbody);
     wrap.append(table);
-    Plainview.tableResize.enable(table, { offset: 1, tableId: 'csv' });
+    tableResize.enable(table, { offset: 1, tableId: 'csv' });
 
     let timer = 0;
     let visibleRows = [];

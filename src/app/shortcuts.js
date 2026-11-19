@@ -1,4 +1,5 @@
 import { ZOOM_STEP } from '../core/settings.js';
+import { shortcutConfig } from '.././core/shortcut-config.js';
 
 /* global Plainview */
 /*
@@ -18,7 +19,7 @@ import { ZOOM_STEP } from '../core/settings.js';
   }
 
   function handleConfiguredKey(event, { viewSwitcher, toc, theme, topbar, app, shortcuts }) {
-    const config = Plainview.shortcutConfig;
+    const config = shortcutConfig;
     if (config.matchesView(event, shortcuts.view)) {
       event.preventDefault();
       viewSwitcher.setView(viewSwitcher.getView() === 'html' ? 'source' : 'html');
@@ -81,7 +82,7 @@ import { ZOOM_STEP } from '../core/settings.js';
   }
 
   function wireShortcuts({ viewSwitcher, zoom, toc, theme, topbar, app, shortcuts }) {
-    const resolved = Plainview.shortcutConfig.normalizeShortcuts(shortcuts);
+    const resolved = shortcutConfig.normalizeShortcuts(shortcuts);
 
     document.addEventListener(
       'wheel',

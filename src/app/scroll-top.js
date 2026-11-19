@@ -1,4 +1,5 @@
 import { createElement } from '../core/dom.js';
+import { scrollToInstant } from '.././core/scroll-utils.js';
 
 /* global Plainview */
 ((root) => {
@@ -19,7 +20,7 @@ import { createElement } from '../core/dom.js';
     function scrollTop() {
       globalThis.cancelAnimationFrame(animation);
       if (globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        Plainview.scrollToInstant(0);
+        scrollToInstant(0);
         return;
       }
       const startY = globalThis.scrollY;

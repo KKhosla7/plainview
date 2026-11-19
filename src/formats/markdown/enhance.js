@@ -1,6 +1,7 @@
 import { copyText } from '../../core/clipboard.js';
 import { createElement } from '../../core/dom.js';
 import { onAsync } from '../../core/events.js';
+import { tableResize } from '../.././core/table-resize.js';
 
 /* global Plainview */
 /*
@@ -124,7 +125,7 @@ import { onAsync } from '../../core/events.js';
       wrapper.className = 'pv-table-wrap';
       table.replaceWith(wrapper);
       wrapper.append(table);
-      Plainview.tableResize.enable(table, { tableId: `markdown-${index}` });
+      tableResize.enable(table, { tableId: `markdown-${index}` });
       index += 1;
     }
   }

@@ -1,3 +1,5 @@
+import { tableResize } from '.././core/table-resize.js';
+
 /* global Plainview */
 /*
  * Standalone export chrome. It reuses the reader modules for theme, scroll,
@@ -103,7 +105,7 @@
     });
     dataExportMenu(controls.actions);
 
-    Plainview.tableResize.enableAll();
+    tableResize.enableAll();
 
     const app = document.querySelector('.pv-app');
     if (app) {

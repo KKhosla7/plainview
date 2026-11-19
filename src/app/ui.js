@@ -1,3 +1,5 @@
+import { createScrollMemory } from '.././core/scroll-memory.js';
+import { scrollElementIntoViewInstant } from '.././core/scroll-utils.js';
 import {
   CONTENT_FONT_SIZE_KEY,
   FORMAT_VALUES_KEY,
@@ -13,6 +15,7 @@ import {
   watchSetting,
   ZOOM_KEY,
 } from '../core/settings.js';
+import { tableResize } from '.././core/table-resize.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
 
 /* global Plainview */
@@ -79,7 +82,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     }
 
     if (target) {
-      Plainview.scrollElementIntoViewInstant(target);
+      scrollElementIntoViewInstant(target);
     }
   }
 
@@ -147,7 +150,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     refreshExtras,
   }) {
     const fallback = () => scrollToHash(format);
-    const scrollMemory = Plainview.createScrollMemory({
+    const scrollMemory = createScrollMemory({
       key: scrollKey,
       initialY: savedScroll,
       onRestored: (y) => viewSwitcher.syncScroll(y),
@@ -181,10 +184,10 @@ import { focusSnapshot, restoreFocus } from './focus.js';
       Plainview.tableBorders.apply(value);
     });
     watchSetting(TABLE_RESIZE_KEY, (value) => {
-      Plainview.tableResize.apply(Boolean(value));
+      tableResize.apply(Boolean(value));
     });
     watchSetting(TABLE_LAYOUT_KEY, (value) => {
-      Plainview.tableResize.applyLayout(validTableLayout(value));
+      tableResize.applyLayout(validTableLayout(value));
     });
     watchSetting(CONTENT_FONT_SIZE_KEY, applyTreeFont);
   }

@@ -1,3 +1,4 @@
+import { scrollToInstant } from '.././core/scroll-utils.js';
 import { saveSetting } from '.././core/settings.js';
 
 /* global Plainview */
@@ -40,7 +41,7 @@ import { saveSetting } from '.././core/settings.js';
       if (view === 'source' && onSource) {
         onSource();
       }
-      Plainview.scrollToInstant(view === 'source' ? sourceScroll : htmlScroll);
+      scrollToInstant(view === 'source' ? sourceScroll : htmlScroll);
       if (onViewChange) {
         onViewChange(view);
       }

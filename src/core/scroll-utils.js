@@ -1,35 +1,29 @@
 /* global Plainview */
-((root) => {
-  function withAutoBehavior(fn) {
-    const element = document.documentElement;
-    const previous = element.style.scrollBehavior;
-    element.style.scrollBehavior = 'auto';
-    try {
-      fn();
-    } finally {
-      element.style.scrollBehavior = previous;
-    }
+function withAutoBehavior(fn) {
+  const element = document.documentElement;
+  const previous = element.style.scrollBehavior;
+  element.style.scrollBehavior = 'auto';
+  try {
+    fn();
+  } finally {
+    element.style.scrollBehavior = previous;
   }
+}
 
-  function scrollToInstant(top) {
-    withAutoBehavior(() => globalThis.scrollTo(0, top));
+function scrollToInstant(top) {
+  withAutoBehavior(() => globalThis.scrollTo(0, top));
+}
+
+function scrollElementIntoViewInstant(target) {
+  withAutoBehavior(() => target.scrollIntoView({ block: 'start' }));
+}
+
+function scrollElementIntoViewSmooth(target) {
+  if (globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    scrollElementIntoViewInstant(target);
+    return;
   }
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-  function scrollElementIntoViewInstant(target) {
-    withAutoBehavior(() => target.scrollIntoView({ block: 'start' }));
-  }
-
-  function scrollElementIntoViewSmooth(target) {
-    if (globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      scrollElementIntoViewInstant(target);
-      return;
-    }
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  root.Plainview = Object.assign(root.Plainview || {}, {
-    scrollToInstant,
-    scrollElementIntoViewInstant,
-    scrollElementIntoViewSmooth,
-  });
-})(globalThis);
+export { scrollElementIntoViewInstant, scrollElementIntoViewSmooth, scrollToInstant };
