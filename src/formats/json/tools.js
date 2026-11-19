@@ -1,6 +1,7 @@
 import { copyText } from '../../core/clipboard.js';
 import { onAsync } from '../../core/events.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+import { createJsonSearch } from './search-controls.js';
 
 /* global Plainview */
 /*
@@ -19,7 +20,7 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
     const queryResults = el('div', 'pv-json-search-results pv-json-query-results');
     queryResults.hidden = true;
 
-    const search = Plainview.createJsonSearch({
+    const search = createJsonSearch({
       rootValue,
       indexRef,
       revealPath,
