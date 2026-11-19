@@ -7,6 +7,7 @@ import {
   loadSetting,
   validTableLayout,
 } from '.././core/settings.js';
+import { dataExport } from './data-export.js';
 import { downloadHtml } from './download.js';
 import CompressedTemplate from './export/compressed.html';
 import DecompressTemplate from './export/decompress.txt';
@@ -154,7 +155,7 @@ import { TocScript } from './export-scripts.js';
       return '';
     }
 
-    const data = await Plainview.dataExport.serializeScopes({ exportData, fileName });
+    const data = await dataExport.serializeScopes({ exportData, fileName });
     if (data.entries.length === 0) {
       return '';
     }

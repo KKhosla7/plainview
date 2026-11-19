@@ -1,3 +1,4 @@
+import { dataExport } from '../core/data-export.js';
 import { createElement } from '../core/dom.js';
 import { onAsync } from '../core/events.js';
 import { EXPORT_UNCOMPRESSED_KEY, loadSetting } from '.././core/settings.js';
@@ -66,7 +67,7 @@ import { EXPORT_UNCOMPRESSED_KEY, loadSetting } from '.././core/settings.js';
 
   function exportNative(content, fileName, scope) {
     return async () => {
-      await Plainview.dataExport.exportNative({
+      await dataExport.exportNative({
         exportData: content.exportData,
         scope,
         fileName,
