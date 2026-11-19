@@ -22,6 +22,8 @@ import { tableResize } from '.././core/table-resize.js';
 import { buildJson } from '../formats/json/view.js';
 import { buildLogs } from '../formats/logs-view.js';
 import { buildMarkdown } from '../formats/markdown/enhance.js';
+import { buildToml } from '../formats/toml/view.js';
+import { buildYaml } from '../formats/yaml/view.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
 
 /* global Plainview */
@@ -46,7 +48,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     }
 
     if (format.id === 'swagger') {
-      return source.trimStart().startsWith('{') ? buildJson(source) : Plainview.buildYaml(source);
+      return source.trimStart().startsWith('{') ? buildJson(source) : buildYaml(source);
     }
 
     if (format.id === 'logs') {
@@ -54,11 +56,11 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     }
 
     if (format.id === 'yaml') {
-      return Plainview.buildYaml(source);
+      return buildYaml(source);
     }
 
     if (format.id === 'toml') {
-      return Plainview.buildToml(source);
+      return buildToml(source);
     }
 
     if (format.id === 'csv') {

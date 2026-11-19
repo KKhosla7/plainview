@@ -1,3 +1,5 @@
+import { loadToml } from '../formats/toml/loader.js';
+import { loadYaml } from '../formats/yaml/loader.js';
 import { downloadBlob } from './download.js';
 import { valueKind } from './value.js';
 
@@ -52,7 +54,7 @@ function jsonText(value) {
 }
 
 async function yamlText(value) {
-  const yaml = await Plainview.loadYaml();
+  const yaml = await loadYaml();
   return yaml.dump(value, {
     indent: 2,
     lineWidth: -1,
@@ -62,7 +64,7 @@ async function yamlText(value) {
 }
 
 async function tomlText(value) {
-  const toml = await Plainview.loadToml();
+  const toml = await loadToml();
   const document = Array.isArray(value) || value === null ? { results: value } : value;
   return `${toml.stringify(document)}\n`;
 }
