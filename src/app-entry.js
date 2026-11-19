@@ -95,6 +95,10 @@ import './app/source-pane.js';
 import './app/shortcuts.js';
 import './app/viewer-shell.js';
 import './app/viewer-extras.js';
-import './app/ui.js';
+import { mountViewer as mountViewerImpl } from './app/ui.js';
 
 globalThis.marked = { Marked };
+
+export function mountViewer(options) {
+  return mountViewerImpl(options);
+}

@@ -47,7 +47,7 @@ import { ensureHtmlShellForXml } from './core/xml-shell.js';
     document.documentElement.setAttribute('data-pv', 'pending');
 
     try {
-      await import(runtime.getURL('app.js'));
+      const { mountViewer } = await import(runtime.getURL('app.js'));
       if (format.id === 'xml') {
         ensureHtmlShellForXml();
       }
@@ -55,7 +55,7 @@ import { ensureHtmlShellForXml } from './core/xml-shell.js';
       if (!document.body) {
         return;
       }
-      await Plainview.mountViewer({
+      await mountViewer({
         source,
         url: location.href,
         format,
