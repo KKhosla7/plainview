@@ -32,14 +32,14 @@ function searchText(node) {
 
 function exportNode(node) {
   if (node.nodeType === ATTRIBUTE_NODE) {
-    return node.ownerELEMENT_NODE;
+    return node.ownerElement;
   }
 
   if (node.nodeType === Text || node.nodeType === Cdata) {
-    return node.parentELEMENT_NODE;
+    return node.parentNode;
   }
 
-  return node.nodeType === DOCUMENT_NODE ? node.documentELEMENT_NODE : node;
+  return node.nodeType === DOCUMENT_NODE ? node.documentElement : node;
 }
 
 function mark(entry, className) {
