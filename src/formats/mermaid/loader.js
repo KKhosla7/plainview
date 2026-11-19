@@ -2,14 +2,6 @@ import { createElement } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
 import { sanitizeSvg } from './svg-sanitize.js';
 
-/*
- * Mermaid is loaded lazily: pages without a ```mermaid block never pay the
- * download/parse cost.
- *
- * Firefox content scripts run under the extension CSP, which blocks
- * Function("return this") used by mermaid's lodash chunk. The vendor build
- * rewrites that one expression to globalThis.
- */
 const AssetPath = 'vendor/mermaid/mermaid.esm.min.mjs';
 let loader = null;
 let renderGeneration = 0;

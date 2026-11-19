@@ -1,4 +1,3 @@
-/* global window */
 (() => {
   const button = document.querySelector('.coffee-fab');
   if (!button) {

@@ -1,15 +1,10 @@
-/*
- * Raw-document detection and source extraction. "Raw document" means the
- * browser is showing the file's own text, not an HTML rendering or an XSLT
- * output.
- */
 export function isRawTextDocument() {
   if (document.querySelector('#webkit-xml-viewer-source-xml')) {
     return true;
   }
 
   if (!document.body) {
-    return true; // Firefox raw XML
+    return true;
   }
 
   const pre = document.querySelector('body > pre');
@@ -26,8 +21,6 @@ export function extractSource(format) {
     return chromeXmlSource.innerHTML;
   }
 
-  // Firefox renders XML documents without an HTML body. Serialize the DOM
-  // back to text before replacing the document root.
   if (format.id === 'xml' && !document.body) {
     return new XMLSerializer().serializeToString(document);
   }

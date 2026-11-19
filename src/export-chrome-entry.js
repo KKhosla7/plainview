@@ -1,6 +1,3 @@
-/*
- * Shared reader chrome for standalone exports.
- */
 import './core/setting-keys.js';
 import './core/settings.js';
 import './core/dom.js';

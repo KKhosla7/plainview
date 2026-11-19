@@ -3,11 +3,6 @@ import { requestText, requestTextExtension, requestTextXhr } from '.././core/net
 import { SETTING_KEYS } from '.././core/setting-keys.js';
 import { loadSetting } from '.././core/settings.js';
 
-/*
- * Poll the document URL and compare it with the source the reader mounted.
- * A change never silently replaces the page: by default a banner asks first.
- * Auto-reload is opt-in from Settings.
- */
 const PollInterval = 10_000;
 const FirstCheckDelay = 2500;
 const AutoReloadKey = SETTING_KEYS.AutoReload;

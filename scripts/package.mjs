@@ -32,8 +32,7 @@ for (const browser of ['chrome', 'firefox']) {
 
 const sourceZip = path.join(dist, `plainview-${pkg.version}-source.zip`);
 fs.rmSync(sourceZip, { force: true });
-// Build the source archive from the working tree so packaging works without a
-// git repository and never reads from a remote.
+
 const archive = spawnSync(
   'zip',
   [

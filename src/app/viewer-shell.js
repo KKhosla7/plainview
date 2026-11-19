@@ -6,10 +6,6 @@ import { createTocDrawer } from './toc.js';
 import { createViewSwitcher } from './view-switcher.js';
 import { createZoom } from './zoom.js';
 
-/*
- * Builds the reader shell: topbar, content surface, table of contents, view
- * switcher and theme controller.
- */
 function createViewerShell({
   content,
   format,

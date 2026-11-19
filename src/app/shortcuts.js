@@ -1,10 +1,6 @@
 import { ZOOM_STEP } from '../core/settings.js';
 import { shortcutConfig } from '.././core/shortcut-config.js';
 
-/*
- * Keyboard and wheel shortcuts. Shortcuts never capture keys while the user is
- * typing in a form control or editable element.
- */
 function isEditableTarget(target) {
   const editable = target?.closest?.('input, textarea, select, [contenteditable]');
   return Boolean(editable && editable.getAttribute('contenteditable') !== 'false');

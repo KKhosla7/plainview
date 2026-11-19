@@ -6,11 +6,6 @@ import { actionButton, pathButton, renderKey, span } from './classic-parts.js';
 import { renderValue, treeSyntax, valueClass } from './tree-model.js';
 import { jsonTreeReveal } from './tree-reveal.js';
 
-/*
- * Lazily materialized JSON tree. Closed containers create only their summary;
- * opening one renders a small page of children. Search can reveal a path by
- * opening its ancestors without rendering unrelated branches.
- */
 const { autoOpenChildLimit, openDepth, pageSize } = jsonLimits;
 
 function registerNode(ctx, { path, node, value, isContainer, summary }) {

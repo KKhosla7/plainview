@@ -1,9 +1,5 @@
 import { createElement } from '../../core/dom.js';
 
-/*
- * Purely visual: put the document's own H1 and first paragraph in a bordered
- * title box. No invented metadata is added.
- */
 function applyTitleBlock(article) {
   const first = article.firstElementChild;
   if (first?.tagName !== 'H1') {

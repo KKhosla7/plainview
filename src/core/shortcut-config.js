@@ -1,9 +1,5 @@
 import { valueKind } from '../core/value.js';
 
-/*
- * Keyboard shortcut defaults, presets and matching. The options page writes a
- * per-action object; older installs may still have a single view preset string.
- */
 const Defaults = Object.freeze({
   view: 'alt-s',
   theme: 'alt-t',

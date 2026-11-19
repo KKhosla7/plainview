@@ -1,7 +1,3 @@
-/*
- * Format registry. Add an entry here plus a builder in ui.js to teach the
- * viewer another plain-text format.
- */
 const Formats = {
   markdown: {
     id: 'markdown',
@@ -132,10 +128,6 @@ function shouldSkip(type, extension) {
   return extension === 'svg';
 }
 
-/**
- * Decide which renderer (if any) should handle this document.
- * Returns null for normal HTML pages, images, PDFs, and so on.
- */
 export function detectFormat(contentType, pathname) {
   const type = String(contentType || '')
     .toLowerCase()

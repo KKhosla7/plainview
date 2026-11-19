@@ -1,9 +1,5 @@
 import { childEntries, entryCount, isContainer, pathTextFor } from './tree-model.js';
 
-/*
- * Bulk expansion actions for the virtualized tree.
- */
-
 function expandAll(state, rebuild) {
   const seen = new WeakSet();
   function walk(nodeValue, path) {

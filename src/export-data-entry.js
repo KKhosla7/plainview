@@ -1,6 +1,3 @@
-/*
- * Standalone data-document bundle inlined into exported HTML.
- */
 import './core/setting-keys.js';
 import './core/settings.js';
 import './core/events.js';

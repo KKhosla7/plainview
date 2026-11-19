@@ -3,10 +3,6 @@ import { loadYaml } from '../formats/yaml/loader.js';
 import { downloadBlob } from './download.js';
 import { valueKind } from './value.js';
 
-/*
- * Native data exports. These are always plain, uncompressed text and are
- * independent of the standalone HTML export/compression setting.
- */
 const Mime = {
   csv: 'text/csv;charset=utf-8',
   json: 'application/json;charset=utf-8',

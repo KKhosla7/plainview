@@ -2,9 +2,6 @@ import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { jsonSearchRunner } from './search-runner.js';
 
-/*
- * JSON search controls. The walk itself lives in search-runner.js.
- */
 const { el, button, bindResultDismiss, inputClear, selectHit, SearchDebounceMs } = jsonToolsShared;
 
 function createSearchElements() {

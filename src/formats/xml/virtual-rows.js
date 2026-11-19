@@ -1,8 +1,6 @@
 import { el } from '../../core/dom.js';
 import { Cdata, closeTag, openTag, pathButton } from './tree-shared.js';
 
-/* Row rendering for the virtualized XML tree. */
-
 function nodeParts(fragment) {
   return [...fragment.childNodes];
 }
@@ -41,7 +39,7 @@ function rowParts(descriptor) {
   }
 
   if (descriptor.kind === 'comment') {
-    return [el('span', 'pv-xml-comment', `<!--${descriptor.source.nodeValue}-->`)];
+    return [el('span', 'pv-xml-comment', `\x3C!--${descriptor.source.nodeValue}-->`)];
   }
 
   if (descriptor.kind === 'pi') {

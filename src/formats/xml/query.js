@@ -1,9 +1,6 @@
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
 
-/*
- * XPath query controls and result mapping.
- */
 const { el, button, exportNode, mark, unmark, selectHit, Attribute, Document } = xmlToolsShared;
 
 function scalarResult(resultType, result, XPathResultType) {

@@ -1,4 +1,3 @@
-/* global window */
 (() => {
   const Key = 'plainview-options-theme';
   const root = document.documentElement;

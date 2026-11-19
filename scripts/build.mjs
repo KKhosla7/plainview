@@ -176,8 +176,6 @@ await bundle('app-entry.js', 'app.js', 'esm', pageBuild);
 await bundle('export-chrome-entry.js', 'export-chrome.js', 'iife');
 await bundle('export-data-entry.js', 'export-data.js', 'iife', pageBuild);
 
-// Parsers and renderers that are only shipped for their own document type.
-// They are separate ESM files so opening JSON or Markdown never pays for them.
 await Promise.all(
   vendorBundles.map((vendor) =>
     build({

@@ -1,4 +1,3 @@
-/* global chrome, browser */
 (() => {
   const api = globalThis.browser ?? globalThis.chrome;
   const { userAgent } = navigator;

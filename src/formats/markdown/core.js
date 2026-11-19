@@ -1,11 +1,6 @@
 import { createElement } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
 
-/* global marked, Plainview */
-/*
- * Markdown parsing and DOM hardening. Raw HTML is deliberately escaped: a
- * downloaded .md file is untrusted input and must not run script.
- */
 const HtmlEscapes = {
   '&': '&amp;',
   '<': '&lt;',
@@ -47,10 +42,6 @@ function renderMarkdown(source) {
   return parser.parse(String(source ?? ''));
 }
 
-/**
- * Return a URL that is safe to put in href/src, or null when it is not.
- * Relative URLs stay relative so they resolve against the markdown file.
- */
 function sanitizeUrl(raw, kind) {
   if (valueKind(raw) !== 'string') {
     return null;

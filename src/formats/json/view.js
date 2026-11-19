@@ -6,9 +6,6 @@ import { createJsonTools } from './tools.js';
 import { createJsonTree } from './tree.js';
 import { createVirtualJsonTree } from './virtual-tree.js';
 
-/*
- * JSON/JSONC document entry point. Tree construction lives in tree.js.
- */
 function summaryFor(source, options, stats) {
   return (
     `${stats.nodes.toLocaleString()}${stats.truncated ? '+' : ''} nodes · ` +

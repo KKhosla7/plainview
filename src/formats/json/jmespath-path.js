@@ -1,9 +1,5 @@
 import { valueKind } from '../../core/value.js';
 
-/*
- * Maps simple path-only JMESPath expressions to JSON paths. Complex
- * expressions fall back to value matching.
- */
 const Identifier = /^[A-Za-z_][\w-]*/u;
 const Index = /^\[(-?\d+)\]/u;
 

@@ -1,9 +1,6 @@
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
 
-/*
- * XML element, attribute and text search.
- */
 const { el, button, exportNode, searchText, mark, unmark, selectHit, SearchDebounceMs } =
   xmlToolsShared;
 

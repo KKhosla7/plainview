@@ -8,10 +8,6 @@ import { highlightCodeBlocks } from '../formats/code/loader.js';
 import { renderMath } from '../formats/math/loader.js';
 import { renderMermaidBlocks } from '../formats/mermaid/loader.js';
 
-/*
- * Lazy enhancements and export actions. Enhancement failures are visible as a
- * state class instead of escaping as unhandled promise rejections.
- */
 const ExportErrorResetMs = 8000;
 
 function el(tag, className, text) {

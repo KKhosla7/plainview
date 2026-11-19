@@ -123,7 +123,7 @@ function renderNonElement(node, ctx) {
 
   if (node.nodeType === Comment) {
     ctx.comments += 1;
-    const row = el('div', 'pv-xml-comment', `<!--${node.nodeValue}-->`);
+    const row = el('div', 'pv-xml-comment', `\x3C!--${node.nodeValue}-->`);
     register(ctx, node, row);
     return row;
   }

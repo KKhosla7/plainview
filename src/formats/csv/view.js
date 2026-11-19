@@ -6,9 +6,6 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
 import { parseCsv } from './parse.js';
 import { csvTable } from './table.js';
 
-/*
- * CSV/TSV document entry point. Table controls live in table.js.
- */
 function columnIsEmpty(rows, index) {
   for (const row of rows) {
     if (String(row[index] ?? '').trim() !== '') {

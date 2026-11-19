@@ -1,8 +1,3 @@
-/*
- * RFC 4180-style CSV/TSV parsing with quoted fields, escaped quotes and
- * embedded newlines. Parsing is bounded so a malformed or enormous file can
- * never build an unbounded table.
- */
 const MaxRows = 50_000;
 const MaxColumns = 200;
 

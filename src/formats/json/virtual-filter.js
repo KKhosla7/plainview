@@ -1,7 +1,5 @@
 import { pathTextFor } from './tree-model.js';
 
-/* Filtering helpers for the virtualized JSON tree. */
-
 function filterRelevant(state, pathText, path) {
   if (!state.filterPaths) {
     return true;

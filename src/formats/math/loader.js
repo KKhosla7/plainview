@@ -1,9 +1,5 @@
 import { createElement } from '../../core/dom.js';
 
-/*
- * KaTeX is bundled locally and loaded only for Markdown that contains math.
- * CSS and fonts are local extension resources, not a CDN request.
- */
 const AssetPath = 'vendor/katex/katex.min.mjs';
 const CssPath = 'vendor/katex/katex.min.css';
 const MathPattern = /\$\$[\s\S]+?\$\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\]|\$(?!\s)[^$\n]+?(?<!\s)\$/u;

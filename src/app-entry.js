@@ -1,7 +1,3 @@
-/*
- * The reader bundle. It is imported only for supported documents, so normal
- * pages pay only for boot.js and the manifest stylesheet.
- */
 import { Marked } from 'marked';
 import 'virtual:viewer-css';
 

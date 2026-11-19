@@ -4,10 +4,6 @@ import { createXmlQuery } from './query.js';
 import { createXmlSearch } from './search.js';
 import { xmlToolsShared } from './tools-shared.js';
 
-/*
- * XML search and XPath controls. Search and query state live in their own
- * modules; this file composes the toolbar and path-copy behavior.
- */
 const { el, CopyResetMs } = xmlToolsShared;
 
 function createXmlTools({ tree, doc, byNode, exportState }) {

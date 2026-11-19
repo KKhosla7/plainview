@@ -1,8 +1,3 @@
-/*
- * Local font faces, registered through the CSS Font Loading API. This keeps
- * the extension self-contained (no Google Fonts request) and avoids relative
- * URL problems when the reader is mounted inside an XML document.
- */
 const Faces = [
   ['Barlow Condensed', 'barlow-condensed-500.woff2', '500', 'normal'],
   ['Barlow Condensed', 'barlow-condensed-600.woff2', '600', 'normal'],

@@ -1,8 +1,3 @@
-/*
- * XML documents are inconsistent across browsers: Firefox may have no body,
- * while Chromium has a native XML viewer with its own document. Inject the
- * build-generated stylesheet for both, and create an XHTML shell when needed.
- */
 export function ensureHtmlShellForXml() {
   const XhtmlNamespace = 'http://www.w3.org/1999/xhtml';
 

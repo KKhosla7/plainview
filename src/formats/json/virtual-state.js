@@ -1,7 +1,6 @@
 import { jsonLimits } from '../.././formats/json/limits.js';
 import { treeSyntax } from './tree-model.js';
 
-/* Shared state creation for the virtualized JSON tree. */
 const AutoRows = 20_000;
 const { openDepth } = jsonLimits;
 

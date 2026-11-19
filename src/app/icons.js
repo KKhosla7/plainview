@@ -1,8 +1,5 @@
 import { createElement } from '../core/dom.js';
 
-/*
- * Inline SVG icons used by the reader chrome.
- */
 const Namespace = 'http://www.w3.org/2000/svg';
 
 function icon(paths, size = 18) {

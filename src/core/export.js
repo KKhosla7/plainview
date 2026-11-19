@@ -140,7 +140,7 @@ function minifyHtml(html) {
   let output = String(html)
     .replace(/<(pre|script|style)\b[\s\S]*?<\/\1>/giu, protect)
     .replace(/<code\b[\s\S]*?<\/code>/giu, protect)
-    .replace(/<!--(?!\[if)[\s\S]*?-->/gu, '')
+    .replace(/\x3C!--(?!\[if)[\s\S]*?-->/gu, '')
     .replace(/>\s*\n\s*</gu, '><')
     .trim();
   for (let index = 0; index < protectedBlocks.length; index += 1) {

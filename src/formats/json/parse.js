@@ -1,8 +1,3 @@
-/**
- * Remove // and /* comments *\/ and trailing commas without touching string
- * contents. This makes .jsonc files readable without pretending to support
- * the rest of JSON5.
- */
 function readJsonString(text, start) {
   let index = start + 1;
   let escaped = false;

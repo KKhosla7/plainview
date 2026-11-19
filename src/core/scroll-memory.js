@@ -1,11 +1,6 @@
 import { scrollToInstant } from './scroll-utils.js';
 import { saveSetting } from './settings.js';
 
-/*
- * Remembers the reading position per document. The stored value is restored
- * after the reader mounts, and every user scroll is saved with a short
- * debounce. When there is no saved value, the caller's hash fallback runs.
- */
 const SaveDelayMs = 250;
 const RestoreDelayMs = 200;
 

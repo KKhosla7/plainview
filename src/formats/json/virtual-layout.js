@@ -1,6 +1,5 @@
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 
-/* Variable-height row layout for wrapped values in the virtual JSON tree. */
 const RowHeight = 24;
 
 function applyRowTitle(node, value) {

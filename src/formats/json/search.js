@@ -1,10 +1,6 @@
 import { valueKind } from '../../core/value.js';
 import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 
-/*
- * Full-document JSON walker. Search consumes it in small batches so the page
- * can yield between chunks instead of building one giant index up front.
- */
 const MaxResults = 5000;
 
 function pushChildren(item, stack, seen) {

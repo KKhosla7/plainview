@@ -11,7 +11,6 @@ import {
 } from './tree-shared.js';
 import { createRow } from './virtual-rows.js';
 
-/* Windowed XML tree. Rows are flattened from expanded descriptors and mounted lazily. */
 const RowHeight = 24;
 const Overscan = 8;
 

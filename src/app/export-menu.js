@@ -2,10 +2,6 @@ import { formatGlyph } from '.././app/format-glyph.js';
 import { icons } from '.././app/icons.js';
 import { createElement, el } from '../core/dom.js';
 
-/*
- * Shared export-menu shell, item rendering and dismissal behavior. The live
- * reader and standalone exports only provide their own download tasks.
- */
 function createMenuShell(titleText) {
   const menu = createElement('div');
   menu.className = 'pv-export-menu';

@@ -3,10 +3,6 @@ import { jsonPathParse } from './jsonpath.js';
 
 const { fail, parseBracket, readBracketContent, readName, readQuoted } = jsonPathParse;
 
-/*
- * JSONPath filter tokenizer and predicate parser.
- */
-
 function readFilterOperator(text, index) {
   const rest = text.slice(index);
   const operator = /^(?:&&|\|\||==|!=|<=|>=|<|>|!)/u.exec(rest);

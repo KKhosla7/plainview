@@ -5,10 +5,6 @@ import { createTheme } from '.././app/theme.js';
 import { createTopbarActions } from '../app/topbar.js';
 import { tableResize } from '.././core/table-resize.js';
 
-/*
- * Standalone export chrome. It reuses the reader modules for theme, scroll,
- * table borders, table resizing and native data downloads.
- */
 ((root) => {
   const { document } = root;
   const ExportTableBordersPrefix = 'plainview.export.tableBorders:';

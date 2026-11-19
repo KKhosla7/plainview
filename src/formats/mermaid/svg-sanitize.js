@@ -1,8 +1,3 @@
-/**
- * Mermaid already renders with securityLevel: 'strict'. This is a second,
- * cheap pass before the SVG is imported into the page: no scripts, no inline
- * event handlers, no javascript: hrefs.
- */
 function sanitizeSvg(svgText) {
   let doc;
   try {

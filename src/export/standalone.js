@@ -4,10 +4,6 @@ import { setJmespathLoader } from '../formats/jmespath/loader.js';
 import { buildJsonValue } from '../formats/json/view.js';
 import { buildXml } from '../formats/xml/view.js';
 
-/*
- * Builds the full interactive data reader inside a standalone export. The
- * embedded payload contains the parsed value/source, not a DOM snapshot.
- */
 (() => {
   setJmespathLoader(async () => ({ search }));
 

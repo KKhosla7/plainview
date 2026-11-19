@@ -1,7 +1,3 @@
-/*
- * JSON tree sizing policy. Large documents render only the branch the reader
- * opens, with small per-container pages instead of one global node budget.
- */
 const SmallSourceBytes = 100_000;
 const MediumSourceBytes = 500_000;
 const SmallPageSize = 200;

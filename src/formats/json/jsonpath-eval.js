@@ -4,10 +4,6 @@ import { parseFilter } from './jsonpath-filter.js';
 
 const { fail, Identifier, MaxResults, tokenize } = jsonPathParse;
 
-/*
- * JSONPath evaluation over plain data.
- */
-
 function quoteKey(key) {
   return JSON.stringify(String(key));
 }

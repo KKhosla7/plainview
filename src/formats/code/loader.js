@@ -1,9 +1,5 @@
 import { replaceWithGeneratedHtml } from '../../core/dom.js';
 
-/*
- * highlight.js is bundled locally and imported only after a Markdown document
- * with a fenced code block has mounted. No code leaves the browser.
- */
 const AssetPath = 'vendor/highlight/highlight.min.mjs';
 const MaxAutoChars = 20_000;
 const MinAutoRelevance = 6;

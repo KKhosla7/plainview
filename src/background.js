@@ -1,5 +1,3 @@
-/* global chrome, browser */
-/* Read the source document for the viewer. */
 (() => {
   const api = globalThis.browser ?? globalThis.chrome;
 

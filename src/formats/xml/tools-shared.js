@@ -1,8 +1,5 @@
 import { el } from '../../core/dom.js';
 
-/*
- * Shared XML tool state and hit navigation.
- */
 const CopyResetMs = 1200;
 const SearchDebounceMs = 120;
 const Element = 1;

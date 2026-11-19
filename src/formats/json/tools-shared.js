@@ -3,9 +3,6 @@ import { el } from '../../core/dom.js';
 import { onAsync } from '../../core/events.js';
 import { valueKind } from '../../core/value.js';
 
-/*
- * Shared JSON tool helpers.
- */
 const CopyResetMs = 1200;
 const SearchDebounceMs = 120;
 

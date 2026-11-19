@@ -2,7 +2,6 @@ import { onAsync } from '../core/events.js';
 import { installFonts } from '../core/fonts.js';
 import { SETTING_KEYS } from '.././core/setting-keys.js';
 
-/* global chrome, browser, Plainview */
 (() => {
   const StatusResetMs = 1400;
   const Keys = SETTING_KEYS;
