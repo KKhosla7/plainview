@@ -63,31 +63,8 @@ function createDataToolbar({ article, source, summary, copyLabel, treeMode, canv
   const actions = el('span', 'pv-meta-actions');
 
   const expand = metaButton('Expand all');
-  expand.addEventListener('click', () => {
-    const virtualTree = article.querySelector('.pv-virtual-tree');
-    if (virtualTree) {
-      virtualTree.dispatchEvent(new CustomEvent('pv-expand-all'));
-      return;
-    }
-
-    for (const details of article.querySelectorAll('details')) {
-      details.open = true;
-    }
-  });
-
   const collapse = metaButton('Collapse all');
-  collapse.addEventListener('click', () => {
-    const virtualTree = article.querySelector('.pv-virtual-tree');
-    if (virtualTree) {
-      virtualTree.dispatchEvent(new CustomEvent('pv-collapse-all'));
-      return;
-    }
-
-    for (const details of article.querySelectorAll('details')) {
-      details.open = false;
-    }
-  });
-
+  bindTreeActions(article, expand, collapse);
   const copy = metaButton(copyLabel);
   onAsync(copy, 'click', async () => {
     const ok = await copyText(source);
@@ -116,6 +93,32 @@ function createDataToolbar({ article, source, summary, copyLabel, treeMode, canv
   }
 
   return meta;
+}
+
+function bindTreeActions(article, expand, collapse) {
+  expand.addEventListener('click', () => {
+    const virtualTree = article.querySelector('.pv-virtual-tree');
+    if (virtualTree) {
+      virtualTree.dispatchEvent(new CustomEvent('pv-expand-all'));
+      return;
+    }
+
+    for (const details of article.querySelectorAll('details')) {
+      details.open = true;
+    }
+  });
+
+  collapse.addEventListener('click', () => {
+    const virtualTree = article.querySelector('.pv-virtual-tree');
+    if (virtualTree) {
+      virtualTree.dispatchEvent(new CustomEvent('pv-collapse-all'));
+      return;
+    }
+
+    for (const details of article.querySelectorAll('details')) {
+      details.open = false;
+    }
+  });
 }
 
 export { createDataToolbar };
