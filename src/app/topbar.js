@@ -1,6 +1,7 @@
 import { createIconButton, icons } from '.././app/icons.js';
 import { createThemeButton } from '../core/../app/theme.js';
 import { createElement } from '../core/dom.js';
+import { createTableBordersButton } from './table-border-toggle.js';
 
 /* global Plainview */
 function el(tag, className, text) {
@@ -74,7 +75,7 @@ function createActions({
 
   const themeButton = createThemeButton();
   const tableBordersButton = showTableBorders
-    ? Plainview.createTableBordersButton({ settingKey: tableBordersKey })
+    ? createTableBordersButton({ settingKey: tableBordersKey })
     : null;
 
   const downloadButton = button('pv-action pv-action-download', 'Download');

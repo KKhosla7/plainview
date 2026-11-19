@@ -27,6 +27,7 @@ import { buildToml } from '../formats/toml/view.js';
 import { buildXml } from '../formats/xml/view.js';
 import { buildYaml } from '../formats/yaml/view.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
+import { tableBorders } from './table-border-toggle.js';
 
 /* global Plainview */
 /*
@@ -189,7 +190,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
       document.documentElement.dataset.pvIndentGuides = value ? 'on' : 'off';
     });
     watchSetting(TABLE_BORDERS_KEY, (value) => {
-      Plainview.tableBorders.apply(value);
+      tableBorders.apply(value);
     });
     watchSetting(TABLE_RESIZE_KEY, (value) => {
       tableResize.apply(Boolean(value));
@@ -226,7 +227,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     } = await loadViewerSettings(url);
 
     applyTreeFont(savedContentFontSize, savedFormatValues, savedIndentGuides);
-    Plainview.tableBorders.apply(savedTableBorders);
+    tableBorders.apply(savedTableBorders);
     document.documentElement.dataset.pvTableResize = savedTableResize ? 'on' : 'off';
     document.documentElement.dataset.pvTableLayout = validTableLayout(savedTableLayout);
 

@@ -1,6 +1,7 @@
 import { createTheme } from '.././app/theme.js';
 import { createTopbar } from '../app/topbar.js';
 import { el } from '../core/dom.js';
+import { createSourcePane } from './source-pane.js';
 
 /* global Plainview */
 /*
@@ -30,7 +31,7 @@ import { el } from '../core/dom.js';
       showDownload: false,
       showTableBorders: format.id === 'markdown',
     });
-    const sourcePane = Plainview.createSourcePane(source, format);
+    const sourcePane = createSourcePane(source, format);
     const shell = el('div', 'pv-shell');
     const main = el('main', 'pv-main');
     const zoomSurface = el('div', 'pv-zoom-surface');
