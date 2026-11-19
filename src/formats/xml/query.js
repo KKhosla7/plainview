@@ -98,38 +98,7 @@ function clearQueryHits({ hits, queryCount, status, query }) {
   return [];
 }
 
-function runXPathQuery({ doc, byNode, status, query, queryCount, state }) {
-  state.exportState?.clear('query');
-  state.hits = clearQueryHits({
-    hits: state.hits,
-    queryCount,
-    status,
-    query,
-  });
-  const expression = query.value.trim();
-  if (!expression) {
-    return;
-  }
-  const XPathResultType = globalThis.XPathResult;
-  let result;
-  try {
-    result = doc.evaluate(expression, doc, null, XPathResultType.ORDERED_NODE_SNAPSHOT_TYPE, null);
-  } catch {
-    try {
-      result = doc.evaluate(expression, doc, null, XPathResultType.ANY_TYPE, null);
-    } catch (error) {
-      status.textContent = `XPath error: ${error instanceof Error ? error.message : String(error)}`;
-      status.classList.add('is-error');
-      query.setAttribute('aria-invalid', 'true');
-      return;
-    }
-  }
-  const scalar = scalarResult(result.resultType, result, XPathResultType);
-  if (scalar) {
-    status.textContent = scalar;
-    return;
-  }
-  const nodes = nodesFromResult(result, XPathResultType).filter(Boolean);
+function applyXPathNodes({ nodes, byNode, doc, state, queryCount, status, expression }) {
   for (const node of nodes) {
     const entry = mappedEntry(node, byNode, doc);
     if (!entry) {
@@ -162,6 +131,41 @@ function runXPathQuery({ doc, byNode, status, query, queryCount, state }) {
     status.textContent = `${nodes.length - state.hits.length} result(s) are below the tree cap.`;
   }
   selectHit(state.hits, 0, 'pv-xml-query-active');
+}
+
+function runXPathQuery({ doc, byNode, status, query, queryCount, state }) {
+  state.exportState?.clear('query');
+  state.hits = clearQueryHits({
+    hits: state.hits,
+    queryCount,
+    status,
+    query,
+  });
+  const expression = query.value.trim();
+  if (!expression) {
+    return;
+  }
+  const XPathResultType = globalThis.XPathResult;
+  let result;
+  try {
+    result = doc.evaluate(expression, doc, null, XPathResultType.ORDERED_NODE_SNAPSHOT_TYPE, null);
+  } catch {
+    try {
+      result = doc.evaluate(expression, doc, null, XPathResultType.ANY_TYPE, null);
+    } catch (error) {
+      status.textContent = `XPath error: ${error instanceof Error ? error.message : String(error)}`;
+      status.classList.add('is-error');
+      query.setAttribute('aria-invalid', 'true');
+      return;
+    }
+  }
+  const scalar = scalarResult(result.resultType, result, XPathResultType);
+  if (scalar) {
+    status.textContent = scalar;
+    return;
+  }
+  const nodes = nodesFromResult(result, XPathResultType).filter(Boolean);
+  applyXPathNodes({ nodes, byNode, doc, state, queryCount, status, expression });
 }
 
 function createXmlQuery({ doc, byNode, exportState, status }) {
