@@ -1,8 +1,6 @@
 import assert from 'node:assert/strict';
 import { test as it } from 'node:test';
-import '../src/core/export-name.js';
-
-const { exportFileName } = globalThis.Plainview;
+import { exportFileName } from '../src/core/export-name.js';
 
 it('replaces the source extension with .html', () => {
   assert.equal(exportFileName('sample.md'), 'sample.html');

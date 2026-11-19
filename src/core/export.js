@@ -7,10 +7,10 @@ import {
   loadSetting,
   validTableLayout,
 } from '.././core/settings.js';
-/* global Plainview */
 import CompressedTemplate from './export/compressed.html';
 import DecompressTemplate from './export/decompress.txt';
 import DocumentTemplate from './export/document.html';
+import { exportFileName } from './export-name.js';
 
 /*
  * Export the current rendered article as one standalone HTML file. The clone is
@@ -288,7 +288,7 @@ import DocumentTemplate from './export/document.html';
 
   async function exportHtml(options) {
     const html = await buildExportHtml(options);
-    Plainview.downloadHtml(html, Plainview.exportFileName(options.fileName));
+    Plainview.downloadHtml(html, exportFileName(options.fileName));
     return html;
   }
 

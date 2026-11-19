@@ -1,3 +1,4 @@
+import { installFonts } from '../core/fonts.js';
 import { createScrollMemory } from '.././core/scroll-memory.js';
 import { scrollElementIntoViewInstant } from '.././core/scroll-utils.js';
 import {
@@ -223,7 +224,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     document.documentElement.dataset.pvTableLayout = validTableLayout(savedTableLayout);
 
     if (format.id === 'markdown') {
-      Plainview.installFonts();
+      installFonts();
     }
     const content = await buildContent(source, format);
     const { app, topbar, sourcePane, shell, zoom, toc, viewSwitcher, theme } =
