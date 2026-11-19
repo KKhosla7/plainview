@@ -1,4 +1,5 @@
 import { search } from 'jmespath';
+import { buildCsv } from '../formats/csv/view.js';
 import { buildJsonValue } from '../formats/json/view.js';
 
 /*
@@ -14,7 +15,7 @@ import { buildJsonValue } from '../formats/json/view.js';
     }
 
     if (documentData.formatId === 'csv' || documentData.formatId === 'tsv') {
-      return Plainview.buildCsv(documentData.source, {
+      return buildCsv(documentData.source, {
         delimiter: documentData.delimiter,
         label: documentData.label,
       });

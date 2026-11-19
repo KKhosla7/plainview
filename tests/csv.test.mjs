@@ -1,8 +1,6 @@
 import assert from 'node:assert/strict';
 import { test as it } from 'node:test';
-import '../src/formats/csv/parse.js';
-
-const { parseCsv, csvLimits } = globalThis.Plainview;
+import { csvLimits, parseCsv } from '../src/formats/csv/parse.js';
 
 it('parses basic CSV and strips a BOM', () => {
   const parsed = parseCsv('\uFEFFname,value\nalpha,1\nbeta,2\n');
