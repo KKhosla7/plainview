@@ -1,3 +1,4 @@
+import { formatGlyph } from '.././app/format-glyph.js';
 import { icons } from '.././app/icons.js';
 import { createElement, el } from '../core/dom.js';
 
@@ -26,9 +27,7 @@ import { createElement, el } from '../core/dom.js';
     button.setAttribute('aria-label', ariaLabel);
     button.title = title;
     button.append(
-      kind === 'html'
-        ? icons.html()
-        : el('span', 'pv-format-glyph', Plainview.formatGlyph(glyphLabel)),
+      kind === 'html' ? icons.html() : el('span', 'pv-format-glyph', formatGlyph(glyphLabel)),
       root.document.createTextNode(label),
     );
     return button;

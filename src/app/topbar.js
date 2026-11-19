@@ -1,4 +1,5 @@
 import { createIconButton, icons } from '.././app/icons.js';
+import { createThemeButton } from '../core/../app/theme.js';
 import { createElement } from '../core/dom.js';
 
 /* global Plainview */
@@ -72,7 +73,7 @@ import { createElement } from '../core/dom.js';
     tocButton.setAttribute('aria-expanded', 'false');
     tocButton.title = 'Table of contents';
 
-    const themeButton = Plainview.createThemeButton();
+    const themeButton = createThemeButton();
     const tableBordersButton = showTableBorders
       ? Plainview.createTableBordersButton({ settingKey: tableBordersKey })
       : null;

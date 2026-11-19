@@ -1,4 +1,5 @@
 import { createIconButton, icons } from '.././app/icons.js';
+import { createTheme } from '.././app/theme.js';
 import { tableResize } from '.././core/table-resize.js';
 
 /* global Plainview */
@@ -100,7 +101,7 @@ import { tableResize } from '.././core/table-resize.js';
       topbar.append(controls.actions);
     }
 
-    Plainview.createTheme({
+    createTheme({
       button: controls.themeButton,
       initialTheme: document.documentElement.dataset.pvTheme,
     });

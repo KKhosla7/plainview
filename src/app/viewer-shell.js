@@ -1,3 +1,4 @@
+import { createTheme } from '.././app/theme.js';
 import { el } from '../core/dom.js';
 
 /* global Plainview */
@@ -66,7 +67,7 @@ import { el } from '../core/dom.js';
       },
     });
 
-    const theme = Plainview.createTheme({
+    const theme = createTheme({
       button: topbar.themeButton,
       initialTheme: savedTheme,
     });
