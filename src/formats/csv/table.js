@@ -1,6 +1,7 @@
 import { el } from '../../core/dom.js';
 import { tableResize } from '../../core/table-resize.js';
 import urls from '../../core/urls.json' with { type: 'json' };
+import { createTableState } from './table-state.js';
 import { createVirtualTable } from './virtual-table.js';
 
 function numeric(value) {
@@ -158,20 +159,6 @@ function createHeader({ header, columns, filterRow, onSort, onFilter }) {
   return { thead, headCells, columnFilters };
 }
 
-function updateHeaders(headCells, sortState) {
-  for (let column = 0; column < headCells.length; column += 1) {
-    const th = headCells[column];
-    const icon = th.querySelector('.pv-csv-sort-icon');
-    if (sortState.column !== column) {
-      th.setAttribute('aria-sort', 'none');
-      icon.textContent = '↕';
-      continue;
-    }
-    th.setAttribute('aria-sort', sortState.direction > 0 ? 'ascending' : 'descending');
-    icon.textContent = sortState.direction > 0 ? '↑' : '↓';
-  }
-}
-
 function filterRows(rows, needle, columnFilters) {
   return rows.filter((row) => {
     if (
@@ -231,6 +218,15 @@ function createRowElement(row, columns) {
   return tr;
 }
 
+function createTableSurface() {
+  const wrap = el('div', 'pv-csv-wrap');
+  const table = el('table', 'pv-csv-table');
+  const tbody = el('tbody');
+  table.append(tbody);
+  wrap.append(table);
+  return { table, tbody, wrap };
+}
+
 function createTable({ header, columns, dataRows, filter, count, status }) {
   const sortState = { column: -1, direction: 1 };
   const filterRow = el('tr', 'pv-csv-filter-row');
@@ -245,16 +241,13 @@ function createTable({ header, columns, dataRows, filter, count, status }) {
         sortState.column = column;
         sortState.direction = 1;
       }
-      render();
+      tableState.render();
     },
-    onFilter: () => scheduleRender(),
+    onFilter: () => tableState.scheduleRender(),
   });
 
-  const wrap = el('div', 'pv-csv-wrap');
-  const table = el('table', 'pv-csv-table');
-  const tbody = el('tbody');
-  table.append(headerParts.thead, tbody);
-  wrap.append(table);
+  const { table, tbody, wrap } = createTableSurface();
+  table.prepend(headerParts.thead);
   tableResize.enable(table, { offset: 1, tableId: 'csv' });
   const virtualTable = createVirtualTable({
     tbody,
@@ -263,33 +256,24 @@ function createTable({ header, columns, dataRows, filter, count, status }) {
     createRow: (row) => createRowElement(row, columns),
   });
 
-  let timer = 0;
-  let visibleRows = [];
-
-  function render() {
+  const computeVisible = () => {
     const needle = filter.value.trim().toLocaleLowerCase();
-    const visible = sortRows(filterRows(dataRows, needle, headerParts.columnFilters), sortState);
-    visibleRows = visible;
-    virtualTable.render(visible);
-    updateHeaders(headerParts.headCells, sortState);
-    count.textContent = `${visible.length.toLocaleString()} of ${dataRows.length.toLocaleString()} rows`;
-    status.textContent = visible.length === 0 ? 'No rows match this filter.' : '';
-    status.classList.toggle('is-empty', visible.length === 0);
-  }
-
-  function scheduleRender() {
-    globalThis.clearTimeout(timer);
-    timer = globalThis.setTimeout(render, csvTable.FilterDebounceMs);
-  }
-
-  filter.addEventListener('input', scheduleRender);
-  render();
-  return {
-    element: wrap,
-    getVisibleRows: () => visibleRows.map((row) => row.cells.slice(0, columns)),
-    isFiltered: () => filter.value.trim() !== '' || headerParts.columnFilters.some(Boolean),
-    render,
-    scheduleRender,
+    return sortRows(filterRows(dataRows, needle, headerParts.columnFilters), sortState);
   };
+  const tableState = createTableState({
+    filter,
+    computeVisible,
+    virtualTable,
+    headerParts,
+    sortState,
+    count,
+    total: dataRows.length,
+    status,
+    columns,
+  });
+
+  filter.addEventListener('input', tableState.scheduleRender);
+  tableState.render();
+  return { element: wrap, ...tableState };
 }
 export const csvTable = { FilterDebounceMs: FILTER_DEBOUNCE_MS_VALUE, compareCells, createTable };
