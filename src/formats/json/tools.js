@@ -6,6 +6,24 @@ import { createJsonSearch } from './search-controls.js';
 
 const { el, COPY_RESET_MS, clearStatus } = jsonToolsShared;
 
+function bindPathCopy(tree) {
+  onAsync(tree, 'click', async (event) => {
+    const target = event.target?.closest?.('.pv-json-path') ?? null;
+    if (!target) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    const path = target.getAttribute('data-json-path') || '';
+    const ok = await copyText(path);
+    const previous = target.textContent;
+    target.textContent = ok ? 'Copied' : 'Failed';
+    globalThis.setTimeout(() => {
+      target.textContent = previous;
+    }, COPY_RESET_MS);
+  });
+}
+
 function createJsonTools({ tree, rootValue, indexRef, revealPath, exportState }) {
   const tools = el('div', 'pv-json-tools');
   const status = el('div', 'pv-json-status');
@@ -44,21 +62,7 @@ function createJsonTools({ tree, rootValue, indexRef, revealPath, exportState })
     },
   });
 
-  onAsync(tree, 'click', async (event) => {
-    const target = event.target?.closest?.('.pv-json-path') ?? null;
-    if (!target) {
-      return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-    const path = target.getAttribute('data-json-path') || '';
-    const ok = await copyText(path);
-    const previous = target.textContent;
-    target.textContent = ok ? 'Copied' : 'Failed';
-    globalThis.setTimeout(() => {
-      target.textContent = previous;
-    }, COPY_RESET_MS);
-  });
+  bindPathCopy(tree);
 
   tools.append(search, query, status, searchResults, queryResults);
   return tools;
