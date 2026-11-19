@@ -3,7 +3,7 @@
  * embedded newlines. Parsing is bounded so a malformed or enormous file can
  * never build an unbounded table.
  */
-const MaxRows = 5000;
+const MaxRows = 50_000;
 const MaxColumns = 200;
 
 function detectDelimiter(source, preferred) {

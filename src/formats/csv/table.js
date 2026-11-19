@@ -1,5 +1,6 @@
 import { el } from '../../core/dom.js';
 import { tableResize } from '../../core/table-resize.js';
+import { createVirtualTable } from './virtual-table.js';
 
 function numeric(value) {
   return /^-?\d+(?:\.\d+)?$/u.test(String(value ?? '').trim());
@@ -212,22 +213,19 @@ function sortRows(rows, sortState) {
   });
 }
 
-function renderRows(tbody, rows, columns) {
-  const fragment = document.createDocumentFragment();
-  for (const row of rows) {
-    const tr = el('tr');
-    tr.append(el('th', 'pv-csv-row-number', String(row.number)));
-    for (let column = 0; column < columns; column += 1) {
-      const value = row.cells[column] ?? '';
-      const cell = el('td', 'pv-csv-cell', value);
-      if (numeric(value)) {
-        cell.classList.add('pv-csv-number');
-      }
-      tr.append(cell);
+function createRowElement(row, columns) {
+  const tr = el('tr');
+  tr.append(el('th', 'pv-csv-row-number', String(row.number)));
+  for (let column = 0; column < columns; column += 1) {
+    const value = row.cells[column] ?? '';
+    const cell = el('td', 'pv-csv-cell', value);
+    if (numeric(value)) {
+      cell.classList.add('pv-csv-number');
     }
-    fragment.append(tr);
+    tr.append(cell);
   }
-  tbody.replaceChildren(fragment);
+
+  return tr;
 }
 
 function createTable({ header, columns, dataRows, filter, count, status }) {
@@ -255,6 +253,12 @@ function createTable({ header, columns, dataRows, filter, count, status }) {
   table.append(headerParts.thead, tbody);
   wrap.append(table);
   tableResize.enable(table, { offset: 1, tableId: 'csv' });
+  const virtualTable = createVirtualTable({
+    tbody,
+    wrap,
+    columns,
+    createRow: (row) => createRowElement(row, columns),
+  });
 
   let timer = 0;
   let visibleRows = [];
@@ -263,7 +267,7 @@ function createTable({ header, columns, dataRows, filter, count, status }) {
     const needle = filter.value.trim().toLocaleLowerCase();
     const visible = sortRows(filterRows(dataRows, needle, headerParts.columnFilters), sortState);
     visibleRows = visible;
-    renderRows(tbody, visible, columns);
+    virtualTable.render(visible);
     updateHeaders(headerParts.headCells, sortState);
     count.textContent = `${visible.length.toLocaleString()} of ${dataRows.length.toLocaleString()} rows`;
     status.textContent = visible.length === 0 ? 'No rows match this filter.' : '';
