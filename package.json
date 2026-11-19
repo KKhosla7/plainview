@@ -30,12 +30,13 @@
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",
     "@kkhosla7/dwarpal-core": "file:tools/kkhosla7-dwarpal-core-0.7.0.tgz",
+    "@kkhosla7/dwarpal-css": "file:tools/kkhosla7-dwarpal-css-0.7.0.tgz",
     "@kkhosla7/dwarpal-js": "file:tools/kkhosla7-dwarpal-js-0.7.0.tgz",
+    "@kkhosla7/dwarpal-policy": "file:tools/kkhosla7-dwarpal-policy-0.7.0.tgz",
     "@playwright/test": "1.64.1",
     "esbuild": "^0.28.2",
-    "web-ext": "^10.8.0",
-    "@kkhosla7/dwarpal-css": "file:tools/kkhosla7-dwarpal-css-0.7.0.tgz",
-    "@kkhosla7/dwarpal-policy": "file:tools/kkhosla7-dwarpal-policy-0.7.0.tgz"
+    "fflate": "^0.8.3",
+    "web-ext": "^10.8.0"
   },
   "repository": {
     "type": "git",
