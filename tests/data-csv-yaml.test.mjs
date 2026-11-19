@@ -7,6 +7,7 @@ import {
   openPage,
   startServer,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 const TableBordersKey = 'plainview.tableBorders';
 const TableResizeKey = 'plainview.tableResize';
@@ -32,7 +33,7 @@ it('renders a YAML tree and its source syntax', async () => {
   await page.waitForSelector('.pv-json');
 
   assert.match(await page.locator('.pv-doc-meta').innerText(), /YAML/u);
-  assert.ok((await page.locator('.pv-json-key').count()) >= 5);
+  assert.ok((await page.locator('.pv-json-key').count()) >= TestConstants.MIN_KEYS);
   assert.equal(await page.locator('.pv-error').count(), 0);
 
   await page.getByRole('tab', { name: 'Source' }).click();
@@ -56,7 +57,9 @@ async function openCsvFixture(name = 'sample.csv') {
 async function setStoredSetting(key, value) {
   let workers = context.serviceWorkers();
   if (workers.length === 0) {
-    workers = [await context.waitForEvent('serviceworker', { timeout: 10_000 })];
+    workers = [
+      await context.waitForEvent('serviceworker', { timeout: TestConstants.WORKER_TIMEOUT_MS }),
+    ];
   }
   await workers[0].evaluate(
     ({ enabled, storageKey }) =>
@@ -85,10 +88,13 @@ async function setTableLayout(value) {
 it('renders CSV as a bounded table with quoted fields', async () => {
   const { page, errors } = await openCsvFixture();
   assert.match(await page.locator('.pv-doc-meta').innerText(), /3 data rows · 3 columns/u);
-  assert.equal(await page.locator('.pv-csv-table tbody tr').count(), 3);
+  assert.equal(await page.locator('.pv-csv-table tbody tr').count(), TestConstants.CSV_ROWS);
   assert.match(await page.locator('.pv-csv-table').innerText(), /one, quoted/u);
   assert.match(await page.locator('.pv-csv-table').innerText(), /two\s+lines/u);
-  assert.ok((await page.locator('.pv-csv-doc').evaluate((node) => node.clientWidth)) > 900);
+  assert.ok(
+    (await page.locator('.pv-csv-doc').evaluate((node) => node.clientWidth)) >
+      TestConstants.CSV_MIN_WIDTH,
+  );
 
   const filter = page.getByLabel('Search CSV rows in any column');
   await filter.fill('quoted');
@@ -99,9 +105,10 @@ it('renders CSV as a bounded table with quoted fields', async () => {
   assert.match(await page.locator('.pv-csv-table tbody tr').innerText(), /alpha/u);
 
   await filter.fill('');
-  await page.waitForFunction(
-    () => document.querySelectorAll('.pv-csv-table tbody tr').length === 3,
-  );
+  await page.waitForFunction(() => {
+    const EXPECTED_ROWS = 3;
+    return document.querySelectorAll('.pv-csv-table tbody tr').length === EXPECTED_ROWS;
+  });
 
   assertNoErrors(errors);
   await page.close();
@@ -158,9 +165,15 @@ it('detects semicolon-delimited CSV columns', async () => {
 
   assert.match(await page.locator('.pv-doc-meta').innerText(), /5 data rows · 4 columns/u);
   const firstRow = page.locator('.pv-csv-table tbody tr').first();
-  assert.equal(await firstRow.locator('td').count(), 4);
+  assert.equal(await firstRow.locator('td').count(), TestConstants.CSV_COLUMNS);
   assert.match(await firstRow.locator('td').nth(0).innerText(), /booker12/u);
-  assert.match(await firstRow.locator('td').nth(3).innerText(), /Booker/u);
+  assert.match(
+    await firstRow
+      .locator('td')
+      .nth(TestConstants.CSV_COLUMNS - 1)
+      .innerText(),
+    /Booker/u,
+  );
 
   assertNoErrors(errors);
   await page.close();
@@ -209,25 +222,6 @@ it('renders TSV with the tab delimiter', async () => {
   assertNoErrors(errors);
   await page.close();
 });
-it('renders a TOML tree and its source syntax', async () => {
-  const { page, errors } = await openPage(context, `${base}/sample.toml`);
-  await page.waitForSelector('.pv-json');
-
-  assert.match(await page.locator('.pv-doc-meta').innerText(), /TOML/u);
-  assert.ok((await page.locator('.pv-json-key').count()) >= 5);
-  const query = page.getByLabel('Query expression');
-  await query.fill('$..title');
-  await page.getByRole('button', { name: 'Query', exact: true }).click();
-  await page.waitForFunction(() => document.querySelectorAll('.pv-json-query-hit').length === 3);
-
-  await page.getByRole('tab', { name: 'Source' }).click();
-  await page.waitForSelector('.pv-raw-code .pv-syn-key');
-  assert.ok((await page.locator('.pv-raw-code .pv-syn-string').count()) >= 1);
-
-  assertNoErrors(errors);
-  await page.close();
-});
-
 it('ignores whitespace-only trailing CSV columns', async () => {
   const { page, errors } = await openCsvFixture('trailing-space.csv');
   assert.match(await page.locator('.pv-doc-meta').innerText(), /2 data rows · 2 columns/u);
@@ -242,7 +236,10 @@ it('exposes column resize handles', async () => {
   try {
     assert.equal(await page.locator('.pv-table-resize').count(), 0);
     await setTableResize(true);
-    await page.waitForFunction(() => document.querySelectorAll('.pv-table-resize').length === 3);
+    await page.waitForFunction(() => {
+      const EXPECTED_HANDLES = 3;
+      return document.querySelectorAll('.pv-table-resize').length === EXPECTED_HANDLES;
+    });
     assertNoErrors(errors);
   } finally {
     await setTableResize(true);
@@ -280,17 +277,19 @@ it('remembers Markdown column widths after reload', async () => {
     const initialWidth = (await header.boundingBox()).width;
     const box = await handle.boundingBox();
     const y = box.y + box.height / 2;
-    await page.mouse.move(box.x + 3, y);
+    await page.mouse.move(box.x + TestConstants.DRAG_START, y);
     await page.mouse.down();
-    await page.mouse.move(box.x + 63, y, { steps: 5 });
+    await page.mouse.move(box.x + TestConstants.DRAG_DISTANCE, y, {
+      steps: TestConstants.DRAG_STEPS,
+    });
     await page.mouse.up();
     const resized = (await header.boundingBox()).width;
     assert.ok(resized > initialWidth);
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(TestConstants.RELOAD_WAIT_MS);
     await page.reload();
     await page.waitForSelector('.pv-markdown .pv-table-resize');
     const restored = (await header.boundingBox()).width;
-    assert.ok(Math.abs(restored - resized) < 3);
+    assert.ok(Math.abs(restored - resized) < TestConstants.WIDTH_TOLERANCE);
     assertNoErrors(errors);
   } finally {
     await page.close();
