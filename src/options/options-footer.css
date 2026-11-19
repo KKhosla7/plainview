@@ -1,0 +1,28 @@
+.foot {
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--wd-d-35);
+}
+
+.shortcut-list {
+  display: grid;
+  gap: var(--wd-d-42);
+}
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wd-d-56);
+}
+
+input[type="number"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: var(--wd-d-89);
+}
+
+.shortcut-row select {
+  min-width: var(--wd-d-54);
+}
+.card > .coffee {
+  justify-self: center;
+}

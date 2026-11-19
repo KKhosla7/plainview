@@ -2,9 +2,9 @@
 
 html[data-pv] .pv-json,
 html[data-pv] .pv-xml {
-  padding-left: 28px;
+  padding-left: var(--wd-d-84);
   font-size: var(--pv-tree-font-size, 12px);
-  line-height: 24px;
+  line-height: var(--wd-d-81);
 }
 
 html[data-pv] .pv-json-node {
@@ -27,9 +27,9 @@ html[data-pv] .pv-json-summary::before,
 html[data-pv] .pv-xml-summary::before {
   content: "▸";
   display: inline-block;
-  width: 16px;
+  width: var(--wd-d-56);
   color: var(--pv-fg-faint);
-  font-size: 12px;
+  font-size: var(--wd-d-48);
 }
 
 html[data-pv] details[open] > .pv-json-summary::before,
@@ -39,13 +39,13 @@ html[data-pv] details[open] > .pv-xml-summary::before {
 
 html[data-pv] .pv-json-children {
   margin-left: 0;
-  padding-left: 18px;
+  padding-left: var(--wd-d-58);
 }
 
 html[data-pv] .pv-json-leaf {
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: var(--wd-d-108);
 }
 
 .pv-json-leaf > .pv-json-key,
@@ -58,7 +58,7 @@ html[data-pv] .pv-json-leaf {
 .pv-json-value {
   flex: 1 1 auto;
   min-width: 0;
-  padding-left: 1ch;
+  padding-left: var(--wd-d-73);
   text-indent: -1ch;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -100,7 +100,7 @@ html[data-pv] .pv-json-count {
 
 html[data-pv] .pv-json-count,
 html[data-pv] .pv-xml-count {
-  font-size: 0.9em;
+  font-size: var(--wd-d-37);
 }
 
 /* ----------------------------------------------------------------- XML tree */
@@ -111,11 +111,11 @@ html[data-pv] .pv-xml-node {
 
 html[data-pv] .pv-xml-children {
   margin-left: 0;
-  padding-left: 18px;
+  padding-left: var(--wd-d-58);
 }
 
 html[data-pv] .pv-xml-leaf {
-  padding-left: 4px;
+  padding-left: var(--wd-d-108);
   white-space: pre-wrap;
 }
 
@@ -125,33 +125,33 @@ html[data-pv] .pv-xml-close {
 }
 
 html[data-pv] .pv-xml-tag {
-  margin: 0 0.15em;
+  margin: 0 var(--wd-d-6);
   color: var(--pv-syn-tag);
 }
 
 html[data-pv] .pv-xml-attr-name {
-  margin: 0 0.1em;
+  margin: 0 var(--wd-d-7);
   color: var(--pv-syn-attr);
 }
 
 html[data-pv] .pv-xml-attr-value {
-  margin: 0 0.1em;
+  margin: 0 var(--wd-d-7);
   color: var(--pv-syn-string);
 }
 
 html[data-pv] .pv-xml-punct {
-  margin: 0 0.12em;
+  margin: 0 var(--wd-d-5);
   color: var(--pv-fg-muted);
 }
 
 html[data-pv] .pv-xml-text {
-  margin: 0 0.2em;
+  margin: 0 var(--wd-d-9);
   color: var(--pv-fg);
 }
 
 html[data-pv] .pv-xml-cdata,
 html[data-pv] .pv-xml-cdata-block {
-  margin: 0 0.2em;
+  margin: 0 var(--wd-d-9);
   color: var(--pv-syn-string);
   white-space: pre-wrap;
 }
@@ -168,11 +168,11 @@ html[data-pv] .pv-xml-pi {
 }
 
 html[data-pv] .pv-xml-text-block {
-  padding-left: 1.25em;
+  padding-left: var(--wd-d-62);
   white-space: pre-wrap;
 }
 
 html[data-pv] .pv-xml-count {
-  margin-left: 6px;
+  margin-left: var(--wd-d-118);
   color: var(--pv-fg-faint);
 }

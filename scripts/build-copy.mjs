@@ -6,6 +6,7 @@ function ensureDirectories(target) {
     'src/core',
     'src/fonts',
     'src/options',
+    'src/styles',
     'assets',
     'vendor/mermaid/chunks/mermaid.esm.min',
     'vendor/yaml',
@@ -42,6 +43,10 @@ function copyRuntimeFiles({ project }, target) {
       recursive: true,
     });
   }
+  fs.copyFileSync(
+    path.join(project, 'src', 'styles', 'design-tokens.css'),
+    path.join(target, 'src', 'styles', 'design-tokens.css'),
+  );
   fs.cpSync(path.join(project, 'assets'), path.join(target, 'assets'), { recursive: true });
 }
 

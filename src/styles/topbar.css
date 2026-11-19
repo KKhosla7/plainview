@@ -6,18 +6,18 @@ html[data-pv] .pv-topbar {
   z-index: 30;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: var(--wd-d-76);
   height: var(--pv-topbar);
-  padding: 0 20px;
+  padding: 0 var(--wd-d-76);
   border-bottom: 1px solid var(--pv-border);
   background: color-mix(in srgb, var(--pv-bg) 88%, transparent);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(var(--wd-d-48));
 }
 
 html[data-pv] .pv-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--wd-d-42);
   min-width: 0;
   flex: 1 1 auto;
 }
@@ -26,14 +26,14 @@ html[data-pv] .pv-logo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: var(--wd-d-90);
+  height: var(--wd-d-90);
   flex: 0 0 auto;
-  border-radius: 8px;
+  border-radius: var(--wd-d-128);
   background: var(--pv-accent);
-  color: #fff;
+  color: var(--wd-c-fff);
   font-family: var(--pv-mono);
-  font-size: 13px;
+  font-size: var(--wd-d-50);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
@@ -42,7 +42,7 @@ html[data-pv] .pv-logo {
 html[data-pv] .pv-file {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--wd-d-128);
   min-width: 0;
 }
 
@@ -50,40 +50,40 @@ html[data-pv] .pv-filename {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--wd-d-51);
   font-weight: 600;
 }
 
 html[data-pv] .pv-badge {
   flex: 0 0 auto;
-  padding: 1px 6px;
+  padding: var(--wd-d-75) var(--wd-d-118);
   border: 1px solid var(--pv-border);
-  border-radius: 999px;
+  border-radius: var(--wd-d-132);
   color: var(--pv-fg-muted);
   font-family: var(--pv-mono);
-  font-size: 10px;
+  font-size: var(--wd-d-42);
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--wd-d-2);
 }
 
 html[data-pv] .pv-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--wd-d-42);
   flex: 0 0 auto;
 }
 
 html[data-pv] .pv-action {
   appearance: none;
-  padding: 5px 10px;
-  border: 1px solid transparent;
-  border-radius: 6px;
+  padding: var(--wd-d-113) var(--wd-d-42);
+  border: var(--wd-d-75) solid transparent;
+  border-radius: var(--wd-d-118);
   background: transparent;
   color: var(--pv-fg-muted);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--wd-d-48);
   font-weight: 500;
-  line-height: 20px;
+  line-height: var(--wd-d-76);
   cursor: pointer;
   white-space: nowrap;
 }
@@ -99,29 +99,29 @@ html[data-pv] .pv-copy:focus-visible,
 html[data-pv] .pv-toc-link:focus-visible,
 html[data-pv] .pv-anchor:focus-visible {
   outline: 2px solid var(--pv-accent);
-  outline-offset: 2px;
+  outline-offset: var(--wd-d-89);
 }
 
 html[data-pv] .pv-themes {
   display: flex;
   align-items: center;
-  padding: 2px;
+  padding: var(--wd-d-89);
   border: 1px solid var(--pv-border);
-  border-radius: 7px;
+  border-radius: var(--wd-d-123);
   background: var(--pv-bg-soft);
 }
 
 html[data-pv] .pv-theme-tab {
   appearance: none;
-  padding: 3px 8px;
-  border: 1px solid transparent;
-  border-radius: 5px;
+  padding: var(--wd-d-99) var(--wd-d-128);
+  border: var(--wd-d-75) solid transparent;
+  border-radius: var(--wd-d-113);
   background: transparent;
   color: var(--pv-fg-muted);
   font: inherit;
-  font-size: 11px;
+  font-size: var(--wd-d-45);
   font-weight: 600;
-  line-height: 18px;
+  line-height: var(--wd-d-58);
   cursor: pointer;
 }
 
@@ -137,7 +137,7 @@ html[data-pv] .pv-theme-tab[aria-selected="true"] {
 
 html[data-pv] .pv-theme-tab:focus-visible {
   outline: 2px solid var(--pv-accent);
-  outline-offset: 1px;
+  outline-offset: var(--wd-d-75);
 }
 
 html[data-pv] .pv-action-toc {
@@ -148,32 +148,32 @@ html[data-pv] .pv-view-label,
 html[data-pv] .pv-theme-label {
   color: var(--pv-fg-faint);
   font-family: var(--pv-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
+  font-size: var(--wd-d-16);
+  letter-spacing: var(--wd-d-7);
   text-transform: uppercase;
 }
 
 html[data-pv] .pv-views {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--wd-d-89);
   padding: 0;
   border: 1px solid var(--pv-border);
-  border-radius: 9px;
+  border-radius: var(--wd-d-133);
   background: var(--pv-bg-soft);
 }
 
 html[data-pv] .pv-view-tab {
   appearance: none;
-  padding: 3px 16px;
-  border: 1px solid transparent;
-  border-radius: 7px;
+  padding: var(--wd-d-99) var(--wd-d-56);
+  border: var(--wd-d-75) solid transparent;
+  border-radius: var(--wd-d-123);
   background: transparent;
   color: var(--pv-fg-muted);
   font: inherit;
-  font-size: 11px;
+  font-size: var(--wd-d-45);
   font-weight: 600;
-  line-height: 18px;
+  line-height: var(--wd-d-58);
   cursor: pointer;
 }
 
@@ -190,15 +190,15 @@ html[data-pv] .pv-view-tab[aria-selected="true"] {
 
 html[data-pv] .pv-view-tab:focus-visible {
   outline: 2px solid var(--pv-accent);
-  outline-offset: 1px;
+  outline-offset: var(--wd-d-75);
 }
 
 html[data-pv] .pv-icon-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: var(--wd-d-94);
+  height: var(--wd-d-94);
   padding: 0;
   border-color: transparent;
 }
@@ -221,9 +221,9 @@ html[data-pv] .pv-icon-tab {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  min-width: 52px;
-  padding: 5px 0;
+  width: var(--wd-d-109);
+  min-width: var(--wd-d-109);
+  padding: var(--wd-d-113) 0;
 }
 
 html[data-pv] .pv-icon {

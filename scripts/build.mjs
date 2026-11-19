@@ -17,6 +17,7 @@ const sourceManifest = JSON.parse(
 );
 
 const STYLE_FILES = [
+  'src/styles/design-tokens.css',
   'src/styles/tokens.css',
   'src/styles/topbar.css',
   'src/styles/export-menu.css',

@@ -1,9 +1,9 @@
 /* -------------------------------------------------------------- mermaid */
 
 html[data-pv] .pv-mermaid {
-  margin: 1.2em 0;
+  margin: var(--wd-d-63) 0;
   border: 1px solid var(--pv-border);
-  border-radius: 8px;
+  border-radius: var(--wd-d-128);
   overflow: hidden;
   background: var(--pv-bg-soft);
 }
@@ -12,8 +12,8 @@ html[data-pv] .pv-mermaid-diagram {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
-  padding: 18px;
+  min-height: var(--wd-d-124);
+  padding: var(--wd-d-58);
   overflow: auto;
 }
 
@@ -25,18 +25,18 @@ html[data-pv] .pv-mermaid-diagram svg {
 html[data-pv] .pv-mermaid-loading {
   color: var(--pv-fg-muted);
   font-family: var(--pv-sans);
-  font-size: 13px;
+  font-size: var(--wd-d-50);
 }
 
 html[data-pv] .pv-mermaid-failed .pv-mermaid-diagram {
   display: block;
-  padding: 12px;
+  padding: var(--wd-d-48);
 }
 
 html[data-pv] .pv-mermaid-error {
   color: var(--pv-danger);
   font-family: var(--pv-sans);
-  font-size: 13px;
+  font-size: var(--wd-d-50);
   white-space: pre-wrap;
 }
 
@@ -50,23 +50,23 @@ html[data-pv] .pv-mermaid-source[hidden] {
 
 html[data-pv] .pv-mermaid-source pre {
   margin: 0;
-  padding: 14px 16px;
+  padding: var(--wd-d-51) var(--wd-d-56);
   overflow: auto;
   background: var(--pv-code-bg);
   color: var(--pv-code-fg);
   font-family: var(--pv-mono);
-  font-size: 12px;
+  font-size: var(--wd-d-48);
   line-height: 1.55;
 }
 
 html[data-pv] .pv-mermaid-tools {
   display: flex;
-  gap: 4px;
+  gap: var(--wd-d-108);
 }
 
 @media (max-width: 640px) {
   html[data-pv] .pv-zoom {
-    right: 14px;
-    bottom: 14px;
+    right: var(--wd-d-51);
+    bottom: var(--wd-d-51);
   }
 }

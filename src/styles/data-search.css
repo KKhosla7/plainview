@@ -1,6 +1,6 @@
 html[data-pv] .pv-json-count {
   color: var(--pv-fg-muted);
-  font-size: 11px;
+  font-size: var(--wd-d-45);
   white-space: nowrap;
 }
 
@@ -12,7 +12,7 @@ html[data-pv] .pv-json-status {
   flex: 1 0 100%;
   min-height: 0;
   color: var(--pv-fg-muted);
-  font-size: 11px;
+  font-size: var(--wd-d-45);
 }
 
 html[data-pv] .pv-json-status:empty {
@@ -20,8 +20,8 @@ html[data-pv] .pv-json-status:empty {
 }
 
 html[data-pv] .pv-json-status:not(:empty) {
-  padding: 5px 8px;
-  border-radius: 4px;
+  padding: var(--wd-d-113) var(--wd-d-128);
+  border-radius: var(--wd-d-108);
   background: var(--pv-bg);
 }
 
@@ -37,32 +37,32 @@ html[data-pv] .pv-json-status.is-error {
 
 html[data-pv] .pv-json-search-results {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + var(--wd-d-108));
   right: 0;
   left: 0;
   z-index: 30;
-  max-height: 240px;
-  padding: 4px;
+  max-height: var(--wd-d-80);
+  padding: var(--wd-d-108);
   overflow: auto;
   border: 1px solid var(--pv-border);
-  border-radius: 8px;
+  border-radius: var(--wd-d-128);
   background: var(--pv-bg-soft);
-  box-shadow: 0 10px 28px rgb(0 0 0 / 18%);
+  box-shadow: 0 var(--wd-d-42) var(--wd-d-84) var(--wd-c-rgb_0_0_0_18);
 }
 
 html[data-pv] .pv-json-search-result {
   appearance: none;
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: var(--wd-d-42);
   width: 100%;
-  padding: 6px 8px;
+  padding: var(--wd-d-118) var(--wd-d-128);
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--wd-d-108);
   background: transparent;
   color: var(--pv-fg);
   font: inherit;
-  font-size: 11px;
+  font-size: var(--wd-d-45);
   text-align: left;
   cursor: pointer;
 }
@@ -94,9 +94,9 @@ html[data-pv] .pv-json-search-value {
 }
 
 html[data-pv] .pv-json-search-more {
-  padding: 6px 8px;
+  padding: var(--wd-d-118) var(--wd-d-128);
   color: var(--pv-fg-faint);
-  font-size: 11px;
+  font-size: var(--wd-d-45);
 }
 
 html[data-pv] .pv-json-input[aria-invalid="true"] {
@@ -105,14 +105,14 @@ html[data-pv] .pv-json-input[aria-invalid="true"] {
 
 html[data-pv] .pv-json-path {
   appearance: none;
-  margin-left: 0.5em;
-  padding: 0 4px;
-  border: 1px solid transparent;
-  border-radius: 3px;
+  margin-left: var(--wd-d-14);
+  padding: 0 var(--wd-d-108);
+  border: var(--wd-d-75) solid transparent;
+  border-radius: var(--wd-d-99);
   background: transparent;
   color: var(--pv-fg-faint);
   font-family: var(--pv-mono);
-  font-size: 0.78em;
+  font-size: var(--wd-d-23);
   line-height: 1.5;
   cursor: pointer;
   opacity: 0;
@@ -135,7 +135,7 @@ html[data-pv] .pv-json-path:hover {
 
 html[data-pv] .pv-json-path:focus-visible {
   outline: 2px solid var(--pv-accent);
-  outline-offset: 1px;
+  outline-offset: var(--wd-d-75);
 }
 
 html[data-pv] .pv-json-leaf.pv-json-hit,
@@ -153,7 +153,7 @@ html[data-pv] .pv-json-leaf.pv-json-query-active,
 html[data-pv] .pv-json-summary.pv-json-hit-active,
 html[data-pv] .pv-json-summary.pv-json-query-active {
   outline: 2px solid var(--pv-accent);
-  outline-offset: 1px;
+  outline-offset: var(--wd-d-75);
 }
 
 html[data-pv] .pv-xml-hit {
@@ -167,14 +167,14 @@ html[data-pv] .pv-xml-query-hit {
 html[data-pv] .pv-xml-hit-active,
 html[data-pv] .pv-xml-query-active {
   outline: 2px solid var(--pv-accent);
-  outline-offset: 1px;
+  outline-offset: var(--wd-d-75);
 }
 
 @media (max-width: 720px) {
   html[data-pv] .pv-json-tools {
     display: grid;
     grid-template-columns: 1fr;
-    padding: 12px;
+    padding: var(--wd-d-48);
   }
 
   html[data-pv] .pv-json-search,

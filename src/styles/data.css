@@ -7,10 +7,10 @@ html[data-pv] .pv-data-doc {
 }
 
 html[data-pv] .pv-doc-title {
-  margin-bottom: 0.6em;
+  margin-bottom: var(--wd-d-19);
   color: var(--pv-danger);
   font-family: var(--pv-sans);
-  font-size: 1.5em;
+  font-size: var(--wd-d-68);
   font-weight: 650;
 }
 
@@ -18,33 +18,33 @@ html[data-pv] .pv-doc-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--wd-d-48);
   flex-wrap: wrap;
-  margin-bottom: 14px;
-  padding: 7px 10px 7px 12px;
+  margin-bottom: var(--wd-d-51);
+  padding: var(--wd-d-123) var(--wd-d-42) var(--wd-d-123) var(--wd-d-48);
   border: 1px solid var(--pv-border);
-  border-radius: 8px;
+  border-radius: var(--wd-d-128);
   background: var(--pv-bg-soft);
   font-family: var(--pv-sans);
-  font-size: 12px;
+  font-size: var(--wd-d-48);
   color: var(--pv-fg-muted);
 }
 
 html[data-pv] .pv-meta-actions {
   display: flex;
-  gap: 4px;
+  gap: var(--wd-d-108);
   flex-wrap: wrap;
 }
 
 html[data-pv] .pv-meta-button {
   appearance: none;
-  padding: 3px 8px;
+  padding: var(--wd-d-99) var(--wd-d-128);
   border: 1px solid var(--pv-border);
-  border-radius: 5px;
+  border-radius: var(--wd-d-113);
   background: var(--pv-bg);
   color: var(--pv-fg-muted);
   font: inherit;
-  font-size: 11px;
+  font-size: var(--wd-d-45);
   cursor: pointer;
 }
 
@@ -55,17 +55,17 @@ html[data-pv] .pv-meta-button:hover {
 
 html[data-pv] .pv-meta-button:focus-visible {
   outline: 2px solid var(--pv-accent);
-  outline-offset: 1px;
+  outline-offset: var(--wd-d-75);
 }
 
 html[data-pv] .pv-error {
-  margin: 1em 0;
-  padding: 14px 16px;
+  margin: var(--wd-d-74) 0;
+  padding: var(--wd-d-51) var(--wd-d-56);
   border: 1px solid color-mix(in srgb, var(--pv-danger) 35%, var(--pv-border));
-  border-radius: 8px;
+  border-radius: var(--wd-d-128);
   background: color-mix(in srgb, var(--pv-danger) 7%, var(--pv-bg));
   font-family: var(--pv-sans);
-  font-size: 14px;
+  font-size: var(--wd-d-51);
 }
 
 html[data-pv] .pv-error strong {
@@ -73,30 +73,30 @@ html[data-pv] .pv-error strong {
 }
 
 html[data-pv] .pv-error-message {
-  margin-top: 6px;
-  max-height: 220px;
+  margin-top: var(--wd-d-118);
+  max-height: var(--wd-d-78);
   overflow: auto;
   font-family: var(--pv-mono);
-  font-size: 12px;
+  font-size: var(--wd-d-48);
   white-space: pre-wrap;
 }
 
 html[data-pv] .pv-error-location {
-  margin-top: 6px;
+  margin-top: var(--wd-d-118);
   color: var(--pv-fg-muted);
-  font-size: 12px;
+  font-size: var(--wd-d-48);
 }
 
 html[data-pv] .pv-tree-more {
-  margin-left: 8px;
+  margin-left: var(--wd-d-128);
 }
 
 html[data-pv] .pv-tree-note {
-  margin: 8px 0;
-  padding: 8px 10px;
+  margin: var(--wd-d-128) 0;
+  padding: var(--wd-d-128) var(--wd-d-42);
   border: 1px dashed var(--pv-border);
-  border-radius: 6px;
+  border-radius: var(--wd-d-118);
   color: var(--pv-fg-muted);
   font-family: var(--pv-sans);
-  font-size: 12px;
+  font-size: var(--wd-d-48);
 }

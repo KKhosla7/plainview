@@ -1,8 +1,8 @@
 .onboarding ol {
-  margin: 8px 0;
-  padding-left: 1.4em;
+  margin: var(--wd-d-128) 0;
+  padding-left: var(--wd-d-67);
   display: grid;
-  gap: 9px;
+  gap: var(--wd-d-133);
 }
 .onboarding li strong {
   display: block;
@@ -10,7 +10,7 @@
 .onboarding .coffee {
   display: flex;
   width: max-content;
-  margin: 4px auto 0;
+  margin: var(--wd-d-108) auto 0;
   border: 0;
   cursor: pointer;
   font: inherit;

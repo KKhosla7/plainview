@@ -34,7 +34,7 @@ html[data-pv] .pv-markdown .pv-table-wrap table.pv-table-resizable {
 html[data-pv] .pv-table-resize {
   position: absolute;
   inset: 0 0 0 auto;
-  width: 7px;
+  width: var(--wd-d-123);
   cursor: col-resize;
   touch-action: none;
   user-select: none;

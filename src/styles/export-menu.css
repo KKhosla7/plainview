@@ -4,16 +4,16 @@ html[data-pv] .pv-actions {
 
 html[data-pv] .pv-export-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + var(--wd-d-128));
   right: 0;
   z-index: 40;
   display: grid;
-  min-width: min(340px, calc(100vw - 40px));
-  padding: 6px;
+  min-width: min(var(--wd-d-93), calc(var(--wd-d-40) - var(--wd-d-101)));
+  padding: var(--wd-d-118);
   border: 1px solid var(--pv-border);
-  border-radius: 8px;
+  border-radius: var(--wd-d-128);
   background: var(--pv-bg);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 18%);
+  box-shadow: 0 var(--wd-d-48) var(--wd-d-90) var(--wd-c-rgb_0_0_0_18);
 }
 
 html[data-pv] .pv-export-menu[hidden] {
@@ -21,25 +21,25 @@ html[data-pv] .pv-export-menu[hidden] {
 }
 
 html[data-pv] .pv-export-menu-title {
-  padding: 6px 10px;
+  padding: var(--wd-d-118) var(--wd-d-42);
   color: var(--pv-fg-faint);
   font-family: var(--pv-mono);
-  font-size: 10px;
+  font-size: var(--wd-d-42);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--wd-d-4);
   text-transform: uppercase;
 }
 
 html[data-pv] .pv-export-menu button {
   appearance: none;
   white-space: nowrap;
-  padding: 8px 10px;
+  padding: var(--wd-d-128) var(--wd-d-42);
   border: 0;
-  border-radius: 5px;
+  border-radius: var(--wd-d-113);
   background: transparent;
   color: var(--pv-fg);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--wd-d-48);
   text-align: left;
   cursor: pointer;
 }
@@ -55,7 +55,7 @@ html[data-pv] .pv-export-progress {
   right: 0;
   bottom: -1px;
   left: 0;
-  height: 2px;
+  height: var(--wd-d-89);
   overflow: hidden;
   background: var(--pv-accent-soft);
 }
@@ -86,64 +86,64 @@ html[data-pv] .pv-export-progress::after {
 html[data-pv] .pv-export-error {
   position: fixed;
   top: calc(var(--pv-topbar) + 16px);
-  right: 20px;
+  right: var(--wd-d-76);
   z-index: 60;
-  max-width: min(440px, calc(100vw - 40px));
-  padding: 10px 14px;
+  max-width: min(var(--wd-d-104), calc(var(--wd-d-40) - var(--wd-d-101)));
+  padding: var(--wd-d-42) var(--wd-d-51);
   border: 1px solid color-mix(in srgb, var(--pv-danger) 45%, var(--pv-border));
-  border-radius: 7px;
+  border-radius: var(--wd-d-123);
   background: var(--pv-bg);
   color: var(--pv-danger);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
-  font-size: 12px;
+  box-shadow: 0 var(--wd-d-128) var(--wd-d-81) var(--wd-c-rgb_0_0_0_18);
+  font-size: var(--wd-d-48);
 }
 
 html[data-pv] .pv-export-grid {
   display: grid;
-  grid-template-columns: minmax(110px, 1fr) auto auto;
+  grid-template-columns: minmax(var(--wd-d-43), 1fr) auto auto;
   align-items: center;
-  gap: 4px 8px;
+  gap: var(--wd-d-108) var(--wd-d-128);
 }
 
 html[data-pv] .pv-export-grid-blank {
-  min-height: 1px;
+  min-height: var(--wd-d-75);
 }
 
 html[data-pv] .pv-export-grid-head {
-  padding: 2px 0;
+  padding: var(--wd-d-89) 0;
   color: var(--pv-fg-faint);
   font-family: var(--pv-mono);
-  font-size: 9px;
+  font-size: var(--wd-d-133);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--wd-d-4);
   text-align: center;
   text-transform: uppercase;
 }
 
 html[data-pv] .pv-export-grid-label {
-  padding: 4px 10px;
+  padding: var(--wd-d-108) var(--wd-d-42);
   color: var(--pv-fg-muted);
-  font-size: 11px;
+  font-size: var(--wd-d-45);
 }
 
 html[data-pv] .pv-export-menu .pv-export-cell {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  min-width: 58px;
-  padding: 6px 8px;
+  gap: var(--wd-d-108);
+  min-width: var(--wd-d-112);
+  padding: var(--wd-d-118) var(--wd-d-128);
   border: 0;
   text-align: center;
 }
 
 html[data-pv] .pv-format-glyph {
-  width: 18px;
+  width: var(--wd-d-58);
   color: var(--pv-fg-muted);
   font-family: var(--pv-mono);
-  font-size: 12px;
+  font-size: var(--wd-d-48);
   font-weight: 700;
-  line-height: 18px;
+  line-height: var(--wd-d-58);
   text-align: center;
 }
 

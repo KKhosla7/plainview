@@ -1,7 +1,7 @@
 html[data-pv] .pv-virtual-tree {
   position: relative;
-  margin: 1em 0;
-  min-height: 12em;
+  margin: var(--wd-d-74) 0;
+  min-height: var(--wd-d-47);
   font-family: var(--pv-mono);
   font-size: var(--pv-tree-font-size, 12px);
 }
@@ -12,10 +12,10 @@ html[data-pv] .pv-vrow {
   left: 0;
   display: flex;
   align-items: center;
-  gap: 4px;
-  height: 24px;
+  gap: var(--wd-d-108);
+  height: var(--wd-d-81);
   overflow: hidden;
-  line-height: 24px;
+  line-height: var(--wd-d-81);
   white-space: nowrap;
 }
 
@@ -30,8 +30,8 @@ html[data-pv] .pv-vrow-active {
 }
 
 html[data-pv] .pv-vrow-toggle {
-  flex: 0 0 16px;
-  width: 16px;
+  flex: 0 0 var(--wd-d-56);
+  width: var(--wd-d-56);
   padding: 0;
   border: 0;
   background: transparent;
@@ -45,8 +45,8 @@ html[data-pv] .pv-vrow-toggle:hover {
 }
 
 html[data-pv] .pv-vrow-spacer {
-  flex: 0 0 16px;
-  width: 16px;
+  flex: 0 0 var(--wd-d-56);
+  width: var(--wd-d-56);
 }
 
 html[data-pv] .pv-vrow > .pv-json-key,
@@ -81,7 +81,7 @@ html[data-pv] .pv-vrow:focus-within .pv-json-path {
 html[data-pv] .pv-json-virtual .pv-vrow {
   align-items: flex-start;
   height: auto;
-  min-height: 24px;
+  min-height: var(--wd-d-81);
   overflow: visible;
   white-space: normal;
 }
@@ -101,7 +101,7 @@ html[data-pv] .pv-guide {
   top: 0;
   bottom: 0;
   width: 0;
-  border-left: 1px dotted currentColor;
+  border-left: var(--wd-d-75) dotted currentColor;
   opacity: 0.55;
   pointer-events: none;
 }
@@ -110,6 +110,6 @@ html[data-pv][data-pv-indent-guides="off"] .pv-guide {
 }
 
 html[data-pv] .pv-json-virtual .pv-vrow > .pv-json-string {
-  padding-left: 1ch;
+  padding-left: var(--wd-d-73);
   text-indent: -1ch;
 }

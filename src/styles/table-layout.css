@@ -25,11 +25,11 @@ html[data-pv][data-pv-format="markdown"][data-pv-table-layout="wrap"] .pv-table-
 }
 
 html[data-pv][data-pv-format="jsonl"] .pv-shell {
-  width: min(1612px, 100%);
+  width: min(var(--wd-d-55), 100%);
 }
 
 html[data-pv][data-pv-format="csv"] .pv-shell {
-  width: min(1560px, 100%);
+  width: min(var(--wd-d-52), 100%);
 }
 
 html[data-pv][data-pv-format="csv"] .pv-csv-doc {

@@ -89,12 +89,12 @@ html[data-pv] .hljs-deletion {
 /* --------------------------------------------------------------- KaTeX */
 
 html[data-pv] .pv-markdown .katex {
-  font-size: 1.08em;
+  font-size: var(--wd-d-60);
 }
 
 html[data-pv] .pv-markdown .katex-display {
-  margin: 1.2em 0;
-  padding: 0.25em 0;
+  margin: var(--wd-d-63) 0;
+  padding: var(--wd-d-8) 0;
   overflow-x: auto;
   overflow-y: hidden;
 }

@@ -27,15 +27,15 @@ html[data-pv][data-pv-format="markdown"] .pv-markdown :is(h1, h2, h3, h4, h5, h6
 /* ----------------------------------------------------------- title block */
 
 html[data-pv][data-pv-format="markdown"] .pv-titleblock {
-  margin: 0 0 1.4em;
+  margin: 0 0 var(--wd-d-67);
   border: 2px solid var(--pv-fg);
   background: var(--pv-bg-soft);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-tb-main {
   display: grid;
-  gap: 0.875em;
-  padding: 1.75em;
+  gap: var(--wd-d-31);
+  padding: var(--wd-d-70);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-tb-title {
@@ -45,9 +45,9 @@ html[data-pv][data-pv-format="markdown"] .pv-tb-title {
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-tb-lede {
-  max-width: 62ch;
+  max-width: var(--wd-d-115);
   margin: 0;
-  font-size: 1.12em;
+  font-size: var(--wd-d-61);
   line-height: 1.6;
 }
 
@@ -57,7 +57,7 @@ html[data-pv][data-pv-format="markdown"] .pv-markdown h1,
 html[data-pv][data-pv-format="markdown"] .pv-markdown h2,
 html[data-pv][data-pv-format="markdown"] .pv-markdown h3 {
   max-width: none;
-  margin: 1.4em 0 0.55em;
+  margin: var(--wd-d-67) 0 var(--wd-d-13);
   color: var(--pv-fg);
   font-family: var(--pv-display);
   line-height: 1.1;
@@ -66,29 +66,29 @@ html[data-pv][data-pv-format="markdown"] .pv-markdown h3 {
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown h1 {
   margin-top: 0;
-  padding-bottom: 0.25em;
+  padding-bottom: var(--wd-d-8);
   border-bottom: 2px solid var(--pv-fg);
   font-size: clamp(2.4em, calc(6vw * var(--pv-zoom, 1)), 3.8em);
   font-weight: 700;
-  letter-spacing: 0.01em;
+  letter-spacing: var(--wd-d-1);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown h2 {
-  padding-bottom: 0.2em;
+  padding-bottom: var(--wd-d-9);
   border-bottom: 1px solid var(--pv-border);
-  font-size: 1.9em;
+  font-size: var(--wd-d-72);
   font-weight: 600;
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown h3 {
-  font-size: 1.35em;
+  font-size: var(--wd-d-64);
   font-weight: 600;
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown h4,
 html[data-pv][data-pv-format="markdown"] .pv-markdown h5,
 html[data-pv][data-pv-format="markdown"] .pv-markdown h6 {
-  margin: 1.2em 0 0.5em;
+  margin: var(--wd-d-63) 0 var(--wd-d-14);
   color: var(--pv-fg);
   font-family: var(--pv-sans);
   font-weight: 600;
@@ -96,41 +96,41 @@ html[data-pv][data-pv-format="markdown"] .pv-markdown h6 {
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown h4 {
-  font-size: 1.05em;
+  font-size: var(--wd-d-59);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown h5,
 html[data-pv][data-pv-format="markdown"] .pv-markdown h6 {
   color: var(--pv-fg-muted);
-  font-size: 0.95em;
+  font-size: var(--wd-d-36);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown p,
 html[data-pv][data-pv-format="markdown"] .pv-markdown li {
-  max-width: 72ch;
-  margin: 0 0 1em;
+  max-width: var(--wd-d-119);
+  margin: 0 0 var(--wd-d-74);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown ul,
 html[data-pv][data-pv-format="markdown"] .pv-markdown ol {
   display: grid;
-  gap: 0.375em;
-  margin: 0 0 1em;
-  padding-left: 1.3em;
+  gap: var(--wd-d-11);
+  margin: 0 0 var(--wd-d-74);
+  padding-left: var(--wd-d-65);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown li > ul,
 html[data-pv][data-pv-format="markdown"] .pv-markdown li > ol {
-  margin-top: 0.375em;
+  margin-top: var(--wd-d-11);
   margin-bottom: 0;
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown li > p {
-  margin-bottom: 0.5em;
+  margin-bottom: var(--wd-d-14);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown li > input[type="checkbox"] {
-  margin: 0 0.45em 0 -1.35em;
+  margin: 0 var(--wd-d-208) 0 var(--wd-d-209);
   vertical-align: middle;
 }
 
@@ -141,7 +141,7 @@ html[data-pv][data-pv-format="markdown"] .pv-markdown a {
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown a:hover {
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: var(--wd-d-89);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown strong {
@@ -149,8 +149,8 @@ html[data-pv][data-pv-format="markdown"] .pv-markdown strong {
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown hr {
-  height: 1px;
-  margin: 2em 0;
+  height: var(--wd-d-75);
+  margin: var(--wd-d-88) 0;
   border: 0;
   background: var(--pv-border);
 }
@@ -161,10 +161,10 @@ html[data-pv][data-pv-format="markdown"] .pv-markdown img {
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-anchor {
-  margin-left: 0.35em;
+  margin-left: var(--wd-d-10);
   color: var(--pv-fg-faint);
   font-family: var(--pv-mono);
-  font-size: 0.7em;
+  font-size: var(--wd-d-25);
   font-weight: 400;
   text-decoration: none;
   opacity: 0;
@@ -179,13 +179,13 @@ html[data-pv][data-pv-format="markdown"] .pv-anchor:focus-visible {
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown blockquote {
   display: grid;
-  gap: 0.375em;
-  margin: 1.2em 0;
-  padding: 0.625em 0.875em;
+  gap: var(--wd-d-11);
+  margin: var(--wd-d-63) 0;
+  padding: var(--wd-d-15) var(--wd-d-31);
   border-left: 3px solid var(--pv-accent);
   background: var(--pv-accent-soft);
   color: var(--pv-fg);
-  max-width: 72ch;
+  max-width: var(--wd-d-119);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown blockquote > :last-child {
@@ -195,22 +195,22 @@ html[data-pv][data-pv-format="markdown"] .pv-markdown blockquote > :last-child {
 /* ---------------------------------------------------------------- tables */
 
 html[data-pv][data-pv-format="markdown"] .pv-table-wrap {
-  margin: 1.2em 0;
+  margin: var(--wd-d-63) 0;
   border: 1px solid var(--pv-border);
   overflow-x: auto;
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-table-wrap table {
   width: 100%;
-  min-width: 40em;
+  min-width: var(--wd-d-100);
   border-collapse: collapse;
-  font-size: 0.9em;
+  font-size: var(--wd-d-37);
   font-variant-numeric: tabular-nums;
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-table-wrap th,
 html[data-pv][data-pv-format="markdown"] .pv-table-wrap td {
-  padding: 0.5em 0.625em;
+  padding: var(--wd-d-14) var(--wd-d-15);
   border: 0;
   border-bottom: 1px solid var(--pv-border);
   text-align: left;
@@ -221,9 +221,9 @@ html[data-pv][data-pv-format="markdown"] .pv-table-wrap th {
   background: var(--pv-accent-soft);
   color: var(--pv-fg-muted);
   font-family: var(--pv-mono);
-  font-size: 0.8em;
+  font-size: var(--wd-d-34);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--wd-d-4);
   text-transform: uppercase;
 }
 
@@ -242,18 +242,18 @@ html[data-pv][data-pv-format="markdown"] .pv-table-wrap tr:nth-child(2n) td {
 /* ------------------------------------------------------------------ code */
 
 html[data-pv][data-pv-format="markdown"] .pv-markdown :not(pre) > code {
-  padding: 0 0.25em;
-  border-radius: 3px;
+  padding: 0 var(--wd-d-8);
+  border-radius: var(--wd-d-99);
   background: var(--pv-accent-soft);
   color: var(--pv-fg);
   font-family: var(--pv-mono);
-  font-size: 0.88em;
+  font-size: var(--wd-d-32);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-code {
-  margin: 1.2em 0;
+  margin: var(--wd-d-63) 0;
   border: 1px solid var(--pv-border);
-  border-radius: 3px;
+  border-radius: var(--wd-d-99);
   background: var(--pv-code-bg);
   overflow: hidden;
 }
@@ -262,27 +262,27 @@ html[data-pv][data-pv-format="markdown"] .pv-code-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75em;
-  padding: 0.3em 0.5em 0.3em 0.75em;
+  gap: var(--wd-d-22);
+  padding: var(--wd-d-12) var(--wd-d-14) var(--wd-d-12) var(--wd-d-22);
   border-bottom: 1px solid var(--pv-border);
   background: var(--pv-bg-inset);
   color: var(--pv-fg-muted);
-  font-size: 0.72em;
+  font-size: var(--wd-d-20);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-code-lang {
   font-family: var(--pv-mono);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--wd-d-3);
   text-transform: uppercase;
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-copy {
-  border-radius: 3px;
+  border-radius: var(--wd-d-99);
   border-color: var(--pv-border);
   background: var(--pv-bg-soft);
   color: var(--pv-fg-muted);
   font-family: var(--pv-mono);
-  font-size: 0.7em;
+  font-size: var(--wd-d-25);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-copy:hover {
@@ -291,12 +291,12 @@ html[data-pv][data-pv-format="markdown"] .pv-copy:hover {
 
 html[data-pv][data-pv-format="markdown"] .pv-code pre {
   margin: 0;
-  padding: 0.875em 1em;
+  padding: var(--wd-d-31) var(--wd-d-74);
   overflow: auto;
   background: var(--pv-code-bg);
   color: var(--pv-code-fg);
   font-family: var(--pv-mono);
-  font-size: 0.82em;
+  font-size: var(--wd-d-27);
   line-height: 1.6;
   tab-size: 4;
 }
@@ -310,27 +310,27 @@ html[data-pv][data-pv-format="markdown"] .pv-code pre code {
 
 html[data-pv][data-pv-format="markdown"] .pv-raw-html {
   margin: 0;
-  padding: 0.625em 0.75em;
+  padding: var(--wd-d-15) var(--wd-d-22);
   border: 1px dashed var(--pv-border);
-  border-radius: 3px;
+  border-radius: var(--wd-d-99);
   background: var(--pv-bg);
   color: var(--pv-fg-muted);
   font-family: var(--pv-mono);
-  font-size: 0.82em;
+  font-size: var(--wd-d-27);
   white-space: pre-wrap;
 }
 
 /* --------------------------------------------------------------- mermaid */
 
 html[data-pv][data-pv-format="markdown"] .pv-mermaid {
-  margin: 1.2em 0;
+  margin: var(--wd-d-63) 0;
   border: 1px solid var(--pv-border);
-  border-radius: 3px;
+  border-radius: var(--wd-d-99);
   background: var(--pv-bg);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-mermaid-diagram {
-  padding: 0.75em;
+  padding: var(--wd-d-22);
 }
 
 html[data-pv][data-pv-format="markdown"] .pv-mermaid-source pre {
@@ -342,11 +342,11 @@ html[data-pv][data-pv-format="markdown"] .pv-mermaid-source pre {
 
 @media (max-width: 860px) {
   html[data-pv][data-pv-format="markdown"] .pv-markdown {
-    padding: 1.25em 1em;
+    padding: var(--wd-d-62) var(--wd-d-74);
   }
 
   html[data-pv][data-pv-format="markdown"] .pv-tb-main {
-    padding: 1.25em;
+    padding: var(--wd-d-62);
   }
 }
 
@@ -357,7 +357,7 @@ html[data-pv][data-pv-format="markdown"] .pv-mermaid-source pre {
     width: auto;
     padding: 0;
     border: 0;
-    background: #fff;
-    font-size: 11pt;
+    background: var(--wd-c-fff);
+    font-size: var(--wd-d-44);
   }
 }
