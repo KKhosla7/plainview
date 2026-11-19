@@ -9,6 +9,9 @@ import urls from '../src/core/urls.json' with { type: 'json' };
 const project = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const fixtures = path.join(project, 'tests', 'fixtures');
 const LocalOrigin = urls.localOrigin;
+const HTTP_NOT_FOUND = 404;
+const HTTP_OK = 200;
+const WORKER_TIMEOUT_MS = 10_000;
 const dist = path.join(project, 'dist', 'chrome');
 
 function valueKind(value) {
@@ -46,7 +49,7 @@ export async function startServer(overrides = {}) {
     const file = path.join(fixtures, pathname.replace(/^\//u, ''));
 
     if (!(file.startsWith(fixtures) && fs.existsSync(file))) {
-      response.writeHead(404);
+      response.writeHead(HTTP_NOT_FOUND);
       response.end('not found');
       return;
     }
@@ -68,7 +71,7 @@ export async function startServer(overrides = {}) {
       contentType = override;
     }
 
-    response.writeHead(200, { 'content-type': contentType, ...headers });
+    response.writeHead(HTTP_OK, { 'content-type': contentType, ...headers });
     response.end(body);
   });
 
@@ -105,7 +108,7 @@ export async function closeExtension({ context, profile } = {}) {
 export async function setSetting(context, key, value) {
   let workers = context.serviceWorkers();
   if (workers.length === 0) {
-    workers = [await context.waitForEvent('serviceworker', { timeout: 10_000 })];
+    workers = [await context.waitForEvent('serviceworker', { timeout: WORKER_TIMEOUT_MS })];
   }
   await workers[0].evaluate(
     ({ settingKey, settingValue }) => chrome.storage.local.set({ [settingKey]: settingValue }),

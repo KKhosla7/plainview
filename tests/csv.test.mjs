@@ -66,16 +66,20 @@ it('reports an unterminated quoted field', () => {
   assert.equal(parsed.error.line, 1);
 });
 
+const ROW_OVERFLOW = 10;
+const COLUMN_OVERFLOW = 10;
+
 it('caps rows and columns', () => {
-  const manyRows = Array.from({ length: csvLimits.MaxRows + 10 }, (_, index) => `r${index}`).join(
-    '\n',
-  );
+  const manyRows = Array.from(
+    { length: csvLimits.MaxRows + ROW_OVERFLOW },
+    (_, index) => `r${index}`,
+  ).join('\n');
   const cappedRows = parseCsv(manyRows);
   assert.equal(cappedRows.rows.length, csvLimits.MaxRows);
   assert.equal(cappedRows.rowsTruncated, true);
 
   const manyColumns = Array.from(
-    { length: csvLimits.MaxColumns + 10 },
+    { length: csvLimits.MaxColumns + COLUMN_OVERFLOW },
     (_, index) => `c${index}`,
   ).join(',');
   const cappedColumns = parseCsv(manyColumns);

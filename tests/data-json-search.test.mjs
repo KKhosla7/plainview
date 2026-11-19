@@ -8,6 +8,8 @@ import {
   startServer,
 } from './helpers.mjs';
 
+const CLICK_OFFSET = 5;
+
 let server;
 let base;
 let context;
@@ -221,7 +223,7 @@ it('dismisses search and query results with Escape or an outside click', async (
   await page.waitForSelector('.pv-json-search-results', { state: 'hidden' });
   await search.click();
   await page.waitForSelector('.pv-json-search-results:not([hidden])');
-  await page.locator('.pv-topbar').click({ position: { x: 5, y: 5 } });
+  await page.locator('.pv-topbar').click({ position: { x: CLICK_OFFSET, y: CLICK_OFFSET } });
   await page.waitForSelector('.pv-json-search-results', { state: 'hidden' });
 
   const query = page.getByLabel('Query expression');
@@ -232,7 +234,7 @@ it('dismisses search and query results with Escape or an outside click', async (
   await page.waitForSelector('.pv-json-query-results', { state: 'hidden' });
   await query.click();
   await page.waitForSelector('.pv-json-query-results:not([hidden])');
-  await page.locator('.pv-topbar').click({ position: { x: 5, y: 5 } });
+  await page.locator('.pv-topbar').click({ position: { x: CLICK_OFFSET, y: CLICK_OFFSET } });
   await page.waitForSelector('.pv-json-query-results', { state: 'hidden' });
   assert.equal(await page.locator('.pv-json-query-results').isHidden(), true);
   assertNoErrors(errors);
