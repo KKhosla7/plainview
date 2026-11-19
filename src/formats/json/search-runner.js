@@ -1,5 +1,6 @@
 import { yieldToMain } from '../../core/scheduler.js';
 import { valueKind } from '../../core/value.js';
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 
 /* global Plainview */
 /*
@@ -7,17 +8,17 @@ import { valueKind } from '../../core/value.js';
  * the next one is read, keeping input and scrolling responsive.
  */
 ((root) => {
-  const { mark, renderResults } = Plainview.jsonToolsShared;
+  const { mark, renderResults } = jsonToolsShared;
   const SearchBatchNodes = 500;
   const RenderIntervalMs = 100;
 
   function searchable(entry) {
     const key = entry.isRoot ? '' : String(entry.key);
     const quotedKey = entry.isRoot ? '' : JSON.stringify(String(entry.key));
-    const primitive = Plainview.jsonToolsShared.primitiveText(entry.value);
+    const primitive = jsonToolsShared.primitiveText(entry.value);
     const quotedValue =
       valueKind(entry.value) === 'string' ? JSON.stringify(entry.value) : primitive;
-    const preview = primitive || Plainview.jsonToolsShared.previewValue(entry.value);
+    const preview = primitive || jsonToolsShared.previewValue(entry.value);
     return [
       entry.pathText,
       key,

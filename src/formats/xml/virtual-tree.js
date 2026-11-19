@@ -1,4 +1,5 @@
 import { el } from '../../core/dom.js';
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 
 /* global Plainview */
 /* Windowed XML tree. Rows are flattened from expanded descriptors and mounted lazily. */
@@ -183,7 +184,7 @@ import { el } from '../../core/dom.js';
     if (index < 0) {
       return;
     }
-    const offset = Plainview.jsonToolsShared.stickyOffset();
+    const offset = jsonToolsShared.stickyOffset();
     const top =
       globalThis.scrollY + state.tree.getBoundingClientRect().top + index * RowHeight - offset;
     globalThis.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });

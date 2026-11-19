@@ -1,10 +1,12 @@
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+
 /* global Plainview */
 /*
  * JSON search controls. The walk itself lives in search-runner.js.
  */
 ((root) => {
   const { el, button, bindResultDismiss, inputClear, selectHit, SearchDebounceMs } =
-    Plainview.jsonToolsShared;
+    jsonToolsShared;
 
   function createSearchElements() {
     const searchWrap = el('div', 'pv-json-search');
@@ -45,8 +47,8 @@
     const records = [];
     const seen = new Set();
     for (const { path } of matches) {
-      const recordPath = Plainview.jsonToolsShared.recordPathFor(rootValue, path);
-      const record = Plainview.jsonToolsShared.valueAtPath(rootValue, recordPath);
+      const recordPath = jsonToolsShared.recordPathFor(rootValue, path);
+      const record = jsonToolsShared.valueAtPath(rootValue, recordPath);
       const pathText = Plainview.jsonPath.pathToJsonPath(recordPath);
       if (seen.has(pathText)) {
         continue;
@@ -62,7 +64,7 @@
     const paths = [];
     const seen = new Set();
     for (const { path } of matches) {
-      const recordPath = Plainview.jsonToolsShared.recordPathFor(rootValue, path);
+      const recordPath = jsonToolsShared.recordPathFor(rootValue, path);
       const pathText = Plainview.jsonPath.pathToJsonPath(recordPath);
       if (seen.has(pathText)) {
         continue;
@@ -158,8 +160,8 @@
 
     function clear() {
       for (const hit of state.hits) {
-        Plainview.jsonToolsShared.unmark(hit.entry, 'pv-json-hit');
-        Plainview.jsonToolsShared.unmark(hit.entry, 'pv-json-hit-active');
+        jsonToolsShared.unmark(hit.entry, 'pv-json-hit');
+        jsonToolsShared.unmark(hit.entry, 'pv-json-hit-active');
       }
       state.hits = [];
       state.index = -1;

@@ -1,10 +1,12 @@
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+
 /* global Plainview */
 /* Variable-height row layout for wrapped values in the virtual JSON tree. */
 ((root) => {
   const RowHeight = 24;
 
   function applyRowTitle(node, value) {
-    const text = Plainview.jsonToolsShared.primitiveText(value);
+    const text = jsonToolsShared.primitiveText(value);
     if (text.length > 60) {
       node.title = text;
     }

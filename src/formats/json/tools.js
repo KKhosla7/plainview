@@ -1,5 +1,6 @@
 import { copyText } from '../../core/clipboard.js';
 import { onAsync } from '../../core/events.js';
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 
 /* global Plainview */
 /*
@@ -7,7 +8,7 @@ import { onAsync } from '../../core/events.js';
  * modules; this file composes them and handles path copying.
  */
 ((root) => {
-  const { el, CopyResetMs, clearStatus } = Plainview.jsonToolsShared;
+  const { el, CopyResetMs, clearStatus } = jsonToolsShared;
 
   function createJsonTools({ tree, rootValue, indexRef, revealPath, exportState }) {
     const tools = el('div', 'pv-json-tools');

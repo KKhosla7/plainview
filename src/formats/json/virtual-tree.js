@@ -1,4 +1,5 @@
 import { el } from '../../core/dom.js';
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 import { primePath } from './virtual-prime.js';
 
@@ -234,7 +235,7 @@ import { primePath } from './virtual-prime.js';
     }
     state.activePath = target;
     rebuild(state);
-    const offset = Plainview.jsonToolsShared.stickyOffset();
+    const offset = jsonToolsShared.stickyOffset();
     const top =
       globalThis.scrollY + state.tree.getBoundingClientRect().top + rowTop(state, index) - offset;
     globalThis.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });

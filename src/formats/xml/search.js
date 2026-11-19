@@ -1,3 +1,5 @@
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+
 /* global Plainview */
 /*
  * XML element, attribute and text search.
@@ -111,7 +113,7 @@
       searchTimer = globalThis.setTimeout(runSearch, SearchDebounceMs);
     }
 
-    const clear = Plainview.jsonToolsShared.inputClear(search, 'Clear XML search', () => {
+    const clear = jsonToolsShared.inputClear(search, 'Clear XML search', () => {
       search.value = '';
       clearSearch();
       clearStatus();

@@ -1,4 +1,5 @@
 import { el } from '../../core/dom.js';
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
 
@@ -37,7 +38,7 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
     const count = el('span', 'pv-json-count', '');
     const status = el('div', 'pv-json-status');
     status.setAttribute('role', 'status');
-    const clear = Plainview.jsonToolsShared.inputClear(filter, 'Clear CSV search', () => {
+    const clear = jsonToolsShared.inputClear(filter, 'Clear CSV search', () => {
       filter.value = '';
       filter.dispatchEvent(new Event('input', { bubbles: true }));
       filter.focus();

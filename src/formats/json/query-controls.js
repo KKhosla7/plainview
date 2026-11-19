@@ -1,8 +1,9 @@
 import { valueKind } from '../../core/value.js';
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 
 ((root) => {
   const { el, button, bindResultDismiss, inputClear, mark, unmark, selectHit, renderResults } =
-    Plainview.jsonToolsShared;
+    jsonToolsShared;
 
   function findEntry(value, used, indexRef) {
     let found = null;
@@ -139,7 +140,7 @@ import { valueKind } from '../../core/value.js';
         detail: {
           hitClass: 'pv-json-query-hit',
           paths: items.flatMap((item) =>
-            item.path ? [Plainview.jsonToolsShared.recordPathFor(ctx.rootValue, item.path)] : [],
+            item.path ? [jsonToolsShared.recordPathFor(ctx.rootValue, item.path)] : [],
           ),
         },
       }),

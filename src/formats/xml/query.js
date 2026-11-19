@@ -1,3 +1,5 @@
+import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+
 /* global Plainview */
 /*
  * XPath query controls and result mapping.
@@ -178,7 +180,7 @@
   function createXmlQuery({ doc, byNode, exportState, status }) {
     const { queryWrap, queryRow, query, queryButton, queryCount } = createQueryElements();
     const state = { exportState, hits: [] };
-    const clear = Plainview.jsonToolsShared.inputClear(query, 'Clear XPath query', () => {
+    const clear = jsonToolsShared.inputClear(query, 'Clear XPath query', () => {
       query.value = '';
       state.hits = clearQueryHits({ hits: state.hits, queryCount, status, query });
       state.exportState?.clear('query');
