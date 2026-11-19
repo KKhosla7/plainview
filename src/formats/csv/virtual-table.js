@@ -51,6 +51,45 @@ function visibleRange(rows, offsets, wrap) {
   return { end: Math.min(rows.length, end + OverscanRows), start };
 }
 
+function renderAllRows(tbody, rows, createRow) {
+  const fragment = document.createDocumentFragment();
+  for (const row of rows) {
+    fragment.append(createRow(row));
+  }
+  tbody.replaceChildren(fragment);
+}
+
+function renderWindow({ tbody, wrap, rows, offsets, columns, createRow }) {
+  const { start, end } = visibleRange(rows, offsets, wrap);
+  const fragment = document.createDocumentFragment();
+  fragment.append(createSpacer(offsets[start], columns));
+  for (let index = start; index < end; index += 1) {
+    fragment.append(createRow(rows[index]));
+  }
+  fragment.append(createSpacer(offsets.at(-1) - offsets[end], columns));
+  tbody.replaceChildren(fragment);
+  return { end, start };
+}
+
+function measureRendered({ tbody, rows, start, end, heights }) {
+  const rendered = [...tbody.querySelectorAll('tr:not(.pv-csv-spacer)')];
+  let changed = false;
+  for (let index = start; index < end; index += 1) {
+    const node = rendered[index - start];
+    if (!node) {
+      continue;
+    }
+    const height = Math.ceil(node.getBoundingClientRect().height);
+    const row = rows[index];
+    if ((heights.get(row.number) ?? EstimateRowHeight) !== height) {
+      heights.set(row.number, height);
+      changed = true;
+    }
+  }
+
+  return changed;
+}
+
 function createVirtualTable({ tbody, wrap, columns, createRow }) {
   let currentRows = [];
   let frame = 0;
@@ -58,22 +97,7 @@ function createVirtualTable({ tbody, wrap, columns, createRow }) {
   let offsets = rebuildOffsets([], heights);
 
   function measure(start, end) {
-    const rendered = [...tbody.querySelectorAll('tr:not(.pv-csv-spacer)')];
-    let changed = false;
-    for (let index = start; index < end; index += 1) {
-      const node = rendered[index - start];
-      if (!node) {
-        continue;
-      }
-      const height = Math.ceil(node.getBoundingClientRect().height);
-      const row = currentRows[index];
-      if ((heights.get(row.number) ?? EstimateRowHeight) !== height) {
-        heights.set(row.number, height);
-        changed = true;
-      }
-    }
-
-    if (changed) {
+    if (measureRendered({ tbody, rows: currentRows, start, end, heights })) {
       offsets = rebuildOffsets(currentRows, heights);
       paint();
     }
@@ -81,21 +105,17 @@ function createVirtualTable({ tbody, wrap, columns, createRow }) {
 
   function paint() {
     if (currentRows.length <= VirtualizeThreshold) {
-      const fragment = document.createDocumentFragment();
-      for (const row of currentRows) {
-        fragment.append(createRow(row));
-      }
-      tbody.replaceChildren(fragment);
+      renderAllRows(tbody, currentRows, createRow);
       return;
     }
-    const { start, end } = visibleRange(currentRows, offsets, wrap);
-    const fragment = document.createDocumentFragment();
-    fragment.append(createSpacer(offsets[start], columns));
-    for (let index = start; index < end; index += 1) {
-      fragment.append(createRow(currentRows[index]));
-    }
-    fragment.append(createSpacer(offsets.at(-1) - offsets[end], columns));
-    tbody.replaceChildren(fragment);
+    const { start, end } = renderWindow({
+      tbody,
+      wrap,
+      rows: currentRows,
+      offsets,
+      columns,
+      createRow,
+    });
     globalThis.requestAnimationFrame(() => measure(start, end));
   }
 
