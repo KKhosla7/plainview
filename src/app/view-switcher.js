@@ -1,6 +1,14 @@
 import { scrollToInstant } from '.././core/scroll-utils.js';
 import { saveSetting } from '.././core/settings.js';
 
+function applyViewState(app, htmlTab, sourceTab, zoom, view) {
+  const source = view === 'source';
+  app.classList.toggle('pv-show-source', source);
+  htmlTab.setAttribute('aria-selected', String(!source));
+  sourceTab.setAttribute('aria-selected', String(source));
+  zoom.setVisible(!source);
+}
+
 function createViewSwitcher({
   app,
   htmlTab,
@@ -15,14 +23,6 @@ function createViewSwitcher({
   let htmlScroll = globalThis.scrollY;
   let sourceScroll = 0;
 
-  function applyState() {
-    const source = view === 'source';
-    app.classList.toggle('pv-show-source', source);
-    htmlTab.setAttribute('aria-selected', String(!source));
-    sourceTab.setAttribute('aria-selected', String(source));
-    zoom.setVisible(!source);
-  }
-
   function setView(next, { persist = true } = {}) {
     if (next === view) {
       return;
@@ -35,7 +35,7 @@ function createViewSwitcher({
     }
 
     view = next;
-    applyState();
+    applyViewState(app, htmlTab, sourceTab, zoom, view);
     if (view === 'source' && onSource) {
       onSource();
     }
@@ -57,7 +57,7 @@ function createViewSwitcher({
     }
   }
 
-  applyState();
+  applyViewState(app, htmlTab, sourceTab, zoom, view);
 
   htmlTab.addEventListener('click', () => setView('html'));
   sourceTab.addEventListener('click', () => setView('source'));

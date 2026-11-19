@@ -9,30 +9,30 @@ function createThemeButton() {
   );
 }
 
+function effectiveDark(theme) {
+  if (theme === 'dark') {
+    return true;
+  }
+
+  if (theme === 'light') {
+    return false;
+  }
+
+  return globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+function applyTheme(button, theme) {
+  globalThis.document.documentElement.dataset.pvTheme = theme;
+  const dark = theme === 'dark';
+  button.setAttribute('aria-pressed', String(dark));
+  button.title = dark ? 'Dark theme · Switch to light' : 'Light theme · Switch to dark';
+}
+
 function createTheme({ button, initialTheme }) {
   const stored = validTheme(initialTheme);
   let theme =
     stored || (globalThis.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   let onChange = null;
-
-  function effectiveDark() {
-    if (theme === 'dark') {
-      return true;
-    }
-
-    if (theme === 'light') {
-      return false;
-    }
-
-    return globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-
-  function apply() {
-    globalThis.document.documentElement.dataset.pvTheme = theme;
-    const dark = theme === 'dark';
-    button.setAttribute('aria-pressed', String(dark));
-    button.title = dark ? 'Dark theme · Switch to light' : 'Light theme · Switch to dark';
-  }
 
   function setTheme(next) {
     if (next === theme) {
@@ -40,7 +40,7 @@ function createTheme({ button, initialTheme }) {
     }
     theme = next;
     saveSetting(THEME_KEY, theme);
-    apply();
+    applyTheme(button, theme);
     if (onChange) {
       onChange();
     }
@@ -50,10 +50,10 @@ function createTheme({ button, initialTheme }) {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   });
 
-  apply();
+  applyTheme(button, theme);
 
   return {
-    effectiveDark,
+    effectiveDark: () => effectiveDark(theme),
     toggle() {
       setTheme(theme === 'dark' ? 'light' : 'dark');
     },
