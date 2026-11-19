@@ -19,6 +19,7 @@ import {
 } from '../core/settings.js';
 import { watchSource } from '../core/source-watch.js';
 import { tableResize } from '.././core/table-resize.js';
+import { buildJson } from '../formats/json/view.js';
 import { buildLogs } from '../formats/logs-view.js';
 import { buildMarkdown } from '../formats/markdown/enhance.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
@@ -41,13 +42,11 @@ import { focusSnapshot, restoreFocus } from './focus.js';
 
   function buildContent(source, format) {
     if (format.id === 'json') {
-      return Plainview.buildJson(source);
+      return buildJson(source);
     }
 
     if (format.id === 'swagger') {
-      return source.trimStart().startsWith('{')
-        ? Plainview.buildJson(source)
-        : Plainview.buildYaml(source);
+      return source.trimStart().startsWith('{') ? buildJson(source) : Plainview.buildYaml(source);
     }
 
     if (format.id === 'logs') {

@@ -1,4 +1,5 @@
 import { search } from 'jmespath';
+import { buildJsonValue } from '../formats/json/view.js';
 
 /*
  * Builds the full interactive data reader inside a standalone export. The
@@ -19,7 +20,7 @@ import { search } from 'jmespath';
       });
     }
 
-    return Plainview.buildJsonValue(documentData.value, {
+    return buildJsonValue(documentData.value, {
       copyLabel: `Copy ${documentData.formatId.toUpperCase()}`,
       exportFormatId: documentData.formatId,
       source: documentData.source,

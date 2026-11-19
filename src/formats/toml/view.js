@@ -1,6 +1,7 @@
 import { createElement } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
+import { buildJsonValue } from '../json/view.js';
 
 /* global Plainview */
 ((root) => {
@@ -51,7 +52,7 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
       return { article, stats: null, error: true };
     }
 
-    return Plainview.buildJsonValue(value, {
+    return buildJsonValue(value, {
       source,
       copyLabel: 'Copy TOML',
       exportFormatId: 'toml',
