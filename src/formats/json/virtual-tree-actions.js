@@ -1,9 +1,11 @@
+import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+
 /* global Plainview */
 /*
  * Bulk expansion actions for the virtualized tree.
  */
 ((root) => {
-  const { childEntries, entryCount, isContainer, pathTextFor } = Plainview.jsonTreeShared;
+  const { childEntries, entryCount, isContainer, pathTextFor } = jsonTreeShared;
 
   function expandAll(state, rebuild) {
     const seen = new WeakSet();

@@ -1,4 +1,5 @@
 import { yieldToMain } from '../../core/scheduler.js';
+import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 
 /* global Plainview */
 /*
@@ -6,7 +7,7 @@ import { yieldToMain } from '../../core/scheduler.js';
  * available, without re-rendering the rest of the tree.
  */
 ((root) => {
-  const { keyIndex } = Plainview.jsonTreeShared;
+  const { keyIndex } = jsonTreeShared;
 
   function openContainer(state, ctx) {
     state.details.open = true;

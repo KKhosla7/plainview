@@ -5,155 +5,151 @@ import { valueKind } from '../../core/value.js';
 /*
  * Small tree-node presentation helpers shared by the JSON tree renderer.
  */
-((root) => {
-  function span(className, text) {
-    return el('span', className, text);
+function span(className, text) {
+  return el('span', className, text);
+}
+
+function actionButton(className, label) {
+  const node = el('button', className, label);
+  node.type = 'button';
+  return node;
+}
+
+function valueClass(value) {
+  if (value === null) {
+    return 'pv-json-null';
   }
 
-  function actionButton(className, label) {
-    const node = el('button', className, label);
-    node.type = 'button';
-    return node;
+  if (valueKind(value) === 'string') {
+    return 'pv-json-string';
   }
 
-  function valueClass(value) {
-    if (value === null) {
-      return 'pv-json-null';
-    }
+  if (valueKind(value) === 'number') {
+    return 'pv-json-number';
+  }
 
-    if (valueKind(value) === 'string') {
-      return 'pv-json-string';
-    }
-
-    if (valueKind(value) === 'number') {
-      return 'pv-json-number';
-    }
-
-    if (valueKind(value) === 'boolean') {
-      return 'pv-json-boolean';
-    }
-
+  if (valueKind(value) === 'boolean') {
     return 'pv-json-boolean';
   }
 
-  function treeSyntax(formatId) {
-    if (formatId === 'yaml') {
-      return 'yaml';
+  return 'pv-json-boolean';
+}
+
+function treeSyntax(formatId) {
+  if (formatId === 'yaml') {
+    return 'yaml';
+  }
+
+  return formatId === 'jsonl' ? 'jsonl' : '';
+}
+
+const JsonlFormatCache = new Map();
+const MaxJsonlFormatCache = 250;
+
+function formattedJsonlValue(value) {
+  if (JsonlFormatCache.has(value)) {
+    return JsonlFormatCache.get(value);
+  }
+
+  const trimmed = value.trim();
+  let formatted = JSON.stringify(value).replaceAll('\\n', '\n').replaceAll('\\t', '\t');
+  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+    try {
+      formatted = JSON.stringify(JSON.parse(trimmed), null, 2);
+    } catch {
+      formatted = value;
+    }
+  }
+
+  if (JsonlFormatCache.size >= MaxJsonlFormatCache) {
+    JsonlFormatCache.delete(JsonlFormatCache.keys().next().value);
+  }
+
+  JsonlFormatCache.set(value, formatted);
+  return formatted;
+}
+
+function renderValue(value, syntax) {
+  if (valueKind(value) === 'string') {
+    if (syntax === 'yaml') {
+      return value;
     }
 
-    return formatId === 'jsonl' ? 'jsonl' : '';
-  }
-
-  const JsonlFormatCache = new Map();
-  const MaxJsonlFormatCache = 250;
-
-  function formattedJsonlValue(value) {
-    if (JsonlFormatCache.has(value)) {
-      return JsonlFormatCache.get(value);
+    if (document.documentElement.dataset.pvFormatValues !== 'off') {
+      return JSON.stringify(value).replaceAll('\\n', '\n').replaceAll('\\t', '\t');
     }
 
-    const trimmed = value.trim();
-    let formatted = JSON.stringify(value).replaceAll('\\n', '\n').replaceAll('\\t', '\t');
-    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-      try {
-        formatted = JSON.stringify(JSON.parse(trimmed), null, 2);
-      } catch {
-        formatted = value;
-      }
+    if (syntax === 'jsonl') {
+      return formattedJsonlValue(value);
     }
 
-    if (JsonlFormatCache.size >= MaxJsonlFormatCache) {
-      JsonlFormatCache.delete(JsonlFormatCache.keys().next().value);
-    }
-
-    JsonlFormatCache.set(value, formatted);
-    return formatted;
+    return JSON.stringify(value);
   }
 
-  function renderValue(value, syntax) {
-    if (valueKind(value) === 'string') {
-      if (syntax === 'yaml') {
-        return value;
-      }
-
-      if (document.documentElement.dataset.pvFormatValues !== 'off') {
-        return JSON.stringify(value).replaceAll('\\n', '\n').replaceAll('\\t', '\t');
-      }
-
-      if (syntax === 'jsonl') {
-        return formattedJsonlValue(value);
-      }
-
-      return JSON.stringify(value);
-    }
-
-    if (value === null) {
-      return 'null';
-    }
-
-    return String(value);
+  if (value === null) {
+    return 'null';
   }
 
-  function renderKey(key, syntax) {
-    if (valueKind(key) === 'number') {
-      return span('pv-json-index', String(key));
-    }
+  return String(value);
+}
 
-    return span('pv-json-key', syntax === 'yaml' ? String(key) : JSON.stringify(key));
+function renderKey(key, syntax) {
+  if (valueKind(key) === 'number') {
+    return span('pv-json-index', String(key));
   }
 
-  function pathTextFor(path) {
-    return Plainview.jsonPath.pathToJsonPath(path);
+  return span('pv-json-key', syntax === 'yaml' ? String(key) : JSON.stringify(key));
+}
+
+function pathTextFor(path) {
+  return Plainview.jsonPath.pathToJsonPath(path);
+}
+
+function isContainer(value) {
+  return value !== null && valueKind(value) === 'object';
+}
+
+function entryCount(value) {
+  return Array.isArray(value) ? value.length : Object.keys(value).length;
+}
+
+function childEntries(value, index) {
+  if (Array.isArray(value)) {
+    return [index, value[index]];
   }
 
-  function isContainer(value) {
-    return value !== null && valueKind(value) === 'object';
+  const key = Object.keys(value)[index];
+  return [key, value[key]];
+}
+
+function keyIndex(state, segment) {
+  if (state.array) {
+    return Number(segment);
   }
 
-  function entryCount(value) {
-    return Array.isArray(value) ? value.length : Object.keys(value).length;
-  }
+  return state.keys.indexOf(String(segment));
+}
 
-  function childEntries(value, index) {
-    if (Array.isArray(value)) {
-      return [index, value[index]];
-    }
+function pathButton(pathText) {
+  const node = el('button', 'pv-json-path', '⧉');
+  node.type = 'button';
+  node.title = `Copy path ${pathText}`;
+  node.setAttribute('aria-label', `Copy path ${pathText}`);
+  node.setAttribute('data-json-path', pathText);
+  return node;
+}
 
-    const key = Object.keys(value)[index];
-    return [key, value[key]];
-  }
-
-  function keyIndex(state, segment) {
-    if (state.array) {
-      return Number(segment);
-    }
-
-    return state.keys.indexOf(String(segment));
-  }
-
-  function pathButton(pathText) {
-    const node = el('button', 'pv-json-path', '⧉');
-    node.type = 'button';
-    node.title = `Copy path ${pathText}`;
-    node.setAttribute('aria-label', `Copy path ${pathText}`);
-    node.setAttribute('data-json-path', pathText);
-    return node;
-  }
-
-  root.Plainview = Object.assign(root.Plainview || {}, {
-    jsonTreeShared: {
-      actionButton,
-      childEntries,
-      entryCount,
-      isContainer,
-      keyIndex,
-      pathTextFor,
-      pathButton,
-      renderKey,
-      renderValue,
-      span,
-      treeSyntax,
-      valueClass,
-    },
-  });
-})(globalThis);
+export const jsonTreeShared = {
+  actionButton,
+  childEntries,
+  entryCount,
+  isContainer,
+  keyIndex,
+  pathTextFor,
+  pathButton,
+  renderKey,
+  renderValue,
+  span,
+  treeSyntax,
+  valueClass,
+};

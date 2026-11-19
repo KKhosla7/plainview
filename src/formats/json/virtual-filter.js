@@ -1,7 +1,9 @@
+import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+
 /* global Plainview */
 /* Filtering helpers for the virtualized JSON tree. */
 ((root) => {
-  const { pathTextFor } = Plainview.jsonTreeShared;
+  const { pathTextFor } = jsonTreeShared;
 
   function filterRelevant(state, pathText, path) {
     if (!state.filterPaths) {

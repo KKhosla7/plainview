@@ -1,9 +1,12 @@
+import { jsonLimits } from '../.././formats/json/limits.js';
+import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+
 /* global Plainview */
 /* Shared state creation for the virtualized JSON tree. */
 ((root) => {
   const AutoRows = 20_000;
-  const { openDepth } = Plainview.jsonLimits;
-  const { treeSyntax } = Plainview.jsonTreeShared;
+  const { openDepth } = jsonLimits;
+  const { treeSyntax } = jsonTreeShared;
 
   function createState({ value, options, indexRef, onStats, tree }) {
     return {

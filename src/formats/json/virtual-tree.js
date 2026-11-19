@@ -1,4 +1,5 @@
 import { el } from '../../core/dom.js';
+import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 import { primePath } from './virtual-prime.js';
 
 ((root) => {
@@ -14,7 +15,7 @@ import { primePath } from './virtual-prime.js';
     renderValue,
     span,
     valueClass,
-  } = Plainview.jsonTreeShared;
+  } = jsonTreeShared;
   const { filterRelevant, setFilter } = Plainview.jsonVirtualFilter;
   const { AutoRows, createState } = Plainview.jsonVirtualState;
   const { RowHeight, applyRowTitle, measureRows, rebuildOffsets, rowTop, visibleRange } =

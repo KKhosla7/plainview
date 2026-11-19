@@ -1,5 +1,7 @@
 import { el } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
+import { jsonLimits } from '../.././formats/json/limits.js';
+import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 
 /* global Plainview */
 /*
@@ -8,10 +10,10 @@ import { valueKind } from '../../core/value.js';
  * opening its ancestors without rendering unrelated branches.
  */
 ((root) => {
-  const { autoOpenChildLimit, openDepth, pageSize } = Plainview.jsonLimits;
+  const { autoOpenChildLimit, openDepth, pageSize } = jsonLimits;
 
   const { actionButton, pathButton, renderKey, renderValue, span, treeSyntax, valueClass } =
-    Plainview.jsonTreeShared;
+    jsonTreeShared;
 
   function registerNode(ctx, { path, node, value, isContainer, summary }) {
     const pathText = Plainview.jsonPath.pathToJsonPath(path);
