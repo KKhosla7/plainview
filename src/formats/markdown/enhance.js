@@ -2,6 +2,7 @@ import { copyText } from '../../core/clipboard.js';
 import { createElement } from '../../core/dom.js';
 import { onAsync } from '../../core/events.js';
 import { tableResize } from '../../core/table-resize.js';
+import { hasMath } from '../math/loader.js';
 import { createIdFactory, renderMarkdown, sanitizeArticle } from './core.js';
 
 /* global Plainview */
@@ -187,7 +188,7 @@ function buildMarkdown(source) {
     headings,
     mermaidBlocks,
     codeBlocks,
-    math: Plainview.hasMath(source),
+    math: hasMath(source),
     exportData: {
       formatId: 'markdown',
       hasFilter: () => false,

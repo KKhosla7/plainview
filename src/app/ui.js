@@ -27,7 +27,11 @@ import { buildToml } from '../formats/toml/view.js';
 import { buildXml } from '../formats/xml/view.js';
 import { buildYaml } from '../formats/yaml/view.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
+import { createScrollTop } from './scroll-top.js';
+import { wireShortcuts } from './shortcuts.js';
 import { tableBorders } from './table-border-toggle.js';
+import { createViewerEnhancements, wireViewerExport } from './viewer-extras.js';
+import { createViewerShell } from './viewer-shell.js';
 
 /* global Plainview */
 /*
@@ -235,25 +239,24 @@ import { tableBorders } from './table-border-toggle.js';
       installFonts();
     }
     const content = await buildContent(source, format);
-    const { app, topbar, sourcePane, shell, zoom, toc, viewSwitcher, theme } =
-      Plainview.createViewerShell({
-        content,
-        format,
-        fileName,
-        url,
-        viewKey,
-        source,
-        savedView,
-        savedTheme,
-        savedZoom,
-      });
+    const { app, topbar, sourcePane, shell, zoom, toc, viewSwitcher, theme } = createViewerShell({
+      content,
+      format,
+      fileName,
+      url,
+      viewKey,
+      source,
+      savedView,
+      savedTheme,
+      savedZoom,
+    });
 
-    const { refreshMermaid, refreshExtras } = Plainview.createViewerEnhancements(content, theme);
+    const { refreshMermaid, refreshExtras } = createViewerEnhancements(content, theme);
     theme.setOnChange(refreshMermaid);
     topbar.downloadButton.addEventListener('click', () => {
       downloadText(source, fileName, format);
     });
-    Plainview.wireViewerExport({ topbar, refreshExtras, content, fileName, format });
+    wireViewerExport({ topbar, refreshExtras, content, fileName, format });
     const shortcutBindings = {
       viewSwitcher,
       zoom,
@@ -263,14 +266,14 @@ import { tableBorders } from './table-border-toggle.js';
       app,
       shortcuts: savedShortcuts,
     };
-    Plainview.wireShortcuts(shortcutBindings);
+    wireShortcuts(shortcutBindings);
 
     if (viewSwitcher.getView() === 'source') {
       sourcePane.populate();
     }
     app.append(topbar.element, shell, sourcePane.element, zoom.element);
 
-    Plainview.createScrollTop({ app });
+    createScrollTop({ app });
     const sourceWatch = watchSource({
       source,
       url,

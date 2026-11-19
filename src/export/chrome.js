@@ -1,5 +1,6 @@
 import { createExportCell, createMenuController, createMenuShell } from '../app/export-menu.js';
 import { createIconButton, icons } from '.././app/icons.js';
+import { createScrollTop } from '../app/scroll-top.js';
 import { createTheme } from '.././app/theme.js';
 import { createTopbarActions } from '../app/topbar.js';
 import { tableResize } from '.././core/table-resize.js';
@@ -113,7 +114,7 @@ import { tableResize } from '.././core/table-resize.js';
 
     const app = document.querySelector('.pv-app');
     if (app) {
-      Plainview.createScrollTop({ app });
+      createScrollTop({ app });
     }
   }
 
