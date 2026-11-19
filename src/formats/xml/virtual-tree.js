@@ -1,13 +1,19 @@
 import { el } from '../../core/dom.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
-import { xmlTreeShared } from './render.js';
+import {
+  Cdata,
+  Comment,
+  Element,
+  MaxNodes,
+  meaningfulChildren,
+  ProcessingInstruction,
+  Text,
+} from './tree-shared.js';
 import { createRow } from './virtual-rows.js';
 
 /* Windowed XML tree. Rows are flattened from expanded descriptors and mounted lazily. */
 const RowHeight = 24;
 const Overscan = 8;
-const { Cdata, Comment, Element, MaxNodes, ProcessingInstruction, Text, meaningfulChildren } =
-  xmlTreeShared;
 
 function createStats() {
   return {

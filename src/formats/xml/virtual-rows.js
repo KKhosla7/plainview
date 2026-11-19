@@ -1,8 +1,7 @@
 import { el } from '../../core/dom.js';
-import { xmlTreeShared } from './render.js';
+import { Cdata, closeTag, openTag, pathButton } from './tree-shared.js';
 
 /* Row rendering for the virtualized XML tree. */
-const { Cdata, closeTag, openTag, pathButton } = xmlTreeShared;
 
 function nodeParts(fragment) {
   return [...fragment.childNodes];

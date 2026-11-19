@@ -1,128 +1,19 @@
-import { createElement } from '../../core/dom.js';
-
-const MaxNodes = 40_000;
-const Element = 1;
-const Text = 3;
-const Cdata = 4;
-const ProcessingInstruction = 7;
-const Comment = 8;
-
-function el(tag, className, text) {
-  const node = createElement(tag);
-  if (className) {
-    node.className = className;
-  }
-
-  if (text !== undefined) {
-    node.textContent = text;
-  }
-
-  return node;
-}
+import {
+  Cdata,
+  Comment,
+  closeTag,
+  Element,
+  el,
+  MaxNodes,
+  meaningfulChildren,
+  openTag,
+  ProcessingInstruction,
+  pathButton,
+  Text,
+} from './tree-shared.js';
 
 function register(ctx, sourceNode, rendered, summary = null) {
   ctx.byNode.set(sourceNode, { node: rendered, source: sourceNode, summary });
-}
-
-function xpathLiteral(value) {
-  return `'${value}'`;
-}
-
-function sameElementSiblings(current) {
-  if (!current.parentNode) {
-    return [current];
-  }
-
-  return [...current.parentNode.children].filter(
-    (sibling) =>
-      sibling.localName === current.localName && sibling.namespaceURI === current.namespaceURI,
-  );
-}
-
-function xpathFor(element, rootElement) {
-  const useLocalName = [element, ...ancestors(element)].some(
-    (ancestor) => ancestor.namespaceURI || ancestor.prefix,
-  );
-  const segments = [];
-  let node = element;
-  while (node && node.nodeType === Element) {
-    const siblings = sameElementSiblings(node);
-    const index = siblings.indexOf(node) + 1;
-    const name = useLocalName ? `*[local-name()=${xpathLiteral(node.localName)}]` : node.nodeName;
-    segments.unshift(node === rootElement ? name : `${name}[${index}]`);
-    if (node === rootElement) {
-      break;
-    }
-    node = node.parentNode;
-  }
-
-  return `/${segments.join('/')}`;
-}
-
-function ancestors(element) {
-  const list = [];
-  let node = element.parentNode;
-  while (node && node.nodeType === Element) {
-    list.push(node);
-    node = node.parentNode;
-  }
-
-  return list;
-}
-
-function pathButton(element, rootElement) {
-  const path = xpathFor(element, rootElement);
-  const node = el('button', 'pv-json-path pv-xml-path', '⧉');
-  node.type = 'button';
-  node.title = `Copy XPath ${path}`;
-  node.setAttribute('aria-label', `Copy XPath ${path}`);
-  node.setAttribute('data-xpath', path);
-  return node;
-}
-
-function meaningfulChildren(element) {
-  return [...element.childNodes].filter((node) => {
-    if (node.nodeType === Element) {
-      return true;
-    }
-
-    if (node.nodeType === Text) {
-      return Boolean(node.nodeValue?.trim());
-    }
-
-    return [Cdata, Comment, ProcessingInstruction].includes(node.nodeType);
-  });
-}
-
-function openTag(element, selfClosing = false) {
-  const fragment = document.createDocumentFragment();
-  const tag = el('span', 'pv-xml-tag', element.nodeName);
-  if (element.namespaceURI) {
-    tag.title = element.namespaceURI;
-  }
-  fragment.append(el('span', 'pv-xml-punct', '<'), tag);
-
-  for (const attr of element.attributes) {
-    fragment.append(
-      document.createTextNode(' '),
-      el('span', 'pv-xml-attr-name', attr.name),
-      el('span', 'pv-xml-punct', '='),
-      el('span', 'pv-xml-attr-value', `"${attr.value}"`),
-    );
-  }
-
-  fragment.append(el('span', 'pv-xml-punct', selfClosing ? '/>' : '>'));
-  return fragment;
-}
-
-function closeTag(element) {
-  const fragment = document.createDocumentFragment();
-  fragment.append(
-    el('span', 'pv-xml-punct', '</'),
-    el('span', 'pv-xml-tag', element.nodeName),
-    el('span', 'pv-xml-punct', '>'),
-  );
-  return fragment;
 }
 
 function renderEmptyElement(element, ctx) {
