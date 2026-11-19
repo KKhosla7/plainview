@@ -1,3 +1,7 @@
+import { extractSource, isRawTextDocument } from './core/document.js';
+import { detectFormat } from './core/formats.js';
+import { ensureHtmlShellForXml } from './core/xml-shell.js';
+
 /* global Plainview */
 /*
  * Tiny content-script loader. It runs on every page, detects a supported raw
@@ -22,23 +26,20 @@
       return;
     }
 
-    if (!(document.body || Plainview.isRawTextDocument())) {
+    if (!(document.body || isRawTextDocument())) {
       return;
     }
 
-    const format = Plainview.detectFormat(
-      document.contentType,
-      decodeUriComponentSafe(location.pathname),
-    );
+    const format = detectFormat(document.contentType, decodeUriComponentSafe(location.pathname));
     if (!format) {
       return;
     }
 
-    if (!Plainview.isRawTextDocument()) {
+    if (!isRawTextDocument()) {
       return;
     }
 
-    const source = Plainview.extractSource(format);
+    const source = extractSource(format);
     const runtime = globalThis.chrome?.runtime ?? globalThis.browser?.runtime;
     const version = runtime?.getManifest?.().version || 'dev';
 
@@ -48,7 +49,7 @@
     try {
       await import(runtime.getURL('app.js'));
       if (format.id === 'xml') {
-        Plainview.ensureHtmlShellForXml();
+        ensureHtmlShellForXml();
       }
 
       if (!document.body) {

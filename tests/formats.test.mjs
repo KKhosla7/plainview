@@ -1,8 +1,6 @@
 import assert from 'node:assert/strict';
 import { test as it } from 'node:test';
-import '../src/core/formats.js';
-
-const { detectFormat } = globalThis.Plainview;
+import { detectFormat } from '../src/core/formats.js';
 
 function formatId(type, pathname) {
   return detectFormat(type, pathname)?.id ?? null;
