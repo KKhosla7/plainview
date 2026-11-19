@@ -1,3 +1,4 @@
+import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 
 /* global Plainview */
@@ -49,7 +50,7 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
     for (const { path } of matches) {
       const recordPath = jsonToolsShared.recordPathFor(rootValue, path);
       const record = jsonToolsShared.valueAtPath(rootValue, recordPath);
-      const pathText = Plainview.jsonPath.pathToJsonPath(recordPath);
+      const pathText = jsonPath.pathToJsonPath(recordPath);
       if (seen.has(pathText)) {
         continue;
       }
@@ -65,7 +66,7 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
     const seen = new Set();
     for (const { path } of matches) {
       const recordPath = jsonToolsShared.recordPathFor(rootValue, path);
-      const pathText = Plainview.jsonPath.pathToJsonPath(recordPath);
+      const pathText = jsonPath.pathToJsonPath(recordPath);
       if (seen.has(pathText)) {
         continue;
       }

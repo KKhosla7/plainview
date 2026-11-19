@@ -1,4 +1,5 @@
 import { valueKind } from '../../core/value.js';
+import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { jmespathPath } from './jmespath-path.js';
 
@@ -40,7 +41,7 @@ import { jmespathPath } from './jmespath-path.js';
     for (let index = 0; index < values.length; index += 1) {
       const value = values[index];
       const path = paths?.[index];
-      const pathText = path ? Plainview.jsonPath.pathToJsonPath(path) : null;
+      const pathText = path ? jsonPath.pathToJsonPath(path) : null;
       const entry = pathText ? indexRef.current.get(pathText) : findEntry(value, used, indexRef);
       if (entry) {
         used.add(entry);
@@ -186,14 +187,14 @@ import { jmespathPath } from './jmespath-path.js';
   function runJsonPath(ctx, expression) {
     let results;
     try {
-      results = Plainview.jsonPath.evaluate(ctx.rootValue, expression);
+      results = jsonPath.evaluate(ctx.rootValue, expression);
     } catch (error) {
       queryError(ctx, 'JSONPath', error);
       return;
     }
     const items = [];
     for (const result of results) {
-      const pathText = Plainview.jsonPath.pathToJsonPath(result.path);
+      const pathText = jsonPath.pathToJsonPath(result.path);
       const entry = ctx.indexRef.current.get(pathText);
       items.push({
         path: result.path,

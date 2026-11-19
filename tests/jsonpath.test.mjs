@@ -1,10 +1,8 @@
 import assert from 'node:assert/strict';
 import { test as it } from 'node:test';
-import '../src/formats/json/jsonpath.js';
-import '../src/formats/json/jsonpath-filter.js';
-import '../src/formats/json/jsonpath-eval.js';
+import { jsonPath } from '../src/formats/json/jsonpath-eval.js';
 
-const { evaluate, pathToJsonPath } = globalThis.Plainview.jsonPath;
+const { evaluate, pathToJsonPath } = jsonPath;
 
 function values(nodes) {
   return nodes.map((node) => node.value);

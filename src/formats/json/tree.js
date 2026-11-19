@@ -1,5 +1,6 @@
 import { el } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
+import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonLimits } from '../.././formats/json/limits.js';
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 
@@ -16,7 +17,7 @@ import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
     jsonTreeShared;
 
   function registerNode(ctx, { path, node, value, isContainer, summary }) {
-    const pathText = Plainview.jsonPath.pathToJsonPath(path);
+    const pathText = jsonPath.pathToJsonPath(path);
     ctx.indexRef.current.set(pathText, {
       node,
       summary,
@@ -38,7 +39,7 @@ import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
     }
     const valueBox = el('span', 'pv-json-value');
     valueBox.append(span(valueClass(value), renderValue(value, ctx.syntax)));
-    row.append(valueBox, pathButton(Plainview.jsonPath.pathToJsonPath(path)));
+    row.append(valueBox, pathButton(jsonPath.pathToJsonPath(path)));
     registerNode(ctx, { path, node: row, value, isContainer: false, summary: null });
     return row;
   }
@@ -64,7 +65,7 @@ import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
       span('pv-json-count', `${count} ${countLabel(count, array)}`),
       span('pv-json-punct', array ? ' ]' : ' }'),
     );
-    summary.append(pathButton(Plainview.jsonPath.pathToJsonPath(path)));
+    summary.append(pathButton(jsonPath.pathToJsonPath(path)));
     return summary;
   }
 
@@ -141,7 +142,7 @@ import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
       ctx.stats.objects += 1;
     }
 
-    const pathText = Plainview.jsonPath.pathToJsonPath(path);
+    const pathText = jsonPath.pathToJsonPath(path);
     const details = el('details', 'pv-json-node');
     details.open = Boolean(
       meta.isRoot || (depth < ctx.openDepth && total <= ctx.autoOpenChildLimit),
@@ -214,7 +215,7 @@ import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
   }
 
   function applyClassicFilter({ paths, tree }) {
-    const filterPaths = paths.map((path) => Plainview.jsonPath.pathToJsonPath(path));
+    const filterPaths = paths.map((path) => jsonPath.pathToJsonPath(path));
     for (const node of tree.querySelectorAll('.pv-json-leaf, .pv-json-node')) {
       const pathText =
         node.dataset.jsonPath || node.querySelector('.pv-json-path')?.dataset.jsonPath || '';

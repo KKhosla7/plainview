@@ -1,5 +1,6 @@
 import { el } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
+import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 
 /* global Plainview */
 /*
@@ -102,7 +103,7 @@ function renderKey(key, syntax) {
 }
 
 function pathTextFor(path) {
-  return Plainview.jsonPath.pathToJsonPath(path);
+  return jsonPath.pathToJsonPath(path);
 }
 
 function isContainer(value) {

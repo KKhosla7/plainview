@@ -1,4 +1,5 @@
 import { valueKind } from '../../core/value.js';
+import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 
 /* global Plainview */
 /*
@@ -54,7 +55,7 @@ import { valueKind } from '../../core/value.js';
         entries.push({
           key: item.key,
           path: item.path,
-          pathText: Plainview.jsonPath.pathToJsonPath(item.path),
+          pathText: jsonPath.pathToJsonPath(item.path),
           value: item.value,
           isRoot: item.isRoot,
         });

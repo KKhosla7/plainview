@@ -1,4 +1,5 @@
 import { yieldToMain } from '../../core/scheduler.js';
+import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 
 /* global Plainview */
@@ -52,7 +53,7 @@ import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
     }
 
     currentPath.push(segment);
-    const pathText = Plainview.jsonPath.pathToJsonPath(currentPath);
+    const pathText = jsonPath.pathToJsonPath(currentPath);
     const entry = ctx.indexRef.current.get(pathText);
     if (!entry) {
       return null;
