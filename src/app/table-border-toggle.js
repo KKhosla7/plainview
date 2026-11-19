@@ -1,3 +1,4 @@
+import { createIconButton, icons } from '.././app/icons.js';
 import { loadSetting, saveSetting, TABLE_BORDERS_KEY } from '.././core/settings.js';
 
 /* global Plainview */
@@ -11,10 +12,10 @@ import { loadSetting, saveSetting, TABLE_BORDERS_KEY } from '.././core/settings.
   }
 
   function createTableBordersButton({ settingKey } = {}) {
-    const button = Plainview.createIconButton(
+    const button = createIconButton(
       'pv-action pv-icon-action pv-table-borders-toggle',
       'Show column lines',
-      Plainview.icons.table(),
+      icons.table(),
     );
     createTableBordersToggle({ button, settingKey });
     return button;

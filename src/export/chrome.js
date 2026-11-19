@@ -1,3 +1,4 @@
+import { createIconButton, icons } from '.././app/icons.js';
 import { tableResize } from '.././core/table-resize.js';
 
 /* global Plainview */
@@ -58,10 +59,10 @@ import { tableResize } from '.././core/table-resize.js';
       return;
     }
 
-    const button = Plainview.createIconButton(
+    const button = createIconButton(
       'pv-action pv-icon-action pv-export-data-action',
       'Export data',
-      Plainview.icons.export(),
+      icons.export(),
     );
     const { menu, title } = Plainview.createMenuShell('Clean data');
     let controller;

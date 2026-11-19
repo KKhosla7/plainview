@@ -1,3 +1,4 @@
+import { createIconButton, icons } from '.././app/icons.js';
 import { createElement } from '../core/dom.js';
 
 /* global Plainview */
@@ -45,7 +46,7 @@ import { createElement } from '../core/dom.js';
     htmlTab.setAttribute('aria-label', 'HTML');
     htmlTab.setAttribute('aria-selected', 'true');
     htmlTab.title = 'Rendered HTML view';
-    htmlTab.append(Plainview.icons.html());
+    htmlTab.append(icons.html());
 
     const sourceTab = button('pv-view-tab pv-icon-tab');
     sourceTab.setAttribute('role', 'tab');
@@ -53,7 +54,7 @@ import { createElement } from '../core/dom.js';
     sourceTab.setAttribute('aria-selected', 'false');
     sourceTab.title = 'Raw source';
 
-    sourceTab.append(Plainview.icons.source());
+    sourceTab.append(icons.source());
     views.append(htmlTab, sourceTab);
     return { views, htmlTab, sourceTab };
   }
@@ -79,10 +80,10 @@ import { createElement } from '../core/dom.js';
     const downloadButton = button('pv-action pv-action-download', 'Download');
     downloadButton.title = 'Download the original file';
 
-    const exportButton = Plainview.createIconButton(
+    const exportButton = createIconButton(
       'pv-action pv-icon-action pv-action-export',
       'Export',
-      Plainview.icons.export(),
+      icons.export(),
     );
     exportButton.title = 'Export data or standalone HTML';
 

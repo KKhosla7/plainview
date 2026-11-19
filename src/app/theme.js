@@ -1,12 +1,13 @@
+import { createIconButton, icons } from '.././app/icons.js';
 import { saveSetting, THEME_KEY, validTheme } from '../core/settings.js';
 
 /* global Plainview */
 ((root) => {
   function createThemeButton() {
-    return Plainview.createIconButton(
+    return createIconButton(
       'pv-action pv-icon-action pv-theme-toggle',
       'Toggle theme',
-      Plainview.icons.theme(),
+      icons.theme(),
     );
   }
 

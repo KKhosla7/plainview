@@ -1,3 +1,4 @@
+import { icons } from '.././app/icons.js';
 import { createElement, el } from '../core/dom.js';
 
 /* global Plainview */
@@ -26,7 +27,7 @@ import { createElement, el } from '../core/dom.js';
     button.title = title;
     button.append(
       kind === 'html'
-        ? Plainview.icons.html()
+        ? icons.html()
         : el('span', 'pv-format-glyph', Plainview.formatGlyph(glyphLabel)),
       root.document.createTextNode(label),
     );
