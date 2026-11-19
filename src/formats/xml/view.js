@@ -26,23 +26,26 @@ function selectTree(rootElement) {
     : createXmlVirtualTree(rootElement);
 }
 
-function buildXml(source) {
-  const parsed = parseXml(source);
-  const parseError = Object.getOwnPropertyDescriptor(parsed, 'error')?.value;
-  const article = el('article', 'pv-doc pv-data-doc');
+function createXmlExportData(source, exportState) {
+  return {
+    formatId: 'xml',
+    hasFilter: () => Boolean(exportState.getFiltered()?.length),
+    getDocument() {
+      return { filter: exportState.filter, formatId: 'xml', source };
+    },
+    getData(scope) {
+      const nodes = exportState.getFiltered();
+      if (scope === 'filtered') {
+        return nodes?.length ? { data: nodes, formatId: 'xml', kind: 'xml-nodes' } : null;
+      }
 
-  if (parseError) {
-    article.append(
-      el('div', 'pv-doc-title', 'Invalid XML'),
-      errorPanel(parseError.message, parseError.line, parseError.column),
-    );
-    return { article, stats: null, error: true };
-  }
+      return { data: source, formatId: 'xml', kind: 'xml' };
+    },
+  };
+}
 
-  const treeMode = document.documentElement.dataset.pvJsonTreeMode || 'virtual';
-  const tree = selectTree(parsed.doc.documentElement);
-  const { stats } = tree;
-  const exportState = {
+function createXmlExportState() {
+  return {
     filter: null,
     kind: '',
     values: null,
@@ -62,6 +65,25 @@ function buildXml(source) {
       return this.values;
     },
   };
+}
+
+function buildXml(source) {
+  const parsed = parseXml(source);
+  const parseError = Object.getOwnPropertyDescriptor(parsed, 'error')?.value;
+  const article = el('article', 'pv-doc pv-data-doc');
+
+  if (parseError) {
+    article.append(
+      el('div', 'pv-doc-title', 'Invalid XML'),
+      errorPanel(parseError.message, parseError.line, parseError.column),
+    );
+    return { article, stats: null, error: true };
+  }
+
+  const treeMode = document.documentElement.dataset.pvJsonTreeMode || 'virtual';
+  const tree = selectTree(parsed.doc.documentElement);
+  const { stats } = tree;
+  const exportState = createXmlExportState();
 
   article.append(
     createDataToolbar({
@@ -87,21 +109,7 @@ function buildXml(source) {
     article,
     stats,
     error: false,
-    exportData: {
-      formatId: 'xml',
-      hasFilter: () => Boolean(exportState.getFiltered()?.length),
-      getDocument() {
-        return { filter: exportState.filter, formatId: 'xml', source };
-      },
-      getData(scope) {
-        const nodes = exportState.getFiltered();
-        if (scope === 'filtered') {
-          return nodes?.length ? { data: nodes, formatId: 'xml', kind: 'xml-nodes' } : null;
-        }
-
-        return { data: source, formatId: 'xml', kind: 'xml' };
-      },
-    },
+    exportData: createXmlExportData(source, exportState),
   };
 }
 
