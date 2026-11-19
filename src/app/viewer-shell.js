@@ -6,6 +6,26 @@ import { createTocDrawer } from './toc.js';
 import { createViewSwitcher } from './view-switcher.js';
 import { createZoom } from './zoom.js';
 
+function createSwitcher({ app, topbar, zoom, toc, sourcePane, viewKey, savedView }) {
+  return createViewSwitcher({
+    app,
+    htmlTab: topbar.htmlTab,
+    sourceTab: topbar.sourceTab,
+    zoom,
+    initialView: savedView,
+    persistKey: viewKey,
+    onSource: () => {
+      toc.close();
+      sourcePane.populate();
+    },
+    onViewChange: () => {
+      if (toc.element) {
+        toc.update();
+      }
+    },
+  });
+}
+
 function createViewerShell({
   content,
   format,
@@ -48,22 +68,14 @@ function createViewerShell({
   }
   shell.append(main);
 
-  const viewSwitcher = createViewSwitcher({
+  const viewSwitcher = createSwitcher({
     app,
-    htmlTab: topbar.htmlTab,
-    sourceTab: topbar.sourceTab,
+    topbar,
     zoom,
-    initialView: savedView,
-    persistKey: viewKey,
-    onSource: () => {
-      toc.close();
-      sourcePane.populate();
-    },
-    onViewChange: () => {
-      if (toc.element) {
-        toc.update();
-      }
-    },
+    toc,
+    sourcePane,
+    viewKey,
+    savedView,
   });
 
   const theme = createTheme({
