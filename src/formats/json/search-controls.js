@@ -2,7 +2,8 @@ import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { jsonSearchRunner } from './search-runner.js';
 
-const { el, button, bindResultDismiss, inputClear, selectHit, SearchDebounceMs } = jsonToolsShared;
+const { el, button, bindResultDismiss, inputClear, selectHit, SEARCH_DEBOUNCE_MS } =
+  jsonToolsShared;
 
 function createSearchElements() {
   const searchWrap = el('div', 'pv-json-search');
@@ -189,7 +190,7 @@ function createSearchController(options) {
     globalThis.clearTimeout(state.timer);
     state.timer = globalThis.setTimeout(() => {
       executeSearch(options, state, clear).catch(failed);
-    }, SearchDebounceMs);
+    }, SEARCH_DEBOUNCE_MS);
   }
 
   function cancel() {

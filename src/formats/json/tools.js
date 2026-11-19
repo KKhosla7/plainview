@@ -4,7 +4,7 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { createJsonQuery } from './query-controls.js';
 import { createJsonSearch } from './search-controls.js';
 
-const { el, CopyResetMs, clearStatus } = jsonToolsShared;
+const { el, COPY_RESET_MS, clearStatus } = jsonToolsShared;
 
 function createJsonTools({ tree, rootValue, indexRef, revealPath, exportState }) {
   const tools = el('div', 'pv-json-tools');
@@ -57,7 +57,7 @@ function createJsonTools({ tree, rootValue, indexRef, revealPath, exportState })
     target.textContent = ok ? 'Copied' : 'Failed';
     globalThis.setTimeout(() => {
       target.textContent = previous;
-    }, CopyResetMs);
+    }, COPY_RESET_MS);
   });
 
   tools.append(search, query, status, searchResults, queryResults);
