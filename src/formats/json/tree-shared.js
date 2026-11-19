@@ -1,10 +1,11 @@
+import { el } from '../.././core/dom.js';
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * Small tree-node presentation helpers shared by the JSON tree renderer.
  */
 ((root) => {
-  const { el } = Plainview;
-
   function span(className, text) {
     return el('span', className, text);
   }
@@ -20,15 +21,15 @@
       return 'pv-json-null';
     }
 
-    if (Plainview.valueKind(value) === 'string') {
+    if (valueKind(value) === 'string') {
       return 'pv-json-string';
     }
 
-    if (Plainview.valueKind(value) === 'number') {
+    if (valueKind(value) === 'number') {
       return 'pv-json-number';
     }
 
-    if (Plainview.valueKind(value) === 'boolean') {
+    if (valueKind(value) === 'boolean') {
       return 'pv-json-boolean';
     }
 
@@ -70,7 +71,7 @@
   }
 
   function renderValue(value, syntax) {
-    if (Plainview.valueKind(value) === 'string') {
+    if (valueKind(value) === 'string') {
       if (syntax === 'yaml') {
         return value;
       }
@@ -94,7 +95,7 @@
   }
 
   function renderKey(key, syntax) {
-    if (Plainview.valueKind(key) === 'number') {
+    if (valueKind(key) === 'number') {
       return span('pv-json-index', String(key));
     }
 
@@ -106,7 +107,7 @@
   }
 
   function isContainer(value) {
-    return value !== null && Plainview.valueKind(value) === 'object';
+    return value !== null && valueKind(value) === 'object';
   }
 
   function entryCount(value) {

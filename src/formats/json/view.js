@@ -1,10 +1,10 @@
+import { el } from '../.././core/dom.js';
+
 /* global Plainview */
 /*
  * JSON/JSONC document entry point. Tree construction lives in tree.js.
  */
 ((root) => {
-  const { el } = Plainview;
-
   function summaryFor(source, options, stats) {
     return (
       `${stats.nodes.toLocaleString()}${stats.truncated ? '+' : ''} nodes · ` +

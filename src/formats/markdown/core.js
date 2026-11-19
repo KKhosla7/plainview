@@ -1,3 +1,6 @@
+import { createElement } from '../.././core/dom.js';
+import { valueKind } from '../.././core/value.js';
+
 /* global marked, Plainview */
 /*
  * Markdown parsing and DOM hardening. Raw HTML is deliberately escaped: a
@@ -50,7 +53,7 @@
    * Relative URLs stay relative so they resolve against the markdown file.
    */
   function sanitizeUrl(raw, kind) {
-    if (Plainview.valueKind(raw) !== 'string') {
+    if (valueKind(raw) !== 'string') {
       return null;
     }
     const value = raw.trim();
@@ -99,7 +102,7 @@
     for (const image of article.querySelectorAll('img[src]')) {
       const safe = sanitizeUrl(image.getAttribute('src'), 'image');
       if (safe === null) {
-        const blocked = Plainview.createElement('span');
+        const blocked = createElement('span');
         blocked.className = 'pv-image-blocked';
         blocked.textContent = image.alt ? `[blocked image: ${image.alt}]` : '[blocked image]';
         image.replaceWith(blocked);

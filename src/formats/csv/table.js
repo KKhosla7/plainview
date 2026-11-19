@@ -1,10 +1,10 @@
+import { el } from '../.././core/dom.js';
+
 /* global Plainview */
 /*
  * CSV table header, filtering, sorting and row rendering.
  */
 ((root) => {
-  const { el } = Plainview;
-
   function numeric(value) {
     return /^-?\d+(?:\.\d+)?$/u.test(String(value ?? '').trim());
   }

@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { test as it } from 'node:test';
-import '../src/core/value.js';
 import '../src/formats/json/jsonpath.js';
 import '../src/formats/json/jsonpath-filter.js';
 import '../src/formats/json/jsonpath-eval.js';

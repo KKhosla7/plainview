@@ -1,3 +1,5 @@
+import { createElement } from '.././core/dom.js';
+
 /* global Plainview */
 /*
  * Lazy enhancements and export actions. Enhancement failures are visible as a
@@ -7,7 +9,7 @@
   const ExportErrorResetMs = 8000;
 
   function el(tag, className, text) {
-    const node = Plainview.createElement(tag);
+    const node = createElement(tag);
     if (className) {
       node.className = className;
     }

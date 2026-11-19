@@ -1,3 +1,5 @@
+import { valueKind } from '.././core/value.js';
+
 /* global Plainview */
 /*
  * Native data exports. These are always plain, uncompressed text and are
@@ -36,7 +38,7 @@
     return `${JSON.stringify(
       value,
       (_key, item) => {
-        if (item !== null && Plainview.valueKind(item) === 'object') {
+        if (item !== null && valueKind(item) === 'object') {
           if (seen.has(item)) {
             return '[circular]';
           }

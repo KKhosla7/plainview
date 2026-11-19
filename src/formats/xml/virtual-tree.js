@@ -1,3 +1,5 @@
+import { el } from '../.././core/dom.js';
+
 /* global Plainview */
 /* Windowed XML tree. Rows are flattened from expanded descriptors and mounted lazily. */
 ((root) => {
@@ -6,7 +8,6 @@
   const { Cdata, Comment, Element, MaxNodes, ProcessingInstruction, Text, meaningfulChildren } =
     Plainview.xmlTreeShared;
   const { createRow } = Plainview.xmlVirtualRows;
-  const { el } = Plainview;
 
   function createStats() {
     return {

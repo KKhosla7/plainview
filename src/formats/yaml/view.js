@@ -1,7 +1,10 @@
+import { createElement } from '../.././core/dom.js';
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 ((root) => {
   function el(tag, className, text) {
-    const node = Plainview.createElement(tag);
+    const node = createElement(tag);
     if (className) {
       node.className = className;
     }
@@ -16,14 +19,14 @@
   function errorDetails(error) {
     const message = error instanceof Error ? error.message : String(error);
     const mark = error?.mark;
-    if (!mark || Plainview.valueKind(mark.line) !== 'number') {
+    if (!mark || valueKind(mark.line) !== 'number') {
       return { message };
     }
 
     return {
       message: error.reason || message,
       line: mark.line + 1,
-      column: Plainview.valueKind(mark.column) === 'number' ? mark.column + 1 : undefined,
+      column: valueKind(mark.column) === 'number' ? mark.column + 1 : undefined,
     };
   }
 

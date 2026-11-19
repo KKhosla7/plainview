@@ -1,9 +1,11 @@
+import { el } from '.././core/dom.js';
+import { valueKind } from '.././core/value.js';
+
 /* global Plainview */
 /*
  * Shared pointer-driven column resizing for Markdown and CSV tables.
  */
 ((root) => {
-  const { el } = Plainview;
   const MinColumnWidth = 60;
   function widthKey(tableId) {
     return `plainview.tableWidths:${location.href}:${tableId}`;
@@ -54,7 +56,7 @@
     }
 
     for (let index = 0; index < widths.length; index += 1) {
-      if (Plainview.valueKind(widths[index]) === 'number' && widths[index] > 0) {
+      if (valueKind(widths[index]) === 'number' && widths[index] > 0) {
         cols[index].style.width = `${widths[index]}px`;
       }
     }

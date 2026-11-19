@@ -1,3 +1,5 @@
+import { createElement } from '.././core/dom.js';
+
 /* global Plainview */
 /*
  * Poll the document URL and compare it with the source the reader mounted.
@@ -11,7 +13,7 @@
   const AutoReloadDelayMs = 900;
 
   function el(tag, className, text) {
-    const node = Plainview.createElement(tag);
+    const node = createElement(tag);
     if (className) {
       node.className = className;
     }

@@ -1,9 +1,11 @@
+import { createElement } from '../.././core/dom.js';
+
 /* global Plainview */
 ((root) => {
   const CopyResetMs = 1200;
 
   function el(tag, className, text) {
-    const node = Plainview.createElement(tag);
+    const node = createElement(tag);
     if (className) {
       node.className = className;
     }

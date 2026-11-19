@@ -1,3 +1,5 @@
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * Maps simple path-only JMESPath expressions to JSON paths. Complex
@@ -89,11 +91,11 @@
   function valueAt(rootValue, path) {
     let current = rootValue;
     for (const segment of path) {
-      if (current === null || Plainview.valueKind(current) !== 'object') {
+      if (current === null || valueKind(current) !== 'object') {
         return;
       }
 
-      if (Plainview.valueKind(segment) === 'number') {
+      if (valueKind(segment) === 'number') {
         const index = segment < 0 ? current.length + segment : segment;
         current = current[index];
       } else {

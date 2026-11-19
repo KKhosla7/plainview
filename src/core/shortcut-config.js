@@ -1,3 +1,5 @@
+import { valueKind } from '.././core/value.js';
+
 /* global Plainview */
 /*
  * Keyboard shortcut defaults, presets and matching. The options page writes a
@@ -14,15 +16,15 @@
   const ViewPresets = new Set(['alt-s', 'alt-arrows', 'ctrl-shift-arrows', 'off']);
 
   function stringOr(value, fallback) {
-    return Plainview.valueKind(value) === 'string' ? value : fallback;
+    return valueKind(value) === 'string' ? value : fallback;
   }
 
   function normalizeShortcuts(value) {
-    if (Plainview.valueKind(value) === 'string') {
+    if (valueKind(value) === 'string') {
       return { ...Defaults, view: ViewPresets.has(value) ? value : Defaults.view };
     }
 
-    if (!value || Plainview.valueKind(value) !== 'object' || Array.isArray(value)) {
+    if (!value || valueKind(value) !== 'object' || Array.isArray(value)) {
       return { ...Defaults };
     }
 

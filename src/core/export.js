@@ -1,3 +1,4 @@
+import { createElement } from '.././core/dom.js';
 /* global Plainview */
 import CompressedTemplate from './export/compressed.html';
 import DecompressTemplate from './export/decompress.txt';
@@ -76,7 +77,7 @@ import DocumentTemplate from './export/document.html';
       node.remove();
     }
 
-    const actions = Plainview.createElement('div');
+    const actions = createElement('div');
     actions.className = 'pv-actions pv-export-actions';
     clone.append(actions);
     return clone.outerHTML;

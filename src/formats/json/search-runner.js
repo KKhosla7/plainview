@@ -1,3 +1,5 @@
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * Batched full-document search runner. Each batch yields to the browser before
@@ -13,7 +15,7 @@
     const quotedKey = entry.isRoot ? '' : JSON.stringify(String(entry.key));
     const primitive = Plainview.jsonToolsShared.primitiveText(entry.value);
     const quotedValue =
-      Plainview.valueKind(entry.value) === 'string' ? JSON.stringify(entry.value) : primitive;
+      valueKind(entry.value) === 'string' ? JSON.stringify(entry.value) : primitive;
     const preview = primitive || Plainview.jsonToolsShared.previewValue(entry.value);
     return [
       entry.pathText,

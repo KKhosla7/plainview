@@ -1,9 +1,10 @@
+import { el } from '../.././core/dom.js';
+
 /* global Plainview */
 /*
  * Shared XML tool state and hit navigation.
  */
 ((root) => {
-  const { el } = Plainview;
   const CopyResetMs = 1200;
   const SearchDebounceMs = 120;
   const Element = 1;

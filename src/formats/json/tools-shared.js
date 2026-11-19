@@ -1,9 +1,11 @@
+import { el } from '../.././core/dom.js';
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * Shared JSON tool helpers.
  */
 ((root) => {
-  const { el } = Plainview;
   const CopyResetMs = 1200;
   const SearchDebounceMs = 120;
 
@@ -37,11 +39,11 @@
       return 'null';
     }
 
-    if (Plainview.valueKind(value) === 'string') {
+    if (valueKind(value) === 'string') {
       return value;
     }
 
-    if (Plainview.valueKind(value) === 'number' || Plainview.valueKind(value) === 'boolean') {
+    if (valueKind(value) === 'number' || valueKind(value) === 'boolean') {
       return String(value);
     }
 
@@ -57,7 +59,7 @@
       return `[${value.length} items]`;
     }
 
-    if (Plainview.valueKind(value) === 'object') {
+    if (valueKind(value) === 'object') {
       return `{${Object.keys(value).length} keys}`;
     }
 
@@ -67,7 +69,7 @@
   function valueAtPath(rootValue, path) {
     let value = rootValue;
     for (const segment of path) {
-      if (value === null || Plainview.valueKind(value) !== 'object') {
+      if (value === null || valueKind(value) !== 'object') {
         return;
       }
       value = value[segment];
@@ -80,9 +82,9 @@
     const value = valueAtPath(rootValue, path);
     const parentPath = path.slice(0, -1);
     const parent = valueAtPath(rootValue, parentPath);
-    const isRecord = value !== null && Plainview.valueKind(value) === 'object';
+    const isRecord = value !== null && valueKind(value) === 'object';
     const parentIsRecord =
-      parent !== null && Plainview.valueKind(parent) === 'object' && !Array.isArray(parent);
+      parent !== null && valueKind(parent) === 'object' && !Array.isArray(parent);
     return !isRecord && parentIsRecord ? parentPath : path;
   }
 

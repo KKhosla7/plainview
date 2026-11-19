@@ -1,3 +1,5 @@
+import { createElement } from '../.././core/dom.js';
+
 /* global Plainview */
 /*
  * Purely visual: put the document's own H1 and first paragraph in a bordered
@@ -12,10 +14,10 @@
 
     const lede = first.nextElementSibling?.tagName === 'P' ? first.nextElementSibling : null;
 
-    const block = Plainview.createElement('header');
+    const block = createElement('header');
     block.className = 'pv-titleblock';
 
-    const main = Plainview.createElement('div');
+    const main = createElement('div');
     main.className = 'pv-tb-main';
 
     first.querySelector('.pv-anchor')?.remove();

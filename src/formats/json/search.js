@@ -1,3 +1,5 @@
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * Full-document JSON walker. Search consumes it in small batches so the page
@@ -7,7 +9,7 @@
   const MaxResults = 5000;
 
   function pushChildren(item, stack, seen) {
-    if (item.value === null || Plainview.valueKind(item.value) !== 'object') {
+    if (item.value === null || valueKind(item.value) !== 'object') {
       return;
     }
 

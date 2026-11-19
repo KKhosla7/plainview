@@ -1,11 +1,11 @@
+import { el } from '.././core/dom.js';
+
 /* global Plainview */
 /*
  * Builds the reader shell: topbar, content surface, table of contents, view
  * switcher and theme controller.
  */
 ((root) => {
-  const { el } = Plainview;
-
   function createViewerShell({
     content,
     format,

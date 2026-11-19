@@ -1,3 +1,5 @@
+import { createElement } from '.././core/dom.js';
+
 /* global Plainview */
 ((root) => {
   const RevokeDelayMs = 10_000;
@@ -10,7 +12,7 @@
 
   function downloadBlob(blob, fileName) {
     const url = URL.createObjectURL(blob);
-    const link = Plainview.createElement('a');
+    const link = createElement('a');
     link.href = url;
     link.download = fileName || 'document.txt';
     link.dataset.pvDownload = 'ignore';

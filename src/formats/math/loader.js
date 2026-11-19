@@ -1,3 +1,5 @@
+import { createElement } from '../.././core/dom.js';
+
 /* global Plainview */
 /*
  * KaTeX is bundled locally and loaded only for Markdown that contains math.
@@ -29,7 +31,7 @@
     if (!(api && document.head)) {
       return;
     }
-    const link = Plainview.createElement('link');
+    const link = createElement('link');
     link.rel = 'stylesheet';
     link.href = api.getURL(CssPath);
     link.setAttribute('data-pv-katex', '');

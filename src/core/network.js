@@ -1,3 +1,5 @@
+import { valueKind } from '.././core/value.js';
+
 /* global Plainview */
 /*
  * The only module allowed to perform raw network I/O. Callers receive a
@@ -62,7 +64,7 @@
 
     try {
       const response = await runtime.sendMessage({ type: 'plainview:read-source', url });
-      return Plainview.valueKind(response?.text) === 'string' ? response.text : null;
+      return valueKind(response?.text) === 'string' ? response.text : null;
     } catch {
       return null;
     }

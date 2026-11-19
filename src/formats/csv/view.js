@@ -1,10 +1,10 @@
+import { el } from '../.././core/dom.js';
+
 /* global Plainview */
 /*
  * CSV/TSV document entry point. Table controls live in table.js.
  */
 ((root) => {
-  const { el } = Plainview;
-
   function columnIsEmpty(rows, index) {
     for (const row of rows) {
       if (String(row[index] ?? '').trim() !== '') {

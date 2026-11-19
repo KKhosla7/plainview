@@ -1,7 +1,5 @@
-/* global Plainview */
-/*
- * JSONPath and JMESPath query controls.
- */
+import { valueKind } from '../.././core/value.js';
+
 ((root) => {
   const { el, button, bindResultDismiss, inputClear, mark, unmark, selectHit, renderResults } =
     Plainview.jsonToolsShared;
@@ -67,7 +65,7 @@
   }
 
   function scalarValue(result) {
-    if (Array.isArray(result) || (result !== null && Plainview.valueKind(result) === 'object')) {
+    if (Array.isArray(result) || (result !== null && valueKind(result) === 'object')) {
       return;
     }
 

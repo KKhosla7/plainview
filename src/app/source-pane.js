@@ -1,3 +1,5 @@
+import { el, replaceWithGeneratedHtml } from '../core/dom.js';
+
 /* global Plainview */
 /*
  * The source tab. It renders a bounded preview first, then lets the reader
@@ -8,7 +10,6 @@
   const PreviewChars = 200_000;
   const HighlightChars = 500_000;
   const PreviewCutRatio = 0.8;
-  const { el } = Plainview;
 
   function previewSource(source, full) {
     if (full || source.length <= PreviewChars) {
@@ -28,7 +29,7 @@
       code.textContent = text;
       return;
     }
-    Plainview.replaceWithGeneratedHtml(code, Plainview.sourceHighlight.highlight(text, format.id));
+    replaceWithGeneratedHtml(code, Plainview.sourceHighlight.highlight(text, format.id));
   }
 
   function updateSourceStatus({ status, fullButton, preview, total, text, full }) {

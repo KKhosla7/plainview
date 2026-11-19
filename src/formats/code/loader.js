@@ -1,3 +1,5 @@
+import { replaceWithGeneratedHtml } from '../../core/dom.js';
+
 /* global Plainview */
 /*
  * highlight.js is bundled locally and imported only after a Markdown document
@@ -77,7 +79,7 @@
       language,
       ignoreIllegals: true,
     });
-    Plainview.replaceWithGeneratedHtml(block.code, result.value);
+    replaceWithGeneratedHtml(block.code, result.value);
     block.code.classList.add('hljs');
     block.code.parentElement?.classList.add('pv-code-highlighted');
   }
@@ -90,7 +92,7 @@
     if (result.relevance < MinAutoRelevance) {
       return;
     }
-    Plainview.replaceWithGeneratedHtml(block.code, result.value);
+    replaceWithGeneratedHtml(block.code, result.value);
     block.code.classList.add('hljs');
     block.code.parentElement?.classList.add('pv-code-highlighted');
   }

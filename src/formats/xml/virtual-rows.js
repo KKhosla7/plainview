@@ -1,8 +1,9 @@
+import { el } from '../.././core/dom.js';
+
 /* global Plainview */
 /* Row rendering for the virtualized XML tree. */
 ((root) => {
   const { Cdata, closeTag, openTag, pathButton } = Plainview.xmlTreeShared;
-  const { el } = Plainview;
 
   function nodeParts(fragment) {
     return [...fragment.childNodes];

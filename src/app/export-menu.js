@@ -1,3 +1,5 @@
+import { createElement, el } from '.././core/dom.js';
+
 /* global Plainview */
 /*
  * Shared export-menu shell, item rendering and dismissal behavior. The live
@@ -5,11 +7,11 @@
  */
 ((root) => {
   function createMenuShell(titleText) {
-    const menu = Plainview.createElement('div');
+    const menu = createElement('div');
     menu.className = 'pv-export-menu';
     menu.setAttribute('role', 'menu');
     menu.hidden = true;
-    const title = Plainview.createElement('div');
+    const title = createElement('div');
     title.className = 'pv-export-menu-title';
     title.textContent = titleText;
     menu.append(title);
@@ -17,7 +19,7 @@
   }
 
   function createExportCell({ ariaLabel, glyphLabel, kind = 'data', label, title }) {
-    const button = Plainview.createElement('button');
+    const button = createElement('button');
     button.type = 'button';
     button.className = 'pv-export-cell';
     button.setAttribute('aria-label', ariaLabel);
@@ -25,7 +27,7 @@
     button.append(
       kind === 'html'
         ? Plainview.icons.html()
-        : Plainview.el('span', 'pv-format-glyph', Plainview.formatGlyph(glyphLabel)),
+        : el('span', 'pv-format-glyph', Plainview.formatGlyph(glyphLabel)),
       root.document.createTextNode(label),
     );
     return button;

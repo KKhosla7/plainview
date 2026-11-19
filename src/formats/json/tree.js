@@ -1,3 +1,6 @@
+import { el } from '../.././core/dom.js';
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * Lazily materialized JSON tree. Closed containers create only their summary;
@@ -6,7 +9,6 @@
  */
 ((root) => {
   const { autoOpenChildLimit, openDepth, pageSize } = Plainview.jsonLimits;
-  const { el } = Plainview;
 
   const { actionButton, pathButton, renderKey, renderValue, span, treeSyntax, valueClass } =
     Plainview.jsonTreeShared;
@@ -184,7 +186,7 @@
     ctx.depth = Math.max(ctx.depth, depth);
     ctx.stats.nodes += 1;
     ctx.stats.depth = Math.max(ctx.stats.depth, depth);
-    const isContainer = value !== null && Plainview.valueKind(value) === 'object';
+    const isContainer = value !== null && valueKind(value) === 'object';
     if (isContainer && meta.chain.includes(value)) {
       ctx.stats.values += 1;
       return renderLeaf(key, '[circular]', meta, ctx);

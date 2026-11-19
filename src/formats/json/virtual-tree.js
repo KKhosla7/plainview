@@ -1,3 +1,6 @@
+import { el } from '../../core/dom.js';
+import { primePath } from './virtual-prime.js';
+
 ((root) => {
   const Overscan = 8;
   const {
@@ -16,29 +19,6 @@
   const { AutoRows, createState } = Plainview.jsonVirtualState;
   const { RowHeight, applyRowTitle, measureRows, rebuildOffsets, rowTop, visibleRange } =
     Plainview.jsonVirtualLayout;
-  function primePath(state, path, nodeValue, depth) {
-    if (!isContainer(nodeValue)) {
-      return;
-    }
-    const total = entryCount(nodeValue);
-    if (depth > 0 && depth >= state.pageDepth) {
-      return;
-    }
-    const cost = total + 1;
-    if (depth === 0) {
-      state.autoRows = cost;
-    } else {
-      if (state.autoRows + cost > AutoRows) {
-        return;
-      }
-      state.autoRows += cost;
-    }
-    state.expanded.add(pathTextFor(path));
-    for (let index = 0; index < total; index += 1) {
-      const [key, child] = childEntries(nodeValue, index);
-      primePath(state, [...path, key], child, depth + 1);
-    }
-  }
   function flattenNode({ state, path, key, nodeValue, depth, isRoot }) {
     const pathText = pathTextFor(path);
     if (!filterRelevant(state, pathText, path)) {
@@ -130,7 +110,7 @@
     rebuild(state);
   }
   function createRow(state, row, index) {
-    const node = Plainview.el('div', 'pv-vrow');
+    const node = el('div', 'pv-vrow');
     node.style.top = `${rowTop(state, index)}px`;
     node.style.paddingLeft = `${8 + row.depth * 18}px`;
     node.style.setProperty('--pv-row-guide', `var(--pv-guide-${(row.depth % 5) + 1})`);
@@ -167,7 +147,7 @@
     }
     node.append(...rowValue(state, row), pathButton(row.pathText));
     for (let depth = 0; depth < row.depth; depth += 1) {
-      const guide = Plainview.el('span', 'pv-guide');
+      const guide = el('span', 'pv-guide');
       guide.style.left = `${16 + depth * 18}px`;
       guide.style.color = `var(--pv-guide-${(depth % 5) + 1})`;
       node.append(guide);
@@ -262,7 +242,7 @@
     return { handled: true };
   }
   function createVirtualJsonTree({ value, source, options, indexRef, onStats }) {
-    const tree = Plainview.el('div', 'pv-json pv-virtual-tree pv-json-virtual');
+    const tree = el('div', 'pv-json pv-virtual-tree pv-json-virtual');
     const state = createState({
       value,
       options: { ...options, source },
@@ -270,7 +250,17 @@
       onStats,
       tree,
     });
-    primePath(state, [], value, 0);
+    primePath({
+      state,
+      path: [],
+      nodeValue: value,
+      depth: 0,
+      isContainer,
+      entryCount,
+      childEntries,
+      pathTextFor,
+      autoRows: AutoRows,
+    });
     flatten(state);
     renderRows(state);
     tree.addEventListener('pv-expand-all', () =>

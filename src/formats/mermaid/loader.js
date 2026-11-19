@@ -1,3 +1,6 @@
+import { createElement } from '../.././core/dom.js';
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * Mermaid is loaded lazily: pages without a ```mermaid block never pay the
@@ -37,7 +40,7 @@
   }
 
   function showError(block, message) {
-    const panel = Plainview.createElement('div');
+    const panel = createElement('div');
     panel.className = 'pv-mermaid-error';
     panel.textContent = `Diagram error: ${message}`;
     block.diagram.replaceChildren(panel);
@@ -170,9 +173,7 @@
     renderGeneration += 1;
     const generation = renderGeneration;
     const isDark =
-      Plainview.valueKind(options?.isDark) === 'function'
-        ? options.isDark()
-        : Boolean(options?.isDark);
+      valueKind(options?.isDark) === 'function' ? options.isDark() : Boolean(options?.isDark);
 
     let mermaid;
     try {

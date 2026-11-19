@@ -1,3 +1,5 @@
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * JSONPath filter tokenizer and predicate parser.
@@ -136,11 +138,7 @@
     }
     let value = item;
     for (const part of token.parts) {
-      if (
-        value === null ||
-        Plainview.valueKind(value) !== 'object' ||
-        !Object.hasOwn(value, part)
-      ) {
+      if (value === null || valueKind(value) !== 'object' || !Object.hasOwn(value, part)) {
         return;
       }
       value = value[part];

@@ -1,3 +1,5 @@
+import { createElement } from '../.././core/dom.js';
+
 /* global Plainview */
 /*
  * Post-processing after marked: code blocks, Mermaid placeholders, tables,
@@ -12,7 +14,7 @@
   }
 
   function addCopyButton(code) {
-    const button = Plainview.createElement('button');
+    const button = createElement('button');
     button.type = 'button';
     button.className = 'pv-copy';
     button.textContent = 'Copy';
@@ -28,19 +30,19 @@
   }
 
   function createMermaidBar(code) {
-    const bar = Plainview.createElement('div');
+    const bar = createElement('div');
     bar.className = 'pv-code-bar';
-    const label = Plainview.createElement('span');
+    const label = createElement('span');
     label.className = 'pv-code-lang';
     label.textContent = 'mermaid';
-    const tools = Plainview.createElement('span');
+    const tools = createElement('span');
     tools.className = 'pv-mermaid-tools';
-    const sourceButton = Plainview.createElement('button');
+    const sourceButton = createElement('button');
     sourceButton.type = 'button';
     sourceButton.className = 'pv-copy';
     sourceButton.textContent = 'Source';
     sourceButton.setAttribute('aria-expanded', 'false');
-    const sourceWrap = Plainview.createElement('div');
+    const sourceWrap = createElement('div');
     sourceWrap.className = 'pv-mermaid-source';
     sourceWrap.hidden = true;
     tools.append(sourceButton, addCopyButton(code));
@@ -49,7 +51,7 @@
   }
 
   function createMermaidDiagram() {
-    const diagram = Plainview.createElement('div');
+    const diagram = createElement('div');
     diagram.className = 'pv-mermaid-diagram pv-mermaid-loading';
     diagram.textContent = 'Rendering diagram…';
     return diagram;
@@ -57,7 +59,7 @@
 
   function prepareMermaidBlock(pre, code) {
     const source = code.textContent.replace(/\n$/u, '');
-    const container = Plainview.createElement('figure');
+    const container = createElement('figure');
     container.className = 'pv-mermaid';
     const { bar, sourceButton, sourceWrap } = createMermaidBar(code);
     const diagram = createMermaidDiagram();
@@ -77,11 +79,11 @@
     if (code.textContent.endsWith('\n')) {
       code.textContent = code.textContent.slice(0, -1);
     }
-    const wrapper = Plainview.createElement('div');
+    const wrapper = createElement('div');
     wrapper.className = 'pv-code';
-    const bar = Plainview.createElement('div');
+    const bar = createElement('div');
     bar.className = 'pv-code-bar';
-    const label = Plainview.createElement('span');
+    const label = createElement('span');
     label.className = 'pv-code-lang';
     label.textContent = codeLanguage(code) || 'code';
     bar.append(label, addCopyButton(code));
@@ -116,7 +118,7 @@
   function wrapTables(article) {
     let index = 0;
     for (const table of article.querySelectorAll('table')) {
-      const wrapper = Plainview.createElement('div');
+      const wrapper = createElement('div');
       wrapper.className = 'pv-table-wrap';
       table.replaceWith(wrapper);
       wrapper.append(table);
@@ -139,7 +141,7 @@
       const id = nextId(text);
       heading.id = id;
 
-      const anchor = Plainview.createElement('a');
+      const anchor = createElement('a');
       anchor.className = 'pv-anchor';
       anchor.href = `#${encodeURIComponent(id)}`;
       anchor.setAttribute('aria-label', `Link to section: ${text}`);
@@ -163,13 +165,13 @@
   function buildMarkdown(source) {
     const parsed = new DOMParser().parseFromString(Plainview.renderMarkdown(source), 'text/html');
     Plainview.sanitizeArticle(parsed.body);
-    const article = Plainview.createElement('article');
+    const article = createElement('article');
     article.className = 'pv-doc pv-markdown';
     article.append(...parsed.body.childNodes);
     const { headings, mermaidBlocks, codeBlocks } = enhanceArticle(article);
 
     if (!article.hasChildNodes()) {
-      const empty = Plainview.createElement('p');
+      const empty = createElement('p');
       empty.className = 'pv-empty';
       empty.textContent = 'This Markdown file is empty.';
       article.append(empty);

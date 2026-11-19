@@ -1,3 +1,5 @@
+import { createElement } from '../.././core/dom.js';
+
 /* global Plainview */
 ((root) => {
   const MaxNodes = 40_000;
@@ -8,7 +10,7 @@
   const Comment = 8;
 
   function el(tag, className, text) {
-    const node = Plainview.createElement(tag);
+    const node = createElement(tag);
     if (className) {
       node.className = className;
     }

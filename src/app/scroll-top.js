@@ -1,7 +1,9 @@
+import { createElement } from '.././core/dom.js';
+
 /* global Plainview */
 ((root) => {
   function createScrollTop({ app }) {
-    const button = Plainview.createElement('button');
+    const button = createElement('button');
     button.type = 'button';
     button.className = 'pv-scroll-top';
     button.textContent = '↑';

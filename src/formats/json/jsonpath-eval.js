@@ -1,3 +1,5 @@
+import { valueKind } from '../.././core/value.js';
+
 /* global Plainview */
 /*
  * JSONPath evaluation over plain data.
@@ -12,7 +14,7 @@
   function pathToJsonPath(parts) {
     let out = '$';
     for (const part of parts) {
-      if (Plainview.valueKind(part) === 'number') {
+      if (valueKind(part) === 'number') {
         out += `[${part}]`;
       } else if (Identifier.test(part)) {
         out += `.${part}`;
@@ -25,7 +27,7 @@
   }
 
   function childNodes(node) {
-    if (node.value === null || Plainview.valueKind(node.value) !== 'object') {
+    if (node.value === null || valueKind(node.value) !== 'object') {
       return [];
     }
 
@@ -43,7 +45,7 @@
   }
 
   function descend(node, visit, seen = new WeakSet()) {
-    if (node.value !== null && Plainview.valueKind(node.value) === 'object') {
+    if (node.value !== null && valueKind(node.value) === 'object') {
       if (seen.has(node.value)) {
         return;
       }
@@ -57,7 +59,7 @@
   }
 
   function isObjectValue(value) {
-    return value !== null && Plainview.valueKind(value) === 'object';
+    return value !== null && valueKind(value) === 'object';
   }
 
   function applyChildStep(node, token) {
