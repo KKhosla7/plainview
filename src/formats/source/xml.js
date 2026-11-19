@@ -1,7 +1,6 @@
 import { escapeHtml } from '../markdown/core.js';
 import { register } from './core.js';
 
-/* global Plainview */
 (() => {
   const Token =
     /(<!--[\s\S]*?-->)|(<!\[CDATA\[[\s\S]*?\]\]>)|(<\?[\s\S]*?\?>)|(<\/?)([A-Za-z_][\w:.-]*)((?:\s+[\w:.-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)(\s*\/?>)/gu;

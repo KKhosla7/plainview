@@ -4,7 +4,6 @@ import { onAsync } from '../core/events.js';
 import { formatBytes } from '.././formats/json/parse.js';
 import { highlight } from '../formats/source/core.js';
 
-/* global Plainview */
 /*
  * The source tab. It renders a bounded preview first, then lets the reader
  * explicitly load the full source without freezing the page.

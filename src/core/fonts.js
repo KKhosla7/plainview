@@ -1,4 +1,3 @@
-/* global Plainview */
 /*
  * Local font faces, registered through the CSS Font Loading API. This keeps
  * the extension self-contained (no Google Fonts request) and avoids relative

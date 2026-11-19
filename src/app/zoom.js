@@ -1,7 +1,6 @@
 import { createElement } from '../core/dom.js';
 import { saveSetting, ZOOM_KEY, ZOOM_MAX, ZOOM_MIN, ZOOM_STEP } from '../core/settings.js';
 
-/* global Plainview */
 function el(tag, className, text) {
   const node = createElement(tag);
   if (className) {

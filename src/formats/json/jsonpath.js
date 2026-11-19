@@ -1,4 +1,3 @@
-/* global Plainview */
 /* A small safe JSONPath subset over plain data; JavaScript is never evaluated. */
 const MaxResults = 2000;
 const Identifier = /^[A-Za-z_$][\w$]*$/u;

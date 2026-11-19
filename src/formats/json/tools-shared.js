@@ -3,7 +3,6 @@ import { el } from '../../core/dom.js';
 import { onAsync } from '../../core/events.js';
 import { valueKind } from '../../core/value.js';
 
-/* global Plainview */
 /*
  * Shared JSON tool helpers.
  */

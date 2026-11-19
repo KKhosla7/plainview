@@ -1,7 +1,6 @@
 import { createIconButton, icons } from '.././app/icons.js';
 import { loadSetting, saveSetting, TABLE_BORDERS_KEY } from '.././core/settings.js';
 
-/* global Plainview */
 function ignoreSettingError() {
   return false;
 }

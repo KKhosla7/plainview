@@ -1,7 +1,6 @@
 import { valueKind } from '../../core/value.js';
 import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 
-/* global Plainview */
 /*
  * Full-document JSON walker. Search consumes it in small batches so the page
  * can yield between chunks instead of building one giant index up front.

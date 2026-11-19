@@ -1,6 +1,5 @@
 import { el } from '../../core/dom.js';
 
-/* global Plainview */
 /*
  * Shared XML tool state and hit navigation.
  */

@@ -1,7 +1,6 @@
 import { scrollToInstant } from './scroll-utils.js';
 import { saveSetting } from './settings.js';
 
-/* global Plainview */
 /*
  * Remembers the reading position per document. The stored value is restored
  * after the reader mounts, and every user scroll is saved with a short

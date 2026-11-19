@@ -3,7 +3,6 @@ import { createElement } from '../../core/dom.js';
 import { onAsync } from '../../core/events.js';
 import { JSON_TREE_MODE_KEY, saveSetting } from '../.././core/settings.js';
 
-/* global Plainview */
 const CopyResetMs = 1200;
 
 function el(tag, className, text) {

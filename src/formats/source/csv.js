@@ -1,7 +1,6 @@
 import { escapeHtml } from '../markdown/core.js';
 import { register } from './core.js';
 
-/* global Plainview */
 (() => {
   function consumeQuotedField(source, start) {
     let value = '"';

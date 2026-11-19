@@ -4,7 +4,6 @@ import { parseFilter } from './jsonpath-filter.js';
 
 const { fail, Identifier, MaxResults, tokenize } = jsonPathParse;
 
-/* global Plainview */
 /*
  * JSONPath evaluation over plain data.
  */

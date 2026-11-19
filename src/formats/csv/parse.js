@@ -1,4 +1,3 @@
-/* global Plainview */
 /*
  * RFC 4180-style CSV/TSV parsing with quoted fields, escaped quotes and
  * embedded newlines. Parsing is bounded so a malformed or enormous file can

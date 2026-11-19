@@ -1,7 +1,6 @@
 import { createElement } from '../core/dom.js';
 import { scrollToInstant } from '.././core/scroll-utils.js';
 
-/* global Plainview */
 function createScrollTop({ app }) {
   const button = createElement('button');
   button.type = 'button';

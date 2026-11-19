@@ -2,7 +2,6 @@ import { createElement } from '../core/dom.js';
 import { scrollElementIntoViewSmooth } from '.././core/scroll-utils.js';
 import { createScrollSpy } from './scroll-spy.js';
 
-/* global Plainview */
 function el(tag, className, text) {
   const node = createElement(tag);
   if (className) {

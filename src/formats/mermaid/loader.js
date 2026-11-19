@@ -2,7 +2,6 @@ import { createElement } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
 import { sanitizeSvg } from './svg-sanitize.js';
 
-/* global Plainview */
 /*
  * Mermaid is loaded lazily: pages without a ```mermaid block never pay the
  * download/parse cost.

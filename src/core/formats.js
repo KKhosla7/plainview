@@ -1,4 +1,3 @@
-/* global Plainview */
 /*
  * Format registry. Add an entry here plus a builder in ui.js to teach the
  * viewer another plain-text format.

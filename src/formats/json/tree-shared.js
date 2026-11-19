@@ -2,7 +2,6 @@ import { el } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
 import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 
-/* global Plainview */
 /*
  * Small tree-node presentation helpers shared by the JSON tree renderer.
  */

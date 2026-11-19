@@ -1,4 +1,3 @@
-/* global Plainview */
 const ScrollSettleMs = 50;
 
 function activationPoints(tops, maxScroll, viewport, line) {

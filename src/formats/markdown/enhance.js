@@ -6,7 +6,6 @@ import { hasMath } from '../math/loader.js';
 import { createIdFactory, renderMarkdown, sanitizeArticle } from './core.js';
 import { applyTitleBlock } from './title-block.js';
 
-/* global Plainview */
 /*
  * Post-processing after marked: code blocks, Mermaid placeholders, tables,
  * heading ids and the table of contents source.

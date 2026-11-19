@@ -1,7 +1,6 @@
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
 
-/* global Plainview */
 /*
  * XPath query controls and result mapping.
  */

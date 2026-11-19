@@ -1,6 +1,5 @@
 import { createElement } from '../../core/dom.js';
 
-/* global Plainview */
 function el(tag, className, text) {
   const node = createElement(tag);
   if (className) {

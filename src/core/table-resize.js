@@ -2,7 +2,6 @@ import { el } from '../core/dom.js';
 import { loadSetting, saveSetting } from '.././core/settings.js';
 import { valueKind } from '../core/value.js';
 
-/* global Plainview */
 /*
  * Shared pointer-driven column resizing for Markdown and CSV tables.
  */

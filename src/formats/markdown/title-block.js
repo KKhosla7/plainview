@@ -1,6 +1,5 @@
 import { createElement } from '../../core/dom.js';
 
-/* global Plainview */
 /*
  * Purely visual: put the document's own H1 and first paragraph in a bordered
  * title box. No invented metadata is added.

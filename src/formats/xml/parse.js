@@ -1,4 +1,3 @@
-/* global Plainview */
 function parseXml(source) {
   const clean = source.replace(/^\uFEFF/u, '');
   const doc = new DOMParser().parseFromString(clean, 'application/xml');

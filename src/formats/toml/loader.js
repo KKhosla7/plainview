@@ -1,4 +1,3 @@
-/* global Plainview */
 const AssetPath = 'vendor/toml/toml.min.mjs';
 let loader = null;
 

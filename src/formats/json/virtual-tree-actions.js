@@ -1,6 +1,5 @@
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 
-/* global Plainview */
 /*
  * Bulk expansion actions for the virtualized tree.
  */

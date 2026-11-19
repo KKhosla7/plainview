@@ -1,6 +1,5 @@
 import { valueKind } from '../../core/value.js';
 
-/* global Plainview */
 /*
  * Maps simple path-only JMESPath expressions to JSON paths. Complex
  * expressions fall back to value matching.

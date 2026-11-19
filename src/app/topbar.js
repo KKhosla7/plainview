@@ -3,7 +3,6 @@ import { createThemeButton } from '../core/../app/theme.js';
 import { createElement } from '../core/dom.js';
 import { createTableBordersButton } from './table-border-toggle.js';
 
-/* global Plainview */
 function el(tag, className, text) {
   const node = createElement(tag);
   if (className) {

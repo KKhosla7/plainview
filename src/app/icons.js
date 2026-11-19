@@ -1,6 +1,5 @@
 import { createElement } from '../core/dom.js';
 
-/* global Plainview */
 /*
  * Inline SVG icons used by the reader chrome.
  */

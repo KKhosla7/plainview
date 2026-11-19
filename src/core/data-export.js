@@ -3,7 +3,6 @@ import { loadYaml } from '../formats/yaml/loader.js';
 import { downloadBlob } from './download.js';
 import { valueKind } from './value.js';
 
-/* global Plainview */
 /*
  * Native data exports. These are always plain, uncompressed text and are
  * independent of the standalone HTML export/compression setting.

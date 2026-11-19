@@ -33,7 +33,6 @@ import { tableBorders } from './table-border-toggle.js';
 import { createViewerEnhancements, wireViewerExport } from './viewer-extras.js';
 import { createViewerShell } from './viewer-shell.js';
 
-/* global Plainview */
 /*
  * Mounts the reader shell and wires the small UI controllers together.
  * Format-specific rendering lives in src/formats/.

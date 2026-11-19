@@ -2,7 +2,6 @@ import { extractSource, isRawTextDocument } from './core/document.js';
 import { detectFormat } from './core/formats.js';
 import { ensureHtmlShellForXml } from './core/xml-shell.js';
 
-/* global Plainview */
 /*
  * Tiny content-script loader. It runs on every page, detects a supported raw
  * document, then imports the reader bundle (app.js) only for those pages.

@@ -1,6 +1,5 @@
 import { valueKind } from '../core/value.js';
 
-/* global Plainview */
 /*
  * Keyboard shortcut defaults, presets and matching. The options page writes a
  * per-action object; older installs may still have a single view preset string.

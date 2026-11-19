@@ -1,7 +1,6 @@
 import { scrollToInstant } from '.././core/scroll-utils.js';
 import { saveSetting } from '.././core/settings.js';
 
-/* global Plainview */
 function createViewSwitcher({
   app,
   htmlTab,

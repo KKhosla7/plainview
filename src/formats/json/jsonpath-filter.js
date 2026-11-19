@@ -3,7 +3,6 @@ import { jsonPathParse } from './jsonpath.js';
 
 const { fail, parseBracket, readBracketContent, readName, readQuoted } = jsonPathParse;
 
-/* global Plainview */
 /*
  * JSONPath filter tokenizer and predicate parser.
  */

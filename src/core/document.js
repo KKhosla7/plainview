@@ -1,4 +1,3 @@
-/* global Plainview */
 /*
  * Raw-document detection and source extraction. "Raw document" means the
  * browser is showing the file's own text, not an HTML rendering or an XSLT

@@ -3,7 +3,6 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { xmlTreeShared } from './render.js';
 import { createRow } from './virtual-rows.js';
 
-/* global Plainview */
 /* Windowed XML tree. Rows are flattened from expanded descriptors and mounted lazily. */
 const RowHeight = 24;
 const Overscan = 8;

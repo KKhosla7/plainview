@@ -1,6 +1,5 @@
 import { createElement } from '../core/dom.js';
 
-/* global Plainview */
 const RevokeDelayMs = 10_000;
 
 const Mime = {

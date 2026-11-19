@@ -1,7 +1,6 @@
 import { escapeHtml } from '../markdown/core.js';
 import { register } from './core.js';
 
-/* global Plainview */
 (() => {
   const ValueToken =
     /("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'[^']*')|(#.*$)|(\b(?:true|false)\b)|(-?\d{4}-\d{2}-\d{2}(?:[Tt ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[Zz]|[+-]\d{2}:\d{2})?)?)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|([[\]{},.=])/gu;

@@ -5,7 +5,6 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
 import { createJsonTools } from './tools.js';
 import { createVirtualJsonTree } from './virtual-tree.js';
 
-/* global Plainview */
 /*
  * JSON/JSONC document entry point. Tree construction lives in tree.js.
  */

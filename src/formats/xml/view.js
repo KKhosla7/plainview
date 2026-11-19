@@ -6,7 +6,6 @@ import { parseXml } from './parse.js';
 import { createXmlTools } from './tools.js';
 import { createXmlVirtualTree } from './virtual-tree.js';
 
-/* global Plainview */
 function el(tag, className, text) {
   const node = createElement(tag);
   if (className) {

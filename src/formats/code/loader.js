@@ -1,6 +1,5 @@
 import { replaceWithGeneratedHtml } from '../../core/dom.js';
 
-/* global Plainview */
 /*
  * highlight.js is bundled locally and imported only after a Markdown document
  * with a fenced code block has mounted. No code leaves the browser.

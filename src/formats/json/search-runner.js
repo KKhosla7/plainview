@@ -3,7 +3,6 @@ import { valueKind } from '../../core/value.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { jsonSearch } from './search.js';
 
-/* global Plainview */
 /*
  * Batched full-document search runner. Each batch yields to the browser before
  * the next one is read, keeping input and scrolling responsive.

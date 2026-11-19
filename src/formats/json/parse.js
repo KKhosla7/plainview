@@ -1,4 +1,3 @@
-/* global Plainview */
 /**
  * Remove // and /* comments *\/ and trailing commas without touching string
  * contents. This makes .jsonc files readable without pretending to support

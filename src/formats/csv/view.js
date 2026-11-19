@@ -6,7 +6,6 @@ import { errorPanel } from '../.././formats/shared/error-panel.js';
 import { parseCsv } from './parse.js';
 import { csvTable } from './table.js';
 
-/* global Plainview */
 /*
  * CSV/TSV document entry point. Table controls live in table.js.
  */

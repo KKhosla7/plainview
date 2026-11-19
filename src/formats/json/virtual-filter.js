@@ -1,6 +1,5 @@
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 
-/* global Plainview */
 /* Filtering helpers for the virtualized JSON tree. */
 const { pathTextFor } = jsonTreeShared;
 

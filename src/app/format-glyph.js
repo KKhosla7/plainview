@@ -1,4 +1,3 @@
-/* global Plainview */
 const Glyphs = Object.freeze({
   CSV: ',',
   HTML: '</>',

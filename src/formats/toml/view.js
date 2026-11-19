@@ -4,7 +4,6 @@ import { errorPanel } from '../../formats/shared/error-panel.js';
 import { buildJsonValue } from '../json/view.js';
 import { loadToml } from './loader.js';
 
-/* global Plainview */
 function el(tag, className, text) {
   const node = createElement(tag);
   if (className) {

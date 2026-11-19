@@ -1,7 +1,6 @@
 import { jsonLimits } from '../.././formats/json/limits.js';
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 
-/* global Plainview */
 /* Shared state creation for the virtualized JSON tree. */
 const AutoRows = 20_000;
 const { openDepth } = jsonLimits;

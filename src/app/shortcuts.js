@@ -1,7 +1,6 @@
 import { ZOOM_STEP } from '../core/settings.js';
 import { shortcutConfig } from '.././core/shortcut-config.js';
 
-/* global Plainview */
 /*
  * Keyboard and wheel shortcuts. Shortcuts never capture keys while the user is
  * typing in a form control or editable element.

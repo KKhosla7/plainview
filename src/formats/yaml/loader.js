@@ -1,4 +1,3 @@
-/* global Plainview */
 /*
  * js-yaml is bundled locally and loaded only when a YAML document is opened.
  * The reader never requests a CDN or a remote parser.

@@ -1,4 +1,3 @@
-/* global Plainview */
 /*
  * XML documents are inconsistent across browsers: Firefox may have no body,
  * while Chromium has a native XML viewer with its own document. Inject the

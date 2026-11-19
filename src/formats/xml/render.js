@@ -1,6 +1,5 @@
 import { createElement } from '../../core/dom.js';
 
-/* global Plainview */
 const MaxNodes = 40_000;
 const Element = 1;
 const Text = 3;

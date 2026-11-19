@@ -1,7 +1,6 @@
 import { createIconButton, icons } from '.././app/icons.js';
 import { saveSetting, THEME_KEY, validTheme } from '../core/settings.js';
 
-/* global Plainview */
 function createThemeButton() {
   return createIconButton(
     'pv-action pv-icon-action pv-theme-toggle',

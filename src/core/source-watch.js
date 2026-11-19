@@ -3,7 +3,6 @@ import { requestText, requestTextExtension, requestTextXhr } from '.././core/net
 import { SETTING_KEYS } from '.././core/setting-keys.js';
 import { loadSetting } from '.././core/settings.js';
 
-/* global Plainview */
 /*
  * Poll the document URL and compare it with the source the reader mounted.
  * A change never silently replaces the page: by default a banner asks first.

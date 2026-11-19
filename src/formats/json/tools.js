@@ -4,7 +4,6 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { createJsonQuery } from './query-controls.js';
 import { createJsonSearch } from './search-controls.js';
 
-/* global Plainview */
 /*
  * Search and query toolbar for the JSON/YAML tree. Controls live in focused
  * modules; this file composes them and handles path copying.

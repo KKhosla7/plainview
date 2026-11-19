@@ -1,4 +1,3 @@
-/* global Plainview */
 function withAutoBehavior(fn) {
   const element = document.documentElement;
   const previous = element.style.scrollBehavior;

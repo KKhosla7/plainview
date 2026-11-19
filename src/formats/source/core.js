@@ -1,6 +1,5 @@
 import { escapeHtml } from '../markdown/core.js';
 
-/* global Plainview */
 const MaxHighlightChars = 1_500_000;
 const highlighters = {};
 

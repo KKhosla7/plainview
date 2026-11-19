@@ -5,7 +5,6 @@ import { jsonLimits } from '../.././formats/json/limits.js';
 import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
 import { jsonTreeReveal } from './tree-reveal.js';
 
-/* global Plainview */
 /*
  * Lazily materialized JSON tree. Closed containers create only their summary;
  * opening one renders a small page of children. Search can reveal a path by

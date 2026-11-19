@@ -1,6 +1,5 @@
 import { createElement } from '../../core/dom.js';
 
-/* global Plainview */
 /*
  * KaTeX is bundled locally and loaded only for Markdown that contains math.
  * CSS and fonts are local extension resources, not a CDN request.
