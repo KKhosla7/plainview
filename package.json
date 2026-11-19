@@ -6,7 +6,7 @@
   "description": "Browser extension that renders Markdown, JSON, XML, YAML, TOML and CSV files opened in Chrome or Firefox",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "npm run build && node scripts/test.mjs && node scripts/ast-gate.mjs",
+    "test": "npm run build && node scripts/test.mjs && node scripts/ast-gate.mjs && node scripts/ast-audit.mjs --gate",
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "lint:firefox": "web-ext lint --source-dir dist/firefox",
     "package": "npm run build && node scripts/package.mjs",
