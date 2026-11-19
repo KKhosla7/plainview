@@ -142,6 +142,23 @@ it('Source view, theme and reading position survive a reload', async () => {
   await page.close();
 });
 
+function readZoomMetrics(page) {
+  return page.evaluate(() => {
+    const main = document.querySelector('.pv-main');
+    const doc = document.querySelector('.pv-markdown');
+    return {
+      zoom: getComputedStyle(document.documentElement).getPropertyValue('--pv-zoom').trim(),
+      font: Number.parseFloat(getComputedStyle(doc).fontSize),
+      width: doc.getBoundingClientRect().width,
+      mainWidth: main.getBoundingClientRect().width,
+      scrollWidth: document.documentElement.scrollWidth,
+      mainScrollWidth: main.scrollWidth,
+      mainClientWidth: main.clientWidth,
+      viewport: globalThis.innerWidth,
+    };
+  });
+}
+
 it('zoom enlarges the content without a page-level horizontal scrollbar', async () => {
   const { page, errors } = await openSample();
   await page.waitForSelector('.pv-toc-link.is-active');
@@ -159,20 +176,7 @@ it('zoom enlarges the content without a page-level horizontal scrollbar', async 
   }
   await page.waitForTimeout(TestConstants.ZOOM_SETTLE_MS);
 
-  const afterZoom = await page.evaluate(() => {
-    const main = document.querySelector('.pv-main');
-    const doc = document.querySelector('.pv-markdown');
-    return {
-      zoom: getComputedStyle(document.documentElement).getPropertyValue('--pv-zoom').trim(),
-      font: Number.parseFloat(getComputedStyle(doc).fontSize),
-      width: doc.getBoundingClientRect().width,
-      mainWidth: main.getBoundingClientRect().width,
-      scrollWidth: document.documentElement.scrollWidth,
-      mainScrollWidth: main.scrollWidth,
-      mainClientWidth: main.clientWidth,
-      viewport: globalThis.innerWidth,
-    };
-  });
+  const afterZoom = await readZoomMetrics(page);
 
   assert.equal(afterZoom.zoom, '2.5');
   assert.ok(afterZoom.font > beforeZoom.font * 2, 'the type grew');
