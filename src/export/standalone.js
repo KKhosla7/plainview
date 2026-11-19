@@ -1,6 +1,7 @@
 import { search } from 'jmespath';
 import { buildCsv } from '../formats/csv/view.js';
 import { buildJsonValue } from '../formats/json/view.js';
+import { buildXml } from '../formats/xml/view.js';
 
 /*
  * Builds the full interactive data reader inside a standalone export. The
@@ -11,7 +12,7 @@ import { buildJsonValue } from '../formats/json/view.js';
 
   function buildDocument(documentData) {
     if (documentData.formatId === 'xml') {
-      return Plainview.buildXml(documentData.source);
+      return buildXml(documentData.source);
     }
 
     if (documentData.formatId === 'csv' || documentData.formatId === 'tsv') {

@@ -24,6 +24,7 @@ import { buildJson } from '../formats/json/view.js';
 import { buildLogs } from '../formats/logs-view.js';
 import { buildMarkdown } from '../formats/markdown/enhance.js';
 import { buildToml } from '../formats/toml/view.js';
+import { buildXml } from '../formats/xml/view.js';
 import { buildYaml } from '../formats/yaml/view.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
 
@@ -69,7 +70,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     }
 
     if (format.id === 'xml') {
-      return Plainview.buildXml(source);
+      return buildXml(source);
     }
 
     return buildMarkdown(source);
