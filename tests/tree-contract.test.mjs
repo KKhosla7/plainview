@@ -12,6 +12,7 @@ import {
 const TreeModeKey = 'plainview.jsonTreeMode';
 const EXPECTED_KEYS = 5;
 const MIN_VIRTUAL_ROWS = 3;
+const COLLAPSED_ROWS = 4;
 
 let server;
 let base;
@@ -62,7 +63,10 @@ it('virtual JSON tree supports collapse, expand and keys', async () => {
     assert.equal(await page.locator('.pv-json-node').count(), 0);
     assert.ok((await page.locator('.pv-vrow').count()) > MIN_VIRTUAL_ROWS);
     await page.getByRole('button', { name: 'Collapse all' }).click();
-    await page.waitForFunction(() => document.querySelectorAll('.pv-vrow').length < 4);
+    await page.waitForFunction(
+      (limit) => document.querySelectorAll('.pv-vrow').length < limit,
+      COLLAPSED_ROWS,
+    );
     await page.getByRole('button', { name: 'Expand all' }).click();
     await page.waitForFunction(() => document.querySelectorAll('.pv-vrow').length > 3);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /plainview/u);

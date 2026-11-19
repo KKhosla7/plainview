@@ -17,6 +17,7 @@ const MIN_FULL_SOURCE_CHARS = 500_000;
 const LARGE_JSON_ROWS = 1200;
 const ROW_BIO_LENGTH = 500;
 const FULL_SOURCE_TIMEOUT_MS = 15_000;
+const SCROLL_TOP_LIMIT = 20;
 
 let server;
 let context;
@@ -74,7 +75,7 @@ it('previews a large source file and returns to the top', async () => {
     const backToTop = page.getByRole('button', { name: 'Back to top' });
     await backToTop.waitFor({ state: 'visible' });
     await backToTop.click();
-    await page.waitForFunction(() => globalThis.scrollY < 20);
+    await page.waitForFunction((limit) => globalThis.scrollY < limit, SCROLL_TOP_LIMIT);
     assertNoErrors(errors);
   } finally {
     await page.close();
