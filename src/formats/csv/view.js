@@ -94,15 +94,8 @@ function createCsvExportData({ delimiter, filter, formatId, headerCells, label, 
   };
 }
 
-function buildCsv(source, format = {}) {
-  const { label: formatLabel } = format;
-  const parsed = parseCsv(source, { delimiter: format.delimiter });
+function createCsvArticle({ columns, label, parseError, rows, source }) {
   const article = el('article', 'pv-doc pv-data-doc pv-csv-doc');
-  const { rows } = parsed;
-  const parseError = Object.getOwnPropertyDescriptor(parsed, 'error')?.value;
-  const columns = trimTrailingColumns(rows);
-  const label = formatLabel || 'CSV';
-
   if (parseError) {
     article.append(
       el('div', 'pv-doc-title', `Invalid ${label}`),
@@ -119,6 +112,17 @@ function buildCsv(source, format = {}) {
       copyLabel: `Copy ${label}`,
     }),
   );
+  return article;
+}
+
+function buildCsv(source, format = {}) {
+  const { label: formatLabel } = format;
+  const parsed = parseCsv(source, { delimiter: format.delimiter });
+  const { rows } = parsed;
+  const parseError = Object.getOwnPropertyDescriptor(parsed, 'error')?.value;
+  const columns = trimTrailingColumns(rows);
+  const label = formatLabel || 'CSV';
+  const article = createCsvArticle({ columns, label, parseError, rows, source });
 
   if (rows.length === 0 || columns === 0) {
     article.append(el('p', 'pv-empty', `This ${label} file is empty.`));
