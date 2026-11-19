@@ -158,6 +158,56 @@ function notifyChange({ autoReload, banner, onReload, onUpdate, source, isStoppe
   banner.show();
 }
 
+function createCheckNow({ state, url, format, baseline, banner, autoReload, onReload, onUpdate }) {
+  return async function checkNow() {
+    if (
+      state.stopped ||
+      state.inFlight ||
+      (document.visibilityState === 'hidden' && state.timer !== 0)
+    ) {
+      return;
+    }
+    state.inFlight = true;
+    try {
+      const current = await readSource(url);
+      if (current === null) {
+        return;
+      }
+      const normalized = normalizeSource(current, format?.id);
+      if (normalized === baseline) {
+        state.lastNotified = null;
+        banner.hide();
+        return;
+      }
+
+      if (normalized === state.lastNotified) {
+        return;
+      }
+      state.lastNotified = normalized;
+      notifyChange({
+        autoReload,
+        banner,
+        onReload,
+        onUpdate,
+        source: normalized,
+        isStopped: () => state.stopped,
+      });
+    } finally {
+      state.inFlight = false;
+    }
+  };
+}
+
+function scheduleCheck(state, checkNow, delay) {
+  globalThis.clearTimeout(state.timer);
+  state.timer = globalThis.setTimeout(async () => {
+    await checkNow();
+    if (!state.stopped) {
+      scheduleCheck(state, checkNow, POLL_INTERVAL);
+    }
+  }, delay);
+}
+
 function watchSource({ source, url, app, onReload, onUpdate, format }) {
   if (!(source && url)) {
     return { checkNow: () => undefined, stop: () => undefined };
@@ -170,55 +220,19 @@ function watchSource({ source, url, app, onReload, onUpdate, format }) {
   });
   app.append(banner.element);
 
-  let stopped = false;
-  let inFlight = false;
-  let lastNotified = null;
-  let timer = 0;
+  const state = { inFlight: false, lastNotified: null, stopped: false, timer: 0 };
   const autoReload = createAutoReloadState();
-
-  async function checkNow() {
-    if (stopped || inFlight || (document.visibilityState === 'hidden' && timer !== 0)) {
-      return;
-    }
-    inFlight = true;
-    try {
-      const current = await readSource(url);
-      if (current === null) {
-        return;
-      }
-      const normalized = normalizeSource(current, format?.id);
-      if (normalized === baseline) {
-        lastNotified = null;
-        banner.hide();
-        return;
-      }
-
-      if (normalized === lastNotified) {
-        return;
-      }
-      lastNotified = normalized;
-      notifyChange({
-        autoReload,
-        banner,
-        onReload,
-        onUpdate,
-        source: normalized,
-        isStopped: () => stopped,
-      });
-    } finally {
-      inFlight = false;
-    }
-  }
-
-  function schedule(delay) {
-    globalThis.clearTimeout(timer);
-    timer = globalThis.setTimeout(async () => {
-      await checkNow();
-      if (!stopped) {
-        schedule(POLL_INTERVAL);
-      }
-    }, delay);
-  }
+  const checkNow = createCheckNow({
+    state,
+    url,
+    format,
+    baseline,
+    banner,
+    autoReload,
+    onReload,
+    onUpdate,
+  });
+  const schedule = (delay) => scheduleCheck(state, checkNow, delay);
 
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
@@ -232,8 +246,8 @@ function watchSource({ source, url, app, onReload, onUpdate, format }) {
   return {
     checkNow,
     stop() {
-      stopped = true;
-      globalThis.clearTimeout(timer);
+      state.stopped = true;
+      globalThis.clearTimeout(state.timer);
     },
   };
 }
