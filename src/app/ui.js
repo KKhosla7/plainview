@@ -16,6 +16,7 @@ import {
   watchSetting,
   ZOOM_KEY,
 } from '../core/settings.js';
+import { watchSource } from '../core/source-watch.js';
 import { tableResize } from '.././core/table-resize.js';
 import { focusSnapshot, restoreFocus } from './focus.js';
 
@@ -263,7 +264,7 @@ import { focusSnapshot, restoreFocus } from './focus.js';
     app.append(topbar.element, shell, sourcePane.element, zoom.element);
 
     Plainview.createScrollTop({ app });
-    const sourceWatch = Plainview.watchSource({
+    const sourceWatch = watchSource({
       source,
       url,
       app,

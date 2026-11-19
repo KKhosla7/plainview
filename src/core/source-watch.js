@@ -9,244 +9,239 @@ import { loadSetting } from '.././core/settings.js';
  * A change never silently replaces the page: by default a banner asks first.
  * Auto-reload is opt-in from Settings.
  */
-((root) => {
-  const PollInterval = 10_000;
-  const FirstCheckDelay = 2500;
-  const AutoReloadKey = SETTING_KEYS.AutoReload;
-  const AutoReloadDelayMs = 900;
+const PollInterval = 10_000;
+const FirstCheckDelay = 2500;
+const AutoReloadKey = SETTING_KEYS.AutoReload;
+const AutoReloadDelayMs = 900;
 
-  function el(tag, className, text) {
-    const node = createElement(tag);
-    if (className) {
-      node.className = className;
-    }
-
-    if (text !== undefined) {
-      node.textContent = text;
-    }
-
-    return node;
+function el(tag, className, text) {
+  const node = createElement(tag);
+  if (className) {
+    node.className = className;
   }
 
-  function button(className, label) {
-    const node = el('button', className, label);
-    node.type = 'button';
-    return node;
+  if (text !== undefined) {
+    node.textContent = text;
   }
 
-  async function readSource(url) {
-    if (url.startsWith('file:')) {
-      const viaExtension = await requestTextExtension(url);
-      if (viaExtension !== null) {
-        return viaExtension;
-      }
-    }
+  return node;
+}
 
-    const fetched = await requestText(url, {
-      cache: 'no-store',
-      credentials: 'same-origin',
-    });
-    if (fetched !== null) {
-      return fetched;
-    }
+function button(className, label) {
+  const node = el('button', className, label);
+  node.type = 'button';
+  return node;
+}
 
-    return requestTextXhr(url);
-  }
-
-  function normalizeSource(text, formatId) {
-    const value = String(text ?? '')
-      .replace(/^\uFEFF/u, '')
-      .replace(/\r\n?/gu, '\n');
-    if (formatId === 'xml') {
-      try {
-        const doc = new DOMParser().parseFromString(value, 'application/xml');
-        if (!doc.querySelector('parsererror')) {
-          return new XMLSerializer().serializeToString(doc.documentElement);
-        }
-      } catch {
-        return value;
-      }
-    }
-
-    return value;
-  }
-
-  function reloadDocument(onReload) {
-    if (onReload) {
-      onReload();
-    } else {
-      location.reload();
+async function readSource(url) {
+  if (url.startsWith('file:')) {
+    const viaExtension = await requestTextExtension(url);
+    if (viaExtension !== null) {
+      return viaExtension;
     }
   }
 
-  function createAutoReloadState() {
-    let enabled = false;
-    loadSetting(AutoReloadKey, false).then(
-      (value) => {
-        enabled = Boolean(value);
-      },
-      () => false,
-    );
-    const api = root.browser ?? root.chrome;
+  const fetched = await requestText(url, {
+    cache: 'no-store',
+    credentials: 'same-origin',
+  });
+  if (fetched !== null) {
+    return fetched;
+  }
+
+  return requestTextXhr(url);
+}
+
+function normalizeSource(text, formatId) {
+  const value = String(text ?? '')
+    .replace(/^\uFEFF/u, '')
+    .replace(/\r\n?/gu, '\n');
+  if (formatId === 'xml') {
     try {
-      api?.storage?.onChanged?.addListener((changes, area) => {
-        if (area !== 'local' || !changes?.[AutoReloadKey]) {
-          return;
-        }
-        enabled = Boolean(changes[AutoReloadKey].newValue);
-      });
-    } catch (error) {
-      if (!(error instanceof TypeError)) {
-        throw error;
+      const doc = new DOMParser().parseFromString(value, 'application/xml');
+      if (!doc.querySelector('parsererror')) {
+        return new XMLSerializer().serializeToString(doc.documentElement);
       }
+    } catch {
+      return value;
     }
-
-    return {
-      get enabled() {
-        return enabled;
-      },
-    };
   }
 
-  function createBanner(onReload) {
-    const banner = el('div', 'pv-change-banner');
-    banner.hidden = true;
-    banner.setAttribute('role', 'alert');
-    banner.setAttribute('aria-live', 'assertive');
+  return value;
+}
 
-    const text = el('div', 'pv-change-text');
-    const title = el('strong', '', 'Source changed');
-    const detail = el('span', '', ' The file on disk is different from the open copy.');
-    text.append(title, detail);
-
-    const actions = el('div', 'pv-change-actions');
-    const reload = button('pv-change-reload', 'Reload');
-    const dismiss = button('pv-change-dismiss', 'Dismiss');
-    actions.append(reload, dismiss);
-    banner.append(text, actions);
-
-    reload.addEventListener('click', onReload);
-    dismiss.addEventListener('click', () => {
-      banner.hidden = true;
-    });
-
-    return {
-      element: banner,
-      show() {
-        banner.hidden = false;
-        reload.focus();
-      },
-      hide() {
-        banner.hidden = true;
-      },
-      setAuto(message) {
-        detail.textContent = ` ${message}`;
-        reload.hidden = true;
-        dismiss.hidden = true;
-      },
-    };
+function reloadDocument(onReload) {
+  if (onReload) {
+    onReload();
+  } else {
+    location.reload();
   }
+}
 
-  function notifyChange({ autoReload, banner, onReload, onUpdate, source, isStopped }) {
-    if (autoReload.enabled) {
-      banner.setAuto('Refreshing automatically…');
-      banner.show();
-      globalThis.setTimeout(() => {
-        if (!isStopped()) {
-          if (onUpdate) {
-            onUpdate(source);
-          } else {
-            reloadDocument(onReload);
-          }
-        }
-      }, AutoReloadDelayMs);
-      return;
-    }
-    banner.show();
-  }
-
-  function watchSource({ source, url, app, onReload, onUpdate, format }) {
-    if (!(source && url)) {
-      return { checkNow: () => undefined, stop: () => undefined };
-    }
-
-    const baseline = normalizeSource(source, format?.id);
-    const banner = createBanner(() => {
-      banner.hide();
-      reloadDocument(onReload);
-    });
-    app.append(banner.element);
-
-    let stopped = false;
-    let inFlight = false;
-    let lastNotified = null;
-    let timer = 0;
-    const autoReload = createAutoReloadState();
-
-    async function checkNow() {
-      if (stopped || inFlight || (document.visibilityState === 'hidden' && timer !== 0)) {
+function createAutoReloadState() {
+  let enabled = false;
+  loadSetting(AutoReloadKey, false).then(
+    (value) => {
+      enabled = Boolean(value);
+    },
+    () => false,
+  );
+  const api = globalThis.browser ?? globalThis.chrome;
+  try {
+    api?.storage?.onChanged?.addListener((changes, area) => {
+      if (area !== 'local' || !changes?.[AutoReloadKey]) {
         return;
       }
-      inFlight = true;
-      try {
-        const current = await readSource(url);
-        if (current === null) {
-          return;
-        }
-        const normalized = normalizeSource(current, format?.id);
-        if (normalized === baseline) {
-          lastNotified = null;
-          banner.hide();
-          return;
-        }
-
-        if (normalized === lastNotified) {
-          return;
-        }
-        lastNotified = normalized;
-        notifyChange({
-          autoReload,
-          banner,
-          onReload,
-          onUpdate,
-          source: normalized,
-          isStopped: () => stopped,
-        });
-      } finally {
-        inFlight = false;
-      }
-    }
-
-    function schedule(delay) {
-      globalThis.clearTimeout(timer);
-      timer = globalThis.setTimeout(async () => {
-        await checkNow();
-        if (!stopped) {
-          schedule(PollInterval);
-        }
-      }, delay);
-    }
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        checkNow();
-      }
+      enabled = Boolean(changes[AutoReloadKey].newValue);
     });
-    globalThis.addEventListener('focus', checkNow);
-
-    schedule(FirstCheckDelay);
-
-    return {
-      checkNow,
-      stop() {
-        stopped = true;
-        globalThis.clearTimeout(timer);
-      },
-    };
+  } catch (error) {
+    if (!(error instanceof TypeError)) {
+      throw error;
+    }
   }
 
-  root.Plainview = Object.assign(root.Plainview || {}, {
-    watchSource,
-    SOURCE_AUTO_RELOAD_KEY: AutoReloadKey,
+  return {
+    get enabled() {
+      return enabled;
+    },
+  };
+}
+
+function createBanner(onReload) {
+  const banner = el('div', 'pv-change-banner');
+  banner.hidden = true;
+  banner.setAttribute('role', 'alert');
+  banner.setAttribute('aria-live', 'assertive');
+
+  const text = el('div', 'pv-change-text');
+  const title = el('strong', '', 'Source changed');
+  const detail = el('span', '', ' The file on disk is different from the open copy.');
+  text.append(title, detail);
+
+  const actions = el('div', 'pv-change-actions');
+  const reload = button('pv-change-reload', 'Reload');
+  const dismiss = button('pv-change-dismiss', 'Dismiss');
+  actions.append(reload, dismiss);
+  banner.append(text, actions);
+
+  reload.addEventListener('click', onReload);
+  dismiss.addEventListener('click', () => {
+    banner.hidden = true;
   });
-})(globalThis);
+
+  return {
+    element: banner,
+    show() {
+      banner.hidden = false;
+      reload.focus();
+    },
+    hide() {
+      banner.hidden = true;
+    },
+    setAuto(message) {
+      detail.textContent = ` ${message}`;
+      reload.hidden = true;
+      dismiss.hidden = true;
+    },
+  };
+}
+
+function notifyChange({ autoReload, banner, onReload, onUpdate, source, isStopped }) {
+  if (autoReload.enabled) {
+    banner.setAuto('Refreshing automatically…');
+    banner.show();
+    globalThis.setTimeout(() => {
+      if (!isStopped()) {
+        if (onUpdate) {
+          onUpdate(source);
+        } else {
+          reloadDocument(onReload);
+        }
+      }
+    }, AutoReloadDelayMs);
+    return;
+  }
+  banner.show();
+}
+
+function watchSource({ source, url, app, onReload, onUpdate, format }) {
+  if (!(source && url)) {
+    return { checkNow: () => undefined, stop: () => undefined };
+  }
+
+  const baseline = normalizeSource(source, format?.id);
+  const banner = createBanner(() => {
+    banner.hide();
+    reloadDocument(onReload);
+  });
+  app.append(banner.element);
+
+  let stopped = false;
+  let inFlight = false;
+  let lastNotified = null;
+  let timer = 0;
+  const autoReload = createAutoReloadState();
+
+  async function checkNow() {
+    if (stopped || inFlight || (document.visibilityState === 'hidden' && timer !== 0)) {
+      return;
+    }
+    inFlight = true;
+    try {
+      const current = await readSource(url);
+      if (current === null) {
+        return;
+      }
+      const normalized = normalizeSource(current, format?.id);
+      if (normalized === baseline) {
+        lastNotified = null;
+        banner.hide();
+        return;
+      }
+
+      if (normalized === lastNotified) {
+        return;
+      }
+      lastNotified = normalized;
+      notifyChange({
+        autoReload,
+        banner,
+        onReload,
+        onUpdate,
+        source: normalized,
+        isStopped: () => stopped,
+      });
+    } finally {
+      inFlight = false;
+    }
+  }
+
+  function schedule(delay) {
+    globalThis.clearTimeout(timer);
+    timer = globalThis.setTimeout(async () => {
+      await checkNow();
+      if (!stopped) {
+        schedule(PollInterval);
+      }
+    }, delay);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      checkNow();
+    }
+  });
+  globalThis.addEventListener('focus', checkNow);
+
+  schedule(FirstCheckDelay);
+
+  return {
+    checkNow,
+    stop() {
+      stopped = true;
+      globalThis.clearTimeout(timer);
+    },
+  };
+}
+
+export { watchSource };
