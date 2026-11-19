@@ -35,72 +35,86 @@ function bindRestoreEvents({ saveNow, onScroll, markMoved }) {
   });
 }
 
-function createScrollMemory({ key, initialY, onRestored }) {
-  const parsed = Number(initialY);
-  const target =
-    initialY === null || initialY === undefined || !Number.isFinite(parsed) ? null : parsed;
+function applyScrollReport(target, onRestored, onFallback) {
+  if (target !== null) {
+    scrollToInstant(target);
+  } else if (onFallback) {
+    onFallback();
+  }
+  requestAnimationFrame(() => {
+    if (onRestored) {
+      onRestored(globalThis.scrollY);
+    }
+  });
+}
 
-  let armed = false;
+function armAfterRestore(setArmed) {
+  requestAnimationFrame(() => {
+    globalThis.setTimeout(() => {
+      setArmed(true);
+    }, RESTORE_DELAY_MS);
+  });
+}
+
+function createScrollSaver({ key, state }) {
   let timer = 0;
-  let userMoved = false;
 
   function saveNow() {
-    if (!armed) {
+    if (!state.armed) {
       return;
     }
     saveSetting(key, globalThis.scrollY);
   }
 
   function onScroll() {
-    if (!armed) {
+    if (!state.armed) {
       return;
     }
-    userMoved = true;
+    state.setMoved();
     clearTimeout(timer);
     timer = globalThis.setTimeout(saveNow, SAVE_DELAY_MS);
   }
 
   function markMoved() {
-    userMoved = true;
+    state.setMoved();
   }
 
-  function applyTarget() {
-    if (target === null) {
-      return;
-    }
-    scrollToInstant(target);
-  }
+  return { markMoved, onScroll, saveNow };
+}
 
-  function applyAndReport(fallback) {
-    if (target !== null) {
-      applyTarget();
-    } else if (fallback) {
-      fallback();
-    }
-    requestAnimationFrame(() => {
-      if (onRestored) {
-        onRestored(globalThis.scrollY);
-      }
-    });
+function createScrollMemory({ key, initialY, onRestored }) {
+  const parsed = Number(initialY);
+  const target =
+    initialY === null || initialY === undefined || !Number.isFinite(parsed) ? null : parsed;
+
+  let userMoved = false;
+  const state = {
+    armed: false,
+    setMoved: () => {
+      userMoved = true;
+    },
+  };
+  const { markMoved, onScroll, saveNow } = createScrollSaver({ key, state });
+
+  function apply(fallback) {
+    applyScrollReport(target, onRestored, fallback);
   }
 
   function reapply(fallback) {
     if (userMoved) {
       return;
     }
-    applyAndReport(fallback);
+    apply(fallback);
   }
 
   function restore(fallback) {
-    applyAndReport(fallback);
+    apply(fallback);
 
-    requestAnimationFrame(() => {
-      globalThis.setTimeout(() => {
-        armed = true;
-      }, RESTORE_DELAY_MS);
+    armAfterRestore((value) => {
+      state.armed = value;
     });
 
-    restoreAfterFonts({ target, isUserMoved: () => userMoved, applyAndReport });
+    restoreAfterFonts({ target, isUserMoved: () => userMoved, applyAndReport: apply });
     bindRestoreEvents({ saveNow, onScroll, markMoved });
   }
 
