@@ -62,6 +62,10 @@ function readComment(text, index) {
   return null;
 }
 
+function appendClosingBracket(out, char) {
+  return out + char;
+}
+
 function stripJsonComments(text) {
   let out = '';
   let index = 0;
@@ -69,7 +73,6 @@ function stripJsonComments(text) {
 
   while (index < text.length) {
     const char = text[index];
-
     if (char === '"') {
       out = flushComma(out, pendingComma);
       pendingComma = false;
@@ -100,7 +103,7 @@ function stripJsonComments(text) {
 
     if (isClosingBracket(char)) {
       pendingComma = false;
-      out += char;
+      out = appendClosingBracket(out, char);
       index += 1;
       continue;
     }
