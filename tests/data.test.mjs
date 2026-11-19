@@ -7,6 +7,7 @@ import {
   openPage,
   startServer,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 let server;
 let base;
@@ -27,7 +28,7 @@ it('renders a JSON tree and its source syntax', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.json`);
   await page.waitForSelector('.pv-json');
 
-  assert.ok((await page.locator('.pv-json-key').count()) >= 5);
+  assert.ok((await page.locator('.pv-json-key').count()) >= TestConstants.JSON_MIN_KEYS);
   assert.ok((await page.locator('.pv-json-string').count()) >= 2);
   assert.match(await page.locator('.pv-doc-meta').innerText(), /nodes/u);
 
@@ -56,7 +57,7 @@ it('reads JSONC comments and trailing commas', async () => {
 
   assert.match(await page.locator('.pv-doc-meta').innerText(), /JSONC/u);
   assert.equal(await page.locator('.pv-error').count(), 0);
-  assert.ok((await page.locator('.pv-json-key').count()) >= 3);
+  assert.ok((await page.locator('.pv-json-key').count()) >= TestConstants.JSONC_MIN_KEYS);
 
   assertNoErrors(errors);
   await page.close();
@@ -74,8 +75,8 @@ it('renders an XML tree with attributes, CDATA and comments', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.xml`);
   await page.waitForSelector('.pv-xml');
 
-  assert.ok((await page.locator('.pv-xml-tag').count()) >= 5);
-  assert.ok((await page.locator('.pv-xml-attr-name').count()) >= 3);
+  assert.ok((await page.locator('.pv-xml-tag').count()) >= TestConstants.JSON_MIN_KEYS);
+  assert.ok((await page.locator('.pv-xml-attr-name').count()) >= TestConstants.XML_MIN_ATTRS);
   assert.ok((await page.locator('.pv-xml-cdata').count()) >= 1);
   assert.ok((await page.locator('.pv-xml-comment').count()) >= 1);
 
@@ -84,7 +85,7 @@ it('renders an XML tree with attributes, CDATA and comments', async () => {
     font: getComputedStyle(document.querySelector('.pv-xml')).fontFamily,
     metaBackground: getComputedStyle(document.querySelector('.pv-doc-meta')).backgroundColor,
   }));
-  assert.ok(style.width > 500);
+  assert.ok(style.width > TestConstants.MIN_APP_WIDTH);
   assert.match(style.font, /mono/iu);
   assert.notEqual(style.metaBackground, 'rgba(0, 0, 0, 0)');
 
@@ -108,7 +109,7 @@ it('keeps JSON tools visible while scrolling and resolves indexed paths', async 
   await page.waitForSelector('.pv-json-tools');
 
   await page.evaluate(() => globalThis.scrollTo(0, document.documentElement.scrollHeight));
-  await page.waitForTimeout(120);
+  await page.waitForTimeout(TestConstants.TOOL_SETTLE_MS);
 
   const positions = await page.evaluate(() => {
     const tools = document.querySelector('.pv-json-tools').getBoundingClientRect();
@@ -230,7 +231,7 @@ it('does not show a source-change prompt for unchanged XML', async () => {
     await page.getByRole('tab', { name: 'HTML' }).click();
   }
   await page.waitForSelector('.pv-xml');
-  await page.waitForTimeout(3200);
+  await page.waitForTimeout(TestConstants.SCROLL_BANNER_MS);
   assert.equal(await page.locator('.pv-change-banner:not([hidden])').count(), 0);
   assertNoErrors(errors);
   await page.close();
