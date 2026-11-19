@@ -1,4 +1,5 @@
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
 
 /* global Plainview */
 /*
@@ -6,7 +7,7 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
  */
 ((root) => {
   const { el, button, exportNode, searchText, mark, unmark, selectHit, SearchDebounceMs } =
-    Plainview.xmlToolsShared;
+    xmlToolsShared;
 
   function bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch }) {
     search.addEventListener('input', scheduleSearch);

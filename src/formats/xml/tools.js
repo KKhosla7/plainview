@@ -1,5 +1,6 @@
 import { copyText } from '../../core/clipboard.js';
 import { onAsync } from '../../core/events.js';
+import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
 
 /* global Plainview */
 /*
@@ -7,7 +8,7 @@ import { onAsync } from '../../core/events.js';
  * modules; this file composes the toolbar and path-copy behavior.
  */
 ((root) => {
-  const { el, CopyResetMs } = Plainview.xmlToolsShared;
+  const { el, CopyResetMs } = xmlToolsShared;
 
   function createXmlTools({ tree, doc, byNode, exportState }) {
     const tools = el('div', 'pv-json-tools pv-xml-tools');

@@ -1,12 +1,12 @@
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
 
 /* global Plainview */
 /*
  * XPath query controls and result mapping.
  */
 ((root) => {
-  const { el, button, exportNode, mark, unmark, selectHit, Attribute, Document } =
-    Plainview.xmlToolsShared;
+  const { el, button, exportNode, mark, unmark, selectHit, Attribute, Document } = xmlToolsShared;
 
   function scalarResult(resultType, result, XPathResultType) {
     if (resultType === XPathResultType.NUMBER_TYPE) {
