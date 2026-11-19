@@ -47,6 +47,31 @@ function updateSourceStatus({ status, fullButton, preview, total, text, full }) 
   }
 }
 
+function bindCopyButton(copy, source) {
+  onAsync(copy, 'click', async () => {
+    const ok = await copyText(source);
+    copy.textContent = ok ? 'Copied' : 'Copy failed';
+    globalThis.setTimeout(() => {
+      copy.textContent = 'Copy source';
+    }, COPY_RESET_MS);
+  });
+}
+
+function createSourceCode() {
+  const pre = el('pre', 'pv-raw-source');
+  const code = el('code', 'pv-raw-code');
+  pre.append(code);
+  return { code, pre };
+}
+
+function bindFullButton(fullButton, populate) {
+  fullButton.addEventListener('click', () => {
+    fullButton.disabled = true;
+    fullButton.textContent = 'Loading full source…';
+    globalThis.setTimeout(() => populate(true), 0);
+  });
+}
+
 function createSourcePane(source, format) {
   const pane = el('div', 'pv-raw-pane');
   const head = el('div', 'pv-raw-head');
@@ -56,22 +81,14 @@ function createSourcePane(source, format) {
   const copy = el('button', 'pv-meta-button pv-raw-copy', 'Copy source');
   copy.type = 'button';
   copy.title = 'Copy the original file text';
-  onAsync(copy, 'click', async () => {
-    const ok = await copyText(source);
-    copy.textContent = ok ? 'Copied' : 'Copy failed';
-    globalThis.setTimeout(() => {
-      copy.textContent = 'Copy source';
-    }, COPY_RESET_MS);
-  });
+  bindCopyButton(copy, source);
 
   const fullButton = el('button', 'pv-meta-button pv-raw-full', 'Load full source');
   fullButton.type = 'button';
   fullButton.hidden = true;
   fullButton.title = 'Render the entire file. Large files may take a moment.';
 
-  const pre = el('pre', 'pv-raw-source');
-  const code = el('code', 'pv-raw-code');
-  pre.append(code);
+  const { code, pre } = createSourceCode();
 
   let populated = false;
   let full = false;
@@ -96,11 +113,7 @@ function createSourcePane(source, format) {
     render();
   }
 
-  fullButton.addEventListener('click', () => {
-    fullButton.disabled = true;
-    fullButton.textContent = 'Loading full source…';
-    globalThis.setTimeout(() => populate(true), 0);
-  });
+  bindFullButton(fullButton, populate);
 
   actions.append(copy, fullButton);
   head.append(label, status, actions);
