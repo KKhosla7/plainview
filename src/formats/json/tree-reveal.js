@@ -1,12 +1,11 @@
 import { yieldToMain } from '../../core/scheduler.js';
 import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
-import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+import { keyIndex } from './tree-model.js';
 
 /*
  * Opens ancestors and small child pages until a search or query path is
  * available, without re-rendering the rest of the tree.
  */
-const { keyIndex } = jsonTreeShared;
 
 function openContainer(state, ctx) {
   state.details.open = true;

@@ -1,10 +1,9 @@
 import { jsonLimits } from '../.././formats/json/limits.js';
-import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+import { treeSyntax } from './tree-model.js';
 
 /* Shared state creation for the virtualized JSON tree. */
 const AutoRows = 20_000;
 const { openDepth } = jsonLimits;
-const { treeSyntax } = jsonTreeShared;
 
 function createState({ value, options, indexRef, onStats, tree }) {
   return {

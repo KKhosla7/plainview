@@ -1,7 +1,6 @@
-import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+import { pathTextFor } from './tree-model.js';
 
 /* Filtering helpers for the virtualized JSON tree. */
-const { pathTextFor } = jsonTreeShared;
 
 function filterRelevant(state, pathText, path) {
   if (!state.filterPaths) {

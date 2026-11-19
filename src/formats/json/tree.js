@@ -2,7 +2,8 @@ import { el } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
 import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonLimits } from '../.././formats/json/limits.js';
-import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+import { actionButton, pathButton, renderKey, span } from './classic-parts.js';
+import { renderValue, treeSyntax, valueClass } from './tree-model.js';
 import { jsonTreeReveal } from './tree-reveal.js';
 
 /*
@@ -11,9 +12,6 @@ import { jsonTreeReveal } from './tree-reveal.js';
  * opening its ancestors without rendering unrelated branches.
  */
 const { autoOpenChildLimit, openDepth, pageSize } = jsonLimits;
-
-const { actionButton, pathButton, renderKey, renderValue, span, treeSyntax, valueClass } =
-  jsonTreeShared;
 
 function registerNode(ctx, { path, node, value, isContainer, summary }) {
   const pathText = jsonPath.pathToJsonPath(path);

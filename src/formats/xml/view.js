@@ -20,6 +20,12 @@ function el(tag, className, text) {
   return node;
 }
 
+function selectTree(rootElement) {
+  return document.documentElement.dataset.pvJsonTreeMode === 'classic'
+    ? renderXmlTree(rootElement)
+    : createXmlVirtualTree(rootElement);
+}
+
 function buildXml(source) {
   const parsed = parseXml(source);
   const parseError = Object.getOwnPropertyDescriptor(parsed, 'error')?.value;
@@ -34,10 +40,7 @@ function buildXml(source) {
   }
 
   const treeMode = document.documentElement.dataset.pvJsonTreeMode || 'virtual';
-  const tree =
-    treeMode === 'classic'
-      ? renderXmlTree(parsed.doc.documentElement)
-      : createXmlVirtualTree(parsed.doc.documentElement);
+  const tree = selectTree(parsed.doc.documentElement);
   const { stats } = tree;
   const exportState = {
     filter: null,

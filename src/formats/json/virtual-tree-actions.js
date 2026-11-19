@@ -1,9 +1,8 @@
-import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+import { childEntries, entryCount, isContainer, pathTextFor } from './tree-model.js';
 
 /*
  * Bulk expansion actions for the virtualized tree.
  */
-const { childEntries, entryCount, isContainer, pathTextFor } = jsonTreeShared;
 
 function expandAll(state, rebuild) {
   const seen = new WeakSet();

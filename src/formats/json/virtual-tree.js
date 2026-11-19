@@ -1,25 +1,21 @@
 import { el } from '../../core/dom.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
-import { jsonTreeShared } from '../.././formats/json/tree-shared.js';
+import {
+  childEntries,
+  entryCount,
+  isContainer,
+  pathTextFor,
+  renderValue,
+  valueClass,
+} from './tree-model.js';
 import { jsonVirtualFilter } from './virtual-filter.js';
 import { jsonVirtualLayout } from './virtual-layout.js';
+import { actionButton, pathButton, renderKey, span } from './virtual-parts.js';
 import { primePath } from './virtual-prime.js';
 import { jsonVirtualState } from './virtual-state.js';
 import { virtualTreeActions } from './virtual-tree-actions.js';
 
 const Overscan = 8;
-const {
-  actionButton,
-  childEntries,
-  entryCount,
-  isContainer,
-  pathButton,
-  pathTextFor,
-  renderKey,
-  renderValue,
-  span,
-  valueClass,
-} = jsonTreeShared;
 const { filterRelevant, setFilter } = jsonVirtualFilter;
 const { AutoRows, createState } = jsonVirtualState;
 const { RowHeight, applyRowTitle, measureRows, rebuildOffsets, rowTop, visibleRange } =

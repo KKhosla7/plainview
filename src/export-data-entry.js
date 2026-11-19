@@ -23,7 +23,6 @@ import './formats/json/search-runner.js';
 import './formats/json/search-controls.js';
 import './formats/json/query-controls.js';
 import './formats/json/limits.js';
-import './formats/json/tree-shared.js';
 import './formats/json/tree-reveal.js';
 import './formats/json/tree.js';
 import './formats/json/virtual-tree-actions.js';

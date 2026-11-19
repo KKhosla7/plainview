@@ -1,19 +1,5 @@
-import { el } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
-import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
-
-/*
- * Small tree-node presentation helpers shared by the JSON tree renderer.
- */
-function span(className, text) {
-  return el('span', className, text);
-}
-
-function actionButton(className, label) {
-  const node = el('button', className, label);
-  node.type = 'button';
-  return node;
-}
+import { jsonPath } from './jsonpath-eval.js';
 
 function valueClass(value) {
   if (value === null) {
@@ -93,14 +79,6 @@ function renderValue(value, syntax) {
   return String(value);
 }
 
-function renderKey(key, syntax) {
-  if (valueKind(key) === 'number') {
-    return span('pv-json-index', String(key));
-  }
-
-  return span('pv-json-key', syntax === 'yaml' ? String(key) : JSON.stringify(key));
-}
-
 function pathTextFor(path) {
   return jsonPath.pathToJsonPath(path);
 }
@@ -130,26 +108,13 @@ function keyIndex(state, segment) {
   return state.keys.indexOf(String(segment));
 }
 
-function pathButton(pathText) {
-  const node = el('button', 'pv-json-path', '⧉');
-  node.type = 'button';
-  node.title = `Copy path ${pathText}`;
-  node.setAttribute('aria-label', `Copy path ${pathText}`);
-  node.setAttribute('data-json-path', pathText);
-  return node;
-}
-
-export const jsonTreeShared = {
-  actionButton,
+export {
   childEntries,
   entryCount,
   isContainer,
   keyIndex,
   pathTextFor,
-  pathButton,
-  renderKey,
   renderValue,
-  span,
   treeSyntax,
   valueClass,
 };
