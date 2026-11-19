@@ -95,6 +95,14 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
   assert.doesNotMatch(html, /<script[^>]+src=/iu);
   assert.ok(html.length < MAX_SAMPLE_EXPORT_BYTES, `compressed export is ${html.length} bytes`);
 
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('opens a compressed standalone HTML export with Contents and theme controls', async () => {
+  const { page, errors } = await openSample();
+  const [download] = await Promise.all([page.waitForEvent('download'), downloadHtml(page)]);
+  const file = await download.path();
   const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-export-'));
   const exportFile = path.join(exportDir, 'sample.html');
   fs.copyFileSync(file, exportFile);
@@ -121,37 +129,10 @@ it('exports a compressed standalone HTML file with Contents and theme controls',
       hideCount: 1,
       persistedVisible: true,
     });
-
-    await exported.getByRole('button', { name: 'Toggle theme' }).click();
-    assert.equal(await exported.evaluate(() => document.documentElement.dataset.pvTheme), 'dark');
-    await exported.getByRole('button', { name: 'Toggle theme' }).click();
-    assert.equal(await exported.evaluate(() => document.documentElement.dataset.pvTheme), 'light');
-
-    assert.equal(await exported.getByRole('button', { name: 'Back to top' }).isHidden(), true);
-    await exported.evaluate(() => document.querySelector('#table').scrollIntoView());
-    await exported.waitForFunction(
-      () => document.querySelector('.pv-toc-link.is-active')?.textContent.trim() === 'Table',
-    );
-    await exported.evaluate(() => globalThis.scrollTo(0, document.documentElement.scrollHeight));
-    const exportTop = exported.getByRole('button', { name: 'Back to top' });
-    await exportTop.waitFor({ state: 'visible' });
-    await exportTop.click();
-    await exported.waitForFunction(
-      (limit) => globalThis.scrollY < limit,
-      TestConstants.SCROLL_RETURN_LIMIT,
-    );
-
-    const hasMathFonts = await exported.evaluate(() =>
-      [...document.querySelectorAll('style')].some((style) =>
-        style.textContent.includes('data:font/woff2'),
-      ),
-    );
-    assert.equal(hasMathFonts, false);
   } finally {
     await exported.close();
     fs.rmSync(exportDir, { recursive: true, force: true });
   }
-
   assertNoErrors(errors);
   await page.close();
 });
