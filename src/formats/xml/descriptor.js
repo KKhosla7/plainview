@@ -28,7 +28,7 @@ function describeAttributes(node, descriptor, stats) {
       nodeName: attr.name,
       nodeType: ATTRIBUTE_NODE,
       nodeValue: attr.value,
-      ownerElement: descriptor,
+      ownerElementId: descriptor.id,
       prefix: attr.prefix || '',
       value: attr.value,
     });
@@ -50,7 +50,6 @@ function buildNode(context, node, parent, depth) {
     nodeName: node.nodeName || '',
     nodeType: descriptorNodeType(node),
     nodeValue: node.nodeValue,
-    ownerDocument: null,
     parentNode: parent,
     prefix: node.prefix || '',
     textContent: '',
@@ -96,7 +95,6 @@ function createDescriptorDocument(doc) {
     return { ...context, documentElement: null };
   }
   const documentElement = buildNode(context, doc.documentElement, null, 0);
-  documentElement.ownerDocument = { documentElement, nodeType: DOCUMENT_NODE };
   return { ...context, documentElement };
 }
 

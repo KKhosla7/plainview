@@ -58,7 +58,14 @@ function copyPackageFiles({ project, bundleDir }, target) {
     }
   }
 
-  for (const file of ['boot.js', 'app.js', 'export-chrome.js', 'export-data.js', 'styles.css']) {
+  for (const file of [
+    'boot.js',
+    'app.js',
+    'export-chrome.js',
+    'export-data.js',
+    'xml-worker.js',
+    'styles.css',
+  ]) {
     fs.copyFileSync(path.join(bundleDir, file), path.join(target, file));
   }
 }
