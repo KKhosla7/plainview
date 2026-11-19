@@ -1,6 +1,7 @@
 import { copyText } from '../../core/clipboard.js';
 import { onAsync } from '../../core/events.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+import { createJsonQuery } from './query-controls.js';
 import { createJsonSearch } from './search-controls.js';
 
 /* global Plainview */
@@ -35,7 +36,7 @@ import { createJsonSearch } from './search-controls.js';
         clearStatus(status);
       },
     });
-    const query = Plainview.createJsonQuery({
+    const query = createJsonQuery({
       rootValue,
       indexRef,
       revealPath,
