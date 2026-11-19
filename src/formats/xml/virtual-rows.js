@@ -11,7 +11,7 @@ function rowParts(descriptor) {
   if (descriptor.kind === 'container') {
     return [
       ...nodeParts(openTag(descriptor.source)),
-      el('span', 'pv-xml-count', `${descriptor.children.length} nodes`),
+      el('span', 'pv-xml-count', `${descriptor.childCount ?? descriptor.children.length} nodes`),
     ];
   }
 
@@ -74,6 +74,7 @@ function createRow(state, descriptor, index) {
     toggle.addEventListener('click', (event) => {
       event.stopPropagation();
       descriptor.expanded = !descriptor.expanded;
+      descriptor.ensureChildren?.();
       state.rebuild();
     });
     row.append(toggle);
@@ -82,6 +83,7 @@ function createRow(state, descriptor, index) {
         return;
       }
       descriptor.expanded = !descriptor.expanded;
+      descriptor.ensureChildren?.();
       state.rebuild();
     });
   } else {

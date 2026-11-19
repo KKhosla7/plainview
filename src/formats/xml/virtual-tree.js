@@ -27,14 +27,31 @@ function createStats() {
   };
 }
 
+function ensureChildren(state, descriptor) {
+  if (descriptor.childrenLoaded) {
+    return;
+  }
+
+  descriptor.childrenLoaded = true;
+  for (const child of meaningfulChildren(descriptor.source)) {
+    const described = describeNode(state, child, descriptor.depth + 1, descriptor);
+    if (described) {
+      descriptor.children.push(described);
+    }
+  }
+}
+
 function describeElement(state, descriptor, source, depth) {
   state.stats.elements += 1;
   state.stats.attributes += source.attributes.length;
   const children = meaningfulChildren(source);
+  descriptor.childCount = children.length;
   if (children.length === 0) {
     descriptor.kind = 'empty';
+    descriptor.childrenLoaded = true;
   } else if (children.every((child) => child.nodeType === Text || child.nodeType === Cdata)) {
     descriptor.kind = 'text';
+    descriptor.childrenLoaded = true;
     descriptor.textChildren = children;
     state.stats.text += children.length;
     for (const child of children) {
@@ -43,12 +60,7 @@ function describeElement(state, descriptor, source, depth) {
   } else {
     descriptor.kind = 'container';
     descriptor.expanded = depth < 2;
-    for (const child of children) {
-      const described = describeNode(state, child, depth + 1, descriptor);
-      if (described) {
-        descriptor.children.push(described);
-      }
-    }
+    descriptor.childrenLoaded = false;
   }
 }
 
@@ -96,6 +108,17 @@ function describeNode(state, source, depth, parent) {
   return attachVirtual(state, descriptor);
 }
 
+function describeAll(state, descriptor) {
+  if (descriptor.kind !== 'container') {
+    return;
+  }
+
+  ensureChildren(state, descriptor);
+  for (const child of descriptor.children) {
+    describeAll(state, child);
+  }
+}
+
 function attachVirtual(state, descriptor) {
   descriptor.virtual = {
     mark(className) {
@@ -118,6 +141,7 @@ function collect(state) {
   function walk(descriptor) {
     state.rows.push(descriptor);
     if (descriptor.kind === 'container' && descriptor.expanded) {
+      ensureChildren(state, descriptor);
       for (const child of descriptor.children) {
         walk(child);
       }
@@ -196,13 +220,14 @@ function revealDescriptor(state, descriptor) {
   scheduleRender(state);
 }
 
-function expandAll(descriptor) {
+function expandAll(state, descriptor) {
   if (descriptor.kind !== 'container') {
     return;
   }
   descriptor.expanded = true;
+  ensureChildren(state, descriptor);
   for (const child of descriptor.children) {
-    expandAll(child);
+    expandAll(state, child);
   }
 }
 
@@ -229,10 +254,11 @@ function createXmlVirtualTree(rootElement) {
   };
   state.rebuild = () => rebuild(state);
   state.root = describeNode(state, rootElement, 0, null);
+  state.byNode.ensureAll = () => describeAll(state, state.root);
   collect(state);
   renderRows(state);
   tree.addEventListener('pv-expand-all', () => {
-    expandAll(state.root);
+    expandAll(state, state.root);
     rebuild(state);
   });
   tree.addEventListener('pv-collapse-all', () => {

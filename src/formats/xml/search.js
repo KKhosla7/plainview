@@ -20,6 +20,10 @@ function bindSearchEvents({ search, prev, next, stepSearch, scheduleSearch }) {
   next.addEventListener('click', () => stepSearch(1));
 }
 
+function ensureSearchIndex(byNode) {
+  byNode.ensureAll?.();
+}
+
 function createSearchElements() {
   const searchWrap = el('div', 'pv-json-search');
   const searchRow = el('div', 'pv-json-search-row');
@@ -47,7 +51,6 @@ function createXmlSearch({ byNode, exportState, status }) {
   let searchHits = [];
   let searchIndex = -1;
   let searchTimer = 0;
-
   function clearSearch() {
     for (const hit of searchHits) {
       unmark(hit, 'pv-xml-hit');
@@ -74,6 +77,7 @@ function createXmlSearch({ byNode, exportState, status }) {
       return;
     }
     const needle = value.toLocaleLowerCase();
+    ensureSearchIndex(byNode);
     for (const [node, entry] of byNode) {
       if (!searchText(node).toLocaleLowerCase().includes(needle)) {
         continue;
