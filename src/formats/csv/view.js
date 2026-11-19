@@ -1,4 +1,6 @@
 import { el } from '../../core/dom.js';
+import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
+import { errorPanel } from '../.././formats/shared/error-panel.js';
 
 /* global Plainview */
 /*
@@ -104,11 +106,11 @@ import { el } from '../../core/dom.js';
     if (parsed.error) {
       article.append(
         el('div', 'pv-doc-title', `Invalid ${label}`),
-        Plainview.errorPanel(parsed.error.message, parsed.error.line),
+        errorPanel(parsed.error.message, parsed.error.line),
       );
     }
     article.append(
-      Plainview.createDataToolbar({
+      createDataToolbar({
         article,
         source,
         summary:

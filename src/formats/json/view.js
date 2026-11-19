@@ -1,4 +1,6 @@
 import { el } from '../../core/dom.js';
+import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
+import { errorPanel } from '../.././formats/shared/error-panel.js';
 
 /* global Plainview */
 /*
@@ -34,7 +36,7 @@ import { el } from '../../core/dom.js';
         }
       },
     };
-    const toolbar = Plainview.createDataToolbar({
+    const toolbar = createDataToolbar({
       article,
       source,
       summary: '',
@@ -96,7 +98,7 @@ import { el } from '../../core/dom.js';
       const article = el('article', 'pv-doc pv-data-doc');
       article.append(
         el('div', 'pv-doc-title', 'Invalid JSON'),
-        Plainview.errorPanel(parsed.error.message, parsed.error.line, parsed.error.column),
+        errorPanel(parsed.error.message, parsed.error.line, parsed.error.column),
       );
       return { article, stats: null, error: true };
     }

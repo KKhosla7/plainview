@@ -1,5 +1,6 @@
 import { createElement } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
+import { errorPanel } from '../.././formats/shared/error-panel.js';
 
 /* global Plainview */
 ((root) => {
@@ -33,7 +34,7 @@ import { valueKind } from '../../core/value.js';
     } catch (error) {
       article.append(
         el('div', 'pv-doc-title', 'TOML unavailable'),
-        Plainview.errorPanel(error instanceof Error ? error.message : String(error)),
+        errorPanel(error instanceof Error ? error.message : String(error)),
       );
       return { article, stats: null, error: true };
     }
@@ -45,7 +46,7 @@ import { valueKind } from '../../core/value.js';
       const details = detailsFromError(error);
       article.append(
         el('div', 'pv-doc-title', 'Invalid TOML'),
-        Plainview.errorPanel(details.message, details.line, details.column),
+        errorPanel(details.message, details.line, details.column),
       );
       return { article, stats: null, error: true };
     }

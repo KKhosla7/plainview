@@ -1,4 +1,6 @@
 import { createElement } from '../../core/dom.js';
+import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
+import { errorPanel } from '../.././formats/shared/error-panel.js';
 
 /* global Plainview */
 ((root) => {
@@ -22,7 +24,7 @@ import { createElement } from '../../core/dom.js';
     if (parsed.error) {
       article.append(
         el('div', 'pv-doc-title', 'Invalid XML'),
-        Plainview.errorPanel(parsed.error.message, parsed.error.line, parsed.error.column),
+        errorPanel(parsed.error.message, parsed.error.line, parsed.error.column),
       );
       return { article, stats: null, error: true };
     }
@@ -51,7 +53,7 @@ import { createElement } from '../../core/dom.js';
     };
 
     article.append(
-      Plainview.createDataToolbar({
+      createDataToolbar({
         article,
         source,
         summary:
