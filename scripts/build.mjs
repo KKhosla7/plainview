@@ -10,11 +10,10 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const project = path.resolve(here, '..');
 const dist = path.join(project, 'dist');
 const pkg = JSON.parse(fs.readFileSync(path.join(project, 'package.json'), 'utf8'));
-const HttpMatchPattern = 'http://*/*';
-const HttpsMatchPattern = 'https://*/*';
 const sourceManifest = JSON.parse(
   fs.readFileSync(path.join(project, 'src', 'manifest.json'), 'utf8'),
 );
+const [HttpMatchPattern, HttpsMatchPattern] = sourceManifest.host_permissions;
 
 const STYLE_FILES = [
   'src/styles/design-tokens.css',

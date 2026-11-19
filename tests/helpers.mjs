@@ -4,10 +4,11 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
+import urls from '../src/core/urls.json' with { type: 'json' };
 
 const project = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const fixtures = path.join(project, 'tests', 'fixtures');
-const LocalOrigin = 'http://127.0.0.1';
+const LocalOrigin = urls.localOrigin;
 const dist = path.join(project, 'dist', 'chrome');
 
 function valueKind(value) {

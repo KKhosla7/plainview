@@ -1,6 +1,8 @@
 import { createElement } from '../core/dom.js';
 
-const Namespace = 'http://www.w3.org/2000/svg';
+import urls from '../core/urls.json' with { type: 'json' };
+
+const Namespace = urls.svgNamespace;
 
 function icon(paths, size = 18) {
   const svg = document.createElementNS(Namespace, 'svg');

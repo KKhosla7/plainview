@@ -1,5 +1,6 @@
+import urls from './urls.json' with { type: 'json' };
 export function ensureHtmlShellForXml() {
-  const XhtmlNamespace = 'http://www.w3.org/1999/xhtml';
+  const XhtmlNamespace = urls.xhtmlNamespace;
 
   if (!document.body) {
     const html = document.createElementNS(XhtmlNamespace, 'html');

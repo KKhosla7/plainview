@@ -1,5 +1,6 @@
 import { el } from '../../core/dom.js';
 import { tableResize } from '../../core/table-resize.js';
+import urls from '../../core/urls.json' with { type: 'json' };
 import { createVirtualTable } from './virtual-table.js';
 
 function numeric(value) {
@@ -7,7 +8,7 @@ function numeric(value) {
 }
 
 function filterIcon() {
-  const SvgNamespace = 'http://www.w3.org/2000/svg';
+  const SvgNamespace = urls.svgNamespace;
   const svg = document.createElementNS(SvgNamespace, 'svg');
   svg.setAttribute('viewBox', '0 0 16 16');
   svg.setAttribute('width', '11');

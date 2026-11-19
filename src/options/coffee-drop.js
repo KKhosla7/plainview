@@ -19,9 +19,10 @@
     if (rope) {
       return rope;
     }
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const SvgNamespace = document.querySelector('svg')?.namespaceURI;
+    const svg = document.createElementNS(SvgNamespace, 'svg');
     svg.classList.add('coffee-rope');
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const path = document.createElementNS(SvgNamespace, 'path');
     path.setAttribute('fill', 'none');
     svg.append(path);
     document.body.append(svg);

@@ -5,9 +5,10 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import urls from '../src/core/urls.json' with { type: 'json' };
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const LocalOrigin = 'http://127.0.0.1';
+const LocalOrigin = urls.localOrigin;
 const project = path.resolve(here, '..');
 const fixtures = path.join(project, 'store', 'fixtures');
 const dist = path.join(project, 'dist', 'chrome');
