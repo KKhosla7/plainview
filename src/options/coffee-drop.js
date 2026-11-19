@@ -1,168 +1,46 @@
-const MAX_SAG = 90;
-const SAG_RATIO = 0.45;
-const DRAG_THRESHOLD = 4;
-const RETRACT_MS = 380;
-const ASCEND_MS = 900;
-const ASCEND_DISTANCE = 320;
-const EASE_POWER = 3;
-const SQUASH_FACTOR = 2;
-const SQUASH_COEFFICIENT = 3;
+import { createDragHandlers } from './coffee-drag.js';
+import { createRope } from './coffee-rope.js';
 
-(() => {
-  const button = document.querySelector('.coffee-fab');
-  if (!button) {
-    return;
-  }
+const button = document.querySelector('.coffee-fab');
 
-  let startX = 0;
-  let startY = 0;
-  let anchorX = 0;
-  let offsetX = 0;
-  let offsetY = 0;
-  let upDistance = 0;
-  let rope = null;
-  let dragging = false;
-  let moved = false;
-  let suppressClick = false;
-
-  function ensureRope() {
-    if (rope) {
-      return rope;
-    }
-    const SvgNamespace = document.querySelector('svg')?.namespaceURI;
-    const svg = document.createElementNS(SvgNamespace, 'svg');
-    svg.classList.add('coffee-rope');
-    const path = document.createElementNS(SvgNamespace, 'path');
-    path.setAttribute('fill', 'none');
-    svg.append(path);
-    document.body.append(svg);
-    rope = { path, svg };
-    return rope;
-  }
-
-  function drawRope() {
-    const rect = button.getBoundingClientRect();
-    const cupX = rect.left + rect.width / 2;
-    const cupY = rect.top + rect.height / 2;
-    const { path } = ensureRope();
-    const midX = (anchorX + cupX) / 2;
-    const sag = Math.min(MAX_SAG, Math.abs(cupX - anchorX) * SAG_RATIO);
-    const midY = cupY / 2 + sag;
-    path.setAttribute('d', `M ${anchorX} 0 Q ${midX} ${midY} ${cupX} ${cupY}`);
-  }
-
-  function move(event) {
-    if (!dragging) {
-      return;
-    }
-    offsetX = event.clientX - startX;
-    offsetY = event.clientY - startY;
-    if (!moved && Math.hypot(offsetX, offsetY) <= DRAG_THRESHOLD) {
-      return;
-    }
-
-    if (!moved) {
-      moved = true;
-      button.classList.add('is-dragging');
-    }
-    button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-    drawRope();
-  }
-
-  function end() {
-    if (!dragging) {
-      return;
-    }
-    dragging = false;
-    globalThis.removeEventListener('mousemove', move);
-    globalThis.removeEventListener('mouseup', end);
-    if (!moved) {
-      return;
-    }
-    suppressClick = true;
-    button.classList.remove('is-dragging');
-    button.classList.add('is-releasing');
-    const fromX = offsetX;
-    const fromY = offsetY;
-    const retractMs = RETRACT_MS;
-    const ascendMs = ASCEND_MS;
-    const retractStart = performance.now();
-    let ascendStart = 0;
-
-    function finish() {
-      rope?.svg.remove();
-      rope = null;
-      button.classList.remove('is-releasing');
-      button.classList.add('is-retracted');
-      button.style.removeProperty('--coffee-string-extra');
-    }
-
-    function ascend(now) {
-      const progress = Math.min(1, (now - ascendStart) / ascendMs);
-      const eased = progress ** SQUASH_FACTOR * (SQUASH_COEFFICIENT - SQUASH_FACTOR * progress);
-      const distance = upDistance * eased;
-      offsetY = -distance;
-      button.style.transform = `translate(0, ${offsetY}px)`;
-      if (button.getBoundingClientRect().bottom > 0) {
-        drawRope();
-      } else if (rope) {
-        rope.svg.style.display = 'none';
-      }
-
-      if (progress < 1) {
-        globalThis.requestAnimationFrame(ascend);
-        return;
-      }
-      finish();
-    }
-
-    function retract(now) {
-      const progress = Math.min(1, (now - retractStart) / retractMs);
-      const eased = 1 - (1 - progress) ** EASE_POWER;
-      offsetX = fromX * (1 - eased);
-      offsetY = fromY * (1 - eased);
-      button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-      drawRope();
-      if (progress < 1) {
-        globalThis.requestAnimationFrame(retract);
-        return;
-      }
-      const startRect = button.getBoundingClientRect();
-      upDistance = startRect.top + startRect.height + ASCEND_DISTANCE;
-      ascendStart = performance.now();
-      globalThis.requestAnimationFrame(ascend);
-    }
-
-    const startRect = button.getBoundingClientRect();
-    upDistance = startRect.top + startRect.height + ASCEND_DISTANCE;
-    globalThis.requestAnimationFrame(retract);
-  }
+if (button) {
+  const state = {
+    anchorX: 0,
+    dragging: false,
+    moved: false,
+    offsetX: 0,
+    offsetY: 0,
+    startX: 0,
+    startY: 0,
+    upDistance: 0,
+  };
+  const rope = createRope(button, state);
+  const handlers = createDragHandlers({ button, state, rope, drawRope: rope.draw });
 
   button.addEventListener('dragstart', (event) => event.preventDefault());
   button.addEventListener('mousedown', (event) => {
     if (event.button !== 0) {
       return;
     }
-    startX = event.clientX;
-    startY = event.clientY;
+    state.startX = event.clientX;
+    state.startY = event.clientY;
     const rect = button.getBoundingClientRect();
-    anchorX = rect.left + rect.width / 2;
-    offsetX = 0;
-    offsetY = 0;
-    moved = false;
-    dragging = true;
-    globalThis.addEventListener('mousemove', move);
-    globalThis.addEventListener('mouseup', end);
+    state.anchorX = rect.left + rect.width / 2;
+    state.offsetX = 0;
+    state.offsetY = 0;
+    state.moved = false;
+    state.dragging = true;
+    globalThis.addEventListener('mousemove', handlers.move);
+    globalThis.addEventListener('mouseup', handlers.end);
   });
-
   button.addEventListener(
     'click',
     (event) => {
-      if (suppressClick) {
+      if (state.suppressClick) {
         event.preventDefault();
-        suppressClick = false;
+        state.suppressClick = false;
       }
     },
     true,
   );
-})();
+}
