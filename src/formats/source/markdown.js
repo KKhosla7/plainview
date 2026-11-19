@@ -1,5 +1,9 @@
 import { escapeHtml } from '../markdown/core.js';
+
 import { register } from './core.js';
+
+const GROUP_3 = 3;
+const GROUP_4 = 4;
 
 (() => {
   const Inline =
@@ -35,7 +39,7 @@ import { register } from './core.js';
       if (link) {
         return (
           `<span class="pv-syn-link">${escapeHtml(`${link[1]}[${link[2]}]`)}</span>` +
-          `<span class="pv-syn-url">${escapeHtml(`(${link[3]})`)}</span>`
+          `<span class="pv-syn-url">${escapeHtml(`(${link[GROUP_3]})`)}</span>`
         );
       }
 
@@ -69,8 +73,8 @@ import { register } from './core.js';
     return (
       `${escapeHtml(match[1])}` +
       `<span class="pv-syn-heading-marker">${match[2]}</span>` +
-      `${escapeHtml(match[3])}` +
-      `<span class="pv-syn-heading-text">${highlightInline(match[4])}</span>`
+      `${escapeHtml(match[GROUP_3])}` +
+      `<span class="pv-syn-heading-text">${highlightInline(match[GROUP_4])}</span>`
     );
   }
 
@@ -80,21 +84,21 @@ import { register } from './core.js';
       return null;
     }
 
-    const task = /^(\[[ xX]\])(\s+)(.*)$/u.exec(match[4]);
+    const task = /^(\[[ xX]\])(\s+)(.*)$/u.exec(match[GROUP_4]);
     if (!task) {
       return (
         `${escapeHtml(match[1])}` +
         `<span class="pv-syn-list-marker">${escapeHtml(match[2])}</span>` +
-        `${escapeHtml(match[3])}${highlightInline(match[4])}`
+        `${escapeHtml(match[GROUP_3])}${highlightInline(match[GROUP_4])}`
       );
     }
 
     return (
       `${escapeHtml(match[1])}` +
       `<span class="pv-syn-list-marker">${escapeHtml(match[2])}</span>` +
-      `${escapeHtml(match[3])}` +
+      `${escapeHtml(match[GROUP_3])}` +
       `<span class="pv-syn-task">${escapeHtml(task[1])}</span>` +
-      `${escapeHtml(task[2])}${highlightInline(task[3])}`
+      `${escapeHtml(task[2])}${highlightInline(task[GROUP_3])}`
     );
   }
 
@@ -119,7 +123,7 @@ import { register } from './core.js';
         html:
           `${escapeHtml(quote[1])}` +
           `<span class="pv-syn-quote-marker">${escapeHtml(quote[2])}</span>` +
-          `${highlightInline(quote[3])}`,
+          `${highlightInline(quote[GROUP_3])}`,
       };
     }
 

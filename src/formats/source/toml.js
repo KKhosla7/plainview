@@ -1,5 +1,12 @@
 import { escapeHtml } from '../markdown/core.js';
+
 import { register } from './core.js';
+
+const TABLE_KEY = 3;
+const TABLE_CLOSE = 4;
+const TABLE_COMMENT = 5;
+const PAIR_OPERATOR = 3;
+const PAIR_VALUE = 4;
 
 (() => {
   const ValueToken =
@@ -46,9 +53,11 @@ import { register } from './core.js';
       return (
         escapeHtml(table[1]) +
         `<span class="pv-syn-punct">${escapeHtml(table[2])}</span>` +
-        `<span class="pv-syn-key">${escapeHtml(table[3])}</span>` +
-        `<span class="pv-syn-punct">${escapeHtml(table[4])}</span>` +
-        (table[5] ? ` <span class="pv-syn-comment">${escapeHtml(table[5])}</span>` : '')
+        `<span class="pv-syn-key">${escapeHtml(table[TABLE_KEY])}</span>` +
+        `<span class="pv-syn-punct">${escapeHtml(table[TABLE_CLOSE])}</span>` +
+        (table[TABLE_COMMENT]
+          ? ` <span class="pv-syn-comment">${escapeHtml(table[TABLE_COMMENT])}</span>`
+          : '')
       );
     }
     const pair = /^(\s*)([A-Za-z0-9_.-]+)(\s*=\s*)(.*)$/u.exec(line);
@@ -56,8 +65,8 @@ import { register } from './core.js';
       return (
         escapeHtml(pair[1]) +
         `<span class="pv-syn-key">${escapeHtml(pair[2])}</span>` +
-        `<span class="pv-syn-punct">${escapeHtml(pair[3])}</span>` +
-        highlightValue(pair[4])
+        `<span class="pv-syn-punct">${escapeHtml(pair[PAIR_OPERATOR])}</span>` +
+        highlightValue(pair[PAIR_VALUE])
       );
     }
 
