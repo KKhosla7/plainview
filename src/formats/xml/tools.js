@@ -1,6 +1,8 @@
 import { copyText } from '../../core/clipboard.js';
 import { onAsync } from '../../core/events.js';
-import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
+import { createXmlQuery } from './query.js';
+import { createXmlSearch } from './search.js';
+import { xmlToolsShared } from './tools-shared.js';
 
 /* global Plainview */
 /*
@@ -13,8 +15,8 @@ function createXmlTools({ tree, doc, byNode, exportState }) {
   const tools = el('div', 'pv-json-tools pv-xml-tools');
   const status = el('div', 'pv-json-status');
   status.setAttribute('role', 'status');
-  const search = Plainview.createXmlSearch({ byNode, exportState, status });
-  const query = Plainview.createXmlQuery({ doc, byNode, exportState, status });
+  const search = createXmlSearch({ byNode, exportState, status });
+  const query = createXmlQuery({ doc, byNode, exportState, status });
 
   onAsync(tree, 'click', async (event) => {
     const target = event.target?.closest?.('.pv-xml-path') ?? null;
