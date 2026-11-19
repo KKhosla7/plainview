@@ -214,6 +214,8 @@ function sortRows(rows, sortState) {
   });
 }
 
+const FILTER_DEBOUNCE_MS_VALUE = 120;
+
 function createRowElement(row, columns) {
   const tr = el('tr');
   tr.append(el('th', 'pv-csv-row-number', String(row.number)));
@@ -290,4 +292,4 @@ function createTable({ header, columns, dataRows, filter, count, status }) {
     scheduleRender,
   };
 }
-export const csvTable = { FilterDebounceMs: 120, compareCells, createTable };
+export const csvTable = { FilterDebounceMs: FILTER_DEBOUNCE_MS_VALUE, compareCells, createTable };

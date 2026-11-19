@@ -165,8 +165,10 @@ function parseJson(source) {
   }
 }
 
-const BytesPerKilobyte = 1024;
-const BytesPerMegabyte = 1024 * 1024;
+const BYTES_PER_KILOBYTE_VALUE = 1024;
+const BytesPerKilobyte = BYTES_PER_KILOBYTE_VALUE;
+const BYTES_PER_MEGABYTE_VALUE = BYTES_PER_KILOBYTE_VALUE * BYTES_PER_KILOBYTE_VALUE;
+const BytesPerMegabyte = BYTES_PER_MEGABYTE_VALUE;
 
 function formatBytes(bytes) {
   if (bytes < BytesPerKilobyte) {

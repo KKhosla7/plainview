@@ -1,8 +1,11 @@
 import { el } from '../../core/dom.js';
 
-const VirtualizeThreshold = 200;
-const EstimateRowHeight = 28;
-const OverscanRows = 6;
+const VIRTUALIZE_THRESHOLD_VALUE = 200;
+const VirtualizeThreshold = VIRTUALIZE_THRESHOLD_VALUE;
+const ESTIMATE_ROW_HEIGHT_VALUE = 28;
+const EstimateRowHeight = ESTIMATE_ROW_HEIGHT_VALUE;
+const OVERSCAN_ROWS_VALUE = 6;
+const OverscanRows = OVERSCAN_ROWS_VALUE;
 
 function createSpacer(height, columns) {
   const tr = el('tr', 'pv-csv-spacer');

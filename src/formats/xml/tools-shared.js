@@ -6,8 +6,10 @@ const SEARCH_DEBOUNCE_MS = 120;
 const ELEMENT_NODE = 1;
 const ATTRIBUTE_NODE = 2;
 const DOCUMENT_NODE = 9;
-const Text = 3;
-const Cdata = 4;
+const TEXT_VALUE = 3;
+const Text = TEXT_VALUE;
+const CDATA_VALUE = 4;
+const Cdata = CDATA_VALUE;
 
 function button(className, label) {
   const node = el('button', className, label);

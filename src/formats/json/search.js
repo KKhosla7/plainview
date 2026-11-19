@@ -1,7 +1,8 @@
 import { valueKind } from '../../core/value.js';
 import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 
-const MaxResults = 5000;
+const MAX_RESULTS_VALUE = 5000;
+const MaxResults = MAX_RESULTS_VALUE;
 
 function pushChildren(item, stack, seen) {
   if (item.value === null || valueKind(item.value) !== 'object') {

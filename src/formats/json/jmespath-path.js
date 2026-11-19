@@ -2,6 +2,7 @@ import { valueKind } from '../../core/value.js';
 
 const Identifier = /^[A-Za-z_][\w-]*/u;
 const Index = /^\[(-?\d+)\]/u;
+const WILDCARD_LENGTH = 3;
 
 function readQuoted(expression, start) {
   let index = start + 1;
@@ -48,7 +49,7 @@ function parseStep(expression, index) {
   }
 
   if (expression.startsWith('[*]', index)) {
-    return { step: { type: 'wildcard' }, end: index + 3 };
+    return { step: { type: 'wildcard' }, end: index + WILDCARD_LENGTH };
   }
 
   return null;

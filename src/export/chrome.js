@@ -8,7 +8,8 @@ import { tableResize } from '.././core/table-resize.js';
 ((root) => {
   const { document } = root;
   const ExportTableBordersPrefix = 'plainview.export.tableBorders:';
-  const RevokeDelayMs = 10_000;
+  const REVOKE_DELAY_MS_VALUE = 10_000;
+  const RevokeDelayMs = REVOKE_DELAY_MS_VALUE;
 
   function exportEntry(entry, total, close) {
     const format = entry.formatId === 'markdown' ? 'MD' : entry.formatId.toUpperCase();

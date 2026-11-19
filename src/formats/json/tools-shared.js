@@ -7,6 +7,7 @@ import { openAncestors } from '../shared/tree-tools.js';
 const STICKY_OFFSET_GAP = 16;
 const RESULT_PREVIEW_CHARS = 50;
 const TITLE_PREVIEW_CHARS = 160;
+const MORE_RESULTS_LIMIT = 50;
 const COPY_RESET_MS = 1200;
 const SEARCH_DEBOUNCE_MS = 120;
 
@@ -242,8 +243,10 @@ function renderResults({ hitClass, list, matches, indexRef, onReveal }) {
     fragment.append(resultRow({ hitClass, item, list, indexRef, onReveal }));
   }
 
-  if (matches.length > 50) {
-    fragment.append(el('div', 'pv-json-search-more', `+${matches.length - 50} more results`));
+  if (matches.length > MORE_RESULTS_LIMIT) {
+    fragment.append(
+      el('div', 'pv-json-search-more', `+${matches.length - MORE_RESULTS_LIMIT} more results`),
+    );
   }
   list.replaceChildren(fragment);
   list.hidden = false;

@@ -11,8 +11,10 @@ import {
 } from './tree-shared.js';
 import { createRow } from './virtual-rows.js';
 
-const RowHeight = 24;
-const Overscan = 8;
+const ROW_HEIGHT_VALUE = 24;
+const RowHeight = ROW_HEIGHT_VALUE;
+const OVERSCAN_VALUE = 8;
+const Overscan = OVERSCAN_VALUE;
 
 function createStats() {
   return {

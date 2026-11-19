@@ -1,8 +1,10 @@
 import { replaceWithGeneratedHtml } from '../../core/dom.js';
 
 const AssetPath = 'vendor/highlight/highlight.min.mjs';
-const MaxAutoChars = 20_000;
-const MinAutoRelevance = 6;
+const MAX_AUTO_CHARS_VALUE = 20_000;
+const MaxAutoChars = MAX_AUTO_CHARS_VALUE;
+const MIN_AUTO_RELEVANCE_VALUE = 6;
+const MinAutoRelevance = MIN_AUTO_RELEVANCE_VALUE;
 const Aliases = {
   js: 'javascript',
   jsx: 'javascript',

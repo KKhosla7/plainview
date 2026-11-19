@@ -1,4 +1,5 @@
-const MaxResults = 2000;
+const MAX_RESULTS_VALUE = 2000;
+const MaxResults = MAX_RESULTS_VALUE;
 const Identifier = /^[A-Za-z_$][\w$]*$/u;
 
 function fail(message) {

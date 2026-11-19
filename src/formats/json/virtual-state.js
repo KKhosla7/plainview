@@ -1,7 +1,8 @@
 import { jsonLimits } from '../.././formats/json/limits.js';
 import { treeSyntax } from './tree-model.js';
 
-const AutoRows = 20_000;
+const AUTO_ROWS_VALUE = 20_000;
+const AutoRows = AUTO_ROWS_VALUE;
 const { openDepth } = jsonLimits;
 
 function createState({ value, options, indexRef, onStats, tree }) {

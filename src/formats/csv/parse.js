@@ -1,5 +1,7 @@
-const MaxRows = 50_000;
-const MaxColumns = 200;
+const MAX_ROWS_VALUE = 50_000;
+const MaxRows = MAX_ROWS_VALUE;
+const MAX_COLUMNS_VALUE = 200;
+const MaxColumns = MAX_COLUMNS_VALUE;
 
 function detectDelimiter(source, preferred) {
   if (preferred) {

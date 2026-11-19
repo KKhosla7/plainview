@@ -1,10 +1,12 @@
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 
-const RowHeight = 24;
+const TITLE_PREVIEW_CHARS = 60;
+const ROW_HEIGHT_VALUE = 24;
+const RowHeight = ROW_HEIGHT_VALUE;
 
 function applyRowTitle(node, value) {
   const text = jsonToolsShared.primitiveText(value);
-  if (text.length > 60) {
+  if (text.length > TITLE_PREVIEW_CHARS) {
     node.title = text;
   }
 }

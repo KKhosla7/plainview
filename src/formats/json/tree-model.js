@@ -30,7 +30,8 @@ function treeSyntax(formatId) {
 }
 
 const JsonlFormatCache = new Map();
-const MaxJsonlFormatCache = 250;
+const MAX_JSONL_FORMAT_CACHE_VALUE = 250;
+const MaxJsonlFormatCache = MAX_JSONL_FORMAT_CACHE_VALUE;
 
 function formattedJsonlValue(value) {
   if (JsonlFormatCache.has(value)) {

@@ -4,8 +4,10 @@ import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { jsonSearch } from './search.js';
 
 const { mark, renderResults } = jsonToolsShared;
-const SearchBatchNodes = 500;
-const RenderIntervalMs = 100;
+const SEARCH_BATCH_NODES_VALUE = 500;
+const SearchBatchNodes = SEARCH_BATCH_NODES_VALUE;
+const RENDER_INTERVAL_MS_VALUE = 100;
+const RenderIntervalMs = RENDER_INTERVAL_MS_VALUE;
 
 function searchable(entry) {
   const key = entry.isRoot ? '' : String(entry.key);

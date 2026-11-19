@@ -6,7 +6,8 @@ import { hasMath } from '../math/loader.js';
 import { createIdFactory, renderMarkdown, sanitizeArticle } from './core.js';
 import { applyTitleBlock } from './title-block.js';
 
-const CopyResetMs = 1200;
+const COPY_RESET_MS_VALUE = 1200;
+const CopyResetMs = COPY_RESET_MS_VALUE;
 
 function codeLanguage(code) {
   const languageClass = [...code.classList].find((name) => name.startsWith('language-'));

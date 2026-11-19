@@ -1,6 +1,7 @@
 import { escapeHtml } from '../markdown/core.js';
 
-const MaxHighlightChars = 1_500_000;
+const MAX_HIGHLIGHT_CHARS_VALUE = 1_500_000;
+const MaxHighlightChars = MAX_HIGHLIGHT_CHARS_VALUE;
 const highlighters = {};
 
 function register(format, highlighter) {
