@@ -34,6 +34,7 @@ const STYLE_FILES = [
   'src/styles/responsive.css',
   'src/styles/theme-html.css',
   'src/styles/theme-html-doc.css',
+  'src/styles/theme-html-doc-code.css',
   'src/styles/table-borders.css',
   'src/styles/table-layout.css',
   'src/styles/virtual-tree.css',
