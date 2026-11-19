@@ -1,6 +1,7 @@
 import { valueKind } from '../../core/value.js';
 import { jsonPath } from '../.././formats/json/jsonpath-eval.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
+import { loadJmespath } from '../jmespath/loader.js';
 import { jmespathPath } from './jmespath-path.js';
 
 const { el, button, bindResultDismiss, inputClear, mark, unmark, selectHit, renderResults } =
@@ -214,7 +215,7 @@ async function runJmespath(ctx, expression) {
   let jmespath;
   let result;
   try {
-    jmespath = await Plainview.loadJmespath();
+    jmespath = await loadJmespath();
     result = jmespath.search(ctx.rootValue, expression);
   } catch (error) {
     queryError(ctx, 'JMESPath', error);

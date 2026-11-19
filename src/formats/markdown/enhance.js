@@ -4,6 +4,7 @@ import { onAsync } from '../../core/events.js';
 import { tableResize } from '../../core/table-resize.js';
 import { hasMath } from '../math/loader.js';
 import { createIdFactory, renderMarkdown, sanitizeArticle } from './core.js';
+import { applyTitleBlock } from './title-block.js';
 
 /* global Plainview */
 /*
@@ -181,7 +182,7 @@ function buildMarkdown(source) {
     article.append(empty);
   }
 
-  Plainview.applyTitleBlock(article);
+  applyTitleBlock(article);
 
   return {
     article,

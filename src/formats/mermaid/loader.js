@@ -1,5 +1,6 @@
 import { createElement } from '../../core/dom.js';
 import { valueKind } from '../../core/value.js';
+import { sanitizeSvg } from './svg-sanitize.js';
 
 /* global Plainview */
 /*
@@ -144,7 +145,7 @@ async function renderBlock(api, block, generation) {
       return;
     }
 
-    const svg = Plainview.sanitizeSvg(result.svg);
+    const svg = sanitizeSvg(result.svg);
     if (!svg) {
       throw new Error('Mermaid returned invalid SVG');
     }
