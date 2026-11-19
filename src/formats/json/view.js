@@ -2,6 +2,7 @@ import { el } from '../../core/dom.js';
 import { formatBytes, parseJson } from '../.././formats/json/parse.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
+import { createJsonExportState } from './export-state.js';
 import { createJsonTools } from './tools.js';
 import { createJsonTree } from './tree.js';
 import { createVirtualJsonTree } from './virtual-tree.js';
@@ -14,28 +15,37 @@ function summaryFor(source, options, stats) {
   );
 }
 
+function createJsonExportData({ exportState, formatId, options, source, value }) {
+  return {
+    formatId,
+    hasFilter: () => Boolean(exportState.values?.length),
+    getDocument() {
+      return {
+        filter: exportState.filter,
+        formatId,
+        label: options.copyLabel?.replace(/^Copy /u, '') || 'JSON',
+        source,
+        suffix: options.suffix,
+        value,
+      };
+    },
+    getData(scope) {
+      const data = scope === 'filtered' ? exportState.values : value;
+      if (!data || (scope === 'filtered' && data.length === 0)) {
+        return null;
+      }
+
+      return { data, formatId, kind: formatId };
+    },
+  };
+}
+
 function buildJsonValue(value, options = {}) {
   const treeMode = options.treeMode || document.documentElement.dataset.pvJsonTreeMode || 'virtual';
   const source = String(options.source ?? '');
   const article = el('article', 'pv-doc pv-data-doc');
   const indexRef = { current: new Map() };
-  const exportState = {
-    filter: null,
-    kind: '',
-    values: null,
-    set(kind, values, filter = null) {
-      this.kind = kind;
-      this.values = values;
-      this.filter = filter;
-    },
-    clear(kind) {
-      if (this.kind === kind) {
-        this.filter = null;
-        this.kind = '';
-        this.values = null;
-      }
-    },
-  };
+  const exportState = createJsonExportState();
   const toolbar = createDataToolbar({
     article,
     source,
@@ -69,28 +79,13 @@ function buildJsonValue(value, options = {}) {
     error: false,
     tree,
     index: indexRef.current,
-    exportData: {
+    exportData: createJsonExportData({
+      exportState,
       formatId,
-      hasFilter: () => Boolean(exportState.values?.length),
-      getDocument() {
-        return {
-          filter: exportState.filter,
-          formatId,
-          label: options.copyLabel?.replace(/^Copy /u, '') || 'JSON',
-          source,
-          suffix: options.suffix,
-          value,
-        };
-      },
-      getData(scope) {
-        const data = scope === 'filtered' ? exportState.values : value;
-        if (!data || (scope === 'filtered' && data.length === 0)) {
-          return null;
-        }
-
-        return { data, formatId, kind: formatId };
-      },
-    },
+      options,
+      source,
+      value,
+    }),
   };
 }
 
