@@ -8,6 +8,7 @@ import {
   openPage,
   startServer,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 let server;
 let base;
@@ -83,7 +84,9 @@ it('downloads the original file', async () => {
 
 it('Source view, theme and reading position survive a reload', async () => {
   const { page, errors } = await openSample();
-  await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20_000 });
+  await page.waitForSelector('.pv-mermaid-ready svg', {
+    timeout: TestConstants.MERMAID_TIMEOUT_MS,
+  });
 
   await page.getByRole('tab', { name: 'Source' }).click();
   await page.getByRole('button', { name: 'Toggle theme' }).click();
@@ -112,18 +115,23 @@ it('Source view, theme and reading position survive a reload', async () => {
   await page.getByRole('tab', { name: 'HTML' }).click();
   await page.waitForSelector('.pv-markdown', { state: 'visible' });
   const y = await page.evaluate(
-    () => document.querySelector('#table').getBoundingClientRect().top + globalThis.scrollY - 80,
+    (offset) =>
+      document.querySelector('#table').getBoundingClientRect().top + globalThis.scrollY - offset,
+    TestConstants.SCROLL_OFFSET,
   );
   await page.evaluate((top) => globalThis.scrollTo(0, top), y);
-  await page.waitForTimeout(700);
+  await page.waitForTimeout(TestConstants.SCROLL_SETTLE_MS);
   const saved = await page.evaluate(() => globalThis.scrollY);
-  assert.ok(saved > 100);
+  assert.ok(saved > TestConstants.MIN_SAVED_SCROLL);
 
   await page.reload();
   await page.waitForSelector('.pv-markdown');
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(TestConstants.RELOAD_RESTORE_MS);
   const restored = await page.evaluate(() => globalThis.scrollY);
-  assert.ok(Math.abs(restored - saved) <= 4, `${restored} ~= ${saved}`);
+  assert.ok(
+    Math.abs(restored - saved) <= TestConstants.SCROLL_TOLERANCE,
+    `${restored} ~= ${saved}`,
+  );
 
   assertNoErrors(errors);
   await page.close();
@@ -141,10 +149,10 @@ it('zoom enlarges the content without a page-level horizontal scrollbar', async 
     };
   });
 
-  for (let i = 0; i < 15; i += 1) {
+  for (let i = 0; i < TestConstants.ZOOM_STEPS; i += 1) {
     await page.locator('.pv-zoom-button[aria-label="Zoom in"]').click();
   }
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(TestConstants.ZOOM_SETTLE_MS);
 
   const afterZoom = await page.evaluate(() => {
     const main = document.querySelector('.pv-main');
@@ -194,7 +202,10 @@ it('clicking Contents lands on the heading and highlights the same item', async 
   const top = await page.evaluate(
     () => document.querySelector('#table').getBoundingClientRect().top,
   );
-  assert.ok(top >= 60 && top <= 110, `heading is below the sticky bar (${top})`);
+  assert.ok(
+    top >= TestConstants.HEADING_MIN_TOP && top <= TestConstants.HEADING_MAX_TOP,
+    `heading is below the sticky bar (${top})`,
+  );
 
   assertNoErrors(errors);
   await page.close();
