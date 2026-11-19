@@ -12,6 +12,7 @@ import {
   setSetting,
   startServer,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 const ExportDataMenuKey = 'plainview.exportDataMenu';
 
@@ -217,7 +218,7 @@ it('keeps search, query and complete data in a standalone data HTML export', asy
       await exported.locator('.pv-json-search-result').first().click();
       await exported.waitForSelector('.pv-vrow-active');
       assert.match(await exported.locator('.pv-vrow-active').innerText(), /item-406/u);
-      assert.ok((await exported.locator('.pv-vrow').count()) < 50);
+      assert.ok((await exported.locator('.pv-vrow').count()) < TestConstants.EXPORTED_MAX_ROWS);
     } finally {
       await exported.close();
     }

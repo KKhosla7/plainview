@@ -7,6 +7,7 @@ import {
   openPage,
   startServer,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 let server;
 let base;
@@ -39,7 +40,7 @@ it('escapes raw HTML and blocks javascript: links', async () => {
 
 it('does not touch plain text files', async () => {
   const { page, errors } = await openPage(context, `${base}/plain.txt`);
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(TestConstants.PLAIN_TEXT_WAIT_MS);
   assert.equal(await page.locator('.pv-app').count(), 0);
   assertNoErrors(errors);
   await page.close();
@@ -47,7 +48,7 @@ it('does not touch plain text files', async () => {
 
 it('does not touch normal HTML pages', async () => {
   const { page, errors } = await openPage(context, `${base}/page.html`);
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(TestConstants.HTML_WAIT_MS);
   assert.equal(await page.locator('.pv-app').count(), 0);
   assertNoErrors(errors);
   await page.close();

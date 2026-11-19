@@ -7,6 +7,7 @@ import {
   openPage,
   startServer,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 let server;
 let base;
@@ -63,18 +64,18 @@ it('highlights the current section in Contents', async () => {
     'Plainview sample',
   );
 
-  await page.evaluate(() => {
+  await page.evaluate((offset) => {
     const root = document.documentElement;
     const previous = root.style.scrollBehavior;
     root.style.scrollBehavior = 'auto';
     const target = document.querySelector('#table');
-    globalThis.scrollTo(0, target.getBoundingClientRect().top + globalThis.scrollY - 80);
+    globalThis.scrollTo(0, target.getBoundingClientRect().top + globalThis.scrollY - offset);
     root.style.scrollBehavior = previous;
-  });
+  }, TestConstants.SCROLL_OFFSET);
   await page.waitForFunction(
     () => document.querySelector('.pv-toc-link.is-active')?.textContent.trim() === 'Table',
     null,
-    { polling: 100 },
+    { polling: TestConstants.POLL_INTERVAL },
   );
 
   assertNoErrors(errors);
@@ -84,7 +85,9 @@ it('highlights the current section in Contents', async () => {
 it('renders Mermaid diagrams', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.md`);
   await page.waitForSelector('.pv-markdown');
-  await page.waitForSelector('.pv-mermaid-ready svg', { timeout: 20_000 });
+  await page.waitForSelector('.pv-mermaid-ready svg', {
+    timeout: TestConstants.MERMAID_TIMEOUT_MS,
+  });
 
   assert.ok((await page.locator('.pv-mermaid svg').count()) >= 1);
   assertNoErrors(errors);
@@ -92,7 +95,7 @@ it('renders Mermaid diagrams', async () => {
 });
 it('highlights fenced code with the local highlighter', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.md`);
-  await page.waitForSelector('.pv-code-highlighted', { timeout: 10_000 });
+  await page.waitForSelector('.pv-code-highlighted', { timeout: TestConstants.CODE_TIMEOUT_MS });
 
   assert.ok((await page.locator('.pv-code-highlighted .hljs-string').count()) >= 1);
   assert.ok((await page.locator('.pv-code-highlighted .hljs-title').count()) >= 1);
@@ -103,7 +106,7 @@ it('highlights fenced code with the local highlighter', async () => {
 
 it('renders inline and display math while leaving code literal', async () => {
   const { page, errors } = await openPage(context, `${base}/rich.md`);
-  await page.waitForSelector('.katex-display', { timeout: 10_000 });
+  await page.waitForSelector('.katex-display', { timeout: TestConstants.CODE_TIMEOUT_MS });
 
   assert.ok((await page.locator('.pv-markdown .katex').count()) >= 2);
   assert.equal(await page.locator('.pv-markdown code .katex').count(), 0);
@@ -123,7 +126,7 @@ it('does not fetch code or math vendors for a plain document', async () => {
   page.on('request', (request) => requests.push(request.url()));
   await page.goto(`${base}/simple.md`);
   await page.waitForSelector('.pv-markdown');
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(TestConstants.VENDOR_SETTLE_MS);
 
   assert.equal(
     requests.some((url) => url.includes('/vendor/highlight/') || url.includes('/vendor/katex/')),

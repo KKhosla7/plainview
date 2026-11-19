@@ -129,7 +129,7 @@ it('keeps JSON tools visible while scrolling and resolves indexed paths', async 
   });
   const topbarBottom = positions.topbar.y + positions.topbar.height;
   assert.ok(positions.tools.y >= topbarBottom - 2);
-  assert.ok(positions.tools.y <= topbarBottom + 3);
+  assert.ok(positions.tools.y <= topbarBottom + TestConstants.STICKY_TOLERANCE);
   assert.ok(Math.abs(positions.toolsCenter - positions.articleCenter) <= 1);
   assert.ok(Math.abs(positions.searchLeft - positions.queryRight) <= 2);
   assert.ok(Math.abs(positions.searchTop - positions.searchBottom) <= 2);

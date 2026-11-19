@@ -11,7 +11,7 @@ import {
   startServer,
 } from './helpers.mjs';
 
-const RowCount = 20_000;
+const ROW_COUNT = 20_000;
 const MAX_RENDERED_ROWS = 200;
 const SCROLL_WAIT_MS = 10_000;
 
@@ -27,7 +27,7 @@ before(async () => {
   ({ context, profile } = await launchExtension());
   file = path.join(fixtures, 'large-generated.csv');
   const rows = ['id,name,value'];
-  for (let index = 0; index < RowCount; index += 1) {
+  for (let index = 0; index < ROW_COUNT; index += 1) {
     rows.push(`${index},item-${index},${index * 2}`);
   }
   fs.writeFileSync(file, rows.join('\n'));

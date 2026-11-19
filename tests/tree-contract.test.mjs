@@ -68,7 +68,10 @@ it('virtual JSON tree supports collapse, expand and keys', async () => {
       COLLAPSED_ROWS,
     );
     await page.getByRole('button', { name: 'Expand all' }).click();
-    await page.waitForFunction(() => document.querySelectorAll('.pv-vrow').length > 3);
+    await page.waitForFunction(
+      (minimum) => document.querySelectorAll('.pv-vrow').length > minimum,
+      MIN_VIRTUAL_ROWS,
+    );
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /plainview/u);
     assertNoErrors(errors);
   } finally {

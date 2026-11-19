@@ -11,6 +11,7 @@ import {
   openPage,
   startServer,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 const TreeModeKey = 'plainview.jsonTreeMode';
 
@@ -32,7 +33,9 @@ after(async () => {
 async function setTreeMode(value) {
   let workers = context.serviceWorkers();
   if (workers.length === 0) {
-    workers = [await context.waitForEvent('serviceworker', { timeout: 10_000 })];
+    workers = [
+      await context.waitForEvent('serviceworker', { timeout: TestConstants.WORKER_TIMEOUT_MS }),
+    ];
   }
   await workers[0].evaluate(({ key, mode }) => chrome.storage.local.set({ [key]: mode }), {
     key: TreeModeKey,
@@ -43,14 +46,17 @@ async function setTreeMode(value) {
 function createLongValueJson() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-virtual-'));
   const file = path.join(dir, 'long-value.json');
-  fs.writeFileSync(file, JSON.stringify({ scripts: { dsr: 'x'.repeat(400) } }));
+  fs.writeFileSync(
+    file,
+    JSON.stringify({ scripts: { dsr: 'x'.repeat(TestConstants.LONG_VALUE_LENGTH) } }),
+  );
   return { dir, file };
 }
 
 function createLargeJson() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plainview-virtual-'));
   const file = path.join(dir, 'large.json');
-  const rows = Array.from({ length: 1200 }, (_, index) => ({
+  const rows = Array.from({ length: TestConstants.LARGE_ROW_COUNT }, (_, index) => ({
     id: index,
     name: `item-${index}`,
     enabled: index % 2 === 0,
@@ -66,8 +72,8 @@ it('renders a virtualized tree and reveals a search result', async () => {
   try {
     await page.waitForSelector('.pv-virtual-tree');
     assert.equal(await page.locator('.pv-tree-more').count(), 0);
-    assert.ok((await page.locator('.pv-vrow').count()) > 8);
-    assert.ok((await page.locator('.pv-vrow').count()) < 100);
+    assert.ok((await page.locator('.pv-vrow').count()) > TestConstants.MIN_VIRTUAL_ROWS);
+    assert.ok((await page.locator('.pv-vrow').count()) < TestConstants.MAX_RENDERED_ROWS);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /item-0/u);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /item-1/u);
 
@@ -83,7 +89,7 @@ it('renders a virtualized tree and reveals a search result', async () => {
       return { activeTop: active.top, toolsBottom: tools.bottom };
     });
     assert.ok(positions.activeTop >= positions.toolsBottom - 1);
-    assert.ok((await page.locator('.pv-vrow').count()) < 100);
+    assert.ok((await page.locator('.pv-vrow').count()) < TestConstants.MAX_RENDERED_ROWS);
     assertNoErrors(errors);
   } finally {
     await page.close();
@@ -96,7 +102,10 @@ it('mounts every row when the virtual tree is shorter than the viewport', async 
   const { page, errors } = await openPage(context, `${base}/sample.yaml`);
   try {
     await page.waitForSelector('.pv-virtual-tree');
-    await page.waitForFunction(() => document.querySelectorAll('.pv-vrow').length > 8);
+    await page.waitForFunction(
+      (minimum) => document.querySelectorAll('.pv-vrow').length > minimum,
+      TestConstants.MIN_VIRTUAL_ROWS,
+    );
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /ratio/u);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /keywords/u);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /7 keys/u);
@@ -135,7 +144,7 @@ it('renders XML with the virtual tree and reveals search hits', async () => {
   const { page, errors } = await openPage(context, `${base}/sample.xml`);
   try {
     await page.waitForSelector('.pv-xml-virtual');
-    assert.ok((await page.locator('.pv-vrow').count()) > 5);
+    assert.ok((await page.locator('.pv-vrow').count()) > TestConstants.MIN_XML_ROWS);
     assert.match(await page.locator('.pv-virtual-tree').innerText(), /catalog/u);
     await page.getByLabel('Search XML elements and text').fill('Nested');
     await page.waitForSelector('.pv-vrow.pv-xml-hit-active');

@@ -7,6 +7,7 @@ import {
   launchExtension,
   openPage,
 } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 let context;
 let profile;
@@ -30,7 +31,7 @@ it('renders a local Markdown file', async () => {
 it('renders a local JSON file', async () => {
   const { page, errors } = await openPage(context, fixtureUrl('sample.json'));
   await page.waitForSelector('.pv-json');
-  assert.ok((await page.locator('.pv-json-key').count()) >= 5);
+  assert.ok((await page.locator('.pv-json-key').count()) >= TestConstants.JSON_MIN_KEYS);
   assertNoErrors(errors);
   await page.close();
 });
@@ -38,7 +39,7 @@ it('renders a local JSON file', async () => {
 it('renders a local XML file', async () => {
   const { page, errors } = await openPage(context, fixtureUrl('sample.xml'));
   await page.waitForSelector('.pv-xml');
-  assert.ok((await page.locator('.pv-xml-tag').count()) >= 5);
+  assert.ok((await page.locator('.pv-xml-tag').count()) >= TestConstants.XML_MIN_TAGS);
   assertNoErrors(errors);
   await page.close();
 });
