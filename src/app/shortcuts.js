@@ -71,9 +71,11 @@ function handleZoomKey(event, viewSwitcher, zoom, step) {
     zoom.setZoom(zoom.getZoom() - step);
   } else if (event.key === '0') {
     event.preventDefault();
-    zoom.setZoom(100);
+    zoom.setZoom(FULL_ZOOM);
   }
 }
+
+const FULL_ZOOM = 100;
 
 function wireShortcuts({ viewSwitcher, zoom, toc, theme, topbar, app, shortcuts }) {
   const resolved = shortcutConfig.normalizeShortcuts(shortcuts);

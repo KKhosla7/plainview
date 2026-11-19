@@ -112,8 +112,8 @@
     });
   }
 
-  const CheckIntervalMs = 4000;
+  const CHECK_INTERVAL_MS = 4000;
   checkAccess();
-  const timer = globalThis.setInterval(checkAccess, CheckIntervalMs);
+  const timer = globalThis.setInterval(checkAccess, CHECK_INTERVAL_MS);
   globalThis.addEventListener('pagehide', () => globalThis.clearInterval(timer), { once: true });
 })();

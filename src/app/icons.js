@@ -4,7 +4,9 @@ import urls from '../core/urls.json' with { type: 'json' };
 
 const Namespace = urls.svgNamespace;
 
-function icon(paths, size = 18) {
+const DEFAULT_ICON_SIZE = 18;
+
+function icon(paths, size = DEFAULT_ICON_SIZE) {
   const svg = document.createElementNS(Namespace, 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('width', String(size));

@@ -1,3 +1,13 @@
+const MAX_SAG = 90;
+const SAG_RATIO = 0.45;
+const DRAG_THRESHOLD = 4;
+const RETRACT_MS = 380;
+const ASCEND_MS = 900;
+const ASCEND_DISTANCE = 320;
+const EASE_POWER = 3;
+const SQUASH_FACTOR = 2;
+const SQUASH_COEFFICIENT = 3;
+
 (() => {
   const button = document.querySelector('.coffee-fab');
   if (!button) {
@@ -36,7 +46,7 @@
     const cupY = rect.top + rect.height / 2;
     const { path } = ensureRope();
     const midX = (anchorX + cupX) / 2;
-    const sag = Math.min(90, Math.abs(cupX - anchorX) * 0.45);
+    const sag = Math.min(MAX_SAG, Math.abs(cupX - anchorX) * SAG_RATIO);
     const midY = cupY / 2 + sag;
     path.setAttribute('d', `M ${anchorX} 0 Q ${midX} ${midY} ${cupX} ${cupY}`);
   }
@@ -47,7 +57,7 @@
     }
     offsetX = event.clientX - startX;
     offsetY = event.clientY - startY;
-    if (!moved && Math.hypot(offsetX, offsetY) <= 4) {
+    if (!moved && Math.hypot(offsetX, offsetY) <= DRAG_THRESHOLD) {
       return;
     }
 
@@ -74,8 +84,8 @@
     button.classList.add('is-releasing');
     const fromX = offsetX;
     const fromY = offsetY;
-    const retractMs = 380;
-    const ascendMs = 900;
+    const retractMs = RETRACT_MS;
+    const ascendMs = ASCEND_MS;
     const retractStart = performance.now();
     let ascendStart = 0;
 
@@ -89,7 +99,7 @@
 
     function ascend(now) {
       const progress = Math.min(1, (now - ascendStart) / ascendMs);
-      const eased = progress ** 2 * (3 - 2 * progress);
+      const eased = progress ** SQUASH_FACTOR * (SQUASH_COEFFICIENT - SQUASH_FACTOR * progress);
       const distance = upDistance * eased;
       offsetY = -distance;
       button.style.transform = `translate(0, ${offsetY}px)`;
@@ -108,7 +118,7 @@
 
     function retract(now) {
       const progress = Math.min(1, (now - retractStart) / retractMs);
-      const eased = 1 - (1 - progress) ** 3;
+      const eased = 1 - (1 - progress) ** EASE_POWER;
       offsetX = fromX * (1 - eased);
       offsetY = fromY * (1 - eased);
       button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
@@ -118,13 +128,13 @@
         return;
       }
       const startRect = button.getBoundingClientRect();
-      upDistance = startRect.top + startRect.height + 320;
+      upDistance = startRect.top + startRect.height + ASCEND_DISTANCE;
       ascendStart = performance.now();
       globalThis.requestAnimationFrame(ascend);
     }
 
     const startRect = button.getBoundingClientRect();
-    upDistance = startRect.top + startRect.height + 320;
+    upDistance = startRect.top + startRect.height + ASCEND_DISTANCE;
     globalThis.requestAnimationFrame(retract);
   }
 

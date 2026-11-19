@@ -3,7 +3,10 @@ import { installFonts } from '../core/fonts.js';
 import { SETTING_KEYS } from '.././core/setting-keys.js';
 
 (() => {
-  const StatusResetMs = 1400;
+  const STATUS_RESET_MS = 1400;
+  const DEFAULT_CONTENT_FONT_SIZE = 12;
+  const MIN_CONTENT_FONT_SIZE = 10;
+  const MAX_CONTENT_FONT_SIZE = 20;
   const Keys = SETTING_KEYS;
   const api = globalThis.browser ?? globalThis.chrome;
   const [autoReload, contentFontSize, contentFontStatus, formatValues, indentGuides] = [
@@ -38,7 +41,7 @@ import { SETTING_KEYS } from '.././core/setting-keys.js';
     installFonts();
     const data = await api.storage.local.get({
       [Keys.AutoReload]: false,
-      [Keys.ContentFontSize]: 12,
+      [Keys.ContentFontSize]: DEFAULT_CONTENT_FONT_SIZE,
       [Keys.FormatValues]: true,
       [Keys.IndentGuides]: true,
       [Keys.TableBorders]: false,
@@ -48,7 +51,7 @@ import { SETTING_KEYS } from '.././core/setting-keys.js';
       [Keys.ExportDataMenu]: false,
       [Keys.ExportUncompressed]: false,
     });
-    contentFontSize.value = String(Number(data[Keys.ContentFontSize]) || 12);
+    contentFontSize.value = String(Number(data[Keys.ContentFontSize]) || DEFAULT_CONTENT_FONT_SIZE);
     for (const [control, key] of [
       [autoReload, Keys.AutoReload],
       [formatValues, Keys.FormatValues],
@@ -78,12 +81,15 @@ import { SETTING_KEYS } from '.././core/setting-keys.js';
   }
 
   onAsync(contentFontSize, 'change', async () => {
-    const value = Math.max(10, Math.min(20, Number(contentFontSize.value) || 12));
+    const value = Math.max(
+      MIN_CONTENT_FONT_SIZE,
+      Math.min(MAX_CONTENT_FONT_SIZE, Number(contentFontSize.value) || DEFAULT_CONTENT_FONT_SIZE),
+    );
     contentFontSize.value = String(value);
     await api.storage.local.set({ [Keys.ContentFontSize]: value });
     contentFontStatus.textContent = `Tree font size set to ${value}px`;
     contentFontStatus.classList.add('visible');
-    globalThis.setTimeout(() => contentFontStatus.classList.remove('visible'), StatusResetMs);
+    globalThis.setTimeout(() => contentFontStatus.classList.remove('visible'), STATUS_RESET_MS);
   });
 
   onAsync(exportDataMenu, 'change', async () => {
@@ -94,7 +100,7 @@ import { SETTING_KEYS } from '.././core/setting-keys.js';
       ? 'Data downloads enabled in exported HTML'
       : 'Data downloads hidden in exported HTML';
     exportStatus.classList.add('visible');
-    globalThis.setTimeout(() => exportStatus.classList.remove('visible'), StatusResetMs);
+    globalThis.setTimeout(() => exportStatus.classList.remove('visible'), STATUS_RESET_MS);
   });
 
   onAsync(exportUncompressed, 'change', async () => {
@@ -105,7 +111,7 @@ import { SETTING_KEYS } from '.././core/setting-keys.js';
       ? 'Uncompressed export enabled'
       : 'Compressed export enabled';
     exportStatus.classList.add('visible');
-    globalThis.setTimeout(() => exportStatus.classList.remove('visible'), StatusResetMs);
+    globalThis.setTimeout(() => exportStatus.classList.remove('visible'), STATUS_RESET_MS);
   });
 
   onAsync(tableBorders, 'change', async () => {
@@ -114,7 +120,7 @@ import { SETTING_KEYS } from '.././core/setting-keys.js';
       ? 'Column borders enabled'
       : 'Column borders disabled';
     tableStatus.classList.add('visible');
-    globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
+    globalThis.setTimeout(() => tableStatus.classList.remove('visible'), STATUS_RESET_MS);
   });
 
   onAsync(tableResize, 'change', async () => {
@@ -123,7 +129,7 @@ import { SETTING_KEYS } from '.././core/setting-keys.js';
       ? 'Column resizing enabled'
       : 'Column resizing disabled';
     tableStatus.classList.add('visible');
-    globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
+    globalThis.setTimeout(() => tableStatus.classList.remove('visible'), STATUS_RESET_MS);
   });
 
   onAsync(tableLayout, 'change', async () => {
@@ -131,14 +137,14 @@ import { SETTING_KEYS } from '.././core/setting-keys.js';
     tableStatus.textContent =
       tableLayout.value === 'wrap' ? 'Wide tables wrap text' : 'Wide tables scroll sideways';
     tableStatus.classList.add('visible');
-    globalThis.setTimeout(() => tableStatus.classList.remove('visible'), StatusResetMs);
+    globalThis.setTimeout(() => tableStatus.classList.remove('visible'), STATUS_RESET_MS);
   });
 
   onAsync(autoReload, 'change', async () => {
     await api.storage.local.set({ [Keys.AutoReload]: autoReload.checked });
     sourceStatus.textContent = autoReload.checked ? 'Auto-reload enabled' : 'Ask before reloading';
     sourceStatus.classList.add('visible');
-    globalThis.setTimeout(() => sourceStatus.classList.remove('visible'), StatusResetMs);
+    globalThis.setTimeout(() => sourceStatus.classList.remove('visible'), STATUS_RESET_MS);
   });
 
   load();

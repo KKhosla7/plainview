@@ -14,6 +14,9 @@ function el(tag, className, text) {
   return node;
 }
 
+const DEFAULT_ZOOM = 100;
+const PERCENT_DIVISOR = 100;
+
 function zoomButton(className, label, ariaLabel) {
   const button = el('button', className, label);
   button.type = 'button';
@@ -38,10 +41,13 @@ function createZoom({ initialZoom } = {}) {
   const stored = Number(initialZoom);
   let zoom = Number.isFinite(stored)
     ? Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, Math.round(stored)))
-    : 100;
+    : DEFAULT_ZOOM;
 
   function apply() {
-    globalThis.document.documentElement.style.setProperty('--pv-zoom', String(zoom / 100));
+    globalThis.document.documentElement.style.setProperty(
+      '--pv-zoom',
+      String(zoom / PERCENT_DIVISOR),
+    );
     value.textContent = `${zoom}%`;
     out.disabled = zoom <= ZOOM_MIN;
     inButton.disabled = zoom >= ZOOM_MAX;
@@ -61,7 +67,7 @@ function createZoom({ initialZoom } = {}) {
 
   out.addEventListener('click', () => setZoom(zoom - ZOOM_STEP));
   inButton.addEventListener('click', () => setZoom(zoom + ZOOM_STEP));
-  value.addEventListener('click', () => setZoom(100));
+  value.addEventListener('click', () => setZoom(DEFAULT_ZOOM));
 
   apply();
 

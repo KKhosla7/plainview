@@ -1,4 +1,6 @@
-const ScrollSettleMs = 50;
+const SCROLL_SETTLE_MS = 50;
+const MAX_ACTIVE_LINE = 160;
+const VIEWPORT_LINE_RATIO = 0.35;
 
 function activationPoints(tops, maxScroll, viewport, line) {
   const count = tops.length;
@@ -117,7 +119,7 @@ function createScrollSpy({ nav, headings }) {
     }
 
     const maxScroll = Math.max(0, document.documentElement.scrollHeight - globalThis.innerHeight);
-    const line = Math.min(160, globalThis.innerHeight * 0.35);
+    const line = Math.min(MAX_ACTIVE_LINE, globalThis.innerHeight * VIEWPORT_LINE_RATIO);
     const points = activationPoints(
       items.map((item) => item.top),
       maxScroll,
@@ -131,7 +133,7 @@ function createScrollSpy({ nav, headings }) {
     if (timer) {
       return;
     }
-    timer = globalThis.setTimeout(update, ScrollSettleMs);
+    timer = globalThis.setTimeout(update, SCROLL_SETTLE_MS);
   }
 
   globalThis.addEventListener('scroll', schedule, { passive: true });

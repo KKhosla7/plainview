@@ -8,7 +8,7 @@ import { highlightCodeBlocks } from '../formats/code/loader.js';
 import { renderMath } from '../formats/math/loader.js';
 import { renderMermaidBlocks } from '../formats/mermaid/loader.js';
 
-const ExportErrorResetMs = 8000;
+const EXPORT_ERROR_RESET_MS = 8000;
 
 function el(tag, className, text) {
   const node = createElement(tag);
@@ -106,7 +106,7 @@ function createExportFeedback(topbar) {
     const notice = el('div', 'pv-export-error', `Export failed: ${message}`);
     notice.setAttribute('role', 'alert');
     document.body.append(notice);
-    globalThis.setTimeout(() => notice.remove(), ExportErrorResetMs);
+    globalThis.setTimeout(() => notice.remove(), EXPORT_ERROR_RESET_MS);
   }
 
   return {

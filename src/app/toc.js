@@ -15,8 +15,10 @@ function el(tag, className, text) {
   return node;
 }
 
+const MAX_TOC_LEVEL = 4;
+
 function buildToc(headings) {
-  const usable = headings.filter((heading) => heading.level <= 4);
+  const usable = headings.filter((heading) => heading.level <= MAX_TOC_LEVEL);
   if (usable.length < 2) {
     return null;
   }
@@ -42,7 +44,7 @@ function buildToc(headings) {
 
 function createTocDrawer({ headings, button, app, scrim }) {
   const allHeadings = headings || [];
-  const usable = allHeadings.filter((heading) => heading.level <= 4);
+  const usable = allHeadings.filter((heading) => heading.level <= MAX_TOC_LEVEL);
   const nav = buildToc(allHeadings);
   if (!nav) {
     button.hidden = true;

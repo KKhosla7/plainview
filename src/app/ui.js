@@ -6,18 +6,14 @@ import {
   CONTENT_FONT_SIZE_KEY,
   FORMAT_VALUES_KEY,
   INDENT_GUIDES_KEY,
-  JSON_TREE_MODE_KEY,
-  loadSetting,
   migrateLegacySettings,
-  SHORTCUT_KEY,
   TABLE_BORDERS_KEY,
   TABLE_LAYOUT_KEY,
   TABLE_RESIZE_KEY,
-  THEME_KEY,
   validTableLayout,
   watchSetting,
-  ZOOM_KEY,
 } from '../core/settings.js';
+
 import { watchSource } from '../core/source-watch.js';
 import { tableResize } from '.././core/table-resize.js';
 import { buildCsv } from '../formats/csv/view.js';
@@ -32,7 +28,10 @@ import { createScrollTop } from './scroll-top.js';
 import { wireShortcuts } from './shortcuts.js';
 import { tableBorders } from './table-border-toggle.js';
 import { createViewerEnhancements, wireViewerExport } from './viewer-extras.js';
+import { loadViewerSettings } from './viewer-settings.js';
 import { createViewerShell } from './viewer-shell.js';
+
+const DEFAULT_CONTENT_FONT_SIZE = 12;
 
 function fileNameFromUrl(url) {
   try {
@@ -117,41 +116,6 @@ function applyDocumentChrome({ app, format, fileName }) {
   }
 }
 
-async function loadViewerSettings(url) {
-  const viewKey = `plainview.view:${url}`;
-  const scrollKey = `plainview.scroll:${url}`;
-  const settings = await Promise.all([
-    loadSetting(viewKey, 'html'),
-    loadSetting(scrollKey, null),
-    loadSetting(THEME_KEY, null),
-    loadSetting(ZOOM_KEY, 100),
-    loadSetting(SHORTCUT_KEY, 'alt-s'),
-    loadSetting(TABLE_BORDERS_KEY, false),
-    loadSetting(CONTENT_FONT_SIZE_KEY, 12),
-    loadSetting(FORMAT_VALUES_KEY, true),
-    loadSetting(INDENT_GUIDES_KEY, true),
-    loadSetting(TABLE_RESIZE_KEY, true),
-    loadSetting(TABLE_LAYOUT_KEY, 'wrap'),
-    loadSetting(JSON_TREE_MODE_KEY, 'virtual'),
-  ]);
-  return {
-    viewKey,
-    scrollKey,
-    savedView: settings[0],
-    savedScroll: settings[1],
-    savedTheme: settings[2],
-    savedZoom: settings[3],
-    savedShortcuts: settings[4],
-    savedContentFontSize: settings[6],
-    savedFormatValues: settings[7],
-    savedIndentGuides: settings[8],
-    savedTableBorders: settings[5],
-    savedTableResize: settings[9],
-    savedTableLayout: settings[10],
-    savedJsonTreeMode: settings[11],
-  };
-}
-
 function restoreScrollState({ scrollKey, savedScroll, viewSwitcher, toc, format, refreshExtras }) {
   const fallback = () => scrollToHash(format);
   const scrollMemory = createScrollMemory({
@@ -172,7 +136,10 @@ function restoreScrollState({ scrollKey, savedScroll, viewSwitcher, toc, format,
 }
 
 function applyTreeFont(value, formatValues, indentGuides) {
-  document.documentElement.style.setProperty('--pv-tree-font-size', `${Number(value) || 12}px`);
+  document.documentElement.style.setProperty(
+    '--pv-tree-font-size',
+    `${Number(value) || DEFAULT_CONTENT_FONT_SIZE}px`,
+  );
   document.documentElement.dataset.pvFormatValues = formatValues ? 'on' : 'off';
   document.documentElement.dataset.pvIndentGuides = indentGuides ? 'on' : 'off';
 }

@@ -4,18 +4,18 @@ import { onAsync } from '../core/events.js';
 import { formatBytes } from '.././formats/json/parse.js';
 import { highlight } from '../formats/source/core.js';
 
-const CopyResetMs = 1200;
-const PreviewChars = 200_000;
-const HighlightChars = 500_000;
-const PreviewCutRatio = 0.8;
+const COPY_RESET_MS = 1200;
+const PREVIEW_CHARS = 200_000;
+const HIGHLIGHT_CHARS = 500_000;
+const PREVIEW_CUT_RATIO = 0.8;
 
 function previewSource(source, full) {
-  if (full || source.length <= PreviewChars) {
+  if (full || source.length <= PREVIEW_CHARS) {
     return { preview: false, text: source };
   }
-  let text = source.slice(0, PreviewChars);
+  let text = source.slice(0, PREVIEW_CHARS);
   const lastNewline = text.lastIndexOf('\n');
-  if (lastNewline > PreviewChars * PreviewCutRatio) {
+  if (lastNewline > PREVIEW_CHARS * PREVIEW_CUT_RATIO) {
     text = text.slice(0, lastNewline);
   }
 
@@ -23,7 +23,7 @@ function previewSource(source, full) {
 }
 
 function applySourceText(code, text, format) {
-  if (text.length > HighlightChars) {
+  if (text.length > HIGHLIGHT_CHARS) {
     code.textContent = text;
     return;
   }
@@ -34,9 +34,9 @@ function updateSourceStatus({ status, fullButton, preview, total, text, full }) 
   if (preview) {
     status.textContent = `Preview · first ${formatBytes(text.length)} of ${formatBytes(total)}`;
     fullButton.hidden = false;
-  } else if (text.length > HighlightChars) {
+  } else if (text.length > HIGHLIGHT_CHARS) {
     status.textContent = `Full source · ${formatBytes(total)} · highlighting off`;
-  } else if (total > PreviewChars) {
+  } else if (total > PREVIEW_CHARS) {
     status.textContent = `Full source · ${formatBytes(total)}`;
   } else {
     status.textContent = '';
@@ -61,7 +61,7 @@ function createSourcePane(source, format) {
     copy.textContent = ok ? 'Copied' : 'Copy failed';
     globalThis.setTimeout(() => {
       copy.textContent = 'Copy source';
-    }, CopyResetMs);
+    }, COPY_RESET_MS);
   });
 
   const fullButton = el('button', 'pv-meta-button pv-raw-full', 'Load full source');
