@@ -1,4 +1,5 @@
 import { createElement } from '../core/dom.js';
+import { requestText, requestTextExtension, requestTextXhr } from '.././core/network.js';
 
 /* global Plainview */
 /*
@@ -33,13 +34,13 @@ import { createElement } from '../core/dom.js';
 
   async function readSource(url) {
     if (url.startsWith('file:')) {
-      const viaExtension = await Plainview.requestTextExtension(url);
+      const viaExtension = await requestTextExtension(url);
       if (viaExtension !== null) {
         return viaExtension;
       }
     }
 
-    const fetched = await Plainview.requestText(url, {
+    const fetched = await requestText(url, {
       cache: 'no-store',
       credentials: 'same-origin',
     });
@@ -47,7 +48,7 @@ import { createElement } from '../core/dom.js';
       return fetched;
     }
 
-    return Plainview.requestTextXhr(url);
+    return requestTextXhr(url);
   }
 
   function normalizeSource(text, formatId) {

@@ -1,4 +1,5 @@
 import { createElement } from '../core/dom.js';
+import { requestText } from '.././core/network.js';
 /* global Plainview */
 import CompressedTemplate from './export/compressed.html';
 import DecompressTemplate from './export/decompress.txt';
@@ -91,7 +92,7 @@ import DocumentTemplate from './export/document.html';
     if (!api) {
       return '';
     }
-    const css = await Plainview.requestText(api.getURL('vendor/katex/katex-export.css'));
+    const css = await requestText(api.getURL('vendor/katex/katex-export.css'));
     return css ?? '';
   }
 
@@ -181,7 +182,7 @@ import DocumentTemplate from './export/document.html';
       return null;
     }
 
-    const source = await Plainview.requestText(runtime().getURL('export-data.js'));
+    const source = await requestText(runtime().getURL('export-data.js'));
     if (!source) {
       return null;
     }
@@ -220,7 +221,7 @@ import DocumentTemplate from './export/document.html';
       return '';
     }
 
-    const source = await Plainview.requestText(runtime().getURL('export-chrome.js'));
+    const source = await requestText(runtime().getURL('export-chrome.js'));
     return source ? source.replace(/<\/script/giu, '<\\/script') : '';
   }
 
