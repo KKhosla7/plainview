@@ -25,12 +25,10 @@ input[type="number"]:focus-visible {
   height: var(--wd-d-58);
   flex: 0 0 auto;
 }
-
 .wrap {
   position: relative;
   max-width: var(--wd-d-125);
 }
-
 .coffee-fab {
   position: absolute;
   top: var(--wd-d-110);
