@@ -57,8 +57,10 @@ function normalizeSource(text, formatId) {
         return new XMLSerializer().serializeToString(doc.documentElement);
       }
     } catch {
-      return value;
+      return value.replace(/^\s*<\?xml[^>]*\?>\s*/iu, '').trim();
     }
+
+    return value.replace(/^\s*<\?xml[^>]*\?>\s*/iu, '').trim();
   }
 
   return value;

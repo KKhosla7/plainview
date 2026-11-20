@@ -85,12 +85,12 @@ async function mountDocument(format, source, activeLoading = null) {
   const runtime = globalThis.chrome?.runtime ?? globalThis.browser?.runtime;
   const version = runtime?.getManifest?.().version || 'dev';
 
-  document.documentElement.setAttribute('data-pv-version', version);
-  document.documentElement.setAttribute('data-pv', 'pending');
-  document.documentElement.setAttribute('aria-busy', 'true');
   if (format.id === 'xml') {
     ensureHtmlShellForXml();
   }
+  document.documentElement.setAttribute('data-pv-version', version);
+  document.documentElement.setAttribute('data-pv', 'pending');
+  document.documentElement.setAttribute('aria-busy', 'true');
   const clearLoading = activeLoading || showLoading(format);
 
   try {
@@ -127,7 +127,6 @@ async function main() {
 
   let activeLoading = null;
   if (format.id === 'xml') {
-    document.documentElement.setAttribute('data-pv', 'pending');
     activeLoading = showLoading(format, true);
     await nextPaint();
   }

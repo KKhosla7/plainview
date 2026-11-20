@@ -10,6 +10,8 @@ function startSourceWatch({ source, url, app, format, onUpdate }) {
     onUpdate,
   });
   globalThis.addEventListener('pagehide', () => sourceWatch.stop(), { once: true });
+
+  return sourceWatch;
 }
 
 export { startSourceWatch };

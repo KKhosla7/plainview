@@ -28,6 +28,7 @@ import { wireViewerShell } from './viewer-shell-wiring.js';
 import { startSourceWatch } from './viewer-watch.js';
 
 const DEFAULT_CONTENT_FONT_SIZE = 12;
+let activeSourceWatch = null;
 
 function fileNameFromUrl(url) {
   try {
@@ -166,7 +167,23 @@ function refreshViewer(source, url, format) {
     .catch(() => location.reload());
 }
 
+function stopSourceWatch() {
+  activeSourceWatch?.stop();
+  activeSourceWatch = null;
+}
+
+function startViewerWatch({ app, format, source, url }) {
+  activeSourceWatch = startSourceWatch({
+    source,
+    url,
+    app,
+    format,
+    onUpdate: (nextSource) => refreshViewer(nextSource, location.href, format),
+  });
+}
+
 async function mountViewer({ source, url, format, fileName: requestedName }) {
+  stopSourceWatch();
   await migrateLegacySettings();
   const fileName = requestedName || fileNameFromUrl(url);
   const settings = await loadAndApplySettings({ url, format, fileName });
@@ -197,13 +214,7 @@ async function mountViewer({ source, url, format, fileName: requestedName }) {
     format,
     shortcuts: settings.savedShortcuts,
   });
-  startSourceWatch({
-    source,
-    url,
-    app,
-    format,
-    onUpdate: (nextSource) => refreshViewer(nextSource, location.href, format),
-  });
+  startViewerWatch({ app, format, source, url });
   applyDocumentChrome({ app, format, fileName });
   watchTableSettings();
   restoreScrollState({
