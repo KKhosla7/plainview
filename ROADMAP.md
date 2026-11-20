@@ -8,17 +8,19 @@ rewrite.
 
 | Format | Tree / view | Source highlighting |
 |---|---|---|
-| Markdown (GFM/CommonMark) | HTML, Contents, Mermaid | yes |
-| JSON / JSONC | collapsible tree | yes |
-| XML | collapsible tree | yes |
+| Markdown (GFM/CommonMark) | HTML, Contents, math, Mermaid | yes |
+| JSON / JSONC | searchable tree, JSONPath/JMESPath | yes |
+| XML | searchable element tree, XPath | yes |
+| YAML | collapsible tree, search | yes |
+| TOML | collapsible tree, search | yes |
+| CSV / TSV | virtualized table, search, filters | yes |
+| Logs | wide monospace reader | yes |
+| Swagger / OpenAPI | structured JSON or YAML view | yes |
 
 ## Next formats
 
 | Format | Detected by | View | Status |
 |---|---|---|---|
-| YAML | `.yaml`, `.yml`; `application/yaml`, `text/yaml` | tree, reusing the JSON tree where possible | planned |
-| TOML | `.toml`; `application/toml`, `text/toml` | tree/tables | planned |
-| CSV / TSV | `.csv`, `.tsv`; `text/csv`, `text/tab-separated-values` | table with a row/column cap | planned |
 | JSON5 | `.json5`; `application/json5` | tree, reusing the JSON view | planned |
 | INI | `.ini`, `.cfg`; `text/plain` with extension | sections and keys | later |
 
@@ -26,7 +28,7 @@ rewrite.
 
 1. Add the extension and MIME types to `src/core/formats.js`.
 2. Add a parser module that returns plain data, never DOM from untrusted input.
-3. Add a view module that builds DOM with `Plainview.createElement()` and the shared data toolbar.
+3. Add a view module that builds DOM with the shared `createElement()` helper and data toolbar.
 4. Add a source highlighter under `src/formats/source/*.js` and register it.
 5. Add fixtures and tests in `tests/data.test.mjs`.
 6. Keep the same limits: no code execution, no remote requests, bounded tree size, escaped text.
