@@ -66,14 +66,6 @@ function normalizeSource(text, formatId) {
   return value;
 }
 
-function reloadDocument(onReload) {
-  if (onReload) {
-    onReload();
-  } else {
-    location.reload();
-  }
-}
-
 function createAutoReloadState() {
   let enabled = false;
   loadSetting(AutoReloadKey, false).then(
@@ -103,7 +95,7 @@ function createAutoReloadState() {
   };
 }
 
-function createBanner(onReload) {
+function createBanner() {
   const banner = el('div', 'pv-change-banner');
   banner.hidden = true;
   banner.setAttribute('role', 'alert');
@@ -115,52 +107,53 @@ function createBanner(onReload) {
   text.append(title, detail);
 
   const actions = el('div', 'pv-change-actions');
-  const reload = button('pv-change-reload', 'Reload');
+  const refresh = button('pv-change-reload', 'Refresh');
   const dismiss = button('pv-change-dismiss', 'Dismiss');
-  actions.append(reload, dismiss);
+  actions.append(refresh, dismiss);
   banner.append(text, actions);
 
-  reload.addEventListener('click', onReload);
+  let action = () => undefined;
+  refresh.addEventListener('click', () => action());
   dismiss.addEventListener('click', () => {
     banner.hidden = true;
   });
 
   return {
     element: banner,
-    show() {
+    show(nextAction) {
+      action = nextAction;
       banner.hidden = false;
-      reload.focus();
+      refresh.focus();
     },
     hide() {
       banner.hidden = true;
     },
     setAuto(message) {
       detail.textContent = ` ${message}`;
-      reload.hidden = true;
+      refresh.hidden = true;
       dismiss.hidden = true;
     },
   };
 }
 
-function notifyChange({ autoReload, banner, onReload, onUpdate, source, isStopped }) {
+function notifyChange({ autoReload, banner, onUpdate, source, isStopped }) {
   if (autoReload.enabled) {
     banner.setAuto('Refreshing automatically…');
     banner.show();
     globalThis.setTimeout(() => {
       if (!isStopped()) {
-        if (onUpdate) {
-          onUpdate(source);
-        } else {
-          reloadDocument(onReload);
-        }
+        onUpdate?.(source);
       }
     }, AUTO_RELOAD_DELAY_MS);
     return;
   }
-  banner.show();
+  banner.show(() => {
+    banner.hide();
+    onUpdate?.(source);
+  });
 }
 
-function createCheckNow({ state, url, format, baseline, banner, autoReload, onReload, onUpdate }) {
+function createCheckNow({ state, url, format, baseline, banner, autoReload, onUpdate }) {
   return async function checkNow() {
     if (
       state.stopped ||
@@ -189,7 +182,6 @@ function createCheckNow({ state, url, format, baseline, banner, autoReload, onRe
       notifyChange({
         autoReload,
         banner,
-        onReload,
         onUpdate,
         source: normalized,
         isStopped: () => state.stopped,
@@ -210,16 +202,13 @@ function scheduleCheck(state, checkNow, delay) {
   }, delay);
 }
 
-function watchSource({ source, url, app, onReload, onUpdate, format }) {
+function watchSource({ source, url, app, onUpdate, format }) {
   if (!(source && url)) {
     return { checkNow: () => undefined, stop: () => undefined };
   }
 
   const baseline = normalizeSource(source, format?.id);
-  const banner = createBanner(() => {
-    banner.hide();
-    reloadDocument(onReload);
-  });
+  const banner = createBanner();
   app.append(banner.element);
 
   const state = { inFlight: false, lastNotified: null, stopped: false, timer: 0 };
@@ -231,7 +220,6 @@ function watchSource({ source, url, app, onReload, onUpdate, format }) {
     baseline,
     banner,
     autoReload,
-    onReload,
     onUpdate,
   });
   const schedule = (delay) => scheduleCheck(state, checkNow, delay);

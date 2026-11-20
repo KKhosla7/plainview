@@ -6,7 +6,6 @@ function startSourceWatch({ source, url, app, format, onUpdate }) {
     url,
     app,
     format,
-    onReload: () => location.reload(),
     onUpdate,
   });
   globalThis.addEventListener('pagehide', () => sourceWatch.stop(), { once: true });

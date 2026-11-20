@@ -55,6 +55,9 @@ it('prompts before reloading a changed source', async () => {
   const { page, errors } = await openPage(context, `${base}/watched.md`);
   await page.waitForSelector('.pv-markdown h1');
   assert.match(await page.locator('.pv-markdown h1').innerText(), /Watched/u);
+  await page.evaluate(() => {
+    globalThis.__pvRefreshStayedInPage = true;
+  });
 
   watched = '# Watched\n\nsecond version\n';
   await page.waitForSelector('.pv-change-banner:not([hidden])', {
@@ -74,11 +77,12 @@ it('prompts before reloading a changed source', async () => {
   assert.ok(Math.abs(placement.bannerCenter - placement.viewportCenter) <= 2);
   assert.ok(placement.bannerTop >= placement.topbarBottom);
   assert.ok(placement.bannerTop <= placement.topbarBottom + TestConstants.BANNER_OFFSET);
-  await page.getByRole('button', { name: 'Reload', exact: true }).click();
+  await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await page.waitForFunction(() =>
     document.querySelector('.pv-markdown h1')?.textContent.includes('Watched'),
   );
   await page.waitForFunction(() => document.body.innerText.includes('second version'));
+  assert.equal(await page.evaluate(() => globalThis.__pvRefreshStayedInPage), true);
 
   assertNoErrors(errors);
   await page.close();

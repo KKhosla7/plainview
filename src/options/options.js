@@ -141,7 +141,9 @@ onAsync(tableLayout, 'change', async () => {
 
 onAsync(autoReload, 'change', async () => {
   await api.storage.local.set({ [Keys.AutoReload]: autoReload.checked });
-  sourceStatus.textContent = autoReload.checked ? 'Auto-reload enabled' : 'Ask before reloading';
+  sourceStatus.textContent = autoReload.checked
+    ? 'Automatic refresh enabled'
+    : 'Ask before refreshing';
   sourceStatus.classList.add('visible');
   globalThis.setTimeout(() => sourceStatus.classList.remove('visible'), STATUS_RESET_MS);
 });
