@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Plainview",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Read Markdown, JSON, XML, YAML, TOML, CSV and logs locally with search, trees, tables and clean exports.",
   "permissions": ["storage", "clipboardWrite"],
   "icons": {
