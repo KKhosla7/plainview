@@ -4,9 +4,20 @@
 Markdown, JSON, YAML, TOML, CSV/TSV and XML.
 
 [![CI](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml/badge.svg)](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml)
+[![Release](https://github.com/KKhosla7/plainview/actions/workflows/release.yml/badge.svg)](https://github.com/KKhosla7/plainview/actions/workflows/release.yml)
+[![Latest release](https://img.shields.io/github/v/release/KKhosla7/plainview?label=release&color=1f4fa0)](https://github.com/KKhosla7/plainview/releases/latest)
+[![Chrome 120+](https://img.shields.io/badge/Chrome-120%2B-4285F4?logo=googlechrome&logoColor=white)](https://github.com/KKhosla7/plainview/releases/latest)
+[![Firefox 142+](https://img.shields.io/badge/Firefox-142%2B-FF7139?logo=firefoxbrowser&logoColor=white)](https://github.com/KKhosla7/plainview/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-1f4fa0.svg)](LICENSE)
 
 > Version **1.2.6** · Chrome Web Store and Firefox Add-ons listings pending.
+
+**Install:** [latest release](https://github.com/KKhosla7/plainview/releases/latest) ·
+**Privacy:** [no data collection](store/PRIVACY.md) ·
+**Setup:** [install and file access](docs/INSTALL.md) ·
+**Support:** [GitHub issues](https://github.com/KKhosla7/plainview/issues)
+
+Plainview is local-first: no analytics, telemetry, remote code or remote fonts. Files are rendered in the browser and are not uploaded.
 
 ![Plainview demo](docs/demo.webp)
 
