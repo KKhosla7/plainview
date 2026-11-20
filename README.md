@@ -6,7 +6,7 @@ Markdown, JSON, YAML, TOML, CSV/TSV and XML.
 [![CI](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml/badge.svg)](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-1f4fa0.svg)](LICENSE)
 
-> Version **1.2.2** · Chrome Web Store and Firefox Add-ons listings pending.
+> Version **1.2.3** · Chrome Web Store and Firefox Add-ons listings pending.
 
 ![Plainview demo](docs/demo.webp)
 
