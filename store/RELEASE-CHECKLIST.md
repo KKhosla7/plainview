@@ -2,7 +2,7 @@
 
 ## Current status
 
-- Release `v1.2.5` prepared from `release/1.2.0` (fast-forwarded from `cleanup/1.2.0`).
+- Release `v1.2.6` prepared from `release/1.2.0` (fast-forwarded from `cleanup/1.2.0`).
 - Chrome extension: 116/116 tests pass against `dist/chrome`.
 - Biome: zero diagnostics with the strict non-nursery preset.
 - Firefox: smoke-tested Markdown, Mermaid, source view, theme, XML and the
@@ -13,7 +13,7 @@
 - Code style and review rules are documented in `STYLE.md`.
 - Full AST gate: 15 accepted findings (14 config weakening, 1 tooling-only
   `spawnSync` pattern).
-- Package version: 1.2.5.
+- Package version: 1.2.6.
 
 ## Build and package
 
