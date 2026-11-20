@@ -5,6 +5,7 @@ import { test as it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { evaluateXmlXPath, parseXmlSource } from '../src/formats/xml/xml-engine.js';
 
+const EXPECTED_BOOKS = 2;
 const source = fs.readFileSync(
   path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures', 'sample.xml'),
   'utf8',
@@ -18,6 +19,6 @@ it('parses XML into a descriptor document', () => {
 });
 
 it('evaluates worker XPath node and scalar results', () => {
-  assert.equal(evaluateXmlXPath(source, '//book/title').ids.length, 2);
-  assert.equal(evaluateXmlXPath(source, 'count(//book)').value, 2);
+  assert.equal(evaluateXmlXPath(source, '//book/title').ids.length, EXPECTED_BOOKS);
+  assert.equal(evaluateXmlXPath(source, 'count(//book)').value, EXPECTED_BOOKS);
 });
