@@ -51,6 +51,8 @@ input[type="number"]:focus-visible {
   box-shadow: 0 var(--wd-d-118) var(--wd-d-56) var(--wd-c-rgb_0_0_0_16);
   animation: coffee-drop 8s infinite;
   touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .coffee-fab::before {
