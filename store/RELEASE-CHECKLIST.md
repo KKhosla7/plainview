@@ -2,7 +2,7 @@
 
 ## Current status
 
-- Release candidate on `release/1.2.0`: fast-forwarded from `cleanup/1.2.0`.
+- Release `v1.2.0` prepared from `release/1.2.0` (fast-forwarded from `cleanup/1.2.0`).
 - Chrome extension: 114/114 tests pass against `dist/chrome`.
 - Biome: zero diagnostics with the strict non-nursery preset.
 - Firefox: smoke-tested Markdown, Mermaid, source view, theme, XML and the
