@@ -241,7 +241,7 @@ function manifestFor(browser) {
   if (browser === 'firefox') {
     manifest.browser_specific_settings = {
       gecko: {
-        id: 'plainview@kk18888678.github.io',
+        id: 'plainview@kkhosla7.github.io',
         strict_min_version: '142.0',
         data_collection_permissions: {
           required: ['none'],
