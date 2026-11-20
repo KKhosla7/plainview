@@ -6,7 +6,7 @@ Markdown, JSON, YAML, TOML, CSV/TSV and XML.
 [![CI](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml/badge.svg)](https://github.com/KKhosla7/plainview/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-1f4fa0.svg)](LICENSE)
 
-> Version **1.1.0** · Chrome Web Store and Firefox Add-ons listings pending.
+> Version **1.2.0** · Chrome Web Store and Firefox Add-ons listings pending.
 
 ![Plainview demo](docs/demo.webp)
 
@@ -17,9 +17,14 @@ The full gallery below uses 2560×1600 lossless PNGs; the animated preview is co
 
 | Format | Detection | View |
 |---|---|---|
-| Markdown | `.md`, `.markdown`, `.mdown`, `.mkd`, `.mkdn`, `.mdwn`, `.mdx`; `text/markdown` | GFM/CommonMark HTML, contents panel, code copy, Mermaid diagrams |
-| JSON | `.json`, `.jsonc`, `.geojson`, `.jsonld`, `.har`, `.webmanifest`; `application/json` and `+json` types | Collapsible tree, JSONC comments/trailing commas, expand/collapse, copy |
-| XML | `.xml`, `.rss`, `.atom`, `.rdf`, `.opml`, `.wsdl`, `.plist`, `.xsl`, `.xslt`; `application/xml`, `text/xml` and `+xml` types | Collapsible element tree with attributes, text, CDATA, comments |
+| Markdown | `.md`, `.markdown`, `.mdown`, `.mkd`, `.mkdn`, `.mdwn`, `.mdx`; `text/markdown` | GFM/CommonMark HTML, contents panel, code copy, math and Mermaid diagrams |
+| JSON | `.json`, `.jsonc`, `.geojson`, `.jsonld`, `.har`, `.webmanifest`; `application/json` and `+json` types | Collapsible tree, JSONC comments/trailing commas, search, JSONPath and JMESPath queries |
+| XML | `.xml`, `.rss`, `.atom`, `.rdf`, `.opml`, `.wsdl`, `.plist`, `.xsl`, `.xslt`; `application/xml`, `text/xml` and `+xml` types | Element tree with attributes, text, CDATA, comments, search and XPath |
+| YAML | `.yaml`, `.yml`; YAML MIME types | Collapsible tree with search and copy |
+| TOML | `.toml`; TOML MIME types | Collapsible tree with search and copy |
+| CSV / TSV | `.csv`, `.tsv`; CSV and TSV MIME types | Virtualized table with search, filters, sorting and column controls |
+| Logs | `.log`, `.logs`, `.out`, `.err`; log MIME types | Wide, readable monospace view |
+| Swagger / OpenAPI | `.swagger`, `.openapi`; OpenAPI MIME types | Structured JSON or YAML view |
 
 The Markdown view also supports Mermaid fenced blocks:
 
@@ -39,9 +44,10 @@ Mermaid is loaded only on documents that contain a Mermaid block.
 - **Light and Dark themes.** The selected theme is saved. There is no Auto mode.
 - **Content zoom.** `−` / `+` changes the rendered type size without touching the browser zoom.
   `Ctrl/Cmd` + `+`, `-`, `0` and `Ctrl/Cmd` + wheel also work in the HTML view.
-- **Source view.** Markdown, JSON and XML source are syntax-highlighted, use the full width, and
-  have a **Copy source** button.
-- **Local exports.** Save clean native data or a self-contained HTML reader.
+- **Search and queries.** Search every supported data view; query JSON with JSONPath/JMESPath and XML with XPath.
+- **Source view.** Supported source formats are syntax-highlighted, use the full width, and have a
+  **Copy source** button.
+- **Local exports.** Save clean native data, filtered results, selected content or a self-contained HTML reader.
 - **No remote resources.** marked, Mermaid and the fonts are packaged; nothing is fetched to render.
 - **Contents panel.** The current section is highlighted while reading; clicking an item lands the
   heading below the sticky bar.
@@ -51,10 +57,11 @@ Mermaid is loaded only on documents that contain a Mermaid block.
 
 ## Performance
 
-Normal pages load only a tiny loader (`boot.js`, about 3 KB minified) and the stylesheet (about
-28 KB minified). The reader bundle (`app.js`, about 116 KB minified) is imported only after a
-Markdown, JSON or XML document is detected. Mermaid (about 2.8 MB) and the local fonts (about 296 KB)
-remain lazy. Browsing ordinary sites does not parse marked, the JSON/XML renderers or Mermaid.
+Normal pages load only a small detector (`boot.js`, about 6 KB minified) and the stylesheet (about
+63 KB minified). The reader bundle (`app.js`, about 259 KB minified) is imported only after a
+supported document is detected. Mermaid and the local fonts remain lazy. XML parsing and XPath run
+in the extension service worker, keeping large XML files off the page's main thread. Browsing
+ordinary sites does not parse the reader renderers or Mermaid.
 
 ## Screenshots
 
@@ -116,7 +123,7 @@ Temporary add-ons **cannot read local `file://` documents** in current Firefox.
 2. Install the signed XPI.
 3. Open `about:addons` → Plainview → **Permissions**.
 4. Enable **Access your data for file:// URLs**.
-5. Open or drag the local `.md`, `.json` or `.xml` file again.
+5. Open or drag a supported local file again.
 
 Firefox’s native JSON viewer handles `application/json` and Firefox does not inject content scripts
 into that privileged viewer. Plainview leaves it in place; Markdown and XML use Plainview. This is

@@ -2,14 +2,17 @@
 
 ## Current status
 
-- Chrome extension: full Playwright suite passes against `dist/chrome`.
+- Release candidate on `release/1.2.0`: fast-forwarded from `cleanup/1.2.0`.
+- Chrome extension: 114/114 tests pass against `dist/chrome`.
 - Biome: zero diagnostics with the strict non-nursery preset.
 - Firefox: smoke-tested Markdown, Mermaid, source view, theme, XML and the
   error path. Firefox JSON is handled by Firefox's native JSON viewer.
-- Firefox `web-ext lint`: 0 errors, 11 warnings (bundled lazy imports and
+- Firefox `web-ext lint`: 0 errors, 16 warnings (bundled lazy imports and
   vendored Mermaid `innerHTML`; no eval, no remote code).
 - Gitleaks scans the working tree and full git history in CI; local scan is clean.
 - Code style and review rules are documented in `STYLE.md`.
+- Full AST gate: 15 accepted findings (14 config weakening, 1 tooling-only
+  `spawnSync` pattern).
 - Package version: 1.2.0.
 
 ## Build and package
@@ -28,8 +31,8 @@ dist/plainview-firefox-<version>.zip
 dist/plainview-<version>-source.zip
 ```
 
-Performance after bundling: normal pages load `boot.js` (~3 KB) + `styles.css`
-(~28 KB); the reader bundle `app.js` (~116 KB) is imported only for supported
+Performance after bundling: normal pages load `boot.js` (~6 KB) + `styles.css`
+(~63 KB); the reader bundle `app.js` (~259 KB) is imported only for supported
 documents.
 
 ## Chrome Web Store
