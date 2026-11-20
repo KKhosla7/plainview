@@ -11,3 +11,36 @@
   font-family: sans-serif;
   font-weight: 600;
 }
+
+:root:not([data-pv])::after {
+  content: "";
+  position: fixed;
+  top: calc(50% + var(--wd-d-81));
+  left: 50%;
+  z-index: 2147483647;
+  width: min(var(--wd-d-120), 55vw);
+  height: var(--wd-d-89);
+  border-radius: var(--wd-d-132);
+  background: CanvasText;
+  opacity: 0.25;
+  transform: translateX(-50%);
+  animation: pv-xml-loading-sweep 1.1s ease-in-out infinite;
+}
+
+@keyframes pv-xml-loading-sweep {
+  from {
+    transform: translateX(-150%);
+  }
+
+  to {
+    transform: translateX(150%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-pv])::after {
+    width: min(var(--wd-d-120), 55vw);
+    opacity: 0.55;
+    animation: none;
+  }
+}

@@ -3,6 +3,7 @@ import { detectFormat } from './core/formats.js';
 import { ensureHtmlShellForXml } from './core/xml-shell.js';
 
 const LOADING_DELAY_MS = 120;
+const LARGE_SOURCE_CHARS = 1_000_000;
 
 function decodeUriComponentSafe(value) {
   try {
@@ -45,29 +46,47 @@ function loadingName() {
   }
 }
 
-function showLoading(format, immediate = false) {
+function createLoadingCard(detailText) {
   const overlay = document.createElement('div');
   overlay.className = 'pv-loading';
   overlay.setAttribute('role', 'status');
   overlay.setAttribute('aria-live', 'polite');
   const card = document.createElement('div');
   card.className = 'pv-loading-card';
-  const spinner = document.createElement('span');
-  spinner.className = 'pv-loading-spinner';
-  spinner.setAttribute('aria-hidden', 'true');
   const title = document.createElement('span');
   title.className = 'pv-loading-title';
   title.textContent = loadingName();
   const detail = document.createElement('span');
   detail.className = 'pv-loading-detail';
-  detail.textContent = `Opening ${format.name}…`;
-  card.append(spinner, title, detail);
+  detail.textContent = detailText;
+  const progress = document.createElement('div');
+  progress.className = 'pv-loading-progress';
+  progress.setAttribute('role', 'progressbar');
+  progress.setAttribute('aria-label', 'Loading document');
+  const bar = document.createElement('span');
+  bar.className = 'pv-loading-bar';
+  progress.append(bar);
+  card.append(title, detail, progress);
   overlay.append(card);
+  return {
+    overlay,
+    setDetail(text) {
+      detail.textContent = text;
+    },
+  };
+}
+
+function showLoading(format, immediate = false, detailText = `Opening ${format.name}…`) {
+  const { overlay, setDetail } = createLoadingCard(detailText);
+  let attached = false;
   let timer = 0;
   const attach = () => {
-    if (!document.querySelector('.pv-app')) {
-      document.body?.append(overlay);
+    if (attached || document.querySelector('.pv-app') || !document.body) {
+      return;
     }
+
+    document.body.append(overlay);
+    attached = true;
   };
   if (immediate) {
     attach();
@@ -75,10 +94,13 @@ function showLoading(format, immediate = false) {
     timer = globalThis.setTimeout(attach, LOADING_DELAY_MS);
   }
 
-  return () => {
+  const clear = () => {
     globalThis.clearTimeout(timer);
     overlay.remove();
   };
+  clear.attach = attach;
+  clear.setDetail = setDetail;
+  return clear;
 }
 
 async function mountDocument(format, source, activeLoading = null) {
@@ -91,7 +113,15 @@ async function mountDocument(format, source, activeLoading = null) {
   document.documentElement.setAttribute('data-pv-version', version);
   document.documentElement.setAttribute('data-pv', 'pending');
   document.documentElement.setAttribute('aria-busy', 'true');
-  const clearLoading = activeLoading || showLoading(format);
+  const detailText =
+    format.id === 'xml' && source.length >= LARGE_SOURCE_CHARS
+      ? 'Large XML file · this may take a few seconds.'
+      : `Opening ${format.name}…`;
+  const clearLoading = activeLoading || showLoading(format, false, detailText);
+  if (activeLoading) {
+    activeLoading.setDetail?.(detailText);
+    activeLoading.attach?.();
+  }
 
   try {
     const { mountViewer } = await import(runtime.getURL('app.js'));
