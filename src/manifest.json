@@ -20,7 +20,7 @@
     },
     {
       "matches": ["file:///*.xml", "http://*/*.xml", "https://*/*.xml"],
-      "css": ["styles.css"],
+      "css": ["xml-loading.css"],
       "run_at": "document_start"
     }
   ],

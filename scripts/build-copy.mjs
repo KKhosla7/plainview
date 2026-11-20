@@ -60,6 +60,7 @@ function copyPackageFiles({ project, bundleDir }, target) {
     'export-data.js',
     'background.js',
     'styles.css',
+    'xml-loading.css',
   ]) {
     const destination =
       file === 'background.js' ? path.join(target, 'src', file) : path.join(target, file);

@@ -200,6 +200,10 @@ await Promise.all(
 );
 
 fs.writeFileSync(path.join(bundleDir, 'styles.css'), css);
+fs.writeFileSync(
+  path.join(bundleDir, 'xml-loading.css'),
+  fs.readFileSync(path.join(project, 'src', 'styles', 'xml-loading.css'), 'utf8'),
+);
 
 function manifestFor(browser) {
   const manifest = structuredClone(sourceManifest);
