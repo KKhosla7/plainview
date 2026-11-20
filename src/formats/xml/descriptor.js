@@ -110,6 +110,8 @@ function hydrateDescriptorDocument(document) {
     for (const child of descriptor.childNodes) {
       hydrate(child, descriptor);
     }
+
+    descriptor.children = descriptor.childNodes.filter((child) => child.nodeType === 1);
   }
   if (document.documentElement) {
     hydrate(document.documentElement, null);

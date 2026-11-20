@@ -2,9 +2,9 @@ import { buildCsv } from '../formats/csv/view.js';
 import { buildJsonValue } from '../formats/json/view.js';
 import { buildXml } from '../formats/xml/view.js';
 
-function buildDocument(documentData) {
+async function buildDocument(documentData) {
   if (documentData.formatId === 'xml') {
-    return buildXml(documentData.source);
+    return await buildXml(documentData.source);
   }
 
   if (documentData.formatId === 'csv' || documentData.formatId === 'tsv') {

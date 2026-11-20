@@ -87,6 +87,40 @@ function escapeXml(value) {
     .replaceAll('>', '&gt;');
 }
 
+function descriptorAttributes(node) {
+  return node.attributes
+    .map((attribute) => {
+      const value = escapeXml(attribute.value).replaceAll('"', '&quot;');
+      return ` ${attribute.name}="${value}"`;
+    })
+    .join('');
+}
+
+function descriptorXml(node) {
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    const children = node.childNodes.map((child) => descriptorXml(child)).join('');
+    return `<${node.nodeName}${descriptorAttributes(node)}>${children}</${node.nodeName}>`;
+  }
+
+  if (node.nodeType === Node.TEXT_NODE) {
+    return escapeXml(node.nodeValue);
+  }
+
+  if (node.nodeType === Node.CDATA_SECTION_NODE) {
+    return `<![CDATA[${node.nodeValue}]]>`;
+  }
+
+  if (node.nodeType === Node.COMMENT_NODE) {
+    return `<\u0021--${node.nodeValue}-->`;
+  }
+
+  if (node.nodeType === Node.PROCESSING_INSTRUCTION_NODE) {
+    return `<?${node.nodeName}${node.nodeValue ? ` ${node.nodeValue}` : ''}?>`;
+  }
+
+  return '';
+}
+
 function xmlNodeText(node) {
   if (node.nodeType === Node.ATTRIBUTE_NODE) {
     return `<attribute name="${escapeXml(node.name)}">${escapeXml(node.value)}</attribute>`;
@@ -96,8 +130,7 @@ function xmlNodeText(node) {
     return `<text>${escapeXml(node.nodeValue)}</text>`;
   }
 
-  const target = node.nodeType === Node.DOCUMENT_NODE ? node.documentElement : node;
-  return new XMLSerializer().serializeToString(target);
+  return descriptorXml(node.nodeType === Node.DOCUMENT_NODE ? node.documentElement : node);
 }
 
 function xmlNodesText(nodes) {

@@ -4,9 +4,57 @@ import { createDescriptorDocument } from './descriptor.js';
 
 const { evaluateXPath, evaluateXPathToNodes } = fontoxpath;
 
+function findParserError(node) {
+  if (!node) {
+    return null;
+  }
+
+  if (node.nodeType === 1 && node.localName === 'parsererror') {
+    return node;
+  }
+
+  for (const child of Array.from(node.childNodes ?? [])) {
+    const error = findParserError(child);
+    if (error) {
+      return error;
+    }
+  }
+
+  return null;
+}
+
+function scalarType(value) {
+  switch (Object.prototype.toString.call(value)) {
+    case '[object String]':
+      return 'string';
+    case '[object Boolean]':
+      return 'boolean';
+    case '[object Number]':
+      return 'number';
+    default:
+      return 'other';
+  }
+}
+
 function parseXmlSource(source) {
   try {
     const doc = new DOMParser().parseFromString(source.replace(/^\uFEFF/u, ''), 'application/xml');
+    const parserError = findParserError(doc.documentElement);
+    if (parserError) {
+      const message = (parserError.textContent || 'Malformed XML').trim();
+      const lineColumn =
+        /line\s+(\d+)\s+at\s+column\s+(\d+)/iu.exec(message) ??
+        /line\s+(\d+)\s+column\s+(\d+)/iu.exec(message);
+      return {
+        error: {
+          column: lineColumn ? Number(lineColumn[2]) : undefined,
+          line: lineColumn ? Number(lineColumn[1]) : undefined,
+          message,
+        },
+        ok: false,
+      };
+    }
+
     const result = createDescriptorDocument(doc);
     if (!result.documentElement) {
       return { error: { message: 'The document has no root element.' }, ok: false };
@@ -39,7 +87,9 @@ function evaluateXmlXPath(source, expression) {
         }
       }
     } catch {
-      return { ok: true, value: evaluateXPath(expression, doc) };
+      const value = evaluateXPath(expression, doc);
+
+      return { ok: true, value, valueType: scalarType(value) };
     }
 
     return { ids, ok: true };

@@ -1,3 +1,4 @@
+import { onAsync } from '../../core/events.js';
 import { jsonToolsShared } from '../.././formats/json/tools-shared.js';
 import { xmlToolsShared } from '../.././formats/xml/tools-shared.js';
 
@@ -98,21 +99,17 @@ function clearQueryHits({ hits, queryCount, status, query }) {
   return [];
 }
 
-function applyXPathNodes({ nodes, byNode, doc, state, queryCount, status, expression }) {
-  for (const node of nodes) {
-    const entry = mappedEntry(node, byNode, doc);
-    if (!entry) {
-      continue;
-    }
+function applyEntries({ entries, total, state, queryCount, status, expression }) {
+  for (const entry of entries) {
     state.hits.push(entry);
     mark(entry, 'pv-xml-query-hit');
   }
-  queryCount.textContent = `${nodes.length} ${nodes.length === 1 ? 'result' : 'results'}`;
-  if (nodes.length > 0) {
+  queryCount.textContent = `${total} ${total === 1 ? 'result' : 'results'}`;
+  if (total > 0) {
     state.exportState?.set(
       'query',
-      nodes.flatMap((node) => {
-        const exported = exportNode(node);
+      entries.flatMap((entry) => {
+        const exported = exportNode(entry.source);
         return exported ? [exported] : [];
       }),
       { kind: 'query', text: expression },
@@ -121,19 +118,114 @@ function applyXPathNodes({ nodes, byNode, doc, state, queryCount, status, expres
     state.exportState?.clear('query');
   }
 
-  if (nodes.length === 0) {
+  if (total === 0) {
     status.textContent = `No nodes matched ${expression}.`;
     status.classList.add('is-empty');
     return;
   }
 
-  if (state.hits.length < nodes.length) {
-    status.textContent = `${nodes.length - state.hits.length} result(s) are below the tree cap.`;
+  if (entries.length < total) {
+    status.textContent = `${total - entries.length} result(s) are below the tree cap.`;
   }
   selectHit(state.hits, 0, 'pv-xml-query-active');
 }
 
-function runXPathQuery({ doc, byNode, status, query, queryCount, state }) {
+function showXPathError({ error, status, query }) {
+  status.textContent = `XPath error: ${error instanceof Error ? error.message : String(error)}`;
+  status.classList.add('is-error');
+  query.setAttribute('aria-invalid', 'true');
+}
+
+function formatWorkerValue({ value, valueType }) {
+  if (valueType === 'string') {
+    return `Result: ${JSON.stringify(value)}`;
+  }
+
+  if (valueType === 'boolean') {
+    return `Result: ${value ? 'true' : 'false'}`;
+  }
+
+  return `Result: ${value}`;
+}
+
+async function runWorkerXPath({
+  byId,
+  byNode,
+  expression,
+  query,
+  queryCount,
+  state,
+  status,
+  xpath,
+}) {
+  byNode.ensureAll?.();
+  let response;
+  try {
+    response = await xpath(expression);
+  } catch (error) {
+    showXPathError({ error, status, query });
+    return;
+  }
+
+  if (!response?.ok) {
+    showXPathError({
+      error: response?.error?.message ?? 'Unknown XML worker error',
+      status,
+      query,
+    });
+    return;
+  }
+
+  if (Object.hasOwn(response, 'value')) {
+    status.textContent = formatWorkerValue(response);
+    return;
+  }
+  const ids = response.ids ?? [];
+  const entries = ids.flatMap((id) => {
+    const entry = byId.get(id);
+    return entry ? [entry] : [];
+  });
+  applyEntries({ entries, total: ids.length, state, queryCount, status, expression });
+}
+
+function runNativeXPathQuery({
+  byId,
+  doc,
+  expression,
+  nativeByNode,
+  query,
+  queryCount,
+  state,
+  status,
+}) {
+  const XPathResultType = globalThis.XPathResult;
+  let result;
+  try {
+    result = doc.evaluate(expression, doc, null, XPathResultType.ORDERED_NODE_SNAPSHOT_TYPE, null);
+  } catch {
+    try {
+      result = doc.evaluate(expression, doc, null, XPathResultType.ANY_TYPE, null);
+    } catch (error) {
+      showXPathError({ error, status, query });
+      return;
+    }
+  }
+  const scalar = scalarResult(result.resultType, result, XPathResultType);
+  if (scalar) {
+    status.textContent = scalar;
+    return;
+  }
+  const nodes = nodesFromResult(result, XPathResultType).filter(Boolean);
+  const entries = nodes.flatMap((node) => {
+    const descriptor = mappedEntry(node, nativeByNode, doc);
+    const entry = descriptor ? byId.get(descriptor.id) : null;
+    return entry ? [entry] : [];
+  });
+  applyEntries({ entries, total: nodes.length, state, queryCount, status, expression });
+}
+
+async function runXPathQuery(options) {
+  const { query, queryCount, state, status } = options;
   state.exportState?.clear('query');
   state.hits = clearQueryHits({
     hits: state.hits,
@@ -145,30 +237,15 @@ function runXPathQuery({ doc, byNode, status, query, queryCount, state }) {
   if (!expression) {
     return;
   }
-  const XPathResultType = globalThis.XPathResult;
-  let result;
-  try {
-    result = doc.evaluate(expression, doc, null, XPathResultType.ORDERED_NODE_SNAPSHOT_TYPE, null);
-  } catch {
-    try {
-      result = doc.evaluate(expression, doc, null, XPathResultType.ANY_TYPE, null);
-    } catch (error) {
-      status.textContent = `XPath error: ${error instanceof Error ? error.message : String(error)}`;
-      status.classList.add('is-error');
-      query.setAttribute('aria-invalid', 'true');
-      return;
-    }
-  }
-  const scalar = scalarResult(result.resultType, result, XPathResultType);
-  if (scalar) {
-    status.textContent = scalar;
+  options.byNode.ensureAll?.();
+  if (options.xpath) {
+    await runWorkerXPath({ ...options, expression });
     return;
   }
-  const nodes = nodesFromResult(result, XPathResultType).filter(Boolean);
-  applyXPathNodes({ nodes, byNode, doc, state, queryCount, status, expression });
+  runNativeXPathQuery({ ...options, expression });
 }
 
-function createXmlQuery({ doc, byNode, exportState, status }) {
+function createXmlQuery({ byId, byNode, doc, exportState, nativeByNode, status, xpath }) {
   const { queryWrap, queryRow, query, queryButton, queryCount } = createQueryElements();
   const state = { exportState, hits: [] };
   const clear = jsonToolsShared.inputClear(query, 'Clear XPath query', () => {
@@ -178,15 +255,18 @@ function createXmlQuery({ doc, byNode, exportState, status }) {
     query.focus();
   });
   queryRow.insertBefore(clear, queryButton);
-  queryWrap.addEventListener('submit', (event) => {
+  onAsync(queryWrap, 'submit', async (event) => {
     event.preventDefault();
-    runXPathQuery({
-      doc,
+    await runXPathQuery({
+      byId,
       byNode,
+      doc,
+      nativeByNode,
       status,
       query,
       queryCount,
       state,
+      xpath,
     });
   });
   query.addEventListener('input', () => {

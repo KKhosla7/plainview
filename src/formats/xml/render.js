@@ -13,7 +13,11 @@ import {
 } from './tree-shared.js';
 
 function register(ctx, sourceNode, rendered, summary = null) {
-  ctx.byNode.set(sourceNode, { node: rendered, source: sourceNode, summary });
+  const entry = { node: rendered, source: sourceNode, summary };
+  ctx.byNode.set(sourceNode, entry);
+  if (sourceNode.id !== undefined) {
+    ctx.byId.set(sourceNode.id, entry);
+  }
 }
 
 function renderEmptyELEMENT(element, ctx) {
@@ -154,6 +158,7 @@ function renderXmlTree(rootElement) {
     comments: 0,
     depth: 0,
     truncated: false,
+    byId: new Map(),
     byNode: new Map(),
     rootElement,
   };
@@ -166,7 +171,7 @@ function renderXmlTree(rootElement) {
     tree.append(el('div', 'pv-tree-note', note));
   }
 
-  return { element: tree, stats: ctx, byNode: ctx.byNode };
+  return { element: tree, stats: ctx, byId: ctx.byId, byNode: ctx.byNode };
 }
 
 export const xmlTreeShared = {

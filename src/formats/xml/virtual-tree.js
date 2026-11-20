@@ -106,6 +106,10 @@ function describeNode(state, source, depth, parent) {
     describeOther(state, descriptor, source);
   }
   state.byNode.set(source, descriptor);
+  if (source.id !== undefined) {
+    state.byId.set(source.id, descriptor);
+  }
+
   return attachVirtual(state, descriptor);
 }
 
@@ -245,6 +249,7 @@ function collapseAll(descriptor) {
 function createXmlVirtualTree(rootElement) {
   const tree = el('div', 'pv-xml pv-virtual-tree pv-xml-virtual');
   const state = {
+    byId: new Map(),
     byNode: new Map(),
     frame: 0,
     rootElement,
@@ -271,7 +276,7 @@ function createXmlVirtualTree(rootElement) {
   globalThis.requestAnimationFrame(() => scheduleRender(state));
   globalThis.addEventListener('scroll', () => scheduleRender(state), { passive: true });
   globalThis.addEventListener('resize', () => scheduleRender(state));
-  return { element: tree, stats: state.stats, byNode: state.byNode };
+  return { element: tree, stats: state.stats, byId: state.byId, byNode: state.byNode };
 }
 
 export { createXmlVirtualTree };

@@ -1,10 +1,18 @@
 function createXmlWorkerClient(runtime, source) {
   let nextId = 0;
 
-  function request(kind, payload) {
+  async function request(kind, payload) {
     const id = nextId;
     nextId += 1;
-    return runtime.sendMessage({ ...payload, id, kind, source, type: 'plainview:xml' });
+    const response = await runtime.sendMessage({
+      ...payload,
+      id,
+      kind,
+      source,
+      type: 'plainview:xml',
+    });
+
+    return response?.result;
   }
 
   return {

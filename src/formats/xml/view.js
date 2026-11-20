@@ -2,10 +2,12 @@ import { createElement } from '../../core/dom.js';
 import { formatBytes } from '../.././formats/json/parse.js';
 import { createDataToolbar } from '../.././formats/shared/data-toolbar.js';
 import { errorPanel } from '../.././formats/shared/error-panel.js';
+import { createDescriptorDocument, hydrateDescriptorDocument } from './descriptor.js';
 import { parseXml } from './parse.js';
 import { renderXmlTree } from './render.js';
 import { createXmlTools } from './tools.js';
 import { createXmlVirtualTree } from './virtual-tree.js';
+import { createXmlWorkerClient } from './worker-client.js';
 
 function el(tag, className, text) {
   const node = createElement(tag);
@@ -67,8 +69,49 @@ function createXmlExportState() {
   };
 }
 
-function buildXml(source) {
+function runtimeApi() {
+  return globalThis.browser?.runtime ?? globalThis.chrome?.runtime ?? null;
+}
+
+function parseFallback(source) {
   const parsed = parseXml(source);
+  const parseError = Object.getOwnPropertyDescriptor(parsed, 'error')?.value;
+  if (parseError) {
+    return { error: parseError, xpath: null };
+  }
+  const document = hydrateDescriptorDocument(createDescriptorDocument(parsed.doc));
+  return { document, nativeByNode: document.byNode, xpath: null };
+}
+
+async function parseXmlDocument(source) {
+  const runtime = runtimeApi();
+  if (!runtime?.getURL) {
+    return parseFallback(source);
+  }
+
+  let client;
+  try {
+    client = createXmlWorkerClient(runtime, source);
+    const result = await client.parse();
+    if (!result) {
+      return parseFallback(source);
+    }
+
+    if (!result.ok) {
+      return { error: result.error, xpath: client.xpath };
+    }
+
+    return {
+      document: hydrateDescriptorDocument(result.document),
+      xpath: client.xpath,
+    };
+  } catch {
+    return parseFallback(source);
+  }
+}
+
+async function buildXml(source) {
+  const parsed = await parseXmlDocument(source);
   const parseError = Object.getOwnPropertyDescriptor(parsed, 'error')?.value;
   const article = el('article', 'pv-doc pv-data-doc');
 
@@ -81,7 +124,7 @@ function buildXml(source) {
   }
 
   const treeMode = document.documentElement.dataset.pvJsonTreeMode || 'virtual';
-  const tree = selectTree(parsed.doc.documentElement);
+  const tree = selectTree(parsed.document.documentElement);
   const { stats } = tree;
   const exportState = createXmlExportState();
 
@@ -98,8 +141,10 @@ function buildXml(source) {
     }),
     createXmlTools({
       tree: tree.element,
-      doc: parsed.doc,
+      byId: tree.byId,
       byNode: tree.byNode,
+      nativeByNode: parsed.nativeByNode,
+      xpath: parsed.xpath,
       exportState,
     }),
     tree.element,
