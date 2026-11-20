@@ -1,7 +1,7 @@
 # Plainview privacy policy
 
-Plainview renders Markdown, JSON and XML files inside the browser. It is
-designed to work locally.
+Plainview renders Markdown, JSON, XML, YAML, TOML, CSV/TSV, log and
+Swagger/OpenAPI files inside the browser. It is designed to work locally.
 
 ## What Plainview reads
 
@@ -37,7 +37,7 @@ opened. It does not contact a server.
 - `storage` — save the interface settings listed above.
 - `clipboardWrite` — copy source or code when the user clicks a Copy button.
 - Access to web pages — the extension must inspect the document type of the
-  page to decide whether it is Markdown, JSON or XML. It does not read or send
+  page to decide whether it is a supported document. It does not read or send
   page data for any other purpose.
 - Access to file URLs — optional; the user enables it in the browser so local
   downloaded files can be rendered.
@@ -46,4 +46,4 @@ opened. It does not contact a server.
 
 Open an issue at https://github.com/KKhosla7/plainview/issues.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-20
