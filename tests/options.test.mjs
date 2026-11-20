@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { after, before, test as it } from 'node:test';
+import { SETTING_KEYS } from '../src/core/setting-keys.js';
 import { assertNoErrors, closeExtension, launchExtension } from './helpers.mjs';
 
 let context;
@@ -20,6 +21,7 @@ after(async () => {
 });
 
 const WORKER_TIMEOUT_MS = 10_000;
+const ThemeKey = SETTING_KEYS.Theme;
 const STATUS_VISIBLE_MS = 150;
 
 it('settings page loads and remembers the auto-reload option', async () => {
@@ -76,6 +78,27 @@ it('settings page remembers table options', async () => {
   await page.waitForSelector('html[data-pv-options-ready="true"]');
   assert.equal(await page.isChecked('#tableResize'), false);
   assert.equal(await page.locator('#tableLayout').inputValue(), 'scroll');
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('settings page shares the reader theme', async () => {
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
+  await page.waitForSelector('html[data-pv-options-ready="true"]');
+
+  await page.evaluate((key) => chrome.storage.local.set({ [key]: 'dark' }), ThemeKey);
+  await page.waitForFunction(() => document.documentElement.dataset.pvPageTheme === 'dark');
+  assert.equal(await page.locator('.page-theme-toggle').getAttribute('aria-pressed'), 'true');
+
+  await page.locator('.page-theme-toggle').click();
+  await page.waitForFunction(() => document.documentElement.dataset.pvPageTheme === 'light');
+  assert.equal(
+    await page.evaluate(async (key) => (await chrome.storage.local.get(key))[key], ThemeKey),
+    'light',
+  );
   assertNoErrors(errors);
   await page.close();
 });

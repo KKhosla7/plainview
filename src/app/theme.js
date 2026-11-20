@@ -1,5 +1,5 @@
 import { createIconButton, icons } from '.././app/icons.js';
-import { saveSetting, THEME_KEY, validTheme } from '../core/settings.js';
+import { saveSetting, THEME_KEY, validTheme, watchSetting } from '../core/settings.js';
 
 function createThemeButton() {
   return createIconButton(
@@ -51,6 +51,18 @@ function createTheme({ button, initialTheme }) {
   });
 
   applyTheme(button, theme);
+  watchSetting(THEME_KEY, (value) => {
+    const next = validTheme(value);
+    if (!next || next === theme) {
+      return;
+    }
+
+    theme = next;
+    applyTheme(button, theme);
+    if (onChange) {
+      onChange();
+    }
+  });
 
   return {
     effectiveDark: () => effectiveDark(theme),
