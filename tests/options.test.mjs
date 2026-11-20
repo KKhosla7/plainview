@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { after, before, test as it } from 'node:test';
 import { SETTING_KEYS } from '../src/core/setting-keys.js';
 import { assertNoErrors, closeExtension, launchExtension } from './helpers.mjs';
+import TestConstants from './test-constants.json' with { type: 'json' };
 
 let context;
 let profile;
@@ -23,6 +24,19 @@ after(async () => {
 const WORKER_TIMEOUT_MS = 10_000;
 const ThemeKey = SETTING_KEYS.Theme;
 const STATUS_VISIBLE_MS = 150;
+
+it('opens the setup guide on installation', async () => {
+  let onboarding = context.pages().find((page) => page.url().includes('/onboarding.html'));
+  if (!onboarding) {
+    onboarding = await context.waitForEvent('page', {
+      predicate: (page) => page.url().includes('/onboarding.html'),
+      timeout: WORKER_TIMEOUT_MS,
+    });
+  }
+  await onboarding.waitForSelector('.onboarding h1');
+  assert.equal(await onboarding.locator('.onboarding h1').innerText(), 'Setup guide');
+  await onboarding.close();
+});
 
 it('settings page loads and remembers the auto-reload option', async () => {
   const page = await context.newPage();
@@ -99,6 +113,31 @@ it('settings page shares the reader theme', async () => {
     await page.evaluate(async (key) => (await chrome.storage.local.get(key))[key], ThemeKey),
     'light',
   );
+  assertNoErrors(errors);
+  await page.close();
+});
+
+it('keeps the coffee icon consistent and suppresses the link after a drag', async () => {
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
+  await page.waitForSelector('html[data-pv-options-ready="true"]');
+  assert.equal(await page.locator('.coffee-icon').evaluate((icon) => icon.tagName), 'svg');
+
+  const box = await page.locator('.coffee-fab').boundingBox();
+  const pagesBefore = context.pages().length;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(
+    box.x + box.width / 2 + TestConstants.COFFEE_DRAG_OFFSET,
+    box.y + box.height / 2 + TestConstants.COFFEE_DRAG_OFFSET,
+    { steps: TestConstants.DRAG_STEPS },
+  );
+  await page.mouse.up();
+  await page.waitForTimeout(TestConstants.RELOAD_WAIT_MS);
+  assert.equal(context.pages().length, pagesBefore);
   assertNoErrors(errors);
   await page.close();
 });

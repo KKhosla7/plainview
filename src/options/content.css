@@ -19,6 +19,13 @@ input[type="number"]:focus-visible {
   flex: 0 0 auto;
 }
 
+.coffee-icon {
+  display: block;
+  width: var(--wd-d-58);
+  height: var(--wd-d-58);
+  flex: 0 0 auto;
+}
+
 .wrap {
   position: relative;
   max-width: var(--wd-d-125);

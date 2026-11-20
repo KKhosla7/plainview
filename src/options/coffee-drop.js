@@ -29,6 +29,7 @@ if (button) {
     state.offsetX = 0;
     state.offsetY = 0;
     state.moved = false;
+    state.suppressClick = false;
     state.dragging = true;
     globalThis.addEventListener('mousemove', handlers.move);
     globalThis.addEventListener('mouseup', handlers.end);

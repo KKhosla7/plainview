@@ -30,7 +30,7 @@ function createDragHandlers({ button, state, rope, drawRope }) {
     if (!state.moved) {
       return;
     }
-    button.dataset.coffeeSuppress = 'true';
+    state.suppressClick = true;
     button.classList.remove('is-dragging');
     button.classList.add('is-releasing');
     releaseCoffee({
