@@ -17,6 +17,11 @@
       "css": ["styles.css"],
       "run_at": "document_end",
       "all_frames": false
+    },
+    {
+      "matches": ["file:///*.xml", "http://*/*.xml", "https://*/*.xml"],
+      "css": ["styles.css"],
+      "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [

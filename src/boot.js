@@ -12,8 +12,9 @@ function decodeUriComponentSafe(value) {
   }
 }
 
-function resolveDocument() {
-  if (document.documentElement?.getAttribute?.('data-pv')) {
+function documentFormat() {
+  const state = document.documentElement?.getAttribute?.('data-pv');
+  if (state && state !== 'pending') {
     return null;
   }
 
@@ -22,11 +23,17 @@ function resolveDocument() {
   }
 
   const format = detectFormat(document.contentType, decodeUriComponentSafe(location.pathname));
-  if (!(format && isRawTextDocument())) {
-    return null;
-  }
+  return format && isRawTextDocument() ? format : null;
+}
 
-  return { format, source: extractSource(format) };
+function resolveDocument(format) {
+  return format ? { format, source: extractSource(format) } : null;
+}
+
+function nextPaint() {
+  return new Promise((resolve) => {
+    globalThis.requestAnimationFrame(() => globalThis.setTimeout(resolve));
+  });
 }
 
 function loadingName() {
@@ -38,7 +45,7 @@ function loadingName() {
   }
 }
 
-function showLoading(format) {
+function showLoading(format, immediate = false) {
   const overlay = document.createElement('div');
   overlay.className = 'pv-loading';
   overlay.setAttribute('role', 'status');
@@ -56,18 +63,25 @@ function showLoading(format) {
   detail.textContent = `Opening ${format.name}…`;
   card.append(spinner, title, detail);
   overlay.append(card);
-  const timer = globalThis.setTimeout(() => {
+  let timer = 0;
+  const attach = () => {
     if (!document.querySelector('.pv-app')) {
       document.body?.append(overlay);
     }
-  }, LOADING_DELAY_MS);
+  };
+  if (immediate) {
+    attach();
+  } else {
+    timer = globalThis.setTimeout(attach, LOADING_DELAY_MS);
+  }
+
   return () => {
     globalThis.clearTimeout(timer);
     overlay.remove();
   };
 }
 
-async function mountDocument(format, source) {
+async function mountDocument(format, source, activeLoading = null) {
   const runtime = globalThis.chrome?.runtime ?? globalThis.browser?.runtime;
   const version = runtime?.getManifest?.().version || 'dev';
 
@@ -77,7 +91,7 @@ async function mountDocument(format, source) {
   if (format.id === 'xml') {
     ensureHtmlShellForXml();
   }
-  const clearLoading = showLoading(format);
+  const clearLoading = activeLoading || showLoading(format);
 
   try {
     const { mountViewer } = await import(runtime.getURL('app.js'));
@@ -106,12 +120,26 @@ async function main() {
   }
   globalThis.__plainviewLoaded = true;
 
-  const documentData = resolveDocument();
-  if (!documentData) {
+  const format = documentFormat();
+  if (!format) {
     return;
   }
 
-  await mountDocument(documentData.format, documentData.source);
+  let activeLoading = null;
+  if (format.id === 'xml') {
+    document.documentElement.setAttribute('data-pv', 'pending');
+    activeLoading = showLoading(format, true);
+    await nextPaint();
+  }
+
+  const documentData = resolveDocument(format);
+  if (!documentData) {
+    activeLoading?.();
+    document.documentElement.removeAttribute('data-pv');
+    return;
+  }
+
+  await mountDocument(documentData.format, documentData.source, activeLoading);
 }
 
 if (document.readyState === 'loading') {
