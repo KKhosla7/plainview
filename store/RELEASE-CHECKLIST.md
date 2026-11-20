@@ -2,8 +2,8 @@
 
 ## Current status
 
-- Release `v1.2.0` prepared from `release/1.2.0` (fast-forwarded from `cleanup/1.2.0`).
-- Chrome extension: 114/114 tests pass against `dist/chrome`.
+- Release `v1.2.1` prepared from `release/1.2.0` (fast-forwarded from `cleanup/1.2.0`).
+- Chrome extension: 116/116 tests pass against `dist/chrome`.
 - Biome: zero diagnostics with the strict non-nursery preset.
 - Firefox: smoke-tested Markdown, Mermaid, source view, theme, XML and the
   error path. Firefox JSON is handled by Firefox's native JSON viewer.
@@ -13,7 +13,7 @@
 - Code style and review rules are documented in `STYLE.md`.
 - Full AST gate: 15 accepted findings (14 config weakening, 1 tooling-only
   `spawnSync` pattern).
-- Package version: 1.2.0.
+- Package version: 1.2.1.
 
 ## Build and package
 
