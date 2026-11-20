@@ -22,6 +22,7 @@ const STYLE_FILES = [
   'src/styles/export-menu.css',
   'src/styles/layout.css',
   'src/styles/layout-overlays.css',
+  'src/styles/loading.css',
   'src/styles/data.css',
   'src/styles/data-tools.css',
   'src/styles/data-search.css',

@@ -1,0 +1,54 @@
+html[data-pv="pending"] .pv-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--wd-d-81);
+  background: var(--pv-bg);
+  color: var(--pv-fg);
+  font-family: var(--pv-sans);
+}
+
+html[data-pv="pending"] .pv-loading-card {
+  display: grid;
+  justify-items: center;
+  gap: var(--wd-d-42);
+  max-width: min(var(--wd-d-95), 100%);
+  text-align: center;
+}
+
+html[data-pv="pending"] .pv-loading-spinner {
+  width: calc(var(--wd-d-81) + var(--wd-d-108));
+  height: calc(var(--wd-d-81) + var(--wd-d-108));
+  border: var(--wd-d-89) solid var(--pv-border);
+  border-top-color: var(--pv-accent);
+  border-radius: 50%;
+  animation: pv-loading-spin 0.8s linear infinite;
+}
+
+html[data-pv="pending"] .pv-loading-title {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: var(--wd-d-53);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-pv="pending"] .pv-loading-detail {
+  color: var(--pv-fg-muted);
+  font-size: var(--wd-d-48);
+}
+
+@keyframes pv-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-pv="pending"] .pv-loading-spinner {
+    animation: none;
+  }
+}
