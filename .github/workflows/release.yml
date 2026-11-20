@@ -3,6 +3,12 @@ name: Release
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to build, for example v1.2.6
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -11,9 +17,12 @@ jobs:
   release:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
           fetch-depth: 0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
@@ -30,7 +39,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Check tag matches package version
         run: |
-          node -e "const v=require('./package.json').version; if ('v'+v !== process.env.GITHUB_REF_NAME) { console.error('tag '+process.env.GITHUB_REF_NAME+' does not match v'+v); process.exit(1); }"
+          node -e "const v=require('./package.json').version; if ('v'+v !== process.env.RELEASE_TAG) { console.error('tag '+process.env.RELEASE_TAG+' does not match v'+v); process.exit(1); }"
       - run: npm test
       - run: npm run lint:firefox
       - run: npm run package
@@ -38,12 +47,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          version="${RELEASE_TAG#v}"
           notes="store/release-notes/${version}.md"
-          if [ -f "$notes" ]; then
-            gh release create "$GITHUB_REF_NAME" dist/plainview-*.zip \
-              --title "Plainview $GITHUB_REF_NAME" --notes-file "$notes"
+          title="Plainview ${version}"
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" dist/plainview-*.zip --clobber
+            if [ -f "$notes" ]; then
+              gh release edit "$RELEASE_TAG" --title "$title" --notes-file "$notes"
+            else
+              gh release edit "$RELEASE_TAG" --title "$title"
+            fi
+          elif [ -f "$notes" ]; then
+            gh release create "$RELEASE_TAG" dist/plainview-*.zip \
+              --verify-tag --title "$title" --notes-file "$notes"
           else
-            gh release create "$GITHUB_REF_NAME" dist/plainview-*.zip \
-              --title "Plainview $GITHUB_REF_NAME" --generate-notes
+            gh release create "$RELEASE_TAG" dist/plainview-*.zip \
+              --verify-tag --title "$title" --generate-notes
           fi
