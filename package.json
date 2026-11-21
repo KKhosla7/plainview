@@ -23,7 +23,7 @@
     "fontoxpath": "^3.34.0",
     "highlight.js": "^11.12.0",
     "jmespath": "^0.16.0",
-    "js-yaml": "^4.3.2",
+    "js-yaml": "^5.5.0",
     "katex": "^0.19.1",
     "marked": "^18.2.0",
     "mermaid": "^12.3.0",
